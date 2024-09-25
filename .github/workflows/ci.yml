@@ -65,9 +65,37 @@ jobs:
           cd server
           bun run lint
 
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Cache Bun dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install dependencies
+        run: |
+          cd server
+          bun install
+
+      - name: Run typecheck
+        run: |
+          cd server
+          bun run typecheck
+
   pr-check:
     if: github.event_name == 'pull_request'
-    needs: [test, lint]
+    needs: [test, lint, typecheck]
     runs-on: ubuntu-latest
     steps:
       - name: PR is ready to be merged
