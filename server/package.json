@@ -2,7 +2,7 @@
 	"name": "acm-website-server",
 	"scripts": {
 		"dev": "bun run --watch src/index.ts",
-		"test": "bun test",
+		"test": "bun test src/tests",
 		"lint": "eslint .",
 		"lint-fix": "eslint --fix .",
 		"typecheck": "tsc --noEmit --skipLibCheck",
