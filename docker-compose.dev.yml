@@ -1,0 +1,25 @@
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    ports:
+      - '5001:5001'
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+
+  db:
+    image: postgres:latest
+    ports:
+      - '5432:5432'
+    env_file:
+      - .env
+    volumes:
+      - acm_website_db_data:/var/lib/postgresql/data
+      - ./db-scripts:/docker-entrypoint-initdb.d/
+
+volumes:
+  acm_website_db_data:

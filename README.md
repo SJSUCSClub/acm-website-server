@@ -1,15 +1,23 @@
 # acm-website-server
 
-To install dependencies:
+## Development
+
+Copy .env.example to .env and set the correct environment variables.
 
 ```sh
-bun install
+cp .env.example .env
 ```
 
-To run:
+Start the development server with:
 
 ```sh
-bun run dev
+docker compose -f docker-compose.dev.yml up --build
 ```
 
-open http://localhost:5000
+Open http://localhost:5001
+
+To shutdown the server and remove associated volume, run:
+
+```sh
+docker compose -f docker-compose.dev.yml down -v
+```
