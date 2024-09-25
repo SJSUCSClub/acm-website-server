@@ -5,7 +5,8 @@
 		"test": "bun test src/tests",
 		"lint": "eslint .",
 		"typecheck": "tsc --noEmit --skipLibCheck",
-		"build": "bun build ./src/index.ts --outdir ./dist"
+		"build": "bun build ./src/index.ts --outdir ./dist",
+		"precommit": "bun lint && bun typecheck && bun test"
 	},
 	"dependencies": {
 		"hono": "^4.6.3"

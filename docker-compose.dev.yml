@@ -10,6 +10,8 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
+    env_file:
+      - .env
 
   db:
     image: postgres:latest
