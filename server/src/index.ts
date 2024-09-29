@@ -1,21 +1,21 @@
-import { Hono } from "hono";
-import { cors } from "hono/cors";
-import v1App from "./router/v1/v1.router";
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import v1App from './router/v1/v1.router';
 
 const app = new Hono();
 
-app.use("/*", cors());
-app.get("/", (c) =>
+app.use('/*', cors());
+app.get('/', (c) =>
   c.json(
     {
-      status: "ok",
+      status: 'ok',
     },
-    200
-  )
+    200,
+  ),
 );
 
 // V1 API
-app.route("/v1", v1App);
+app.route('/v1', v1App);
 
 export default {
   port: process.env.PORT || 5001,
