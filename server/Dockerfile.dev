@@ -1,4 +1,6 @@
-FROM oven/bun:latest
+FROM oven/bun:alpine
+
+RUN apk --no-cache add curl
 
 EXPOSE 5001
 
