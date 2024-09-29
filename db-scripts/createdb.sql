@@ -1,4 +1,4 @@
-create database acm_website;
+create database acm_website if not exists;
 
 \c acm_website;
 
