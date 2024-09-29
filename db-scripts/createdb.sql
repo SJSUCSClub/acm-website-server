@@ -31,6 +31,15 @@ create table if not exists users(
    foreign key(major) references majors(name) on update cascade
 );
 
+create table if not exists session(
+   id serial,
+   user_id integer not null,
+   created_at timestamp not null default CURRENT_TIMESTAMP,
+   expires_at timestamp not null,
+   PRIMARY KEY(id),
+   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade
+);
+
 create table if not exists equipment_rental_type(
    id serial,
    created_at timestamp not null default CURRENT_TIMESTAMP,
