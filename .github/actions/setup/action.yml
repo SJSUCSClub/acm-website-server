@@ -23,6 +23,7 @@ runs:
           ${{ inputs.os }}-bun-
 
     - name: Install dependencies
+      shell: bash
       run: |
         cd server
         bun install
