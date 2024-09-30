@@ -57,57 +57,6 @@ create table if not exists equipment_item(
    FOREIGN KEY(equipment_type) REFERENCES equipment_rental_type(id) on update cascade
 );
 
-create table if not exists equipment_rentals(
-   item_id integer not null,
-   user_id integer,
-   date_borrowed date not null default current_date,
-   return_date date not null,
-   price money not null,
-   condition equipment_condition_enum not null default 'ready',
-   PRIMARY KEY(user_id, item_id),
-   FOREIGN KEY(item_id) REFERENCES equipment_item(id) on update cascade on delete set null,
-   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade
-);
-
-create table if not exists payments(
-   payment_id serial,
-   method text not null,
-   PRIMARY KEY(payment_id)
-);
-
-create table if not exists membership_plan(
-   id serial,
-   name text not null,
-   term membership_term_enum not null,
-   price integer not null,
-   PRIMARY KEY(id)
-);
-
-create table if not exists membership_requests(
-   id serial,
-   status membership_request_status_enum not null,
-   note text,
-   plan_id integer not null,
-   user_id integer not null,
-   PRIMARY KEY(id),
-   FOREIGN KEY(plan_id) REFERENCES membership_plan(id) on update cascade,
-   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade
-);
-
-create table if not exists membership(
-   id serial,
-   user_id integer not null,
-   start_date timestamp not null default CURRENT_TIMESTAMP,
-   end_date timestamp not null,
-   is_active boolean default true,
-   payment_id integer not null,
-   plan_id integer not null,
-   PRIMARY KEY(id),
-   FOREIGN KEY(plan_id) REFERENCES membership_plan(id),
-   FOREIGN KEY(payment_id) REFERENCES payments(payment_id),
-   FOREIGN KEY(user_id) REFERENCES users(id) on delete cascade
-);
-
 create table if not exists blacklist(
    user_id integer not null,
    reason text not null,
