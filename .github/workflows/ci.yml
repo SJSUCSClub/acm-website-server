@@ -32,6 +32,20 @@ jobs:
         with:
           os: ${{ runner.os }}
 
+      - name: Lint fix
+        run: |
+          bun lint --fix
+
+      - name: Commit lint fix
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git diff --exit-code > /dev/null
+          then
+            git commit -a -m "lint fix"
+            git push
+          fi
+
       - name: Run linter
         run: |
           cd server
