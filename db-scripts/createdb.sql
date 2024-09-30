@@ -59,13 +59,13 @@ create table if not exists equipment_item(
 
 create table if not exists equipment_rentals(
    item_id integer not null,
-   user_id integer not null,
+   user_id integer,
    date_borrowed date not null default current_date,
    return_date date not null,
    price money not null,
    condition equipment_condition_enum not null default 'ready',
    PRIMARY KEY(user_id, item_id),
-   FOREIGN KEY(item_id) REFERENCES equipment_item(id) on update cascade on delete cascade,
+   FOREIGN KEY(item_id) REFERENCES equipment_item(id) on update cascade on delete set null,
    FOREIGN KEY(user_id) REFERENCES users(id) on update cascade
 );
 
@@ -192,7 +192,7 @@ create table if not exists event_companies(
    event_id integer not null,
    company_id integer not null,
    PRIMARY KEY(event_id, company_id),
-   FOREIGN KEY(event_id) REFERENCES events(id),
+   FOREIGN KEY(event_id) REFERENCES events(id) on delete cascade,
    FOREIGN KEY(company_id) REFERENCES companies(id) on delete cascade
 );
 
