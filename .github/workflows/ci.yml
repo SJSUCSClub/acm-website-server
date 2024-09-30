@@ -34,6 +34,7 @@ jobs:
 
       - name: Lint fix
         run: |
+          cd server/
           bun lint --fix
 
       - name: Commit lint fix
