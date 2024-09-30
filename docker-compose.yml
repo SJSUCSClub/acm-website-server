@@ -1,0 +1,80 @@
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - 8080:8080
+    configs:
+      - source: nginx_config
+        target: /etc/nginx/nginx.conf
+    networks:
+      - public
+    depends_on:
+      server:
+        condition: service_healthy
+        restart: true
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - .env
+    networks:
+      - private
+      - public
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://server:5001"]
+      interval: 5s
+      retries: 5
+      start_period: 5s
+      timeout: 5s
+
+  db:
+    image: postgres:latest
+    # ports:
+    #   - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: acm_website
+      POSTGRES_PASSWORD_FILE: /run/secrets/pg_password
+    volumes:
+      - acm_website_db_data:/var/lib/postgresql/data
+      - ./db-scripts:/docker-entrypoint-initdb.d/
+    secrets:
+      - pg_password
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - private
+
+volumes:
+  acm_website_db_data:
+
+networks:
+  public:
+  private:
+    ipam:
+      config:
+        - subnet: "192.0.0.0/24"
+          gateway: "192.0.0.1"
+
+configs:
+  nginx_config:
+    file: ./nginx.conf
+
+secrets:
+  pg_password:
+    file: ./pg_password.txt
