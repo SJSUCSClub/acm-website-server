@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - '**' # currently run on all branches
+      - "**" # currently run on all branches
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -14,18 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+      - uses: ./.github/actions/setup
         with:
-          bun-version: latest
-
-      - name: Cache Bun dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
-          restore-keys: |
-            ${{ runner.os }}-bun-
+          os: ${{ runner.os }}
 
       - name: Install dependencies
         run: |
