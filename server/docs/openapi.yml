@@ -1,0 +1,523 @@
+openapi: 3.1.0
+info:
+  title: ACM Website API
+  description: API for managing ACM website resources including users, events, projects, and more.
+  version: 1.0.0
+  contact:
+    email: acm@example.com
+servers:
+  - url: http://localhost:5000/api/v1
+tags:
+  - name: users
+    description: Operations about users
+  - name: events
+    description: Operations about events
+  - name: projects
+    description: Operations about projects
+  - name: equipment
+    description: Operations about equipment rentals
+  - name: membership
+    description: Operations about membership plans and requests
+
+paths:
+  /users:
+    get:
+      summary: Admin List all users
+      tags:
+        - users
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:    
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+  /users/my:
+    get:
+      summary: Get current user
+      tags:
+        - users
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      summary: Update current user
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /users/{userId}:
+    get:
+      summary: Admin Get a user by ID
+      tags:
+        - users
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:    
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      summary: Admin Update a user
+      tags:
+        - users
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:    
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      summary: Admin Delete a user
+      tags:
+        - users
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:    
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: string
+
+  /subscriptions:
+    get:
+      summary: Get users all current subscriptions
+      tags:
+        - subscriptions
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+
+    post:
+      summary: User subscribes to a company or an event
+      tags:
+        - subscriptions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: ['company', 'event']
+                id:
+                  type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:    
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: string
+
+    delete:
+      summary: User unsubscribes to a company or an event
+      tags:
+        - subscriptions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: ['company', 'event']
+                id:
+                  type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:    
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: string
+
+  /events:
+    get:
+      summary: List all events
+      tags:
+        - events
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:    
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+    post:
+      summary: Create a new event
+      tags:
+        - events
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:    
+              schema:
+                $ref: '#/components/schemas/Event'
+
+  /events/{eventId}:
+    get:
+      summary: Get an event by ID
+      tags:
+        - events
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:    
+              schema:
+                $ref: '#/components/schemas/Event'
+
+  /projects:
+    get:
+      summary: List all projects
+      tags:
+        - projects
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:    
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+    post:
+      summary: Create a new project
+      tags:
+        - projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:    
+              schema:
+                $ref: '#/components/schemas/Project'
+
+  /equipment-rentals:
+    get:
+      summary: List all equipment rentals
+      tags:
+        - equipment
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:    
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EquipmentRental'
+    post:
+      summary: Create a new equipment rental
+      tags:
+        - equipment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EquipmentRental'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:    
+              schema:
+                $ref: '#/components/schemas/EquipmentRental'
+
+  /companies:
+    get:
+      summary: List all companies
+      tags:
+        - company
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Company'
+    post:
+      summary: Create a new company
+      tags:
+        - company
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyCreation'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:    
+              schema:
+                $ref: '#/components/schemas/Company'
+  
+  /membership-requests:
+    get:
+      summary: List all membership requests
+      tags:
+        - membership
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:    
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MembershipRequest'
+    post:
+      summary: Create a new membership request
+      tags:
+        - membership
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MembershipRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:    
+              schema:
+                $ref: '#/components/schemas/MembershipRequest'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        major:
+          type: string
+        grad_date:
+          type: string
+          format: date
+        interests:
+          type: array
+          items:
+            type: string
+            enum: [web_development, machine_learning, cloud_computing, artificial_intelligence]
+        profile_pic:
+          type: string
+
+    Event:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        location:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        description:
+          type: string
+        event_type:
+          type: string
+          enum: [workshop, seminar, hackathon, conference, meetup, test, other]
+        event_capacity:
+          type: integer
+        image:
+          type: string
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        tags:
+          type: array
+          items:
+            type: string
+            enum: [web_development, machine_learning, cloud_computing, artificial_intelligence]
+        target_audience:
+          type: string
+          enum: [students]
+
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        github_link:
+          type: string
+
+    EquipmentRental:
+      type: object
+      properties:
+        item_id:
+          type: integer
+        user_id:
+          type: integer
+        date_borrowed:
+          type: string
+          format: date
+        return_date:
+          type: string
+          format: date
+        price:
+          type: number
+        condition:
+          type: string
+          enum: [ready, broken, in_maintenance]
+
+    MembershipRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        status:
+          type: string
+          enum: [pending, approved, declined]
+        note:
+          type: string
+        plan_id:
+          type: integer
+        user_id:
+          type: integer
+    
+    Company:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        location:
+          type: string
+        description:
+           type: string
+        industries:
+          type: array
+          items:
+            type: string
+
+    CompanyCreation:
+      type: object
+      properties:
+        name:
+          type: string
+        location:
+          type: string
+        description:
+           type: string
+        industries:
+          type: array
+          items:
+            type: string
