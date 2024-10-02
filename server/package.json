@@ -6,7 +6,9 @@
 		"lint": "eslint .",
 		"typecheck": "tsc --noEmit --skipLibCheck",
 		"build": "bun build ./src/index.ts --outdir ./dist",
-		"precommit": "bun lint && bun typecheck && bun test"
+		"precommit": "bun lint && bun typecheck && bun test",
+		"docs": "bunx @redocly/cli build-docs ./docs/openapi.yml --output ./docs/index.html",
+		"docs:serve": "bunx live-server ./docs"
 	},
 	"dependencies": {
 		"hono": "^4.6.3"
