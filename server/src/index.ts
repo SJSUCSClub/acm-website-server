@@ -6,9 +6,12 @@ const app = new Hono();
 
 app.use('/*', cors());
 app.get('/', (c) =>
-  c.json({
-    status: 'ok',
-  }),
+  c.json(
+    {
+      status: 'ok',
+    },
+    200,
+  ),
 );
 
 // V1 API

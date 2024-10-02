@@ -1,3 +1,5 @@
 .env
 
 .DS_Store
+
+pg_password.txt
