@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - '**' # currently run on all branches
+      - "**" # currently run on all branches
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -14,23 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+      - uses: ./.github/actions/setup
         with:
-          bun-version: latest
-
-      - name: Cache Bun dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
-          restore-keys: |
-            ${{ runner.os }}-bun-
-
-      - name: Install dependencies
-        run: |
-          cd server
-          bun install
+          os: ${{ runner.os }}
 
       - name: Run tests
         run: |
@@ -41,24 +27,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
         with:
-          bun-version: latest
+          ref: ${{ github.event.pull_request.head.ref }}
 
-      - name: Cache Bun dependencies
-        uses: actions/cache@v4
+      - uses: ./.github/actions/setup
         with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
-          restore-keys: |
-            ${{ runner.os }}-bun-
+          os: ${{ runner.os }}
 
-      - name: Install dependencies
+      - name: Lint fix
         run: |
-          cd server
-          bun install
+          cd server/
+          bun lint --fix
+
+      - name: Commit lint fix
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git diff --exit-code > /dev/null
+          then
+            git commit -a -m "lint fix"
+            git push
+          fi
 
       - name: Run linter
         run: |
@@ -70,23 +59,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+      - uses: ./.github/actions/setup
         with:
-          bun-version: latest
-
-      - name: Cache Bun dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
-          restore-keys: |
-            ${{ runner.os }}-bun-
-
-      - name: Install dependencies
-        run: |
-          cd server
-          bun install
+          os: ${{ runner.os }}
 
       - name: Run typecheck
         run: |
