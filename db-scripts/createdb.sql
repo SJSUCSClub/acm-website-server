@@ -19,8 +19,8 @@ create table if not exists majors(
 );
 
 create table if not exists users(
-   id serial,
-   created_at timestamp not null default CURRENT_TIMESTAMP,
+   id text not null,
+   created_at timestamp not null,
    name text not null,
    email text not null,
    major text not null,
@@ -32,10 +32,19 @@ create table if not exists users(
 );
 
 create table if not exists session(
-   id serial,
-   user_id integer not null,
-   created_at timestamp not null default CURRENT_TIMESTAMP,
-   expires_at timestamp not null,
+   id text not null,
+   user_id text not null,
+   created_at timestamp not null,
+   active_expires number not null,
+   idle_expires number not null,
+   PRIMARY KEY(id),
+   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade
+);
+
+create table if not exists key(
+   id text not null,
+   user_id text not null,
+   hashed_password text,
    PRIMARY KEY(id),
    FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade
 );
