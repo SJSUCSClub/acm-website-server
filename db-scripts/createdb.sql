@@ -57,6 +57,18 @@ create table if not exists equipment_item(
    FOREIGN KEY(equipment_type) REFERENCES equipment_rental_type(id) on update cascade
 );
 
+create table if not exists equipment_rentals(
+   item_id integer not null,
+   user_id integer,
+   date_borrowed date not null default current_date,
+   return_date date not null,
+   price money not null,
+   condition equipment_condition_enum not null default 'ready',
+   PRIMARY KEY(user_id, item_id),
+   FOREIGN KEY(item_id) REFERENCES equipment_item(id) on update cascade,
+   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete set null
+);
+
 create table if not exists blacklist(
    user_id integer not null,
    reason text not null,
