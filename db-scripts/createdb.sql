@@ -1,4 +1,5 @@
-create database acm_website if not exists;
+SELECT 'CREATE DATABASE acm_website' 
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'acm_website')\gexec
 
 \c acm_website;
 
@@ -35,8 +36,8 @@ create table if not exists session(
    id text not null,
    user_id text not null,
    created_at timestamp not null,
-   active_expires number not null,
-   idle_expires number not null,
+   active_expires BIGINT not null,
+   idle_expires BIGINT not null,
    PRIMARY KEY(id),
    FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade
 );
