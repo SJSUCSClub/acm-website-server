@@ -41,7 +41,7 @@ create table if not exists session(
    FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade
 );
 
-create table if not exists key(
+create table if not exists user_key(
    id text not null,
    user_id text not null,
    hashed_password text,
@@ -68,7 +68,7 @@ create table if not exists equipment_item(
 
 create table if not exists equipment_rentals(
    item_id integer not null,
-   user_id integer,
+   user_id text,
    date_borrowed date not null default current_date,
    return_date date not null,
    price money not null,
@@ -79,7 +79,7 @@ create table if not exists equipment_rentals(
 );
 
 create table if not exists blacklist(
-   user_id integer not null,
+   user_id text not null,
    reason text not null,
    date_blacklisted timestamp not null default CURRENT_TIMESTAMP,
    PRIMARY KEY(user_id),
@@ -130,7 +130,7 @@ create table if not exists events_files(
 );
 
 create table if not exists bookmarked_events(
-   user_id integer not null,
+   user_id text not null,
    event_id integer not null,
    bookmarked_date timestamp not null default CURRENT_TIMESTAMP,
    PRIMARY KEY(user_id, event_id),
@@ -139,7 +139,7 @@ create table if not exists bookmarked_events(
 );
 
 create table if not exists subscribed_events(
-   user_id integer not null,
+   user_id text not null,
    event_id integer not null,
    subscribed_date timestamp not null default CURRENT_TIMESTAMP,
    PRIMARY KEY(user_id, event_id),
@@ -167,7 +167,7 @@ create table if not exists event_companies(
 );
 
 create table if not exists subscribed_companies(
-   user_id integer not null,
+   user_id text not null,
    company_id integer not null,
    subscribed_date timestamp not null default CURRENT_TIMESTAMP,
    PRIMARY KEY(user_id, company_id),
@@ -192,7 +192,7 @@ create table if not exists projects_files(
 );
 
 create table if not exists interested_in_projects(
-   user_id integer not null,
+   user_id text not null,
    project_id integer not null,
    PRIMARY KEY(user_id, project_id),
    FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade,
@@ -201,10 +201,12 @@ create table if not exists interested_in_projects(
 
 create table if not exists officers(
    id serial,
+   user_id text not null,
    position officer_position_enum not null,
    linkedin text,
    photo text,
    PRIMARY KEY(id),
+   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade,
    FOREIGN KEY(photo) REFERENCES files(key) on update cascade
 );
 
@@ -228,7 +230,7 @@ $$ language plpgsql
 stable
 returns null on null input;
 
-create or replace function is_user_alumni(user_id integer)
+create or replace function is_user_alumni(user_id text)
 returns boolean as $$
 declare
   user_grad_date date;
