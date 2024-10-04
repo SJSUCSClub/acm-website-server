@@ -21,3 +21,16 @@ To shutdown the server and remove associated volume, run:
 ```sh
 docker compose -f docker-compose.dev.yml down -v
 ```
+
+## Documentation
+
+Generate the documentation with:
+
+```sh
+bun run docs
+```
+
+Show Docs
+```sh
+bun run docs:serve
+```
