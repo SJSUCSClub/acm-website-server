@@ -11,7 +11,7 @@ create type equipment_condition_enum as enum ('ready', 'broken', 'in maintenance
 create type membership_term_enum as enum ('semester', 'annual');
 create type membership_request_status_enum as enum ('pending', 'approved', 'declined');
 create type industry_enum as enum ('investment banking', 'aerospace', 'healthcare');
-create type officer_position_enum as enum ('president', 'vice president', 'dev team officer', 'treasurer', 'social media manager');
+create type position as enum ('member', 'admin');
 
 create table if not exists majors(
    name text not null,
@@ -25,6 +25,7 @@ create table if not exists users(
    email text not null,
    major text not null,
    grad_date Date not null,
+   role position not null default 'member',
    interests cs_fields_enum[] not null default '{}'::cs_fields_enum[],
    profile_pic text,
    PRIMARY KEY(id),
@@ -197,15 +198,6 @@ create table if not exists interested_in_projects(
    PRIMARY KEY(user_id, project_id),
    FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade,
    FOREIGN KEY(project_id) REFERENCES projects(id) on update cascade on delete cascade
-);
-
-create table if not exists officers(
-   id serial,
-   position officer_position_enum not null,
-   linkedin text,
-   photo text,
-   PRIMARY KEY(id),
-   FOREIGN KEY(photo) REFERENCES files(key) on update cascade
 );
 
 create index projects_name_trgm_idx on projects using gin (name gin_trgm_ops);
