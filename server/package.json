@@ -11,13 +11,19 @@
 		"docs:serve": "bunx live-server ./docs"
 	},
 	"dependencies": {
-		"hono": "^4.6.3"
+		"drizzle-orm": "^0.33.0",
+		"hono": "^4.6.3",
+		"pg": "^8.13.0"
 	},
 	"devDependencies": {
 		"@types/bun": "^1.1.10",
+		"@types/pg": "^8.11.10",
 		"@typescript-eslint/eslint-plugin": "^8.7.0",
 		"@typescript-eslint/parser": "^8.7.0",
+		"dotenv": "^16.4.5",
+		"drizzle-kit": "^0.24.2",
 		"eslint": "^9.11.1",
+		"eslint-plugin-drizzle": "0.2.3",
 		"typescript": "5.5.3",
 		"typescript-eslint": "^8.7.0"
 	}

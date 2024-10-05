@@ -54,7 +54,8 @@ create table if not exists equipment_rental_type(
    id serial,
    created_at timestamp not null default CURRENT_TIMESTAMP,
    name text not null,
-   price money not null,
+--   price money not null,
+   price numeric(10,2) not null,
    description text,
    PRIMARY KEY(id)
 );
@@ -72,7 +73,8 @@ create table if not exists equipment_rentals(
    user_id text,
    date_borrowed date not null default current_date,
    return_date date not null,
-   price money not null,
+--   price money not null,
+   price numeric(10,2) not null,
    condition equipment_condition_enum not null default 'ready',
    PRIMARY KEY(user_id, item_id),
    FOREIGN KEY(item_id) REFERENCES equipment_item(id) on update cascade,
