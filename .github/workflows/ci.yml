@@ -21,7 +21,7 @@ jobs:
             bun run typecheck
 
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubunut-latest
     steps:
         - uses: actions/checkout@v4
           with:
