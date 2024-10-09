@@ -1,4 +1,5 @@
-create database acm_website if not exists;
+SELECT 'CREATE DATABASE acm_website' 
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'acm_website')\gexec
 
 \c acm_website;
 
@@ -35,8 +36,8 @@ create table if not exists session(
    id text not null,
    user_id text not null,
    created_at timestamp not null,
-   active_expires number not null,
-   idle_expires number not null,
+   active_expires BIGINT not null,
+   idle_expires BIGINT not null,
    PRIMARY KEY(id),
    FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade
 );
@@ -53,7 +54,8 @@ create table if not exists equipment_rental_type(
    id serial,
    created_at timestamp not null default CURRENT_TIMESTAMP,
    name text not null,
-   price money not null,
+--   price money not null,
+   price numeric(10,2) not null,
    description text,
    PRIMARY KEY(id)
 );
@@ -71,7 +73,8 @@ create table if not exists equipment_rentals(
    user_id text,
    date_borrowed date not null default current_date,
    return_date date not null,
-   price money not null,
+--   price money not null,
+   price numeric(10,2) not null,
    condition equipment_condition_enum not null default 'ready',
    PRIMARY KEY(user_id, item_id),
    FOREIGN KEY(item_id) REFERENCES equipment_item(id) on update cascade,
