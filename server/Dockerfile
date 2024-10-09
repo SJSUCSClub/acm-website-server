@@ -10,4 +10,3 @@ FROM install as run
 COPY . /app
 EXPOSE 5001
 CMD ["bun", "run", "dev"]
-
