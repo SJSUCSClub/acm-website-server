@@ -7,7 +7,7 @@ on:
 
 jobs:
   typecheck:
-    runs-on: ubunut-latest
+    runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v4
         
@@ -15,7 +15,7 @@ jobs:
           run: |
             docker build --target=typecheck --no-cache .
   lint:
-    runs-on: ubunut-latest
+    runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v4
         
@@ -31,15 +31,17 @@ jobs:
         ports:
           - 5432:5432
         volumes:
-          - acm_website_db_data:/var/lib/postgresql/data
           - ./db-scripts:/docker-entrypoint-initdb.d/
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: acm_website
         options: >-
           --health-cmd "pg_isready -U postgres"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 5
           --health-start-period 15s
-          --env-file .env
     steps:
       - uses: actions/checkout@v4 
 
