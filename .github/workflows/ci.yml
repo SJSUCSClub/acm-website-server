@@ -13,6 +13,7 @@ jobs:
         
         - name: Typecheck
           run: |
+            cd ./server
             docker build --target=typecheck --no-cache .
   lint:
     runs-on: ubuntu-latest
@@ -21,6 +22,7 @@ jobs:
         
         - name: Lint check
           run: |
+            cd ./server
             docker build --target=lint --no-cache .
 
   test:
@@ -47,6 +49,7 @@ jobs:
 
       - name: Test
         run: |
+          cd ./server
           docker build --target=test --no-cache .
 
   build:
@@ -57,4 +60,5 @@ jobs:
 
       - name: Build
         run: |
+          cd ./server
           docker build --target=run --no-cache .
