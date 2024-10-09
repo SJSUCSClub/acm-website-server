@@ -1,4 +1,5 @@
-create database acm_website;
+SELECT 'CREATE DATABASE acm_website' 
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'acm_website')\gexec
 
 \c acm_website;
 
@@ -19,8 +20,8 @@ create table if not exists majors(
 );
 
 create table if not exists users(
-   id serial,
-   created_at timestamp not null default CURRENT_TIMESTAMP,
+   id text not null,
+   created_at timestamp not null,
    name text not null,
    email text not null,
    major text not null,
@@ -31,11 +32,30 @@ create table if not exists users(
    foreign key(major) references majors(name) on update cascade
 );
 
+create table if not exists session(
+   id text not null,
+   user_id text not null,
+   created_at timestamp not null,
+   active_expires BIGINT not null,
+   idle_expires BIGINT not null,
+   PRIMARY KEY(id),
+   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade
+);
+
+create table if not exists user_key(
+   id text not null,
+   user_id text not null,
+   hashed_password text,
+   PRIMARY KEY(id),
+   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade
+);
+
 create table if not exists equipment_rental_type(
    id serial,
    created_at timestamp not null default CURRENT_TIMESTAMP,
    name text not null,
-   price money not null,
+--   price money not null,
+   price numeric(10,2) not null,
    description text,
    PRIMARY KEY(id)
 );
@@ -50,61 +70,23 @@ create table if not exists equipment_item(
 
 create table if not exists equipment_rentals(
    item_id integer not null,
-   user_id integer not null,
+   user_id text,
    date_borrowed date not null default current_date,
    return_date date not null,
-   price money not null,
+--   price money not null,
+   price numeric(10,2) not null,
    condition equipment_condition_enum not null default 'ready',
    PRIMARY KEY(user_id, item_id),
    FOREIGN KEY(item_id) REFERENCES equipment_item(id) on update cascade,
-   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade
-);
-
-create table if not exists payments(
-   payment_id serial,
-   method text not null,
-   PRIMARY KEY(payment_id)
-);
-
-create table if not exists membership_plan(
-   id serial,
-   name text not null,
-   term membership_term_enum not null,
-   price integer not null,
-   PRIMARY KEY(id)
-);
-
-create table if not exists membership_requests(
-   id serial,
-   status membership_request_status_enum not null,
-   note text,
-   plan_id integer not null,
-   user_id integer not null,
-   PRIMARY KEY(id),
-   FOREIGN KEY(plan_id) REFERENCES membership_plan(id) on update cascade,
-   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade
-);
-
-create table if not exists membership(
-   id serial,
-   user_id integer not null,
-   start_date timestamp not null default CURRENT_TIMESTAMP,
-   end_date timestamp not null,
-   is_active boolean default true,
-   payment_id integer not null,
-   plan_id integer not null,
-   PRIMARY KEY(id),
-   FOREIGN KEY(plan_id) REFERENCES membership_plan(id),
-   FOREIGN KEY(payment_id) REFERENCES payments(payment_id),
-   FOREIGN KEY(user_id) REFERENCES users(id)
+   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete set null
 );
 
 create table if not exists blacklist(
-   user_id integer not null,
+   user_id text not null,
    reason text not null,
    date_blacklisted timestamp not null default CURRENT_TIMESTAMP,
    PRIMARY KEY(user_id),
-   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade
+   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade
 );
 
 create table if not exists urls(
@@ -146,26 +128,26 @@ create table if not exists events_files(
    event_id integer not null,
    file_key text not null,
    primary key(event_id, file_key),
-   foreign key(event_id) references events(id) on update cascade,
-   foreign key(file_key) references files(key) on update cascade
+   foreign key(event_id) references events(id) on update cascade on delete cascade,
+   foreign key(file_key) references files(key) on update cascade on delete cascade
 );
 
 create table if not exists bookmarked_events(
-   user_id integer not null,
+   user_id text not null,
    event_id integer not null,
    bookmarked_date timestamp not null default CURRENT_TIMESTAMP,
    PRIMARY KEY(user_id, event_id),
-   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade,
-   FOREIGN KEY(event_id) REFERENCES events(id) on update cascade
+   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade,
+   FOREIGN KEY(event_id) REFERENCES events(id) on update cascade on delete cascade
 );
 
 create table if not exists subscribed_events(
-   user_id integer not null,
+   user_id text not null,
    event_id integer not null,
    subscribed_date timestamp not null default CURRENT_TIMESTAMP,
    PRIMARY KEY(user_id, event_id),
-   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade,
-   FOREIGN KEY(event_id) REFERENCES events(id) on update cascade
+   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade,
+   FOREIGN KEY(event_id) REFERENCES events(id) on update cascade on delete cascade
 );
 
 create table if not exists companies(
@@ -183,17 +165,17 @@ create table if not exists event_companies(
    event_id integer not null,
    company_id integer not null,
    PRIMARY KEY(event_id, company_id),
-   FOREIGN KEY(event_id) REFERENCES events(id),
-   FOREIGN KEY(company_id) REFERENCES companies(id)
+   FOREIGN KEY(event_id) REFERENCES events(id) on delete cascade,
+   FOREIGN KEY(company_id) REFERENCES companies(id) on delete cascade
 );
 
 create table if not exists subscribed_companies(
-   user_id integer not null,
+   user_id text not null,
    company_id integer not null,
    subscribed_date timestamp not null default CURRENT_TIMESTAMP,
    PRIMARY KEY(user_id, company_id),
-   FOREIGN KEY(user_id) REFERENCES users(id),
-   FOREIGN KEY(company_id) REFERENCES companies(id)
+   FOREIGN KEY(user_id) REFERENCES users(id) on delete cascade,
+   FOREIGN KEY(company_id) REFERENCES companies(id) on delete cascade
 );
 
 create table if not exists projects(
@@ -208,24 +190,26 @@ create table if not exists projects_files(
    project_id integer not null,
    file_key text not null,
    primary key(project_id, file_key),
-   foreign key(project_id) references projects(id) on update cascade,
-   foreign key(file_key) references files(key) on update cascade
+   foreign key(project_id) references projects(id) on update cascade on delete cascade,
+   foreign key(file_key) references files(key) on update cascade on delete cascade
 );
 
 create table if not exists interested_in_projects(
-   user_id integer not null,
+   user_id text not null,
    project_id integer not null,
    PRIMARY KEY(user_id, project_id),
-   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade,
-   FOREIGN KEY(project_id) REFERENCES projects(id) on update cascade
+   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade,
+   FOREIGN KEY(project_id) REFERENCES projects(id) on update cascade on delete cascade
 );
 
 create table if not exists officers(
    id serial,
+   user_id text not null,
    position officer_position_enum not null,
    linkedin text,
    photo text,
    PRIMARY KEY(id),
+   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade,
    FOREIGN KEY(photo) REFERENCES files(key) on update cascade
 );
 
@@ -249,7 +233,7 @@ $$ language plpgsql
 stable
 returns null on null input;
 
-create or replace function is_user_alumni(user_id integer)
+create or replace function is_user_alumni(user_id text)
 returns boolean as $$
 declare
   user_grad_date date;

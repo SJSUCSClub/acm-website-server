@@ -4,7 +4,7 @@ services:
       context: ./server
       dockerfile: Dockerfile.dev
     ports:
-      - '5001:5001'
+      - "5001:5001"
     volumes:
       - ./server:/app
       - /app/node_modules
@@ -12,16 +12,26 @@ services:
       - NODE_ENV=development
     env_file:
       - .env
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
 
   db:
     image: postgres:latest
     ports:
-      - '5432:5432'
+      - "5432:5432"
     env_file:
       - .env
     volumes:
       - acm_website_db_data:/var/lib/postgresql/data
       - ./db-scripts:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
 
 volumes:
   acm_website_db_data:

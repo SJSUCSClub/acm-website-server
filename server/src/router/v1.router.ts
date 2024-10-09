@@ -4,7 +4,7 @@ import users from './v1/users';
 import events from './v1/events';
 import company from './v1/company';
 import equipment from './v1/equipment';
-import project from './v1/project';
+import project from './v1/projects';
 import majors from './v1/majors';
 import officers from './v1/officers';
 
