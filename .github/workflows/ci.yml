@@ -91,4 +91,3 @@ jobs:
         run: |
           cd ./server
           docker build --target=run --no-cache .
-          
