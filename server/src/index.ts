@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import v1App from './router/v1/v1.router';
+import v1App from './router/v1.router';
 
 const app = new Hono();
 
