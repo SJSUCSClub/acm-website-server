@@ -10,20 +10,46 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v4
-        
-        - name: Typecheck
+  
+        - uses: ./.github/actions/setup
+          with:
+            os: ${{ runner.os }}
+
+        - name: Run typecheck
           run: |
-            cd ./server
-            docker build --target=typecheck --no-cache .
+            cd server
+            bun run typecheck
+
   lint:
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v4
-        
-        - name: Lint check
+          with:
+            ref: ${{ github.event.pull_request.head.ref }}
+
+        - uses: ./.github/actions/setup
+          with:
+            os: ${{ runner.os }}
+
+        - name: Lint fix
           run: |
-            cd ./server
-            docker build --target=lint --no-cache .
+            cd server/
+            bun lint --fix
+
+        - name: Commit lint fix
+          run: |
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "github-actions[bot]@users.noreply.github.com"
+            if ! git diff --exit-code > /dev/null
+            then
+              git commit -a -m "lint fix"
+              git push
+            fi
+
+        - name: Run linter
+          run: |
+            cd server
+            bun run lint
 
   test:
     runs-on: ubuntu-latest
@@ -46,11 +72,14 @@ jobs:
           --health-start-period 15s
     steps:
       - uses: actions/checkout@v4 
+      - uses: ./.github/actions/setup
+        with:
+          os: ${{ runner.os }}
 
-      - name: Test
+      - name: Run tests
         run: |
-          cd ./server
-          docker build --target=test --no-cache .
+          cd server
+          bun test
 
   build:
     needs: [typecheck, lint, test]
