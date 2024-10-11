@@ -265,6 +265,7 @@ returns null on null input;
 --stable
 --returns null on null input;
 insert into majors(name) values
+('Undeclared'),
 ('Advertising, BS'),
 ('Aerospace Engineering, BS'),
 ('African American Studies, BA'),
