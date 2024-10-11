@@ -264,3 +264,15 @@ returns null on null input;
 --$$ language plpgsql
 --stable
 --returns null on null input;
+
+CREATE OR REPLACE FUNCTION isalum(personId integer) RETURNS BOOLEAN LANGUAGE plpgsql AS
+$$
+DECLARE
+gradDate date;
+cDate date;
+BEGIN
+SELECT users.grad_date FROM users WHERE users.id = personId INTO gradDate;
+SELECT CURRENT_DATE INTO cDate;
+RETURN gradDate <= cDate;
+END;
+$$;
