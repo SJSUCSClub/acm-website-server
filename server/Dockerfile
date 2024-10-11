@@ -19,3 +19,4 @@ RUN bun test
 FROM install as run
 EXPOSE 5001
 CMD ["bun", "run", "dev"]
+
