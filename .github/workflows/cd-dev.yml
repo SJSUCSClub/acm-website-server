@@ -38,10 +38,10 @@ jobs:
             
             - name: SCP core files
               run: |
-                scp -r docker-compose.yml nginx.conf db-scripts/ .env ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }}:~/
+                scp -i ~/.ssh/id_rsa -r docker-compose.yml nginx.conf db-scripts/ .env ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }}:~/
 
             - name: SSH into server
               run: |
-                ssh -o StrictHostKeyChecking=no ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }}
+                ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }}
                 docker compose down
                 docker compose up --build -d
