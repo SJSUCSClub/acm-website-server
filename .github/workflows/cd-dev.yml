@@ -33,9 +33,12 @@ jobs:
             - name: Setup ssh
               run: |
                 mkdir -p ~/.ssh
-                printf "%s" "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+                echo "$SSH_KEY" > ~/.ssh/id_rsa
                 chmod 600 ~/.ssh/id_rsa
                 cat ~/.ssh/id_rsa 
+              shell: bash
+              env:
+                SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }} 
             
             - name: SCP core files
               run: |
