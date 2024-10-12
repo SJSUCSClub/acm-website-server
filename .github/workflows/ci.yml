@@ -2,18 +2,76 @@ name: CI
 
 on:
   push:
-    branches:
-      - "**" # currently run on all branches
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v4
+  
+        - uses: ./.github/actions/setup
+          with:
+            os: ${{ runner.os }}
+
+        - name: Run typecheck
+          run: |
+            cd server
+            bun run typecheck
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v4
+          with:
+            ref: ${{ github.event.pull_request.head.ref }}
+
+        - uses: ./.github/actions/setup
+          with:
+            os: ${{ runner.os }}
+
+        - name: Lint fix
+          run: |
+            cd server/
+            bun lint --fix
+
+        - name: Commit lint fix
+          run: |
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "github-actions[bot]@users.noreply.github.com"
+            if ! git diff --exit-code > /dev/null
+            then
+              git commit -a -m "lint fix"
+              git push
+            fi
+
+        - name: Run linter
+          run: |
+            cd server
+            bun run lint
+
   test:
     runs-on: ubuntu-latest
-
+    services:
+      db:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        volumes:
+          - ./db-scripts:/docker-entrypoint-initdb.d/
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: acm_website
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+          --health-start-period 15s
     steps:
-      - uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4 
       - uses: ./.github/actions/setup
         with:
           os: ${{ runner.os }}
@@ -23,55 +81,14 @@ jobs:
           cd server
           bun test
 
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-
-      - uses: ./.github/actions/setup
-        with:
-          os: ${{ runner.os }}
-
-      - name: Lint fix
-        run: |
-          cd server/
-          bun lint --fix
-
-      - name: Commit lint fix
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          if ! git diff --exit-code > /dev/null
-          then
-            git commit -a -m "lint fix"
-            git push
-          fi
-
-      - name: Run linter
-        run: |
-          cd server
-          bun run lint
-
-  typecheck:
+  build:
+    needs: [typecheck, lint, test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - uses: ./.github/actions/setup
-        with:
-          os: ${{ runner.os }}
-
-      - name: Run typecheck
+      - name: Build
         run: |
-          cd server
-          bun run typecheck
-
-  pr-check:
-    if: github.event_name == 'pull_request'
-    needs: [test, lint, typecheck]
-    runs-on: ubuntu-latest
-    steps:
-      - name: PR is ready to be merged
-        run: echo "All checks passed. PR is ready to be merged."
+          cd ./server
+          docker build --target=run --no-cache .
+          
