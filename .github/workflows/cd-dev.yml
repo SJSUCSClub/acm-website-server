@@ -33,10 +33,12 @@ jobs:
             - name: Setup private key
               run: |
                 mkdir -p $GITHUB_WORKSPACE/.ssh
-                ls -a
-                'printf "%s" "$SSH_KEY" > $GITHUB_WORKSPACE/.ssh/id_rsa'
-                chmod 600 $GITHUB_WORKSPACE/.ssh/id_rsa
+                ls -a $GITHUB_WORKSPACE/.ssh
+                touch $GITHUB_WORKSPACE/.ssh/id_rsa  
+                ls -a $GITHUB_WORKSPACE/.ssh
                 cat $GITHUB_WORKSPACE/.ssh/id_rsa 
+                echo "$SSH_KEY" > $GITHUB_WORKSPACE/.ssh/id_rsa
+                chmod 600 $GITHUB_WORKSPACE/.ssh/id_rsa
               shell: bash
               env:
                 SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }} 
