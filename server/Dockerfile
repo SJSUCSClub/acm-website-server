@@ -7,6 +7,6 @@ COPY package.json bun.lockb ./
 RUN bun install
 
 FROM install as run
-COPY ./server /app
+COPY . /app
 EXPOSE 5001
 CMD ["bun", "run", "dev"]
