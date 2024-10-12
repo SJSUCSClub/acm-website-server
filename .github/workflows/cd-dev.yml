@@ -33,12 +33,13 @@ jobs:
             - name: Setup ssh
               run: |
                 mkdir -p ~/.ssh
-                echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+                printf "%s" "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
                 chmod 600 ~/.ssh/id_rsa
             
             - name: SCP core files
               run: |
-                scp -i ~/.ssh/id_rsa -r docker-compose.yml nginx.conf db-scripts/ .env ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }}:~/
+                scp -r docker-compose.yml nginx.conf db-scripts/ .env ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }}:~/
+
 
 
 
