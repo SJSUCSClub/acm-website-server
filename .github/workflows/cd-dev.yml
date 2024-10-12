@@ -33,6 +33,7 @@ jobs:
             - name: Setup ssh
               run: |
                 mkdir -p ~/.ssh
+                ls -a
                 'echo "$SSH_KEY" > ~/.ssh/id_rsa'
                 chmod 600 ~/.ssh/id_rsa
                 cat ~/.ssh/id_rsa 
