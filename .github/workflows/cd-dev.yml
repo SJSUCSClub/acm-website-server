@@ -9,7 +9,7 @@ on:
 jobs:
     deploy:
         name: Deploy
-        # if: github.event.workflow_run.head_branch == 'develop'
+        if: github.event.workflow_run.head_branch == 'develop'
         runs-on: ubuntu-latest
         environment: Development
         steps:
@@ -30,10 +30,11 @@ jobs:
               run: |
                 docker push ${{ secrets.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}:latest
             
-            - name: Setup ssh
+            - name: Setup private key
               run: |
                 mkdir -p $GITHUB_WORKSPACE/.ssh
                 ls -a
+                touch $GITHUB_WORKSPACE/.ssh/id_rsa
                 'echo "$SSH_KEY" > $GITHUB_WORKSPACE/.ssh/id_rsa'
                 chmod 600 $GITHUB_WORKSPACE/.ssh/id_rsa
                 cat $GITHUB_WORKSPACE/.ssh/id_rsa 
