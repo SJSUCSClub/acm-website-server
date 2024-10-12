@@ -40,6 +40,7 @@ jobs:
               run: |
                 scp -i ~/.ssh/id_rsa -r docker-compose.yml nginx.conf db-scripts/ .env ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }}:~/
 
+
             - name: SSH into server
               run: |
                 ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }}
