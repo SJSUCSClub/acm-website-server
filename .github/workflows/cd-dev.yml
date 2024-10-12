@@ -35,7 +35,7 @@ jobs:
                 mkdir -p $GITHUB_WORKSPACE/.ssh
                 ls -a
                 touch $GITHUB_WORKSPACE/.ssh/id_rsa
-                'echo "$SSH_KEY" > $GITHUB_WORKSPACE/.ssh/id_rsa'
+                'printf "%s" "$SSH_KEY" > $GITHUB_WORKSPACE/.ssh/id_rsa'
                 chmod 600 $GITHUB_WORKSPACE/.ssh/id_rsa
                 cat $GITHUB_WORKSPACE/.ssh/id_rsa 
               shell: bash
