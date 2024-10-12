@@ -33,10 +33,7 @@ jobs:
             - name: Setup private key
               run: |
                 mkdir -p $GITHUB_WORKSPACE/.ssh
-                ls -a $GITHUB_WORKSPACE/.ssh
                 touch $GITHUB_WORKSPACE/.ssh/id_rsa  
-                ls -a $GITHUB_WORKSPACE/.ssh
-                cat $GITHUB_WORKSPACE/.ssh/id_rsa 
                 echo "$SSH_KEY" > $GITHUB_WORKSPACE/.ssh/id_rsa
                 chmod 600 $GITHUB_WORKSPACE/.ssh/id_rsa
               shell: bash
@@ -45,11 +42,11 @@ jobs:
             
             - name: SCP core files
               run: |
-                scp -r docker-compose.yml nginx.conf db-scripts/ .env ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }}:~/
+                scp -i $GITHUB_WORKSPACE/.ssh/id_rsa -r docker-compose.yml nginx.conf db-scripts/ .env ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }}:~/
             
             - name: SSH into server
               run: |
-                ssh -o StrictHostKeyChecking=no ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }} 'bash -s' << 'EOF'
+                ssh -i $GITHUB_WORKSPACE/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }} 'bash -s' << 'EOF'
                   docker compose down
                   docker compose up --build -d
                 EOF
