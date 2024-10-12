@@ -35,14 +35,12 @@ jobs:
                 mkdir -p ~/.ssh
                 printf "%s" "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
                 chmod 600 ~/.ssh/id_rsa
+                cat ~/.ssh/id_rsa 
             
             - name: SCP core files
               run: |
                 scp -r docker-compose.yml nginx.conf db-scripts/ .env ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }}:~/
-
-
-
-
+            
             - name: SSH into server
               run: |
                 ssh -o StrictHostKeyChecking=no ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }} 'bash -s' << 'EOF'
