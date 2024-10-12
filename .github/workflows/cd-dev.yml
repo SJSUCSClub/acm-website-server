@@ -9,7 +9,7 @@ on:
 jobs:
     deploy:
         name: Deploy
-        if: github.event.workflow_run.head_branch == 'develop'
+        # if: github.event.workflow_run.head_branch == 'develop'
         runs-on: ubuntu-latest
         environment: Development
         steps:
@@ -33,7 +33,7 @@ jobs:
             - name: Setup ssh
               run: |
                 mkdir -p ~/.ssh
-                echo "$SSH_KEY" > ~/.ssh/id_rsa
+                'echo "$SSH_KEY" > ~/.ssh/id_rsa'
                 chmod 600 ~/.ssh/id_rsa
                 cat ~/.ssh/id_rsa 
               shell: bash
