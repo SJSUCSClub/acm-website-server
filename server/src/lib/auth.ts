@@ -1,22 +1,10 @@
 import { Lucia } from 'lucia';
 import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle';
 import { db } from '@/db/db';
-import { sessions, users } from '@/db/schema';
+import { sessions, User, users } from '@/db/schema';
 import { Google } from 'arctic';
-import { setCookie } from 'hono/cookie';
 const adapter = new DrizzlePostgreSQLAdapter(db, sessions, users);
 import { env } from '@/env';
-
-export interface DatabaseUserAttributes {
-	id: string;
-	createdAt: Date;
-	name: string;
-	email: string;
-	major: string;
-	gradDate: Date;
-	interests: ('web development' | 'machine learning' | 'cloud computing' | 'artificial intelligence')[];
-	profilePic: string | null;
-}
 
 export const lucia = new Lucia(adapter, {
 	sessionCookie: {
@@ -24,7 +12,7 @@ export const lucia = new Lucia(adapter, {
 			secure: env.NODE_ENV === 'production',
 		},
 	},
-	getUserAttributes: (attributes: DatabaseUserAttributes): DatabaseUserAttributes => ({
+	getUserAttributes: (attributes: User): User => ({
 		id: attributes.id,
 		createdAt: attributes.createdAt,
 		name: attributes.name,
@@ -33,6 +21,7 @@ export const lucia = new Lucia(adapter, {
 		gradDate: attributes.gradDate,
 		interests: attributes.interests,
 		profilePic: attributes.profilePic,
+		role: attributes.role,
 	}),
 });
 
@@ -45,30 +34,6 @@ export const googleAuth = new Google(
 declare module 'lucia' {
 	interface Register {
 		Lucia: typeof lucia;
-		DatabaseUserAttributes: DatabaseUserAttributes;
+		DatabaseUserAttributes: User;
 	}
-}
-
-import { Context, setUser, setSession } from '@/lib/context';
-
-export async function authMiddleware(c: Context, next: () => Promise<void>): Promise<void> {
-  const sessionId = c.req.cookie('session');
-  if (!sessionId) {
-    setUser(c, null);
-    setSession(c, null);
-    return next();
-  }
-
-  const { session, user } = await lucia.validateSession(sessionId);
-  if (session && session.fresh) {
-    const sessionCookie = lucia.createSessionCookie(session.id);
-    setCookie(c, sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-  }
-  if (!session) {
-    const sessionCookie = lucia.createBlankSessionCookie();
-    setCookie(c, sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-  }
-  setUser(c, user);
-  setSession(c, session);
-  await next();
 }

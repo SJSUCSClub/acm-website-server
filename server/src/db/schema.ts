@@ -15,6 +15,8 @@ export const majors = pgTable('majors', {
   name: text('name').primaryKey(),
 });
 
+export const userRoleEnum = pgEnum('user_role_enum', ['user', 'admin']);
+
 export const users = pgTable('users', {
   id: text('id').primaryKey(),
   createdAt: timestamp('created_at').notNull(),
@@ -24,6 +26,7 @@ export const users = pgTable('users', {
   gradDate: date('grad_date').notNull(),
   interests: csFieldsEnum('interests').array().notNull().default([]),
   profilePic: text('profile_pic'),
+  role: userRoleEnum('role').notNull().default('user'),
 });
 
 export const session = pgTable('session', {

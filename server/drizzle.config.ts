@@ -1,6 +1,4 @@
 import { defineConfig } from 'drizzle-kit';
-import * as dotenv from 'dotenv';
-dotenv.config();
 
 import { env } from './src/env';
 
@@ -9,11 +7,11 @@ export default defineConfig({
 	schema: './src/db/schema.ts',
 	out: './drizzle',
 	dbCredentials: {
-		host: env.POSTGRES_HOST || 'localhost',
-		port: env.POSTGRES_PORT || 5432,
-		user: env.POSTGRES_USER || 'postgres',
-		password: env.POSTGRES_PASSWORD || 'postgres',
-		database: env.POSTGRES_DB || 'acm_website',
+		host: env.POSTGRES_HOST,
+		port: env.POSTGRES_PORT,
+		user: env.POSTGRES_USER,
+		password: env.POSTGRES_PASSWORD,
+		database: env.POSTGRES_DB,
 		ssl: 'allow',
 	},
 	verbose: true,

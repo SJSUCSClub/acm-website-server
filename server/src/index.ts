@@ -6,9 +6,11 @@ import notFound from 'stoker/middlewares/not-found';
 import onError from 'stoker/middlewares/on-error';
 import { Context } from '@/lib/context';
 import { env } from '@/env';
+const app = new OpenAPIHono<Context>({ strict: false });
+import configureOpenAPI from '@/lib/configure-openapi';
+import { csrf } from 'hono/csrf';
 
-const app = new OpenAPIHono<Context>();
-
+app.use(csrf());
 app.use(pinoLogger());
 
 app.notFound(notFound);
@@ -29,6 +31,8 @@ app.get('/', c =>
 
 // V1 API
 app.route('/api/v1', v1App);
+
+configureOpenAPI(app);
 
 export default {
 	port: env.PORT || 5001,
