@@ -35,9 +35,8 @@ create table if not exists users(
 create table if not exists session(
    id text not null,
    user_id text not null,
-   created_at timestamp not null,
-   active_expires BIGINT not null,
-   idle_expires BIGINT not null,
+   created_at timestamp not null default CURRENT_TIMESTAMP,
+   expires_at timestamp not null,
    PRIMARY KEY(id),
    FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade
 );
@@ -264,3 +263,6 @@ returns null on null input;
 --$$ language plpgsql
 --stable
 --returns null on null input;
+
+
+INSERT INTO majors (name) VALUES ('Undeclared');
