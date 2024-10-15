@@ -1,13 +1,6 @@
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
-import { googleAuth } from '@/lib/auth';
 import { setCookie, getCookie } from 'hono/cookie';
-import { db } from '@/db/db';
-import { users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import type { User } from '@/db/schema';
-import { lucia } from '@/lib/auth';
-import { env } from '@/env';
-import type { Context } from '@/lib/context';
 import { z } from 'zod';
 import {
 	OK,
@@ -22,6 +15,13 @@ import {
 	//GoogleRefreshedTokens,
 	type GoogleTokens,
 } from 'arctic';
+
+import type { Context } from '@/lib/context';
+import { googleAuth, lucia } from '@/lib/auth';
+import { db } from '@/db/db';
+import { users } from '@/db/schema';
+import type { User } from '@/db/schema';
+import { env } from '@/env';
 import { authMiddleWare, unauthorizedRequest } from '@/middlewares/auth-middleware';
 
 const authRouter = new OpenAPIHono<Context>();

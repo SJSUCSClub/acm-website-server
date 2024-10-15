@@ -1,10 +1,11 @@
-import { UNAUTHORIZED } from 'stoker/http-status-codes';
 import { createMiddleware } from 'hono/factory';
-import { Context } from '@/lib/context';
-import { z } from 'zod';
-import { lucia } from '@/lib/auth';
 import { getCookie } from 'hono/cookie';
 import type { MiddlewareHandler } from 'hono';
+import { z } from 'zod';
+import { UNAUTHORIZED } from 'stoker/http-status-codes';
+
+import type { Context } from '@/lib/context';
+import { lucia } from '@/lib/auth';
 
 export const authMiddleWare = (role: 'user' | 'admin'): MiddlewareHandler => createMiddleware<Context>(async (c, next) => {
 	const sessionId = getCookie(c, lucia.sessionCookieName) ?? null;

@@ -1,14 +1,15 @@
+import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
+import { z } from 'zod';
+import { createSelectSchema } from 'drizzle-zod';
+import * as HttpStatusCodes from 'stoker/http-status-codes';
+
+import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
 import { users, projects } from '@/db/schema';
 import type { User, Project } from '@/db/schema';
-import authRouter from '@/router/v1/auth';
-import type { Context } from '@/lib/context';
-import { OpenAPIHono } from '@hono/zod-openapi';
-import { createRoute } from '@hono/zod-openapi';
-import * as HttpStatusCodes from 'stoker/http-status-codes';
-import { z } from 'zod';
-import { createSelectSchema } from 'drizzle-zod';
 import { authMiddleWare } from '@/middlewares/auth-middleware';
+
+import authRouter from '@/router/v1/auth';
 
 const v1App = new OpenAPIHono<Context>();
 
