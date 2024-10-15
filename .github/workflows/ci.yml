@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  test:
+  typecheck:
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -23,8 +23,68 @@ jobs:
           --health-retries 5
 
     steps:
-      - uses: actions/checkout@v4
+        - uses: actions/checkout@v4
+  
+        - uses: ./.github/actions/setup
+          with:
+            os: ${{ runner.os }}
 
+      - uses: ./.github/actions/setup
+        with:
+          os: ${{ runner.os }}
+      - name: Run typecheck
+        env:
+          NODE_ENV: test
+          PORT: 5001
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: acm_website
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REDIRECT_URI: http://localhost:5001/api/v1/auth/callback
+        run: |
+          docker run --network host \
+            -e NODE_ENV -e PORT -e POSTGRES_HOST -e POSTGRES_PORT -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB \
+            -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
+            acm-website-server bun typecheck
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v4
+          with:
+            ref: ${{ github.event.pull_request.head.ref }}
+
+        - uses: ./.github/actions/setup
+          with:
+            os: ${{ runner.os }}
+      - name: Run linter
+        run: |
+          docker run --network host acm-website-server bun run lint
+
+  db-test:
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        volumes:
+          - ./db-scripts:/docker-entrypoint-initdb.d/
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: acm_website
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+          --health-start-period 15s
+    steps:
+      - uses: actions/checkout@v4 
       - uses: ./.github/actions/setup
         with:
           os: ${{ runner.os }}
@@ -47,52 +107,14 @@ jobs:
             -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
             acm-website-server bun test
 
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-
-      - uses: ./.github/actions/setup
-        with:
-          os: ${{ runner.os }}
-
-      - name: Lint fix
-        run: |
-          docker run --network host acm-website-server bun lint --fix
-
-      - name: Commit lint fix
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          if ! git diff --exit-code > /dev/null
-          then
-            git commit -a -m "lint fix"
-            git push
-          fi
-
-      - name: Run linter
-        run: |
-          docker run --network host acm-website-server bun run lint
-
-  typecheck:
+  build:
+    needs: [typecheck, lint, test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - uses: ./.github/actions/setup
-        with:
-          os: ${{ runner.os }}
-
-      - name: Run typecheck
+      - name: Build
         run: |
-          docker run --network host acm-website-server bun run typecheck
-
-  pr-check:
-    if: github.event_name == 'pull_request'
-    needs: [test, lint, typecheck]
-    runs-on: ubuntu-latest
-    steps:
-      - name: PR is ready to be merged
-        run: echo "All checks passed. PR is ready to be merged."
+          cd ./server
+          docker build --target=run --no-cache .
+          

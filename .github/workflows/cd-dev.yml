@@ -1,0 +1,54 @@
+name: CD-DEV
+
+on:
+    workflow_run:
+        workflows: ["CI"]
+        types:
+            - completed
+
+jobs:
+    deploy:
+        name: Deploy
+        if: github.event.workflow_run.head_branch == 'develop'
+        runs-on: ubuntu-latest
+        environment: Development
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Docker login
+              uses: docker/login-action@v3
+              with:
+                username: ${{ secrets.DOCKER_USERNAME }}
+                password: ${{ secrets.DOCKERHUB_PASSWORD }}
+              
+            - name: Build image
+              run: |
+                cd ./server
+                docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}:latest .
+
+            - name: Push image
+              run: |
+                docker push ${{ secrets.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}:latest
+            
+            - name: Setup private key
+              run: |
+                mkdir -p $GITHUB_WORKSPACE/.ssh
+                touch $GITHUB_WORKSPACE/.ssh/id_rsa  
+                echo "$SSH_KEY" > $GITHUB_WORKSPACE/.ssh/id_rsa
+                chmod 600 $GITHUB_WORKSPACE/.ssh/id_rsa
+                ssh-keyscan -H ${{ vars.SERVER_IP }} >> $GITHUB_WORKSPACE/.ssh/known_hosts
+              shell: bash
+              env:
+                SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }} 
+            
+            - name: SCP core files
+              run: |
+                scp -i $GITHUB_WORKSPACE/.ssh/id_rsa -r docker-compose.yml nginx.conf db-scripts/ .env ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }}:~/
+            
+            - name: SSH into server
+              run: |
+                ssh -i $GITHUB_WORKSPACE/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }} 'bash -s' << 'EOF'
+                  docker compose down
+                  docker compose up --build -d
+                EOF
+
