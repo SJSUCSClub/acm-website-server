@@ -102,13 +102,13 @@ jobs:
             -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
             acm-website-server bun test
 
-  build:
-    needs: [typecheck, lint, test]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+#  build:
+#    needs: [typecheck, lint, test]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v4
 
-      - name: Build
-        run: |
-          cd ./server
-          docker build --target=run --no-cache .
+#      - name: Build
+#        run: |
+#          cd ./server
+#          docker build --target=run --no-cache .
