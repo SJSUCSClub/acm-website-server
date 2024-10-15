@@ -24,31 +24,26 @@ jobs:
 
     steps:
         - uses: actions/checkout@v4
-  
         - uses: ./.github/actions/setup
           with:
             os: ${{ runner.os }}
-
-      - uses: ./.github/actions/setup
-        with:
-          os: ${{ runner.os }}
-      - name: Run typecheck
-        env:
-          NODE_ENV: test
-          PORT: 5001
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: acm_website
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          GOOGLE_REDIRECT_URI: http://localhost:5001/api/v1/auth/callback
-        run: |
-          docker run --network host \
-            -e NODE_ENV -e PORT -e POSTGRES_HOST -e POSTGRES_PORT -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB \
-            -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
-            acm-website-server bun typecheck
+        - name: Run typecheck
+          env:
+            NODE_ENV: test
+            PORT: 5001
+            POSTGRES_HOST: localhost
+            POSTGRES_PORT: 5432
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: acm_website
+            GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+            GOOGLE_REDIRECT_URI: http://localhost:5001/api/v1/auth/callback
+          run: |
+              docker run --network host \
+                  -e NODE_ENV -e PORT -e POSTGRES_HOST -e POSTGRES_PORT -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB \
+                  -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
+                  acm-website-server bun typecheck
 
   lint:
     runs-on: ubuntu-latest
@@ -60,11 +55,11 @@ jobs:
         - uses: ./.github/actions/setup
           with:
             os: ${{ runner.os }}
-      - name: Run linter
-        run: |
-          docker run --network host acm-website-server bun run lint
+        - name: Run linter
+          run: |
+            docker run --network host acm-website-server bun run lint
 
-  db-test:
+  test:
     runs-on: ubuntu-latest
     services:
       db:
@@ -117,4 +112,3 @@ jobs:
         run: |
           cd ./server
           docker build --target=run --no-cache .
-          
