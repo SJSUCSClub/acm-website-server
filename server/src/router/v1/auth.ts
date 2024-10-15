@@ -49,9 +49,16 @@ authRouter.openapi(
 			[MOVED_PERMANENTLY]: {
 				description: 'Redirect to Google OAuth',
 			},
+			[BAD_REQUEST]: {
+				description: 'Google OAuth not configured',
+			},
 		},
 	}),
 	async c => {
+		if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET || !env.GOOGLE_REDIRECT_URI) {
+			return c.json({ error: 'Google OAuth is not configured' }, BAD_REQUEST);
+		}
+
 		const state = generateState();
 		const url: URL = await googleAuth.createAuthorizationURL(
 			state,

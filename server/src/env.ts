@@ -8,11 +8,11 @@ const EnvSchema = z.object({
 	POSTGRES_HOST: z.string().default('localhost'),
 	POSTGRES_PORT: z.string().transform(Number).default('5432'),
 	POSTGRES_USER: z.string().default('postgres'),
-	POSTGRES_PASSWORD: z.string(),
+	POSTGRES_PASSWORD: z.string().default('postgres'),
 	POSTGRES_DB: z.string().default('acm_website'),
-	GOOGLE_CLIENT_ID: z.string(),
-	GOOGLE_CLIENT_SECRET: z.string(),
-	GOOGLE_REDIRECT_URI: z.string(),
+	GOOGLE_CLIENT_ID: z.string().default(''),
+	GOOGLE_CLIENT_SECRET: z.string().default(''),
+	GOOGLE_REDIRECT_URI: z.string().default(''),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

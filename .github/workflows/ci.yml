@@ -1,15 +1,26 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - "**" # currently run on all branches
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: acm_website
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v4
@@ -19,9 +30,22 @@ jobs:
           os: ${{ runner.os }}
 
       - name: Run tests
+        env:
+          NODE_ENV: test
+          PORT: 5001
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: acm_website
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REDIRECT_URI: http://localhost:5001/api/v1/auth/callback
         run: |
-          cd server
-          bun test
+          docker run --network host \
+            -e NODE_ENV -e PORT -e POSTGRES_HOST -e POSTGRES_PORT -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB \
+            -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
+            acm-website-server bun test
 
   lint:
     runs-on: ubuntu-latest
@@ -36,8 +60,7 @@ jobs:
 
       - name: Lint fix
         run: |
-          cd server/
-          bun lint --fix
+          docker run --network host acm-website-server bun lint --fix
 
       - name: Commit lint fix
         run: |
@@ -51,8 +74,7 @@ jobs:
 
       - name: Run linter
         run: |
-          cd server
-          bun run lint
+          docker run --network host acm-website-server bun run lint
 
   typecheck:
     runs-on: ubuntu-latest
@@ -65,8 +87,7 @@ jobs:
 
       - name: Run typecheck
         run: |
-          cd server
-          bun run typecheck
+          docker run --network host acm-website-server bun run typecheck
 
   pr-check:
     if: github.event_name == 'pull_request'
