@@ -1,23 +1,40 @@
-import { Hono } from 'hono';
+import { OpenAPIHono } from '@hono/zod-openapi';
 import { cors } from 'hono/cors';
-import v1App from './router/v1/v1.router';
+import { pinoLogger } from '@/middlewares/pino-logger';
+import v1App from '@/router/v1';
+import notFound from 'stoker/middlewares/not-found';
+import onError from 'stoker/middlewares/on-error';
+import { Context } from '@/lib/context';
+import { env } from '@/env';
+const app = new OpenAPIHono<Context>({ strict: false });
+import configureOpenAPI from '@/lib/configure-openapi';
+import { csrf } from 'hono/csrf';
 
-const app = new Hono();
+app.use(csrf());
+app.use(pinoLogger());
+
+app.notFound(notFound);
+if (env.NODE_ENV === 'development') {
+	app.onError(onError);
+}
 
 app.use('/*', cors());
-app.get('/', (c) =>
-  c.json(
-    {
-      status: 'ok',
-    },
-    200,
-  ),
+
+app.get('/', c =>
+	c.json(
+		{
+			status: 'ok',
+		},
+		200,
+	),
 );
 
 // V1 API
-app.route('/v1', v1App);
+app.route('/api/v1', v1App);
+
+configureOpenAPI(app);
 
 export default {
-  port: process.env.PORT || 5001,
-  fetch: app.fetch,
+	port: env.PORT || 5001,
+	fetch: app.fetch,
 };

@@ -1,7 +1,9 @@
 {
 	"name": "acm-website-server",
+	"version": "1.0.0",
+	"type": "module",
 	"scripts": {
-		"dev": "bun run --watch src/index.ts",
+		"dev": "NODE_ENV=development bun run --watch src/index.ts",
 		"test": "bun test src/tests",
 		"lint": "eslint .",
 		"typecheck": "tsc --noEmit --skipLibCheck",
@@ -11,16 +13,25 @@
 		"docs:serve": "bunx live-server ./docs"
 	},
 	"dependencies": {
+		"@hono/zod-openapi": "^0.16.4",
+		"@lucia-auth/adapter-drizzle": "^1.1.0",
+		"@scalar/hono-api-reference": "^0.5.154",
+		"arctic": "^1.9.2",
 		"drizzle-orm": "^0.33.0",
+		"drizzle-zod": "^0.5.1",
 		"hono": "^4.6.3",
-		"pg": "^8.13.0"
+		"hono-pino": "^0.3.0",
+		"lucia": "^3.2.1",
+		"pg": "^8.13.0",
+		"pino": "^9.4.0",
+		"pino-pretty": "^11.2.2",
+		"stoker": "^1.1.0"
 	},
 	"devDependencies": {
 		"@types/bun": "^1.1.10",
 		"@types/pg": "^8.11.10",
 		"@typescript-eslint/eslint-plugin": "^8.7.0",
 		"@typescript-eslint/parser": "^8.7.0",
-		"dotenv": "^16.4.5",
 		"drizzle-kit": "^0.24.2",
 		"eslint": "^9.11.1",
 		"eslint-plugin-drizzle": "0.2.3",

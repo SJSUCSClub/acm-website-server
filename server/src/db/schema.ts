@@ -15,6 +15,8 @@ export const majors = pgTable('majors', {
   name: text('name').primaryKey(),
 });
 
+export const userRoleEnum = pgEnum('user_role_enum', ['user', 'admin']);
+
 export const users = pgTable('users', {
   id: text('id').primaryKey(),
   createdAt: timestamp('created_at').notNull(),
@@ -24,19 +26,21 @@ export const users = pgTable('users', {
   gradDate: date('grad_date').notNull(),
   interests: csFieldsEnum('interests').array().notNull().default([]),
   profilePic: text('profile_pic'),
+  role: userRoleEnum('role').notNull().default('user'),
 });
 
 export const session = pgTable('session', {
   id: text('id').primaryKey(),
   userId: text('user_id').notNull().references(() => users.id, { onUpdate: 'cascade', onDelete: 'cascade' }),
-  createdAt: timestamp('created_at').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  expiresAt: timestamp('expires_at').notNull(),
   activeExpires: bigint('active_expires', { mode: 'number' }).notNull(),
   idleExpires: bigint('idle_expires', { mode: 'number' }).notNull(),
 });
 
 export const userKey = pgTable('user_key', {
   id: text('id').primaryKey(),
-  userId: text('user_id').notNull().references(() => users.id, { onUpdate: 'cascade', onDelete: 'cascade' }),
+  userId: text('user_id').notNull().references(() => users.id),
   hashedPassword: text('hashed_password'),
 });
 
@@ -178,6 +182,21 @@ export const officers = pgTable('officers', {
   photo: text('photo').references(() => files.key, { onUpdate: 'cascade' }),
 });
 
+export const sessions = pgTable('session', {
+  id: text('id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => users.id),
+  expiresAt: timestamp('expires_at', {
+    withTimezone: true,
+    mode: 'date',
+  }).notNull(),
+});
+
+// Update types
+export type UserKey = typeof userKey.$inferSelect;
+export type NewUserKey = typeof userKey.$inferInsert;
+
 // Types
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
@@ -219,5 +238,3 @@ export type Major = typeof majors.$inferSelect;
 export type NewMajor = typeof majors.$inferInsert;
 export type Session = typeof session.$inferSelect;
 export type NewSession = typeof session.$inferInsert;
-export type UserKey = typeof userKey.$inferSelect;
-export type NewUserKey = typeof userKey.$inferInsert;
