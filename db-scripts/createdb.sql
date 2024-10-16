@@ -249,6 +249,17 @@ $$ language plpgsql
 stable
 returns null on null input;
 
+CREATE FUNCTION getAttendees(eventId integer) RETURNS TABLE(id integer) LANGUAGE plpgsql AS
+$$
+DECLARE
+BEGIN
+RETURN QUERY
+SELECT user_id from subscribed_events WHERE event_id=eventId;
+END;
+$$;
+stable
+returns null on null input;
+
 --create or replace function is_equipment_type_available(equipment_type_id integer)
 --returns boolean as $$
 --declare
