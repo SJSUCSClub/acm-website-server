@@ -23,6 +23,8 @@ paths:
   /users:
     get:
       summary: Admin List all users
+      description: |
+        Only available for admin users. Returns a list of all users.
       tags:
         - users
       responses:
@@ -46,6 +48,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     put:
       summary: Update current user
       tags:
@@ -63,10 +71,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /users/{userId}:
     get:
       summary: Admin Get a user by ID
+      description: |
+        Only available for admin users. Returns the user info of a user ID.
       tags:
         - users
       parameters:
@@ -82,8 +98,22 @@ paths:
             application/json:    
               schema:
                 $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     put:
       summary: Admin Update a user
+      description: |
+        Only available for admin users. Updates a user by user ID.
       tags:
         - users
       parameters:
@@ -105,8 +135,22 @@ paths:
             application/json:    
               schema:
                 $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
       summary: Admin Delete a user
+      description: |
+        Only available for admin users. Deletes a user by user ID.
       tags:
         - users
       parameters:
@@ -134,6 +178,18 @@ paths:
                 properties:
                   status: 
                     type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /subscriptions:
     get:
@@ -176,6 +232,12 @@ paths:
                 properties:
                   status: 
                     type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
     delete:
       summary: User unsubscribes to a company or an event
@@ -203,6 +265,12 @@ paths:
                 properties:
                   status: 
                     type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /events:
     get:
@@ -219,7 +287,9 @@ paths:
                 items:
                   $ref: '#/components/schemas/Event'
     post:
-      summary: Create a new event
+      summary: Admin Create a new event
+      description: |
+        Only available for admin users. Creates a new event.
       tags:
         - events
       requestBody:
@@ -235,6 +305,18 @@ paths:
             application/json:    
               schema:
                 $ref: '#/components/schemas/Event'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /events/{eventId}:
     get:
@@ -254,6 +336,12 @@ paths:
             application/json:    
               schema:
                 $ref: '#/components/schemas/Event'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /projects:
     get:
@@ -270,7 +358,9 @@ paths:
                 items:
                   $ref: '#/components/schemas/Project'
     post:
-      summary: Create a new project
+      summary: Admin Create a new project
+      description: |
+        Only available for admin users. Creates a new project.
       tags:
         - projects
       requestBody:
@@ -286,10 +376,24 @@ paths:
             application/json:    
               schema:
                 $ref: '#/components/schemas/Project'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /equipment-rentals:
     get:
-      summary: List all equipment rentals
+      summary: Admin List all equipment rentals
+      description: |
+        Only available for admin users. Returns a list of all equipment rentals.
       tags:
         - equipment
       responses:
@@ -301,6 +405,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/EquipmentRental'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     post:
       summary: Create a new equipment rental
       tags:
@@ -318,6 +434,12 @@ paths:
             application/json:    
               schema:
                 $ref: '#/components/schemas/EquipmentRental'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /companies:
     get:
@@ -334,7 +456,9 @@ paths:
                 items:
                   $ref: '#/components/schemas/Company'
     post:
-      summary: Create a new company
+      summary: Admin Create a new company
+      description: |
+        Only available for admin users. Creates a new company.
       tags:
         - company
       requestBody:
@@ -350,10 +474,24 @@ paths:
             application/json:    
               schema:
                 $ref: '#/components/schemas/Company'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   
   /membership-requests:
     get:
-      summary: List all membership requests
+      summary: Admin List all membership requests
+      description: |
+        Only available for admin users. Returns a list of all membership requests.
       tags:
         - membership
       responses:
@@ -365,6 +503,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/MembershipRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     post:
       summary: Create a new membership request
       tags:
@@ -382,9 +532,20 @@ paths:
             application/json:    
               schema:
                 $ref: '#/components/schemas/MembershipRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
     User:
       type: object
       properties:
