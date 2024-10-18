@@ -435,3 +435,22 @@ insert into majors(name) values
 ('Theatre Arts, Preparation for Teaching, BA (Not accepting students)'),
 ('Women, Gender, and Sexuality Studies, BA');
 
+CREATE OR REPLACE FUNCTION getAttendees(eventId integer) RETURNS INTEGER LANGUAGE plpgsql AS
+$$
+DECLARE
+    attendeeCount INTEGER;
+BEGIN
+SELECT COUNT(*) from subscribed_events WHERE event_id=eventId INTO attendeeCount;
+RETURN attendeeCount;   
+END;
+$$;
+RETURNS NULL ON NULL INPUT;
+
+-- MOCK DATA
+INSERT INTO users VALUES (1, default, 'aarya', 'chamkeriaarya@gmail.com', 'Computer Science, BS', CURRENT_DATE, '{"web development"}', 'hello world');
+INSERT INTO urls VALUES (default, 'https://google.com', 'google.com');
+INSERT INTO EVENTS VALUES (default, CURRENT_DATE, 'ADOBE', 'san jose', CURRENT_DATE, CURRENT_DATE, 'adobe tour', '{"https://google.com"}', 'meetup', 30, 'hello world', '13:30', '16:30', '{"web development"}', 'students', 1);
+INSERT INTO subscribed_events VALUES (1, 1, default);
+SELECT * FROM isalum(1);
+SELECT * FROM getAttendees(1);
+
