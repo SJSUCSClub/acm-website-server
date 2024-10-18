@@ -251,6 +251,18 @@ $$ language plpgsql
 stable
 returns null on null input;
 
+CREATE OR REPLACE FUNCTION getAttendeeCount(eventId integer) RETURNS INTEGER LANGUAGE plpgsql AS
+$$
+DECLARE
+    attendeeCount INTEGER;
+BEGIN
+SELECT COUNT(*) from subscribed_events WHERE event_id=eventId INTO attendeeCount;
+RETURN attendeeCount;   
+END;
+$$;
+stable
+returs null on null input;
+
 --create or replace function is_equipment_type_available(equipment_type_id integer)
 --returns boolean as $$
 --declare
