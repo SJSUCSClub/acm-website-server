@@ -37,6 +37,7 @@ jobs:
                 echo "$SSH_KEY" > $GITHUB_WORKSPACE/.ssh/id_rsa
                 chmod 600 $GITHUB_WORKSPACE/.ssh/id_rsa
                 ssh-keyscan -H ${{ secrets.KNOWN_HOSTS }} >> $GITHUB_WORKSPACE/.ssh/known_hosts
+
               shell: bash
               env:
                 SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }} 
