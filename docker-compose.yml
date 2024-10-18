@@ -2,7 +2,7 @@ services:
   nginx:
     image: nginx:latest
     ports:
-      - 8080:8080
+      - 80:80
     configs:
       - source: nginx_config
         target: /etc/nginx/nginx.conf
@@ -14,12 +14,7 @@ services:
         restart: true
 
   server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./server:/app
-      - /app/node_modules
+    image: manasc478/acm-website-server:latest
     environment:
       - NODE_ENV=development
     env_file:
@@ -40,17 +35,11 @@ services:
 
   db:
     image: postgres:latest
-    # ports:
-    #   - "5432:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_DB: acm_website
-      POSTGRES_PASSWORD_FILE: /run/secrets/pg_password
     volumes:
       - acm_website_db_data:/var/lib/postgresql/data
       - ./db-scripts:/docker-entrypoint-initdb.d/
-    secrets:
-      - pg_password
+    env_file:
+      - .env
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 5s
@@ -74,7 +63,3 @@ networks:
 configs:
   nginx_config:
     file: ./nginx.conf
-
-secrets:
-  pg_password:
-    file: ./pg_password.txt
