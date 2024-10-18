@@ -1,29 +1,22 @@
-name: Setup
-description: "Setup Bun"
-
-inputs:
-  os:
-    description: "Runner OS"
-    required: true
+name: Build Docker Image
+description: "Build Docker image for ACM Website Server"
 
 runs:
   using: "composite"
   steps:
-    - name: Setup Bun
-      uses: oven-sh/setup-bun@v1
-      with:
-        bun-version: latest
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
-    - name: Cache Bun dependencies
-      uses: actions/cache@v4
+    - name: Build Docker image
+      uses: docker/build-push-action@v5
       with:
-        path: ~/.bun/install/cache
-        key: ${{ inputs.os }}-bun-${{ hashFiles('**/bun.lockb') }}
-        restore-keys: |
-          ${{ inputs.os }}-bun-
+        context: ./server
+        file: ./server/Dockerfile.test
+        tags: acm-website-server:latest
+        load: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
-    - name: Install dependencies
+    - name: Verify image
       shell: bash
-      run: |
-        cd server
-        bun install
+      run: docker image inspect acm-website-server:latest

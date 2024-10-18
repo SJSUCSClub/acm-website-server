@@ -13,17 +13,20 @@ create type membership_term_enum as enum ('semester', 'annual');
 create type membership_request_status_enum as enum ('pending', 'approved', 'declined');
 create type industry_enum as enum ('investment banking', 'aerospace', 'healthcare');
 create type officer_position_enum as enum ('president', 'vice president', 'dev team officer', 'treasurer', 'social media manager');
+create type user_role_enum as enum ('user', 'admin');
 
 create table if not exists majors(
    name text not null,
    PRIMARY KEY(name)
 );
 
+
 create table if not exists users(
    id text not null,
    created_at timestamp not null,
    name text not null,
    email text not null,
+   role user_role_enum not null default 'user',
    major text not null,
    grad_date Date not null,
    interests cs_fields_enum[] not null default '{}'::cs_fields_enum[],
@@ -35,9 +38,8 @@ create table if not exists users(
 create table if not exists session(
    id text not null,
    user_id text not null,
-   created_at timestamp not null,
-   active_expires BIGINT not null,
-   idle_expires BIGINT not null,
+   created_at timestamp not null default CURRENT_TIMESTAMP,
+   expires_at timestamp not null,
    PRIMARY KEY(id),
    FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade
 );
@@ -264,6 +266,7 @@ returns null on null input;
 --$$ language plpgsql
 --stable
 --returns null on null input;
+
 insert into majors(name) values
 ('Undeclared'),
 ('Advertising, BS'),
@@ -418,3 +421,4 @@ insert into majors(name) values
 ('Theatre Arts, BA'),
 ('Theatre Arts, Preparation for Teaching, BA (Not accepting students)'),
 ('Women, Gender, and Sexuality Studies, BA');
+
