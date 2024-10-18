@@ -1,6 +1,7 @@
 name: CI
 
 on:
+  push:
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -57,7 +58,10 @@ jobs:
             os: ${{ runner.os }}
         - name: Run linter
           run: |
-            docker run --network host acm-website-server bun run lint
+            docker run --network host \
+                -e NODE_ENV -e PORT -e POSTGRES_HOST -e POSTGRES_PORT -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB \
+                -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
+                acm-website-server bun run lint
 
   test:
     runs-on: ubuntu-latest
