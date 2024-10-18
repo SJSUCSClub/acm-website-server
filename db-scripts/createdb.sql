@@ -249,7 +249,7 @@ $$ language plpgsql
 stable
 returns null on null input;
 
-CREATE OR REPLACE FUNCTION getAttendees(eventId integer) RETURNS INTEGER LANGUAGE plpgsql AS
+CREATE OR REPLACE FUNCTION getAttendeeCount(eventId integer) RETURNS INTEGER LANGUAGE plpgsql AS
 $$
 DECLARE
     attendeeCount INTEGER;
