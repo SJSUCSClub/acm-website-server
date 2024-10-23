@@ -261,7 +261,7 @@ RETURN attendeeCount;
 END;
 $$;
 stable
-returs null on null input;
+returns null on null input;
 
 --create or replace function is_equipment_type_available(equipment_type_id integer)
 --returns boolean as $$
