@@ -7,7 +7,7 @@ import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
 import { eq, count, getTableColumns } from 'drizzle-orm';
 import { users, projects, events, eventCompanies, subscribedCompanies, companies, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles } from '@/db/schema';
-import type { User, Project, Event, Company, File, ProjectFile } from '@/db/schema';
+import type { User, Project, Event, Company, File } from '@/db/schema';
 import { authMiddleWare } from '@/middlewares/auth-middleware';
 
 import authRouter from '@/router/v1/auth';
@@ -54,6 +54,9 @@ v1App.openapi(
 // Projects
 const projectSchema = createSelectSchema(projects);
 const fileSchema = createSelectSchema(files);
+const projectIDSchema = z.object({
+	projectID: z.string(),
+});
 
 v1App.openapi(
 	createRoute({
@@ -88,14 +91,9 @@ v1App.openapi(
 		tags: ['projects'],
 		summary: 'List all interested users for a project',
 		middleware: [authMiddleWare('user')],
-		parameters: [
-			{
-				name: 'projectID',
-				in: 'path',
-				required: true,
-				schema: z.string(),
-			},
-		],
+		request: {
+			params: projectIDSchema,
+		},
 		responses: {
 			[HttpStatusCodes.OK]: {
 				content: {
@@ -110,13 +108,19 @@ v1App.openapi(
 		},
 	}),
 	async (c) => {
-		const projectID = c.req.param('projectID');
+		const { projectID } = c.req.valid('param');
 		const interestedUsers: User[] = await db
-			.select(...getTableColumns(users))
+			.select(getTableColumns(users))
 			.from(interestedInProjects)
 			.innerJoin(users, eq(users.id, interestedInProjects.userId))
 			.where(eq(interestedInProjects.projectId, parseInt(projectID)));
-		return c.json({ interestedUsers }, HttpStatusCodes.OK);
+
+		const formattedInterestedUsers = interestedUsers.map(user => ({
+			...user,
+			createdAt: user.createdAt.toISOString(),
+		}));
+
+		return c.json({ interestedUsers: formattedInterestedUsers }, HttpStatusCodes.OK);
 	},
 );
 
@@ -127,14 +131,9 @@ v1App.openapi(
 		tags: ['projects'],
 		summary: 'List all files for a project',
 		middleware: [authMiddleWare('user')],
-		parameters: [
-			{
-				name: 'projectID',
-				in: 'path',
-				required: true,
-				schema: z.string(),
-			},
-		],
+		request: {
+			params: projectIDSchema,
+		},
 		responses: {
 			[HttpStatusCodes.OK]: {
 				content: {
@@ -149,19 +148,29 @@ v1App.openapi(
 		},
 	}),
 	async (c) => {
-		const projectID = c.req.param('projectID');
-		const projectFiles: ProjectFile[] = await db
-			.select()
+		const { projectID } = c.req.valid('param');
+		const projectFiles: File[] = await db
+			.select(getTableColumns(files))
 			.from(projectsFiles)
 			.innerJoin(files, eq(files.key, projectsFiles.fileKey))
 			.where(eq(projectsFiles.projectId, parseInt(projectID)));
+
 		return c.json({ projectFiles }, HttpStatusCodes.OK);
 	},
 );
 
 // Events
-const eventSchema = createSelectSchema(events);
+const baseEventSchema = createSelectSchema(events);
+const eventSchema = z.object({
+	...baseEventSchema.shape,
+	tags: z.array(csFieldsEnum),
+	urls: z.array(z.string()),
+});
+
 const companySchema = createSelectSchema(companies);
+const eventIDSchema = z.object({
+	eventID: z.string(),
+});
 
 v1App.openapi(
 	createRoute({
@@ -170,31 +179,26 @@ v1App.openapi(
 		tags: ['events'],
 		summary: 'List all companies for an event',
 		middleware: [authMiddleWare('user')],
-		parameters: [
-			{
-				name: 'eventID',
-				in: 'path',
-				required: true,
-				schema: z.string(),
-			},
-		],
+		request: {
+			params: eventIDSchema,
+		},
 		responses: {
 			[HttpStatusCodes.OK]: {
 				content: {
 					'application/json': {
 						schema: z.object({
-							eventCompanies: z.array(companySchema),
+							foundEventCompanies: z.array(companySchema),
 						}),
 					},
 				},
-				description: 'Successful response',
+				description: 'Successful response', 
 			},
 		},
 	}),
 	async (c) => {
-		const eventID = c.req.param('eventID');
+		const { eventID } = c.req.valid('param');
 		const foundEventCompanies: Company[] = await db
-			.select(...getTableColumns(companies))
+			.select(getTableColumns(companies))
 			.from(eventCompanies)
 			.innerJoin(companies, eq(companies.id, eventCompanies.companyId))
 			.where(eq(eventCompanies.eventId, parseInt(eventID)));
@@ -209,14 +213,9 @@ v1App.openapi(
 		tags: ['events'],
 		summary: 'List all subscribers for an event',
 		middleware: [authMiddleWare('user')],
-		parameters: [
-			{
-				name: 'eventID',
-				in: 'path',
-				required: true,
-				schema: z.string(),
-			},
-		],
+		request: {
+			params: eventIDSchema,
+		},
 		responses: {
 			[HttpStatusCodes.OK]: {
 				content: {
@@ -231,13 +230,17 @@ v1App.openapi(
 		},
 	}),
 	async (c) => {
-		const eventID = c.req.param('eventID');
+		const { eventID } = c.req.valid('param');
 		const eventSubscribers: User[] = await db
-			.select(...getTableColumns(users))
+			.select(getTableColumns(users))
 			.from(subscribedEvents)
 			.innerJoin(users, eq(users.id, subscribedEvents.userId))
-			.where(eq(subscribedEvents.eventID, parseInt(eventID)));
-		return c.json({ eventSubscribers }, HttpStatusCodes.OK);
+			.where(eq(subscribedEvents.eventId, parseInt(eventID)));
+		const formattedEventSubscribers = eventSubscribers.map(user => ({
+			...user,
+			createdAt: user.createdAt.toISOString(),
+		}));
+		return c.json({ eventSubscribers: formattedEventSubscribers }, HttpStatusCodes.OK);
 	},
 );
 
@@ -248,14 +251,9 @@ v1App.openapi(
 		tags: ['events'],
 		summary: 'Get the number of subscribers for an event',
 		middleware: [authMiddleWare('user')],
-		parameters: [
-			{
-				name: 'eventID',
-				in: 'path',
-				required: true,
-				schema: z.string(),
-			},
-		],
+		request: {
+			params: eventIDSchema,
+		},
 		responses: {
 			[HttpStatusCodes.OK]: {
 				content: {
@@ -270,16 +268,14 @@ v1App.openapi(
 		},
 	}),
 	async (c) => {
-		const eventID = c.req.param('eventID');
+		const { eventID } = c.req.valid('param');
 		const subscribersCount = await db
 			.select({ count: count() })
 			.from(subscribedEvents)
-			.where(eq(subscribedEvents.eventID, parseInt(eventID)));
+			.where(eq(subscribedEvents.eventId, parseInt(eventID)));
 		return c.json({ subscribersCount: subscribersCount[0].count }, HttpStatusCodes.OK);
 	},
 );
-
-
 
 v1App.openapi(
 	createRoute({
@@ -288,14 +284,9 @@ v1App.openapi(
 		tags: ['events'],
 		summary: 'List all files for an event',
 		middleware: [authMiddleWare('user')],
-		parameters: [
-			{
-				name: 'eventID',
-				in: 'path',
-				required: true,
-				schema: z.string(),
-			},
-		],
+		request: {
+			params: eventIDSchema,
+		},
 		responses: {
 			[HttpStatusCodes.OK]: {
 				content: {
@@ -310,9 +301,9 @@ v1App.openapi(
 		},
 	}),
 	async (c) => {
-		const eventID = c.req.param('eventID');
+		const { eventID } = c.req.valid('param');
 		const eventFiles: File[] = await db
-			.select(...getTableColumns(files))
+			.select(getTableColumns(files))
 			.from(eventsFiles)
 			.innerJoin(files, eq(files.key, eventsFiles.fileKey))
 			.where(eq(eventsFiles.eventId, parseInt(eventID)));
@@ -321,6 +312,10 @@ v1App.openapi(
 );
 
 // Companies
+const companyIDSchema = z.object({
+	companyID: z.string(),
+});
+
 v1App.openapi(
 	createRoute({
 		method: 'get',
@@ -328,14 +323,9 @@ v1App.openapi(
 		tags: ['companies'],
 		summary: 'List all events for a company',
 		middleware: [authMiddleWare('user')],
-		parameters: [
-			{
-				name: 'companyID',
-				in: 'path',
-				required: true,
-				schema: z.string(),
-			},
-		],
+		request: {
+			params: companyIDSchema,
+		},
 		responses: {
 			[HttpStatusCodes.OK]: {
 				content: {
@@ -350,13 +340,17 @@ v1App.openapi(
 		},
 	}),
 	async (c) => {
-		const companyID = c.req.param('companyID');
+		const { companyID } = c.req.valid('param');
 		const companyEvents: Event[] = await db
-			.select(...getTableColumns(events))
+			.select(getTableColumns(events))
 			.from(eventCompanies)
 			.innerJoin(events, eq(events.id, eventCompanies.eventId))
 			.where(eq(eventCompanies.companyId, parseInt(companyID)));
-		return c.json({ companyEvents }, HttpStatusCodes.OK);
+		const formattedCompanyEvents = companyEvents.map(event => ({
+			...event,
+			createdAt: event.createdAt.toISOString(),
+		}));
+		return c.json({ companyEvents: formattedCompanyEvents }, HttpStatusCodes.OK);
 	},
 );
 
@@ -367,14 +361,9 @@ v1App.openapi(
 		tags: ['companies'],
 		summary: 'List all subscribers for a company',
 		middleware: [authMiddleWare('user')],
-		parameters: [
-			{
-				name: 'companyID',
-				in: 'path',
-				required: true,
-				schema: z.string(),
-			},
-		],
+		request: {
+			params: companyIDSchema,
+		},
 		responses: {
 			[HttpStatusCodes.OK]: {
 				content: {
@@ -389,13 +378,18 @@ v1App.openapi(
 		},
 	}),
 	async (c) => {
-		const companyID = c.req.param('companyID');
+		const { companyID } = c.req.valid('param');
 		const companySubscribers: User[] = await db
-			.select(...getTableColumns(users))
+			.select(getTableColumns(users))
 			.from(subscribedCompanies)
 			.innerJoin(users, eq(users.id, subscribedCompanies.userId))
 			.where(eq(subscribedCompanies.companyId, parseInt(companyID)));
-		return c.json({ companySubscribers }, HttpStatusCodes.OK);
+		const formattedCompanySubscribers = companySubscribers.map(user => ({
+			...user,
+			createdAt: user.createdAt.toISOString(),
+			interests: user.interests,
+		}));
+		return c.json({ companySubscribers: formattedCompanySubscribers }, HttpStatusCodes.OK);
 	},
 );
 
@@ -406,14 +400,9 @@ v1App.openapi(
 		tags: ['companies'],
 		summary: 'Get the number of subscribers for a company',
 		middleware: [authMiddleWare('user')],
-		parameters: [
-			{
-				name: 'companyID',
-				in: 'path',
-				required: true,
-				schema: z.string(),
-			},
-		],
+		request: {
+			params: companyIDSchema,
+		},
 		responses: {
 			[HttpStatusCodes.OK]: {
 				content: {
@@ -428,7 +417,7 @@ v1App.openapi(
 		},
 	}),
 	async (c) => {
-		const companyID = c.req.param('companyID');
+		const {	 companyID } = c.req.valid('param');
 		const subscribersCount = await db
 			.select({ count: count() })
 			.from(subscribedCompanies)
