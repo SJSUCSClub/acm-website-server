@@ -440,7 +440,7 @@ $$
 DECLARE
     attendeeCount INTEGER;
 BEGIN
-SELECT COUNT(*) from subscribed_events WHERE event_id=eventId INTO attendeeCount;
+SELECT COUNT(*) INTO attendeeCount from subscribed_events WHERE event_id=eventId;
 RETURN attendeeCount;   
 END;
 $$;

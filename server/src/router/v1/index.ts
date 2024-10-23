@@ -5,8 +5,8 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
-import { users, projects } from '@/db/schema';
-import type { User, Project } from '@/db/schema';
+import { users, projects, majors } from '@/db/schema';
+import type { User, Project, Major } from '@/db/schema';
 import { authMiddleWare } from '@/middlewares/auth-middleware';
 
 import authRouter from '@/router/v1/auth';
@@ -75,6 +75,35 @@ v1App.openapi(
 	async (c) => {
 		const foundProjects: Project[] = await db.select().from(projects);
 		return c.json({ projects: foundProjects }, HttpStatusCodes.OK);
+	},
+);
+
+
+// Majors
+const majorSchema = createSelectSchema(majors);
+
+v1App.openapi(
+	createRoute({
+		method: 'get',
+		path: '/majors',
+		tags: ['majors'],
+		summary: 'List all majors',
+		responses: {
+			[HttpStatusCodes.OK]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							majors: z.array(majorSchema),
+						}),
+					},
+				},
+				description: 'Successful response',
+			},
+		},
+	}),
+	async (c) => {
+		const foundMajors: Major[] = await db.select().from(majors);
+		return c.json({ majors: foundMajors }, HttpStatusCodes.OK);
 	},
 );
 
