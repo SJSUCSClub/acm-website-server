@@ -429,7 +429,6 @@ v1App.openapi(
 	},
 );
 
-
 // Majors
 const majorSchema = createSelectSchema(majors);
 
