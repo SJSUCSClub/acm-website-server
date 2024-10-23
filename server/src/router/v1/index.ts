@@ -6,6 +6,7 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
 import { users, projects, majors } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 import type { User, Project, Major } from '@/db/schema';
 import { authMiddleWare } from '@/middlewares/auth-middleware';
 
@@ -78,7 +79,6 @@ v1App.openapi(
 	},
 );
 
-
 // Majors
 const majorSchema = createSelectSchema(majors);
 
@@ -103,7 +103,35 @@ v1App.openapi(
 	}),
 	async (c) => {
 		const foundMajors: Major[] = await db.select().from(majors);
-		return c.json({ majors: foundMajors }, HttpStatusCodes.OK);
+		return c.json(foundMajors, HttpStatusCodes.OK);
+	},
+);
+
+v1App.openapi(
+	createRoute({
+		method: 'get',
+		path: '/majors/{majorName}/users',
+		tags: ['majors'],
+		summary: 'List all users of a major',
+		middleware: [authMiddleWare('admin')],
+		responses: {
+			[HttpStatusCodes.OK]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							majors: z.array(userSchema),
+						}),
+					},
+				},
+				description: 'Successful response',
+			},
+		},
+	}),
+	async (c) => {
+		const majorName  = c.req.param('majorName');
+
+		const foundUsers: User[] = await db.select().from(users).where(eq(users.major, majorName));
+		return c.json(foundUsers, HttpStatusCodes.OK);
 	},
 );
 
