@@ -162,6 +162,65 @@ v1App.openapi(
 	},
 );
 
+v1App.openapi(
+	createRoute({
+		method: 'post',
+		path: '/projects',
+		tags: ['projects'],
+		summary: 'Creates a new project',
+		middleware: [authMiddleWare('admin')],
+		request: {
+			body: {
+				content: {
+					'application/json': {
+						schema: projectSchema,
+					},
+				},
+			},
+		},
+		responses: {
+			[HttpStatusCodes.CREATED]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							project: projectSchema,
+						}),
+					},
+				},
+				description: 'Successful response',
+			},
+			[HttpStatusCodes.UNAUTHORIZED]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Unauthorized',
+			},
+			[HttpStatusCodes.FORBIDDEN]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Forbidden',
+			},
+		},
+	}),
+	async (c) => {
+		const { id, name, description, githubLink } = c.req.valid('json');
+		const newProject = await db
+			.insert(projects).values({ id, name, description, githubLink })
+			// .onConflictDoNothing()
+			.returning();
+		return c.json({ project: newProject[0] }, HttpStatusCodes.CREATED);
+	},
+);
+
 // Events
 const baseEventSchema = createSelectSchema(events);
 const eventSchema = z.object({
@@ -454,6 +513,45 @@ v1App.openapi(
 	async (c) => {
 		const foundMajors: Major[] = await db.select().from(majors);
 		return c.json({ majors: foundMajors }, HttpStatusCodes.OK);
+	},
+);
+
+v1App.openapi(
+	createRoute({
+		method: 'get',
+		path: '/majors/{majorName}/users',
+		tags: ['majors'],
+		summary: 'List of all users in a major',
+		middleware: [authMiddleWare('user')],
+		request: {
+			params: z.object({
+				majorName: z.string(),
+			}),
+		},
+		responses: {
+			[HttpStatusCodes.OK]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							majorUsers: z.array(userSchema),
+						}),
+					},
+				},
+				description: 'Successful response',
+			},
+		},
+	}),
+	async (c) => {
+		const { majorName } = c.req.valid('param');
+		const majorUsers: User[] = await db
+			.select()
+			.from(users)
+			.where(eq(users.major, majorName));
+		const formattedMajorUsers = majorUsers.map(user => ({
+			...user,
+			createdAt: user.createdAt.toISOString(),
+		}));
+		return c.json({ majorUsers: formattedMajorUsers }, HttpStatusCodes.OK);
 	},
 );
 
