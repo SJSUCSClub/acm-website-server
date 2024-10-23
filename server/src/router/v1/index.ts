@@ -103,7 +103,7 @@ v1App.openapi(
 	}),
 	async (c) => {
 		const foundMajors: Major[] = await db.select().from(majors);
-		return c.json(foundMajors, HttpStatusCodes.OK);
+		return c.json({majors: foundMajors}, HttpStatusCodes.OK);
 	},
 );
 
@@ -119,7 +119,7 @@ v1App.openapi(
 				content: {
 					'application/json': {
 						schema: z.object({
-							majors: z.array(userSchema),
+							users: z.array(userSchema),
 						}),
 					},
 				},
@@ -131,7 +131,12 @@ v1App.openapi(
 		const majorName  = c.req.param('majorName');
 
 		const foundUsers: User[] = await db.select().from(users).where(eq(users.major, majorName));
-		return c.json(foundUsers, HttpStatusCodes.OK);
+		const formattedUsers = foundUsers.map(user => ({
+			...user,
+			createdAt: user.createdAt.toISOString(),
+			interests: user.interests[0],
+		}));
+		return c.json({ users: formattedUsers}, HttpStatusCodes.OK);
 	},
 );
 
