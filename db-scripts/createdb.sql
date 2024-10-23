@@ -270,7 +270,7 @@ returns null on null input;
 --returns null on null input;
 
 
-CREATE OR REPLACE FUNCTION isalum(userId integer) RETURNS BOOLEAN LANGUAGE plpgsql AS
+CREATE OR REPLACE FUNCTION isalum(userId text) RETURNS BOOLEAN LANGUAGE plpgsql AS
 $$
 DECLARE
 gradDate date;
