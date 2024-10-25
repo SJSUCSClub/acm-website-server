@@ -16,7 +16,9 @@ const v1App = new OpenAPIHono<Context>();
 v1App.route('/auth', authRouter);
 
 // Users
-const userSchema = createSelectSchema(users);
+const userSchema = createSelectSchema(users).extend({
+	interests: z.array(z.enum(['web development', 'machine learning', 'cloud computing', 'artificial intelligence'])),
+});
 
 v1App.openapi(
 	createRoute({
@@ -43,7 +45,7 @@ v1App.openapi(
 		const formattedUsers = foundUsers.map(user => ({
 			...user,
 			createdAt: user.createdAt.toISOString(),
-			interests: user.interests[0],
+			interests: user.interests,
 		}));
 		return c.json({ users: formattedUsers }, HttpStatusCodes.OK);
 	},
