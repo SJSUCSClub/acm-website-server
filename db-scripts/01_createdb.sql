@@ -310,3 +310,140 @@ BEGIN
     RETURN attendeeCount;
 END;
 $$;
+
+INSERT INTO users (
+    id, name, email, major, education_level, grad_date, interests, profile_pic, linkedin, github, website
+) VALUES 
+('user1', 'Alice Smith', 'alice.smith@example.com', 'Aerospace Engineering, BS', 'undergraduate', '2025-05-15', 
+  '{"web development", "machine learning"}', NULL, 'https://linkedin.com', 'https://github.com', NULL),
+('user2', 'Bob Johnson', 'bob.johnson@example.com', 'Chemistry, BA', 'graduate', '2022-12-10', 
+  '{"networking", "cybersecurity"}', NULL, 'https://linkedin.com', 'https://github.com', NULL),
+('user3', 'Charlie Brown', 'charlie.brown@example.com', 'History, BA', 'undergraduate', '2026-08-30', 
+  '{"mobile development", "game development"}', NULL, 'https://www.linkedin.com', NULL, 'https://www.bing.com/'),
+('user4', 'Diana Evans', 'diana.evans@example.com', 'Computer Science, BS', 'graduate', '2023-11-01', 
+  '{"artificial intelligence"}', NULL, 'https://linkedin.com', 'https://github.com', NULL),
+('user5', 'Evan Wright', 'evan.wright@example.com', 'Philosophy, BA', 'undergraduate', '2025-04-20', 
+  '{"data science", "cloud computing"}', NULL, NULL, 'https://github.com', 'https://www.google.com/');
+
+-- Insert company 1
+INSERT INTO companies (name, location, description, industry_id) values
+('Tech Innovations', 'San Francisco, CA', 'Leading provider of AI-driven solutions', 'technology'),
+('Eco Green Solutions', 'Austin, TX', 'Sustainable and renewable energy provider', 'energy'),
+('Global Finance Corp', 'New York, NY', 'International financial services and investments', 'banking and finance'),
+('Health Plus', 'Boston, MA', 'Healthcare technology and medical devices', 'healthcare'),
+('Future Automotive', 'Detroit, MI', 'Next-generation automotive manufacturing', 'automotive');
+
+INSERT INTO projects (name, description) values
+('AI Chatbot', 'An intelligent chatbot using natural language processing'),
+('Weather App', 'A weather forecasting app using open weather API'),
+('Task Manager', 'A task management tool to organize daily activities'),
+('Portfolio Website', 'A personal portfolio website built with React and Tailwind CSS'),
+('Inventory System', 'A desktop application for managing inventory in small businesses');
+
+-- Insert event 1
+INSERT INTO events (
+    name, location, start_date, end_date, description, event_type, 
+    event_capacity, start_time, end_time, tags, target_audience, image
+) 
+VALUES (
+    'Tech Conference 2024', 'San Francisco, CA', '2024-11-01', '2024-11-03', 
+    'A three-day conference on the latest in technology and innovation.', 
+    'conference', 500, '09:00', '17:00', 
+    '{"artificial intelligence", "machine learning"}', 'students', 'event1.png'
+),
+('Hackathon 2024', 'New York, NY', '2024-12-10', '2024-12-12', 
+    'A 48-hour hackathon focused on software development and innovation.', 
+    'hackathon', 300, '08:00', '20:00', 
+    '{"networking"}', 'students', 'event2.png'
+),
+(
+    'Data Science Workshop', 'Boston, MA', '2024-09-15', '2024-09-15', 
+    'A one-day workshop on data science fundamentals and techniques.', 
+    'workshop', 150, '10:00', '16:00', 
+    '{"data science"}', 'students', 'event3.png'
+);
+
+INSERT INTO event_companies(event_id, company_id) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(2, 1),
+(2, 3),
+(2, 4),
+(3,5),
+(3, 3);
+
+INSERT INTO subscribed_events(user_id, event_id) VALUES
+('user1', 1),
+('user1', 2),
+('user1', 3),
+('user2', 1),
+('user2', 3),
+('user4', 2),
+('user4', 1),
+('user5', 1),
+('user5', 2),
+('user5', 3);
+
+INSERT INTO subscribed_companies(user_id, company_id) VALUES
+('user1', 1),
+('user1', 2),
+('user1', 5),
+('user2', 1),
+('user2', 2),
+('user2', 3),
+('user2', 4),
+('user2', 5),
+('user3', 2),
+('user3', 4),
+('user3', 5),
+('user4', 3),
+('user4', 4),
+('user4', 5);
+
+INSERT INTO interested_in_projects(user_id, project_id) VALUES
+('user1', 1),
+('user1', 3),
+('user2', 2),
+('user2', 5),
+('user3', 1),
+('user3', 2),
+('user3', 3),
+('user3', 4),
+('user3', 5),
+('user5', 2),
+('user5', 3),
+('user5', 4);
+
+INSERT INTO equipment_rental_type (name, price, description) VALUES
+('Laptop Rental', 150.00, 'High-performance laptop rental for projects or events.'),
+('Projector Rental', 80.00, 'HD projector rental for presentations or meetings.'),
+('Camera Rental', 120.00, 'Professional DSLR camera rental for photography.'),
+('VR Headset Rental', 100.00, 'Virtual reality headset rental for gaming or events.'),
+('Tablet Rental', 50.00, NULL);
+
+INSERT INTO equipment_item(equipment_type) VALUES
+(1),
+(1),
+(1),
+(1),
+(1),
+(1),
+(1),
+(2),
+(2),
+(2),
+(3),
+(3),
+(3),
+(3),
+(3),
+(4),
+(4),
+(5),
+(5),
+(5),
+(5),
+(5);
