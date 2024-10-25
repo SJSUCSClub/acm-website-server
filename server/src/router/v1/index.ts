@@ -5,7 +5,7 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
-import { users, projects, majors } from '@/db/schema';
+import { users, projects, majors, csFieldsEnum } from '@/db/schema';
 import type { User, Project, Major } from '@/db/schema';
 import { authMiddleWare } from '@/middlewares/auth-middleware';
 
@@ -16,7 +16,9 @@ const v1App = new OpenAPIHono<Context>();
 v1App.route('/auth', authRouter);
 
 // Users
-const userSchema = createSelectSchema(users);
+const userSchema = createSelectSchema(users).extend({
+	interests: z.array(z.enum(csFieldsEnum.enumValues)),
+});
 
 v1App.openapi(
 	createRoute({
@@ -43,7 +45,6 @@ v1App.openapi(
 		const formattedUsers = foundUsers.map(user => ({
 			...user,
 			createdAt: user.createdAt.toISOString(),
-			interests: user.interests[0],
 		}));
 		return c.json({ users: formattedUsers }, HttpStatusCodes.OK);
 	},
