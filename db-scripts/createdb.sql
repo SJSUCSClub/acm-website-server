@@ -10,6 +10,7 @@ create type cs_fields_enum as enum ('web development', 'machine learning', 'clou
 create type target_audience_enum as enum ('students');
 create type equipment_condition_enum as enum ('ready', 'broken', 'in maintenance');
 create type membership_term_enum as enum ('semester', 'annual');
+create type education_level_enum as enum('undergraduate', 'graduate');
 create type membership_request_status_enum as enum ('pending', 'approved', 'declined');
 create type industry_enum as enum ('investment banking', 'aerospace', 'healthcare');
 create type officer_position_enum as enum ('president', 'vice president', 'dev team officer', 'treasurer', 'social media manager');
@@ -23,14 +24,18 @@ create table if not exists majors(
 
 create table if not exists users(
    id text not null,
-   created_at timestamp not null,
+   created_at timestamp not null default CURRENT_TIMESTAMP,
    name text not null,
    email text not null,
    role user_role_enum not null default 'user',
    major text not null,
+   education_level education_level_enum not null,
    grad_date Date not null,
    interests cs_fields_enum[] not null default '{}'::cs_fields_enum[],
    profile_pic text,
+   linkedin text,
+   github text,
+   website text,
    PRIMARY KEY(id),
    foreign key(major) references majors(name) on update cascade
 );
@@ -92,6 +97,7 @@ create table if not exists blacklist(
 );
 
 create table if not exists urls(
+
    id serial,
    original_url text not null,
    short_url text not null,
@@ -264,17 +270,31 @@ returns null on null input;
 --returns null on null input;
 
 
-CREATE OR REPLACE FUNCTION isalum(personId text) RETURNS BOOLEAN LANGUAGE plpgsql AS
+CREATE OR REPLACE FUNCTION isalum(userId integer) RETURNS BOOLEAN LANGUAGE plpgsql AS
 $$
 DECLARE
 gradDate date;
 cDate date;
 BEGIN
-SELECT users.grad_date FROM users WHERE users.id = personId INTO gradDate;
+SELECT users.grad_date FROM users WHERE users.id = userId INTO gradDate;
 SELECT CURRENT_DATE INTO cDate;
 RETURN gradDate <= cDate;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION getAttendees(eventId integer) 
+RETURNS INTEGER 
+RETURNS NULL ON NULL INPUT
+LANGUAGE plpgsql AS
+$$
+DECLARE
+    attendeeCount INTEGER;
+BEGIN
+SELECT COUNT(*) INTO attendeeCount from subscribed_events WHERE event_id=eventId;
+RETURN attendeeCount;   
+END;
+$$;
+
 
 insert into majors(name) values
 ('Undeclared'),
@@ -446,13 +466,3 @@ BEGIN
     RETURN attendeeCount;
 END;
 $$;
-
-
--- MOCK DATA
-INSERT INTO users (id, created_at, name, email, role, major, grad_date, interests, profile_pic)
-VALUES (1, CURRENT_TIMESTAMP, 'aarya', 'chamkeriaarya@gmail.com', 'user', 'Computer Science, BS', CURRENT_DATE, '{"web development"}', 'hello world');
-INSERT INTO urls VALUES (default, 'https://google.com', 'google.com');
-INSERT INTO EVENTS VALUES (default, CURRENT_DATE, 'ADOBE', 'san jose', CURRENT_DATE, CURRENT_DATE, 'adobe tour', '{"https://google.com"}', 'meetup', 30, 'hello world', '13:30', '16:30', '{"web development"}', 'students', 1);
-INSERT INTO subscribed_events VALUES (1, 1, default);
-SELECT * FROM isalum('1');
-SELECT * FROM getEventAttendeesCount(1);
