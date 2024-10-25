@@ -10,7 +10,6 @@ const app = new OpenAPIHono<Context>({ strict: false });
 import configureOpenAPI from '@/lib/configure-openapi';
 import { csrf } from 'hono/csrf';
 
-app.use(csrf());
 app.use(pinoLogger());
 
 app.notFound(notFound);
@@ -18,7 +17,21 @@ if (env.NODE_ENV === 'development') {
 	app.onError(onError);
 }
 
-app.use('/*', cors());
+app.use('/*', cors({
+	origin: '*',
+	allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+	allowHeaders: ['Content-Type'],
+	exposeHeaders: ['Content-Length'],
+	maxAge: 600,
+	credentials: true,
+}));
+
+app.use('/*', async (c, next) => {
+    if (c.req.method !== 'OPTIONS') {
+        return csrf()(c, next);
+    }
+    return next();
+});
 
 app.get('/', c =>
 	c.json(
