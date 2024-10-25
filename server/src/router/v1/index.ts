@@ -6,8 +6,9 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
 import { eq, count, getTableColumns } from 'drizzle-orm';
-import { users, projects, events, eventCompanies, subscribedCompanies, companies, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles } from '@/db/schema';
-import type { User, Project, Event, Company, File } from '@/db/schema';
+import { users, projects, majors, events, eventCompanies, subscribedCompanies, companies, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles } from '@/db/schema';
+import type { User, Project, Event, Company, File, Major } from '@/db/schema';
+import { csFieldsEnum } from '@/db/schema';
 import { authMiddleWare } from '@/middlewares/auth-middleware';
 
 import authRouter from '@/router/v1/auth';
@@ -17,7 +18,6 @@ const v1App = new OpenAPIHono<Context>();
 v1App.route('/auth', authRouter);
 
 // Users
-const csFieldsEnum = z.enum(['web development', 'machine learning', 'cloud computing', 'artificial intelligence']);
 const userSchema = createSelectSchema(users).extend({
 	interests: z.array(z.enum(csFieldsEnum.enumValues)),
 });
