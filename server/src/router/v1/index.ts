@@ -17,6 +17,7 @@ const v1App = new OpenAPIHono<Context>();
 v1App.route('/auth', authRouter);
 
 // Users
+const csFieldsEnum = z.enum(['web development', 'machine learning', 'cloud computing', 'artificial intelligence']);
 const userSchema = createSelectSchema(users).extend({
 	interests: z.array(z.enum(csFieldsEnum.enumValues)),
 });
