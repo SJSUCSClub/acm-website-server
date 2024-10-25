@@ -125,18 +125,66 @@ v1App.openapi(
 				},
 				description: 'Successful response',
 			},
+			[HttpStatusCodes.BAD_REQUEST]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Bad Request',
+			},
+			[HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Internal Server Error',
+			},
+			[HttpStatusCodes.UNAUTHORIZED]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Unauthorized',
+			},
+			[HttpStatusCodes.FORBIDDEN]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Forbidden',
+			},
 		},
 	}),
 	async (c) => {
-		const majorName  = c.req.param('majorName');
+		try {
+			const majorName  = c.req.param('majorName');
 
-		const foundUsers: User[] = await db.select().from(users).where(eq(users.major, majorName));
-		const formattedUsers = foundUsers.map(user => ({
-			...user,
-			createdAt: user.createdAt.toISOString(),
-			interests: user.interests[0],
-		}));
-		return c.json({ users: formattedUsers}, HttpStatusCodes.OK);
+			if (!majorName) {
+				return c.json({ error: 'Major name is required' }, HttpStatusCodes.BAD_REQUEST);
+			}
+
+			const foundUsers: User[] = await db.select().from(users).where(eq(users.major, majorName));
+			const formattedUsers = foundUsers.map(user => ({
+				...user,
+				createdAt: user.createdAt.toISOString(),
+				interests: user.interests[0],
+			}));
+			return c.json({ users: formattedUsers}, HttpStatusCodes.OK);
+		} catch {
+			return c.json({ error: 'Internal Server Error' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+		}
 	},
 );
 
