@@ -223,7 +223,7 @@ v1App.openapi(
 const baseEventSchema = createSelectSchema(events);
 const eventSchema = z.object({
 	...baseEventSchema.shape,
-	tags: z.array(csFieldsEnum),
+	tags: z.array(z.enum(csFieldsEnum.enumValues)),
 	urls: z.array(z.string()),
 });
 
