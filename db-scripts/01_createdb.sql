@@ -1,4 +1,4 @@
-SELECT 'CREATE DATABASE acm_website' 
+SELECT 'CREATE DATABASE acm_website'
 WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'acm_website')\gexec
 
 \c acm_website;
@@ -227,19 +227,15 @@ create index events_name_trgm_idx on events using gin (name gin_trgm_ops);
 create index equipment_type_trgm_idx on equipment_rental_type using gin (name gin_trgm_ops);
 
 create or replace function get_event_attendance(current_event_id integer)
-returns integer as $$
-declare
-   attendance integer;
-begin
- select COUNT(user_id)
- into attendance
- from subscribed_events
- where event_id = current_event_id;
- return attendance;
-end;
-$$ language plpgsql
-stable
-returns null on null input;
+RETURNS integer AS $$
+BEGIN
+   RETURN (SELECT COUNT(user_id)
+           FROM subscribed_events
+           WHERE event_id = current_event_id);
+END;
+$$ LANGUAGE plpgsql
+STABLE
+RETURNS NULL ON NULL INPUT;
 
 create or replace function is_user_alumni(user_id text)
 returns boolean as $$
@@ -274,7 +270,7 @@ returns null on null input;
 --returns null on null input;
 
 
-CREATE OR REPLACE FUNCTION isalum(userId integer) RETURNS BOOLEAN LANGUAGE plpgsql AS
+CREATE OR REPLACE FUNCTION isalum(userId text) RETURNS BOOLEAN LANGUAGE plpgsql AS
 $$
 DECLARE
 gradDate date;
@@ -296,5 +292,21 @@ DECLARE
 BEGIN
 SELECT COUNT(*) INTO attendeeCount from subscribed_events WHERE event_id=eventId;
 RETURN attendeeCount;   
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION getEventAttendeesCount(eventId integer)
+RETURNS INTEGER
+LANGUAGE plpgsql
+AS
+$$
+DECLARE
+    attendeeCount INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO attendeeCount
+    FROM subscribed_events
+    WHERE event_id = eventId;
+
+    RETURN attendeeCount;
 END;
 $$;
