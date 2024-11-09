@@ -619,6 +619,7 @@ v1App.openapi(
 		path: '/events',
 		tags: ['events'],
 		summary: 'Create an event',
+		middleware: [authMiddleWare('admin')],
 		request: {
 			body: {
 				content: {
