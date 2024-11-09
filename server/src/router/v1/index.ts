@@ -231,6 +231,8 @@ const eventIDSchema = z.object({
 	eventID: z.string(),
 });
 
+const subscribedEventSchema = createSelectSchema(subscribedEvents);
+
 v1App.openapi(
 	createRoute({
 		method: 'get',
@@ -264,6 +266,7 @@ v1App.openapi(
 		path: '/events',
 		tags: ['events'],
 		summary: 'Create an event',
+		middleware: [authMiddleWare('admin')],
 		request: {
 			body: {
 				content: {
@@ -483,6 +486,163 @@ v1App.openapi(
 			.innerJoin(files, eq(files.key, eventsFiles.fileKey))
 			.where(eq(eventsFiles.eventId, parseInt(eventID)));
 		return c.json({ eventFiles }, HttpStatusCodes.OK);
+	},
+);
+
+v1App.openapi(
+	createRoute({
+		method: 'post',
+		path: '/events/{eventID}/subscribe',
+		tags: ['events'],
+		summary: 'User subscribes to an event',
+		middleware: [authMiddleWare('user')],
+		request: {
+			params: eventIDSchema,
+		},
+		responses: {
+			[HttpStatusCodes.OK]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							newSubscription: subscribedEventSchema,
+						}),
+					},
+				},
+				description: 'Successful response',
+			},
+			[HttpStatusCodes.CONFLICT]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Conflict',
+			},
+			[HttpStatusCodes.UNAUTHORIZED]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Unauthorized',
+			},
+			[HttpStatusCodes.FORBIDDEN]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Forbidden',
+			},
+		},
+	}),
+	async (c) => {
+		const user = c.get('user');
+		const { eventID } = c.req.valid('param');
+
+		if (!user) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+
+		const newSubscription = await db
+			.insert(subscribedEvents)
+			.values({ userId: user.id, eventId: parseInt(eventID) })
+			.onConflictDoNothing()
+			.returning();
+
+		if (newSubscription.length === 0) {
+			return c.json({ error: 'Subscription already exists' }, HttpStatusCodes.CONFLICT);
+		}
+
+		return c.json({ newSubscription: newSubscription[0] }, HttpStatusCodes.OK);
+	},
+);
+
+v1App.openapi(
+	createRoute({
+		method: 'delete',
+		path: '/events/{eventID}/subscribe',
+		tags: ['events'],
+		summary: 'User unsubscribes to an event',
+		middleware: [authMiddleWare('user')],
+		request: {
+			params: eventIDSchema,
+		},
+		responses: {
+			[HttpStatusCodes.OK]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							deletedSubscription: subscribedEventSchema,
+						}),
+					},
+				},
+				description: 'Successful response',
+			},
+			[HttpStatusCodes.NOT_FOUND]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Not Found',
+			},
+			[HttpStatusCodes.UNAUTHORIZED]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Unauthorized',
+			},
+			[HttpStatusCodes.FORBIDDEN]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Forbidden',
+			},
+		},
+	}),
+	async (c) => {
+		const user = c.get('user');
+		const { eventID } = c.req.valid('param');
+
+		if (!user) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+		
+		const deletedSubscription = await db
+			.delete(subscribedEvents)
+			.where(
+				and(
+				  eq(subscribedEvents.userId, user.id),
+				  eq(subscribedEvents.eventId, parseInt(eventID)),
+				),
+			  ).returning();
+		
+		if (deletedSubscription.length === 0) {
+			return c.json({ error: 'Subscription not found' }, HttpStatusCodes.NOT_FOUND);
+		}
+		
+		const formattedDeletedSubscription = deletedSubscription.map(sub => ({
+			...sub,
+			subscribedDate: sub.subscribedDate.toISOString(),
+		}));
+		return c.json({ deletedSubscription: formattedDeletedSubscription[0] }, HttpStatusCodes.OK);
 	},
 );
 
