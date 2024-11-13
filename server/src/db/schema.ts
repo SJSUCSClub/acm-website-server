@@ -9,6 +9,7 @@ export const membershipTermEnum = pgEnum('membership_term_enum', ['semester', 'a
 export const membershipRequestStatusEnum = pgEnum('membership_request_status_enum', ['pending', 'approved', 'declined']);
 export const industryEnum = pgEnum('industry_enum', ['investment banking', 'aerospace', 'healthcare']);
 export const officerPositionEnum = pgEnum('officer_position_enum', ['president', 'vice president', 'dev team officer', 'treasurer', 'social media manager']);
+export const educationLevelEnum = pgEnum('education_level_enum', ['undergraduate', 'graduate']);
 
 // Tables
 export const majors = pgTable('majors', {
@@ -27,6 +28,7 @@ export const users = pgTable('users', {
   interests: csFieldsEnum('interests').array().notNull().default([]),
   profilePic: text('profile_pic'),
   role: userRoleEnum('role').notNull().default('user'),
+  education_level: educationLevelEnum('education_level').notNull(),
 });
 
 export const session = pgTable('session', {

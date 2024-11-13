@@ -6,10 +6,10 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
 import { eq, count, getTableColumns } from 'drizzle-orm';
-import { users, projects, majors, events, eventCompanies, subscribedCompanies, companies, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles, equipmentRentalType, equipmentItem, equipmentRentals } from '@/db/schema';
+import { users, projects, majors, events, eventCompanies, subscribedCompanies, companies, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles, equipmentRentalType, equipmentItem, equipmentRentals, educationLevelEnum } from '@/db/schema';
 import type { User, Project, Event, Company, File, Major, EquipmentRentalType, EquipmentItem, EquipmentRental } from '@/db/schema';
 import { csFieldsEnum } from '@/db/schema';
-import { authMiddleWare } from '@/middlewares/auth-middleware';
+import { authMiddleWare, unauthorizedRequest } from '@/middlewares/auth-middleware';
 
 import authRouter from '@/router/v1/auth';
 
@@ -647,6 +647,109 @@ v1App.openapi(
 			createdAt: user.createdAt.toISOString(),
 		}));
 		return c.json({ majorUsers: formattedMajorUsers }, HttpStatusCodes.OK);
+	},
+);
+
+const updateUserSchema = z.object({
+  name: z.string().optional(),
+  major: z.string().optional(),
+  gradDate: z.coerce.date().optional(),
+  interests: z.array(z.enum(csFieldsEnum.enumValues)).optional(),
+  education_level: z.enum(educationLevelEnum.enumValues).optional(),
+  profilePic: z.string().optional(),
+});
+
+// Add GET /users/my endpoint
+v1App.openapi(
+	createRoute({
+		method: 'get',
+		path: '/users/my',
+		tags: ['users'],
+		summary: 'Get current user',
+		middleware: [authMiddleWare('user')],
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful response',
+				content: {
+					'application/json': {
+						schema: userSchema,
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+		const user: User = await db
+			.select()
+			.from(users)
+			.where(eq(users.id, session.userId))
+			.then((res) => res[0]);
+
+		return c.json({
+			...user,
+			createdAt: user.createdAt.toISOString(),
+			gradDate: user.gradDate,
+		}, HttpStatusCodes.OK);
+	},
+);
+
+// Add PUT /users/my endpoint
+v1App.openapi(
+	createRoute({
+		method: 'put',
+		path: '/users/my',
+		tags: ['users'],
+		summary: 'Update current user',
+		middleware: [authMiddleWare('user')],
+		request: {
+			body: {
+				content: {
+					'application/json': {
+						schema: updateUserSchema,
+					},
+				},
+			},
+		},
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successfully updated user',
+				content: {
+					'application/json': {
+						schema: userSchema,
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		const body = await c.req.json();
+		const updateData = updateUserSchema.parse(body);
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+
+		const updatedUser = await db
+			.update(users)
+			.set({
+				...updateData,
+				gradDate: updateData.gradDate?.toISOString(),
+			})
+			.where(eq(users.id, session.userId))
+			.returning();
+
+		const user = updatedUser[0];
+		return c.json({
+			...user,
+			createdAt: user.createdAt.toISOString(),
+			gradDate: user.gradDate,
+		}, HttpStatusCodes.OK);
 	},
 );
 

@@ -567,6 +567,9 @@ components:
             enum: [web_development, machine_learning, cloud_computing, artificial_intelligence]
         profile_pic:
           type: string
+        education_level:
+          type: string
+          enum: [undergraduate, graduate]
 
     Event:
       type: object
