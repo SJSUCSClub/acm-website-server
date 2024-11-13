@@ -6,7 +6,7 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
 import { eq, count, getTableColumns } from 'drizzle-orm';
-import { users, projects, majors, events, eventCompanies, subscribedCompanies, companies, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles, equipmentRentalType, equipmentItem, equipmentRentals, educationLevelEnum, userRoleEnum } from '@/db/schema';
+import { users, projects, majors, events, eventCompanies, subscribedCompanies, companies, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles, equipmentRentalType, equipmentItem, equipmentRentals, educationLevelEnum, userRoleEnum, equipmentConditionEnum } from '@/db/schema';
 import type { User, Project, Event, Company, File, Major, EquipmentRentalType, EquipmentItem, EquipmentRental } from '@/db/schema';
 import { csFieldsEnum } from '@/db/schema';
 import { authMiddleWare, unauthorizedRequest } from '@/middlewares/auth-middleware';
@@ -757,6 +757,77 @@ v1App.openapi(
 const userIdSchema = z.object({
   userId: z.string(),
 });
+
+// GET /users/rental-history
+v1App.openapi(
+	createRoute({
+		method: 'get',
+		path: '/users/rental-history',
+		tags: ['users'],
+		summary: 'Get current user\'s equipment rental history',
+		middleware: [authMiddleWare('user')],
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful response',
+				content: {
+					'application/json': {
+						schema: z.object({
+							rentals: z.array(z.object({
+								itemId: z.number(),
+								dateBorrowed: z.string(),
+								returnDate: z.string(),
+								price: z.number(),
+								condition: z.enum(equipmentConditionEnum.enumValues),
+								equipmentType: z.object({
+									name: z.string(),
+									description: z.string().nullable(),
+								}),
+							})),
+						}),
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+
+		const rentals = await db
+			.select({
+				itemId: equipmentRentals.itemId,
+				dateBorrowed: equipmentRentals.dateBorrowed,
+				returnDate: equipmentRentals.returnDate,
+				price: equipmentRentals.price,
+				condition: equipmentRentals.condition,
+				equipmentType: {
+					name: equipmentRentalType.name,
+					description: equipmentRentalType.description,
+				},
+			})
+			.from(equipmentRentals)
+			.innerJoin(
+				equipmentItem,
+				eq(equipmentRentals.itemId, equipmentItem.id),
+			)
+			.innerJoin(
+				equipmentRentalType,
+				eq(equipmentItem.equipmentType, equipmentRentalType.id),
+			)
+			.where(eq(equipmentRentals.userId, session.userId));
+		return c.json({
+			rentals: rentals.map(rental => ({
+				...rental,
+				price: Number(rental.price),
+				dateBorrowed: rental.dateBorrowed,
+				returnDate: rental.returnDate,
+			})),
+		}, HttpStatusCodes.OK);
+	},
+);
 
 // GET /users/{userId}
 v1App.openapi(
