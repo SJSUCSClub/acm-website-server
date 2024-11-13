@@ -466,3 +466,45 @@ BEGIN
     RETURN attendeeCount;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION getYear(userId text)
+RETURNS TEXT
+LANGUAGE plpgsql
+AS
+$$
+DECLARE
+      gradDate date;
+      gradYear INTEGER;
+      currentYear date;
+      currentMonth date;
+      level text;
+BEGIN
+      SELECT grad_date INTO gradDate FROM users WHERE id = userId;
+      SELECT education_level INTO level FROM users WHERE id = userId;
+
+      SELECT EXTRACT(YEAR FROM gradDate) INTO gradYear;
+      SELECT EXTRACT(YEAR FROM CURRENT_TIMESTAMP) into currentYear;
+      SELECT EXTRACT(MONTH FROM CURRENT_TIMESTAMP) into currentMonth;
+      IF currentMonth > 8 THEN
+            currentYear = currentYear + 1;
+      END IF;
+
+      CASE
+         WHEN gradYear - currentYear = 0 THEN
+            RETURN 'Senior';
+         WHEN gradYear - currentYear = 1 THEN
+            IF level = 'graduate' THEN
+               RETURN 'Sophomore';
+            END IF;
+            RETURN 'Junior';
+         WHEN gradYear - currentYear = 2 THEN
+            IF level = 'graduate' THEN
+               RETURN 'Freshman';
+            END IF;
+            RETURN 'Sophomore';
+         WHEN gradYear - currentYear = 3 THEN
+            RETURN 'Freshman';
+
+      RETURN year;
+END;
+$$;
