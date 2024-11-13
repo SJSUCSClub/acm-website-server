@@ -829,6 +829,62 @@ v1App.openapi(
 	},
 );
 
+// GET /users/subscriptions
+v1App.openapi(
+	createRoute({
+		method: 'get',
+		path: '/users/subscriptions',
+		tags: ['users'],
+		summary: 'Get current user\'s subscriptions',
+		middleware: [authMiddleWare('user')],
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful response',
+				content: {
+					'application/json': {
+						schema: z.object({
+							companies: z.array(companySchema),
+							events: z.array(eventSchema),
+						}),
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+
+		// Get subscribed companies
+		const foundSubscribedCompanies: Company[] = await db
+			.select(getTableColumns(companies))
+			.from(subscribedCompanies)
+			.innerJoin(companies, eq(companies.id, subscribedCompanies.companyId))
+			.where(eq(subscribedCompanies.userId, session.userId));
+
+		// Get subscribed events
+		const foundSubscribedEvents: Event[] = await db
+			.select(getTableColumns(events))
+			.from(subscribedEvents)
+			.innerJoin(events, eq(events.id, subscribedEvents.eventId))
+			.where(eq(subscribedEvents.userId, session.userId));
+
+		// Format events to match schema
+		const formattedEvents = foundSubscribedEvents.map(event => ({
+			...event,
+			createdAt: event.createdAt.toISOString(),
+		}));
+
+		return c.json({
+			companies: foundSubscribedCompanies,
+			events: formattedEvents,
+		}, HttpStatusCodes.OK);
+	},
+);
+
 // GET /users/{userId}
 v1App.openapi(
   createRoute({
