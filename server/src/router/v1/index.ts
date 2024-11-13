@@ -6,7 +6,7 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
 import { eq, count, getTableColumns } from 'drizzle-orm';
-import { users, projects, majors, events, eventCompanies, subscribedCompanies, companies, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles, equipmentRentalType, equipmentItem, equipmentRentals, educationLevelEnum } from '@/db/schema';
+import { users, projects, majors, events, eventCompanies, subscribedCompanies, companies, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles, equipmentRentalType, equipmentItem, equipmentRentals, educationLevelEnum, userRoleEnum } from '@/db/schema';
 import type { User, Project, Event, Company, File, Major, EquipmentRentalType, EquipmentItem, EquipmentRental } from '@/db/schema';
 import { csFieldsEnum } from '@/db/schema';
 import { authMiddleWare, unauthorizedRequest } from '@/middlewares/auth-middleware';
@@ -659,7 +659,7 @@ const updateUserSchema = z.object({
   profilePic: z.string().optional(),
 });
 
-// Add GET /users/my endpoint
+// GET /users/my endpoint
 v1App.openapi(
 	createRoute({
 		method: 'get',
@@ -698,7 +698,7 @@ v1App.openapi(
 	},
 );
 
-// Add PUT /users/my endpoint
+// PUT /users/my endpoint
 v1App.openapi(
 	createRoute({
 		method: 'put',
@@ -751,6 +751,197 @@ v1App.openapi(
 			gradDate: user.gradDate,
 		}, HttpStatusCodes.OK);
 	},
+);
+
+// Admin user management endpoints
+const userIdSchema = z.object({
+  userId: z.string(),
+});
+
+// GET /users/{userId}
+v1App.openapi(
+  createRoute({
+    method: 'get',
+    path: '/users/{userId}',
+    tags: ['users'],
+    summary: 'Admin Get a user by ID',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: userIdSchema,
+    },
+    responses: {
+      [HttpStatusCodes.OK]: {
+        description: 'Successful response',
+        content: {
+          'application/json': {
+            schema: userSchema,
+          },
+        },
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        description: 'User not found',
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+      },
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const { userId } = c.req.valid('param');
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .then((res) => res[0]);
+
+    if (!user) {
+      return c.json({ error: 'User not found' }, HttpStatusCodes.NOT_FOUND);
+    }
+
+    return c.json({
+      ...user,
+      createdAt: user.createdAt.toISOString(),
+      gradDate: user.gradDate,
+    }, HttpStatusCodes.OK);
+  },
+);
+
+// PUT /users/{userId}
+v1App.openapi(
+  createRoute({
+    method: 'put',
+    path: '/users/{userId}',
+    tags: ['users'],
+    summary: 'Admin Update a user',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: userIdSchema,
+      body: {
+        content: {
+          'application/json': {
+            schema: updateUserSchema.extend({
+              role: z.enum(userRoleEnum.enumValues).optional(),
+            }),
+          },
+        },
+      },
+    },
+    responses: {
+      [HttpStatusCodes.OK]: {
+        description: 'Successfully updated user',
+        content: {
+          'application/json': {
+            schema: userSchema,
+          },
+        },
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        description: 'User not found',
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+      },
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const { userId } = c.req.valid('param');
+    const body = await c.req.json();
+    const updateData = updateUserSchema.extend({
+      role: z.enum(userRoleEnum.enumValues).optional(),
+    }).parse(body);
+
+    const existingUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .then((res) => res[0]);
+
+    if (!existingUser) {
+      return c.json({ error: 'User not found' }, HttpStatusCodes.NOT_FOUND);
+    }
+
+    const updatedUser = await db
+      .update(users)
+      .set({
+        ...updateData,
+        gradDate: updateData.gradDate?.toISOString(),
+      })
+      .where(eq(users.id, userId))
+      .returning();
+
+    const user = updatedUser[0];
+    return c.json({
+      ...user,
+      createdAt: user.createdAt.toISOString(),
+      gradDate: user.gradDate,
+    }, HttpStatusCodes.OK);
+  },
+);
+
+// DELETE /users/{userId}
+v1App.openapi(
+  createRoute({
+    method: 'delete',
+    path: '/users/{userId}',
+    tags: ['users'],
+    summary: 'Admin Delete a user',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: userIdSchema,
+    },
+    responses: {
+      [HttpStatusCodes.OK]: {
+        description: 'Successfully deleted user',
+        content: {
+          'application/json': {
+            schema: z.object({
+              success: z.boolean(),
+            }),
+          },
+        },
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        description: 'User not found',
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+      },
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const { userId } = c.req.valid('param');
+
+    const existingUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .then((res) => res[0]);
+
+    if (!existingUser) {
+      return c.json({ error: 'User not found' }, HttpStatusCodes.NOT_FOUND);
+    }
+
+    await db
+      .delete(users)
+      .where(eq(users.id, userId));
+
+    return c.json({ success: true }, HttpStatusCodes.OK);
+  },
 );
 
 export default v1App;
