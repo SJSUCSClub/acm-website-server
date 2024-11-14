@@ -15,6 +15,7 @@ create type membership_request_status_enum as enum ('pending', 'approved', 'decl
 create type industry_enum as enum ('banking and finance', 'aerospace', 'healthcare', 'automotive', 'energy', 'technology');
 create type officer_position_enum as enum ('president', 'vice president', 'dev team officer', 'treasurer', 'social media manager');
 create type user_role_enum as enum ('user', 'admin');
+create type year_enum as enum ('freshman', 'sophomore', 'junior', 'senior', 'alumni');
 
 create table if not exists majors(
    name text not null,
@@ -328,43 +329,43 @@ END;
 $$;
 
 CREATE OR REPLACE FUNCTION getYear(userId text)
-RETURNS TEXT
+RETURNS year_enum 
 LANGUAGE plpgsql
-AS
-$$
+AS $$
 DECLARE
       gradDate date;
       gradYear INTEGER;
-      currentYear date;
-      currentMonth date;
+      currentYear INTEGER;
+      currentMonth INTEGER;
       level text;
 BEGIN
       SELECT grad_date INTO gradDate FROM users WHERE id = userId;
       SELECT education_level INTO level FROM users WHERE id = userId;
 
-      SELECT EXTRACT(YEAR FROM gradDate) INTO gradYear;
-      SELECT EXTRACT(YEAR FROM CURRENT_TIMESTAMP) into currentYear;
-      SELECT EXTRACT(MONTH FROM CURRENT_TIMESTAMP) into currentMonth;
+      SELECT EXTRACT(YEAR FROM gradDate) into gradYear;
+      SELECT EXTRACT(YEAR FROM CURRENT_DATE) into currentYear;
+      SELECT EXTRACT(MONTH FROM CURRENT_DATE) into currentMonth;
       IF currentMonth > 8 THEN
             currentYear = currentYear + 1;
       END IF;
 
       CASE
          WHEN gradYear - currentYear = 0 THEN
-            RETURN 'Senior';
+            RETURN 'senior';
          WHEN gradYear - currentYear = 1 THEN
             IF level = 'graduate' THEN
-               RETURN 'Sophomore';
+               RETURN 'sophomore';
             END IF;
-            RETURN 'Junior';
+            RETURN 'junior';
          WHEN gradYear - currentYear = 2 THEN
             IF level = 'graduate' THEN
-               RETURN 'Freshman';
+               RETURN 'freshman';
             END IF;
-            RETURN 'Sophomore';
+            RETURN 'sophomore';
          WHEN gradYear - currentYear = 3 THEN
-            RETURN 'Freshman';
-
-      RETURN year;
+            RETURN 'freshman';
+         ELSE
+            RETURN 'alumni';
+      END CASE;
 END;
 $$;
