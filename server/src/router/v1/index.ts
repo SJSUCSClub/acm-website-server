@@ -6,8 +6,8 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
 import { eq, count, getTableColumns, and } from 'drizzle-orm';
-import { users, projects, majors, events, eventCompanies, subscribedCompanies, companies, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles, equipmentRentalType, equipmentItem, equipmentRentals } from '@/db/schema';
-import type { User, Project, Event, Company, File, Major, EquipmentRentalType, EquipmentItem, EquipmentRental } from '@/db/schema';
+import { users, projects, majors, events, eventCompanies, subscribedCompanies, companies, urls, bookmarkedEvents, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles, equipmentRentalType, equipmentItem, equipmentRentals } from '@/db/schema';
+import type { User, Project, Event, Url, Company, File, Major, EquipmentRentalType, EquipmentItem, EquipmentRental } from '@/db/schema';
 import { csFieldsEnum } from '@/db/schema';
 import { authMiddleWare } from '@/middlewares/auth-middleware';
 
@@ -232,6 +232,8 @@ const eventIDSchema = z.object({
 });
 
 const subscribedEventSchema = createSelectSchema(subscribedEvents);
+const bookmarkedEventSchema = createSelectSchema(bookmarkedEvents);
+const urlSchema = createSelectSchema(urls);
 
 v1App.openapi(
 	createRoute({
@@ -491,6 +493,39 @@ v1App.openapi(
 
 v1App.openapi(
 	createRoute({
+		method: 'get',
+		path: '/events/{eventID}/url',
+		tags: ['events'],
+		summary: 'Fetch event URL',
+		request: {
+			params: eventIDSchema,
+		},
+		responses: {
+			[HttpStatusCodes.OK]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							url: urlSchema,
+						}),
+					},
+				},
+				description: 'Successful response', 
+			},
+		},
+	}),
+	async (c) => {
+		const { eventID } = c.req.valid('param');
+		const url: Url[] = await db
+			.select(getTableColumns(urls))
+			.from(events)
+			.innerJoin(urls, eq(events.shortenedEventUrl, urls.id))
+			.where(eq(events.id, parseInt(eventID)));
+		return c.json({ url: url[0] }, HttpStatusCodes.OK);
+	},
+);
+
+v1App.openapi(
+	createRoute({
 		method: 'post',
 		path: '/events/{eventID}/subscribe',
 		tags: ['events'],
@@ -637,12 +672,160 @@ v1App.openapi(
 		if (deletedSubscription.length === 0) {
 			return c.json({ error: 'Subscription not found' }, HttpStatusCodes.NOT_FOUND);
 		}
+		return c.json({ deletedSubscription: deletedSubscription[0] }, HttpStatusCodes.OK);
+	},
+);
+
+v1App.openapi(
+	createRoute({
+		method: 'post',
+		path: '/events/{eventID}/bookmark',
+		tags: ['events'],
+		summary: 'User bookmarks an event',
+		middleware: [authMiddleWare('user')],
+		request: {
+			params: eventIDSchema,
+		},
+		responses: {
+			[HttpStatusCodes.OK]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							newBookmark: bookmarkedEventSchema,
+						}),
+					},
+				},
+				description: 'Successful response',
+			},
+			[HttpStatusCodes.CONFLICT]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Conflict',
+			},
+			[HttpStatusCodes.UNAUTHORIZED]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Unauthorized',
+			},
+			[HttpStatusCodes.FORBIDDEN]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Forbidden',
+			},
+		},
+	}),
+	async (c) => {
+		const user = c.get('user');
+		const { eventID } = c.req.valid('param');
+
+		if (!user) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+
+		const newBookmark = await db
+			.insert(bookmarkedEvents)
+			.values({ userId: user.id, eventId: parseInt(eventID) })
+			.onConflictDoNothing()
+			.returning();
+
+		if (newBookmark.length === 0) {
+			return c.json({ error: 'Bookmark already exists' }, HttpStatusCodes.CONFLICT);
+		}
+
+		return c.json({ newBookmark: newBookmark[0] }, HttpStatusCodes.OK);
+	},
+);
+
+v1App.openapi(
+	createRoute({
+		method: 'delete',
+		path: '/events/{eventID}/bookmark',
+		tags: ['events'],
+		summary: 'User unbookmarks an event',
+		middleware: [authMiddleWare('user')],
+		request: {
+			params: eventIDSchema,
+		},
+		responses: {
+			[HttpStatusCodes.OK]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							deletedBookmark: bookmarkedEventSchema,
+						}),
+					},
+				},
+				description: 'Successful response',
+			},
+			[HttpStatusCodes.NOT_FOUND]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Not Found',
+			},
+			[HttpStatusCodes.UNAUTHORIZED]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Unauthorized',
+			},
+			[HttpStatusCodes.FORBIDDEN]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Forbidden',
+			},
+		},
+	}),
+	async (c) => {
+		const user = c.get('user');
+		const { eventID } = c.req.valid('param');
+
+		if (!user) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
 		
-		const formattedDeletedSubscription = deletedSubscription.map(sub => ({
-			...sub,
-			subscribedDate: sub.subscribedDate.toISOString(),
-		}));
-		return c.json({ deletedSubscription: formattedDeletedSubscription[0] }, HttpStatusCodes.OK);
+		const deletedBookmark = await db
+			.delete(bookmarkedEvents)
+			.where(
+				and(
+				  eq(bookmarkedEvents.userId, user.id),
+				  eq(bookmarkedEvents.eventId, parseInt(eventID)),
+				),
+			  ).returning();
+		
+		if (deletedBookmark.length === 0) {
+			return c.json({ error: 'Bookmark not found' }, HttpStatusCodes.NOT_FOUND);
+		}
+
+		return c.json({ deletedBookmark: deletedBookmark[0] }, HttpStatusCodes.OK);
 	},
 );
 
