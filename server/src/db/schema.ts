@@ -2,13 +2,14 @@ import { text, timestamp, date, integer, bigint, pgEnum, pgTable, serial, time, 
 
 // Enums
 export const eventsEnum = pgEnum('events_enum', ['workshop', 'seminar', 'hackathon', 'conference', 'meetup', 'test', 'other']);
-export const csFieldsEnum = pgEnum('cs_fields_enum', ['web development', 'machine learning', 'cloud computing', 'artificial intelligence']);
+export const csFieldsEnum = pgEnum('cs_fields_enum', ['web development', 'machine learning', 'cloud computing', 'artificial intelligence', 'networking', 'cybersecurity', 'mobile development', 'game development', 'data science']);
 export const targetAudienceEnum = pgEnum('target_audience_enum', ['students']);
 export const equipmentConditionEnum = pgEnum('equipment_condition_enum', ['ready', 'broken', 'in maintenance']);
 export const membershipTermEnum = pgEnum('membership_term_enum', ['semester', 'annual']);
 export const membershipRequestStatusEnum = pgEnum('membership_request_status_enum', ['pending', 'approved', 'declined']);
-export const industryEnum = pgEnum('industry_enum', ['investment banking', 'aerospace', 'healthcare']);
+export const industryEnum = pgEnum('industry_enum', ['banking and finance', 'aerospace', 'healthcare', 'automotive', 'energy', 'technology']);
 export const officerPositionEnum = pgEnum('officer_position_enum', ['president', 'vice president', 'dev team officer', 'treasurer', 'social media manager']);
+export const educationLevelEnum = pgEnum('education_level_enum', ['undergraduate', 'graduate']);
 
 // Tables
 export const majors = pgTable('majors', {
@@ -27,6 +28,7 @@ export const users = pgTable('users', {
   interests: csFieldsEnum('interests').array().notNull().default([]),
   profilePic: text('profile_pic'),
   role: userRoleEnum('role').notNull().default('user'),
+  education_level: educationLevelEnum('education_level').notNull(),
 });
 
 export const session = pgTable('session', {
@@ -49,6 +51,7 @@ export const equipmentRentalType = pgTable('equipment_rental_type', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   name: text('name').notNull(),
   price: numeric('price', { precision: 10, scale: 2 }).notNull(),
+  image: text('image'),
   description: text('description'),
 });
 

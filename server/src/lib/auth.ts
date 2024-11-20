@@ -22,6 +22,7 @@ export const lucia = new Lucia(adapter, {
 		interests: attributes.interests,
 		profilePic: attributes.profilePic,
 		role: attributes.role,
+		education_level: attributes.education_level,
 	}),
 });
 

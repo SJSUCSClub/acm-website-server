@@ -1,0 +1,14 @@
+FROM oven/bun:alpine
+
+RUN apk --no-cache add curl
+
+
+EXPOSE 5173
+
+WORKDIR /app
+
+COPY package.json bun.lockb ./
+
+RUN bun install
+
+CMD ["bun", "run", "dev", "--host", "0.0.0.0"]
