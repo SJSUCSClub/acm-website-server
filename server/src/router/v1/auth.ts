@@ -167,6 +167,7 @@ authRouter.openapi(
 						gradDate: new Date().toISOString(),
 						interests: [],
 						profilePic: picture,
+						education_level: 'undergraduate',
 					})
 					.returning();
 
