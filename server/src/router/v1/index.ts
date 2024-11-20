@@ -6,10 +6,10 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
 import { eq, count, getTableColumns } from 'drizzle-orm';
-import { users, projects, majors, events, eventCompanies, subscribedCompanies, companies, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles, equipmentRentalType, equipmentItem, equipmentRentals } from '@/db/schema';
+import { users, projects, majors, events, eventCompanies, subscribedCompanies, companies, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles, equipmentRentalType, equipmentItem, equipmentRentals, educationLevelEnum, userRoleEnum, equipmentConditionEnum } from '@/db/schema';
 import type { User, Project, Event, Company, File, Major, EquipmentRentalType, EquipmentItem, EquipmentRental } from '@/db/schema';
 import { csFieldsEnum } from '@/db/schema';
-import { authMiddleWare } from '@/middlewares/auth-middleware';
+import { authMiddleWare, unauthorizedRequest } from '@/middlewares/auth-middleware';
 
 import authRouter from '@/router/v1/auth';
 
@@ -648,6 +648,427 @@ v1App.openapi(
 		}));
 		return c.json({ majorUsers: formattedMajorUsers }, HttpStatusCodes.OK);
 	},
+);
+
+const updateUserSchema = z.object({
+  name: z.string().optional(),
+  major: z.string().optional(),
+  gradDate: z.coerce.date().optional(),
+  interests: z.array(z.enum(csFieldsEnum.enumValues)).optional(),
+  education_level: z.enum(educationLevelEnum.enumValues).optional(),
+  profilePic: z.string().optional(),
+});
+
+// GET /users/my endpoint
+v1App.openapi(
+	createRoute({
+		method: 'get',
+		path: '/users/my',
+		tags: ['users'],
+		summary: 'Get current user',
+		middleware: [authMiddleWare('user')],
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful response',
+				content: {
+					'application/json': {
+						schema: userSchema,
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+		const user: User = await db
+			.select()
+			.from(users)
+			.where(eq(users.id, session.userId))
+			.then((res) => res[0]);
+
+		return c.json({
+			...user,
+			createdAt: user.createdAt.toISOString(),
+			gradDate: user.gradDate,
+		}, HttpStatusCodes.OK);
+	},
+);
+
+// PUT /users/my endpoint
+v1App.openapi(
+	createRoute({
+		method: 'put',
+		path: '/users/my',
+		tags: ['users'],
+		summary: 'Update current user',
+		middleware: [authMiddleWare('user')],
+		request: {
+			body: {
+				content: {
+					'application/json': {
+						schema: updateUserSchema,
+					},
+				},
+			},
+		},
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successfully updated user',
+				content: {
+					'application/json': {
+						schema: userSchema,
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		const body = await c.req.json();
+		const updateData = updateUserSchema.parse(body);
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+
+		const updatedUser = await db
+			.update(users)
+			.set({
+				...updateData,
+				gradDate: updateData.gradDate?.toISOString(),
+			})
+			.where(eq(users.id, session.userId))
+			.returning();
+
+		const user = updatedUser[0];
+		return c.json({
+			...user,
+			createdAt: user.createdAt.toISOString(),
+			gradDate: user.gradDate,
+		}, HttpStatusCodes.OK);
+	},
+);
+
+// Admin user management endpoints
+const userIdSchema = z.object({
+  userId: z.string(),
+});
+
+// GET /users/rental-history
+v1App.openapi(
+	createRoute({
+		method: 'get',
+		path: '/users/rental-history',
+		tags: ['users'],
+		summary: 'Get current user\'s equipment rental history',
+		middleware: [authMiddleWare('user')],
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful response',
+				content: {
+					'application/json': {
+						schema: z.object({
+							rentals: z.array(z.object({
+								itemId: z.number(),
+								dateBorrowed: z.string(),
+								returnDate: z.string(),
+								price: z.number(),
+								condition: z.enum(equipmentConditionEnum.enumValues),
+								equipmentType: z.object({
+									name: z.string(),
+									description: z.string().nullable(),
+								}),
+							})),
+						}),
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+
+		const rentals = await db
+			.select({
+				itemId: equipmentRentals.itemId,
+				dateBorrowed: equipmentRentals.dateBorrowed,
+				returnDate: equipmentRentals.returnDate,
+				price: equipmentRentals.price,
+				condition: equipmentRentals.condition,
+				equipmentType: {
+					name: equipmentRentalType.name,
+					description: equipmentRentalType.description,
+				},
+			})
+			.from(equipmentRentals)
+			.innerJoin(
+				equipmentItem,
+				eq(equipmentRentals.itemId, equipmentItem.id),
+			)
+			.innerJoin(
+				equipmentRentalType,
+				eq(equipmentItem.equipmentType, equipmentRentalType.id),
+			)
+			.where(eq(equipmentRentals.userId, session.userId));
+		return c.json({
+			rentals: rentals.map(rental => ({
+				...rental,
+				price: Number(rental.price),
+				dateBorrowed: rental.dateBorrowed,
+				returnDate: rental.returnDate,
+			})),
+		}, HttpStatusCodes.OK);
+	},
+);
+
+// GET /users/subscriptions
+v1App.openapi(
+	createRoute({
+		method: 'get',
+		path: '/users/subscriptions',
+		tags: ['users'],
+		summary: 'Get current user\'s subscriptions',
+		middleware: [authMiddleWare('user')],
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful response',
+				content: {
+					'application/json': {
+						schema: z.object({
+							companies: z.array(companySchema),
+							events: z.array(eventSchema),
+						}),
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+
+		// Get subscribed companies
+		const foundSubscribedCompanies: Company[] = await db
+			.select(getTableColumns(companies))
+			.from(subscribedCompanies)
+			.innerJoin(companies, eq(companies.id, subscribedCompanies.companyId))
+			.where(eq(subscribedCompanies.userId, session.userId));
+
+		// Get subscribed events
+		const foundSubscribedEvents: Event[] = await db
+			.select(getTableColumns(events))
+			.from(subscribedEvents)
+			.innerJoin(events, eq(events.id, subscribedEvents.eventId))
+			.where(eq(subscribedEvents.userId, session.userId));
+
+		// Format events to match schema
+		const formattedEvents = foundSubscribedEvents.map(event => ({
+			...event,
+			createdAt: event.createdAt.toISOString(),
+		}));
+
+		return c.json({
+			companies: foundSubscribedCompanies,
+			events: formattedEvents,
+		}, HttpStatusCodes.OK);
+	},
+);
+
+// GET /users/{userId}
+v1App.openapi(
+  createRoute({
+    method: 'get',
+    path: '/users/{userId}',
+    tags: ['users'],
+    summary: 'Admin Get a user by ID',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: userIdSchema,
+    },
+    responses: {
+      [HttpStatusCodes.OK]: {
+        description: 'Successful response',
+        content: {
+          'application/json': {
+            schema: userSchema,
+          },
+        },
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        description: 'User not found',
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+      },
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const { userId } = c.req.valid('param');
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .then((res) => res[0]);
+
+    if (!user) {
+      return c.json({ error: 'User not found' }, HttpStatusCodes.NOT_FOUND);
+    }
+
+    return c.json({
+      ...user,
+      createdAt: user.createdAt.toISOString(),
+      gradDate: user.gradDate,
+    }, HttpStatusCodes.OK);
+  },
+);
+
+// PUT /users/{userId}
+v1App.openapi(
+  createRoute({
+    method: 'put',
+    path: '/users/{userId}',
+    tags: ['users'],
+    summary: 'Admin Update a user',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: userIdSchema,
+      body: {
+        content: {
+          'application/json': {
+            schema: updateUserSchema.extend({
+              role: z.enum(userRoleEnum.enumValues).optional(),
+            }),
+          },
+        },
+      },
+    },
+    responses: {
+      [HttpStatusCodes.OK]: {
+        description: 'Successfully updated user',
+        content: {
+          'application/json': {
+            schema: userSchema,
+          },
+        },
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        description: 'User not found',
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+      },
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const { userId } = c.req.valid('param');
+    const body = await c.req.json();
+    const updateData = updateUserSchema.extend({
+      role: z.enum(userRoleEnum.enumValues).optional(),
+    }).parse(body);
+
+    const existingUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .then((res) => res[0]);
+
+    if (!existingUser) {
+      return c.json({ error: 'User not found' }, HttpStatusCodes.NOT_FOUND);
+    }
+
+    const updatedUser = await db
+      .update(users)
+      .set({
+        ...updateData,
+        gradDate: updateData.gradDate?.toISOString(),
+      })
+      .where(eq(users.id, userId))
+      .returning();
+
+    const user = updatedUser[0];
+    return c.json({
+      ...user,
+      createdAt: user.createdAt.toISOString(),
+      gradDate: user.gradDate,
+    }, HttpStatusCodes.OK);
+  },
+);
+
+// DELETE /users/{userId}
+v1App.openapi(
+  createRoute({
+    method: 'delete',
+    path: '/users/{userId}',
+    tags: ['users'],
+    summary: 'Admin Delete a user',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: userIdSchema,
+    },
+    responses: {
+      [HttpStatusCodes.OK]: {
+        description: 'Successfully deleted user',
+        content: {
+          'application/json': {
+            schema: z.object({
+              success: z.boolean(),
+            }),
+          },
+        },
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        description: 'User not found',
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+      },
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const { userId } = c.req.valid('param');
+
+    const existingUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .then((res) => res[0]);
+
+    if (!existingUser) {
+      return c.json({ error: 'User not found' }, HttpStatusCodes.NOT_FOUND);
+    }
+
+    await db
+      .delete(users)
+      .where(eq(users.id, userId));
+
+    return c.json({ success: true }, HttpStatusCodes.OK);
+  },
 );
 
 export default v1App;
