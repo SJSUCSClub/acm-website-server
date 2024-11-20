@@ -5,7 +5,7 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
-import { eq, count, getTableColumns, and, and } from 'drizzle-orm';
+import { eq, count, getTableColumns, and } from 'drizzle-orm';
 import { users, projects, majors, events, eventCompanies, subscribedCompanies, companies, urls, bookmarkedEvents, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles, equipmentRentalType, equipmentItem, equipmentRentals, educationLevelEnum, userRoleEnum, equipmentConditionEnum } from '@/db/schema';
 import type { User, Project, Event, Url, Company, File, Major, EquipmentRentalType, EquipmentItem, EquipmentRental, SubscribedCompany } from '@/db/schema';
 import { csFieldsEnum } from '@/db/schema';
