@@ -18,6 +18,7 @@ create type user_role_enum as enum ('user', 'admin');
 create type year_enum as enum ('freshman', 'sophomore', 'junior', 'senior', 'alumni');
 create type project_status_enum as enum ('not started', 'looking for members', 'in progress', 'completed');
 create type year_enum as enum ('freshman', 'sophomore', 'junior', 'senior', 'alumni');
+create type project_status_enum as enum ('not started', 'looking for members', 'in progress', 'completed');
 
 create table if not exists majors(
    name text not null,
