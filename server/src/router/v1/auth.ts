@@ -2,13 +2,7 @@ import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
 import { setCookie, getCookie } from 'hono/cookie';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
-import {
-	OK,
-	MOVED_PERMANENTLY,
-	BAD_REQUEST,
-	INTERNAL_SERVER_ERROR,
-	UNAUTHORIZED,
-} from 'stoker/http-status-codes';
+import * as HttpStatusCodes from 'stoker/http-status-codes';
 import {
 	generateCodeVerifier,
 	generateState,
@@ -22,7 +16,7 @@ import { db } from '@/db/db';
 import { users } from '@/db/schema';
 import type { User } from '@/db/schema';
 import { env } from '@/env';
-import { authMiddleWare, unauthorizedRequest } from '@/middlewares/auth-middleware';
+import { authMiddleWare } from '@/middlewares/auth-middleware';
 
 const authRouter = new OpenAPIHono<Context>();
 
@@ -46,17 +40,17 @@ authRouter.openapi(
 		tags: ['auth'],
 		summary: 'Initiate Google OAuth login',
 		responses: {
-			[MOVED_PERMANENTLY]: {
+			[HttpStatusCodes.MOVED_PERMANENTLY]: {
 				description: 'Redirect to Google OAuth',
 			},
-			[BAD_REQUEST]: {
+			[HttpStatusCodes.BAD_REQUEST]: {
 				description: 'Google OAuth not configured',
 			},
 		},
 	}),
 	async c => {
 		if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET || !env.GOOGLE_REDIRECT_URI) {
-			return c.json({ error: 'Google OAuth is not configured' }, BAD_REQUEST);
+			return c.json({ error: 'Google OAuth is not configured' }, HttpStatusCodes.BAD_REQUEST);
 		}
 
 		const state = generateState();
@@ -98,10 +92,10 @@ authRouter.openapi(
 			},
 		],
 		responses: {
-			[MOVED_PERMANENTLY]: {
+			[HttpStatusCodes.MOVED_PERMANENTLY]: {
 				description: 'Redirect after successful login',
 			},
-			[BAD_REQUEST]: {
+			[HttpStatusCodes.BAD_REQUEST]: {
 				description: 'Missing code or state',
 				content: {
 					'application/json': {
@@ -111,7 +105,7 @@ authRouter.openapi(
 					},
 				},
 			},
-			[INTERNAL_SERVER_ERROR]: {
+			[HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
 				description: 'Failed to validate authorization code',
 				content: {
 					'application/json': {
@@ -128,7 +122,7 @@ authRouter.openapi(
 		const storedState = getCookie(c, 'google_state');
 
 		if (!code || !state || state !== storedState) {
-			return c.json({ error: 'Missing code or state' }, BAD_REQUEST);
+			return c.json({ error: 'Missing code or state' }, HttpStatusCodes.BAD_REQUEST);
 		}
 
 		try {
@@ -182,7 +176,7 @@ authRouter.openapi(
 			console.error(error);
 			return c.json(
 				{ error: 'Failed to validate authorization code' },
-				INTERNAL_SERVER_ERROR,
+				HttpStatusCodes.INTERNAL_SERVER_ERROR,
 			);
 		}
 	},
@@ -198,26 +192,18 @@ authRouter.openapi(
 		summary: 'Logout user',
 		middleware: [authMiddleWare('user')],
 		responses: {
-			[OK]: {
-				description: 'Successfully logged out',
-				content: {
-					'application/json': {
-						schema: z.object({
-							success: z.boolean(),
-						}),
-					},
-				},
+			[HttpStatusCodes.MOVED_PERMANENTLY]: {
+				description: 'Redirect after logout',
 			},
-			...unauthorizedRequest,
 		},
 	}),
 	async c => {
 		const session = c.get('session');
 		if (!session) {
-			return c.json({ error: 'Unauthorized' }, UNAUTHORIZED);
+		return c.redirect('/');
 		}
 		lucia.invalidateSession(session.id);
-		return c.json({ success: true }, OK);
+		return c.redirect('/');
 	},
 );
 
