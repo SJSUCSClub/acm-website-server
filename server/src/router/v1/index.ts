@@ -5,9 +5,9 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
-import { eq, count, getTableColumns } from 'drizzle-orm';
+import { eq, count, getTableColumns, and } from 'drizzle-orm';
 import { users, projects, majors, events, eventCompanies, subscribedCompanies, companies, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles, equipmentRentalType, equipmentItem, equipmentRentals, educationLevelEnum, userRoleEnum, equipmentConditionEnum } from '@/db/schema';
-import type { User, Project, Event, Company, File, Major, EquipmentRentalType, EquipmentItem, EquipmentRental } from '@/db/schema';
+import type { User, Project, Event, Company, File, Major, EquipmentRentalType, EquipmentItem, EquipmentRental, SubscribedCompany } from '@/db/schema';
 import { csFieldsEnum } from '@/db/schema';
 import { authMiddleWare, unauthorizedRequest } from '@/middlewares/auth-middleware';
 
@@ -374,6 +374,249 @@ v1App.openapi(
 const companyIDSchema = z.object({
 	companyID: z.string(),
 });
+const subscribedCompanySchema = createSelectSchema(subscribedCompanies);
+
+v1App.openapi(
+	createRoute({
+		method: 'get',
+		path: '/companies',
+		tags: ['companies'],
+		summary: 'List all companies',
+		middleware: [authMiddleWare('user')],
+		responses: {
+			[HttpStatusCodes.OK]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							companies: z.array(companySchema),
+						}),
+					},
+				},
+				description: 'Successful response',
+			},
+		},
+	}),
+	async (c) => {
+		const foundCompanies: Company[] = await db
+			.select()
+			.from(companies);
+		return c.json({ companies: foundCompanies }, HttpStatusCodes.OK);
+	},
+);
+
+v1App.openapi(
+	createRoute({
+		method: 'post',
+		path: '/companies',
+		tags: ['companies'],
+		summary: 'Creates a new company',
+		middleware: [authMiddleWare('admin')],
+		request: {
+			body: {
+				content: {
+					'application/json': {
+						schema: companySchema,
+					},
+				},
+			},
+		},
+		responses: {
+			[HttpStatusCodes.CREATED]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							company: companySchema,
+						}),
+					},
+				},
+				description: 'Successful response',
+			},
+			[HttpStatusCodes.UNAUTHORIZED]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Unauthorized',
+			},
+			[HttpStatusCodes.FORBIDDEN]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Forbidden',
+			},
+			[HttpStatusCodes.CONFLICT]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Conflict',
+			},
+		},
+	}),
+	async (c) => {
+		const { id, name, location, description, industryId, logo } = c.req.valid('json');
+		const newCompany = await db
+			.insert(companies)
+			.values({ id, name, location, description, industryId, logo })
+			.onConflictDoNothing()
+			.returning();
+		if (newCompany.length === 0) {
+			return c.json({ error: 'Company already exists' }, HttpStatusCodes.CONFLICT);
+		}
+		return c.json({ company: newCompany[0] }, HttpStatusCodes.CREATED);
+	},
+);
+
+v1App.openapi(
+	createRoute({
+		method: 'post',
+		path: '/companies/subscribe',
+		tags: ['companies'],
+		summary: 'Subscribe to a company',
+		middleware: [authMiddleWare('user')],
+		request: {
+			body: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							companyId: z.string(),
+						}),
+					},
+				},
+			},
+		},
+		responses: {
+			[HttpStatusCodes.CREATED]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							subscription: subscribedCompanySchema,
+						}),
+					},
+				},
+				description: 'Successfully subscribed',
+			},
+			[HttpStatusCodes.CONFLICT]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Already subscribed',
+			},
+			[HttpStatusCodes.UNAUTHORIZED]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Already subscribed',
+			},
+		},
+	}),
+	async (c) => {
+		const user = c.get('user');
+		if (!user) {
+			return c.json({ error: 'User not found' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+		const { companyId } = c.req.valid('json');
+		const newSubscription: SubscribedCompany[] = await db
+			.insert(subscribedCompanies)
+			.values({ userId: user.id, companyId: parseInt(companyId), subscribedDate: new Date()})
+			.onConflictDoNothing()
+			.returning();
+		if (newSubscription.length === 0) {
+			return c.json({ error: 'Already subscribed' }, HttpStatusCodes.CONFLICT);
+		}
+		return c.json({ subscription: newSubscription[0] }, HttpStatusCodes.CREATED);
+	},
+);
+
+v1App.openapi(
+	createRoute({
+		method: 'delete',
+		path: '/companies/subscribe',
+		tags: ['companies'],
+		summary: 'Unsubscribe from a company',
+		middleware: [authMiddleWare('user')],
+		request: {
+			body: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							companyId: z.number(),
+						}),
+					},
+				},
+			},
+		},
+		responses: {
+			[HttpStatusCodes.OK]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							message: z.string(),
+						}),
+					},
+				},
+				description: 'Successfully unsubscribed',
+			},
+			[HttpStatusCodes.NOT_FOUND]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Not found',
+			},
+			[HttpStatusCodes.UNAUTHORIZED]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Unauthorized',
+			},
+		},
+	}),
+	async (c) => {
+		const user = c.get('user');
+		if (!user) {
+			return c.json({ error: 'User not found' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+		const { companyId } = c.req.valid('json');
+		const result = await db
+			.delete(subscribedCompanies)
+			.where(
+				and(
+					eq(subscribedCompanies.userId, user.id),
+					eq(subscribedCompanies.companyId, companyId),
+				),
+			).returning();
+		if (result.length === 0) {
+			return c.json({ error: 'Subscription not found' }, HttpStatusCodes.NOT_FOUND);
+		}
+		return c.json({ message: 'Successfully unsubscribed from company' }, HttpStatusCodes.OK);
+	},
+);
 
 v1App.openapi(
 	createRoute({
@@ -446,7 +689,6 @@ v1App.openapi(
 		const formattedCompanySubscribers = companySubscribers.map(user => ({
 			...user,
 			createdAt: user.createdAt.toISOString(),
-			interests: user.interests,
 		}));
 		return c.json({ companySubscribers: formattedCompanySubscribers }, HttpStatusCodes.OK);
 	},
