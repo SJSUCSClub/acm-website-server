@@ -33,6 +33,7 @@ create table if not exists users(
    grad_date Date not null,
    interests cs_fields_enum[] not null default '{}'::cs_fields_enum[],
    profile_pic text,
+   discord text,
    linkedin text,
    github text,
    website text,

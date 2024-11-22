@@ -30,6 +30,10 @@ export const users = pgTable('users', {
   profilePic: text('profile_pic'),
   role: userRoleEnum('role').notNull().default('user'),
   education_level: educationLevelEnum('education_level').notNull(),
+  discord: text('discord'),
+  linkedin: text('linkedin'),
+  github: text('github'),
+  website: text('website'),
 });
 
 export const session = pgTable('session', {
