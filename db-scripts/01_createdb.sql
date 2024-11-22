@@ -15,12 +15,12 @@ create type membership_request_status_enum as enum ('pending', 'approved', 'decl
 create type industry_enum as enum ('banking and finance', 'aerospace', 'healthcare', 'automotive', 'energy', 'technology');
 create type officer_position_enum as enum ('president', 'vice president', 'dev team officer', 'treasurer', 'social media manager');
 create type user_role_enum as enum ('user', 'admin');
+create type project_status_enum as enum ('not started', 'looking for members', 'in progress', 'completed');
 
 create table if not exists majors(
    name text not null,
    PRIMARY KEY(name)
 );
-
 
 create table if not exists users(
    id text not null,
@@ -191,6 +191,7 @@ create table if not exists projects(
    name text not null,
    description text not null,
    github_link text,
+   status project_status_enum not null default 'not started',
    PRIMARY KEY(id)
 );
 

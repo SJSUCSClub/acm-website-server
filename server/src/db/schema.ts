@@ -10,6 +10,7 @@ export const membershipRequestStatusEnum = pgEnum('membership_request_status_enu
 export const industryEnum = pgEnum('industry_enum', ['banking and finance', 'aerospace', 'healthcare', 'automotive', 'energy', 'technology']);
 export const officerPositionEnum = pgEnum('officer_position_enum', ['president', 'vice president', 'dev team officer', 'treasurer', 'social media manager']);
 export const educationLevelEnum = pgEnum('education_level_enum', ['undergraduate', 'graduate']);
+export const projectStatusEnum = pgEnum('project_status_enum', ['not started', 'looking for members', 'in progress', 'completed']);
 
 // Tables
 export const majors = pgTable('majors', {
@@ -160,6 +161,7 @@ export const projects = pgTable('projects', {
   id: serial('id').primaryKey(),
   name: text('name').notNull(),
   description: text('description').notNull(),
+  status: projectStatusEnum('status').notNull().default('not started'),
   githubLink: text('github_link'),
 });
 
