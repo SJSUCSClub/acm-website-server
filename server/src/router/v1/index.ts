@@ -6,8 +6,8 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
+import { users, projects, majors, events, eventCompanies, subscribedCompanies, companies, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles, equipmentRentalType, equipmentItem, equipmentRentals, educationLevelEnum, userRoleEnum, equipmentConditionEnum, bookmarkedEvents } from '@/db/schema';
 import { eq, count, getTableColumns, and } from 'drizzle-orm';
-import { users, projects, majors, events, eventCompanies, subscribedCompanies, companies, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles, equipmentRentalType, equipmentItem, equipmentRentals, educationLevelEnum, userRoleEnum, equipmentConditionEnum } from '@/db/schema';
 import type { User, Project, Event, Company, File, Major, EquipmentRentalType, EquipmentItem, EquipmentRental, SubscribedCompany } from '@/db/schema';
 import { csFieldsEnum } from '@/db/schema';
 import { authMiddleWare, unauthorizedRequest } from '@/middlewares/auth-middleware';
@@ -1279,6 +1279,44 @@ v1App.openapi(
 				returnDate: rental.returnDate,
 			})),
 		}, HttpStatusCodes.OK);
+	},
+);
+
+const bookmarkSchema = createSelectSchema(bookmarkedEvents);	
+
+// GET /users/bookmarks
+v1App.openapi(
+	createRoute({
+		method: 'get',
+		path: '/users/bookmarks',
+		tags: ['users'],
+		summary: 'Get current user\'s bookmarks',
+		middleware: [authMiddleWare('user')],
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful response',
+				content: {
+					'application/json': {
+						schema: z.object({
+							bookmarks: z.array(bookmarkSchema),
+						}),
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+		const bookmarks = await db
+			.select()
+			.from(bookmarkedEvents)
+			.where(eq(bookmarkedEvents.userId, session.userId));
+
+		return c.json({ bookmarks }, HttpStatusCodes.OK);
 	},
 );
 
