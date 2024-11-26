@@ -313,22 +313,6 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION getEventAttendeesCount(eventId integer)
-RETURNS INTEGER
-LANGUAGE plpgsql
-AS
-$$
-DECLARE
-    attendeeCount INTEGER;
-BEGIN
-    SELECT COUNT(*) INTO attendeeCount
-    FROM subscribed_events
-    WHERE event_id = eventId;
-
-    RETURN attendeeCount;
-END;
-$$;
-
 create or replace function getEnumValues(enumName text)
 returns text[]
 language plpgsql
