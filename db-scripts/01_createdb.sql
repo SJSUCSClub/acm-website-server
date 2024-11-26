@@ -328,3 +328,16 @@ BEGIN
     RETURN attendeeCount;
 END;
 $$;
+
+create or replace function getEnumValues(enumName text)
+returns text[]
+language plpgsql
+as
+$$
+declare
+	values text[];
+begin
+	select array(select enumlabel from pg_enum where enumtypid=enumName::regtype) into values;
+	return values;
+end;
+$$;
