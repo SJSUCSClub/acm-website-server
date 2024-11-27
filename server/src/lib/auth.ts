@@ -23,6 +23,10 @@ export const lucia = new Lucia(adapter, {
 		profilePic: attributes.profilePic,
 		role: attributes.role,
 		education_level: attributes.education_level,
+		discord: attributes.discord,
+		linkedin: attributes.linkedin,
+		github: attributes.github,
+		website: attributes.website,
 	}),
 });
 
