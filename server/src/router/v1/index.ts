@@ -975,7 +975,7 @@ v1App.openapi(
 	}),
 	async (c) => {
 		const { major } = c.req.valid('param');
-		console.log("deleting major: ", major);	
+		
 		const newMajor = await db
 			.delete(majors)
 			.where(eq(majors.name, major))
@@ -1008,9 +1008,7 @@ v1App.openapi(
 			[HttpStatusCodes.CREATED]: {
 				content: {
 					'application/json': {
-						schema: z.object({
-							major: majorSchema,
-						}),
+						schema: majorSchema,
 					},
 				},
 				description: 'Successful response',
@@ -1141,7 +1139,6 @@ v1App.openapi(
 			.from(users)
 			.where(eq(users.id, session.userId))
 			.then((res) => res[0]);
-
 
 		return c.json({
 			...user,
