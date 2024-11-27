@@ -581,13 +581,9 @@ v1App.openapi(
 		const user = c.get('user');
 		const { eventID } = c.req.valid('param');
 
-		if (!user) {
-			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-		}
-
 		const newSubscription = await db
 			.insert(subscribedEvents)
-			.values({ userId: user.id, eventId: parseInt(eventID) })
+			.values({ userId: user!.id, eventId: parseInt(eventID) })
 			.onConflictDoNothing()
 			.returning();
 
@@ -655,16 +651,12 @@ v1App.openapi(
 	async (c) => {
 		const user = c.get('user');
 		const { eventID } = c.req.valid('param');
-
-		if (!user) {
-			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-		}
 		
 		const deletedSubscription = await db
 			.delete(subscribedEvents)
 			.where(
 				and(
-				  eq(subscribedEvents.userId, user.id),
+				  eq(subscribedEvents.userId, user!.id),
 				  eq(subscribedEvents.eventId, parseInt(eventID)),
 				),
 			  ).returning();
@@ -733,13 +725,9 @@ v1App.openapi(
 		const user = c.get('user');
 		const { eventID } = c.req.valid('param');
 
-		if (!user) {
-			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-		}
-
 		const newBookmark = await db
 			.insert(bookmarkedEvents)
-			.values({ userId: user.id, eventId: parseInt(eventID) })
+			.values({ userId: user!.id, eventId: parseInt(eventID) })
 			.onConflictDoNothing()
 			.returning();
 
@@ -807,16 +795,12 @@ v1App.openapi(
 	async (c) => {
 		const user = c.get('user');
 		const { eventID } = c.req.valid('param');
-
-		if (!user) {
-			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-		}
 		
 		const deletedBookmark = await db
 			.delete(bookmarkedEvents)
 			.where(
 				and(
-				  eq(bookmarkedEvents.userId, user.id),
+				  eq(bookmarkedEvents.userId, user!.id),
 				  eq(bookmarkedEvents.eventId, parseInt(eventID)),
 				),
 			  ).returning();
