@@ -1366,13 +1366,10 @@ v1App.openapi(
 	}),
 	async (c) => {
 		const session = c.get('session');
-		if (!session) {
-			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-		}
 		const user: User = await db
 			.select()
 			.from(users)
-			.where(eq(users.id, session.userId))
+			.where(eq(users.id, session!.userId))
 			.then((res) => res[0]);
 
 		return c.json({
@@ -1416,9 +1413,6 @@ v1App.openapi(
 		const session = c.get('session');
 		const body = await c.req.json();
 		const updateData = updateUserSchema.parse(body);
-		if (!session) {
-			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-		}
 
 		const updatedUser = await db
 			.update(users)
@@ -1426,7 +1420,7 @@ v1App.openapi(
 				...updateData,
 				gradDate: updateData.gradDate?.toISOString(),
 			})
-			.where(eq(users.id, session.userId))
+			.where(eq(users.id, session!.userId))
 			.returning();
 
 		const user = updatedUser[0];
@@ -1477,9 +1471,6 @@ v1App.openapi(
 	}),
 	async (c) => {
 		const session = c.get('session');
-		if (!session) {
-			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-		}
 
 		const rentals = await db
 			.select({
@@ -1502,7 +1493,7 @@ v1App.openapi(
 				equipmentRentalType,
 				eq(equipmentItem.equipmentType, equipmentRentalType.id),
 			)
-			.where(eq(equipmentRentals.userId, session.userId));
+			.where(eq(equipmentRentals.userId, session!.userId));
 		return c.json({
 			rentals: rentals.map(rental => ({
 				...rental,
@@ -1540,13 +1531,10 @@ v1App.openapi(
 	}),
 	async (c) => {
 		const session = c.get('session');
-		if (!session) {
-			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-		}
 		const bookmarks = await db
 			.select()
 			.from(bookmarkedEvents)
-			.where(eq(bookmarkedEvents.userId, session.userId));
+			.where(eq(bookmarkedEvents.userId, session!.userId));
 
 		return c.json({ bookmarks }, HttpStatusCodes.OK);
 	},
@@ -1577,23 +1565,20 @@ v1App.openapi(
 	}),
 	async (c) => {
 		const session = c.get('session');
-		if (!session) {
-			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-		}
 
 		// Get subscribed companies
 		const foundSubscribedCompanies: Company[] = await db
 			.select(getTableColumns(companies))
 			.from(subscribedCompanies)
 			.innerJoin(companies, eq(companies.id, subscribedCompanies.companyId))
-			.where(eq(subscribedCompanies.userId, session.userId));
+			.where(eq(subscribedCompanies.userId, session!.userId));
 
 		// Get subscribed events
 		const foundSubscribedEvents: Event[] = await db
 			.select(getTableColumns(events))
 			.from(subscribedEvents)
 			.innerJoin(events, eq(events.id, subscribedEvents.eventId))
-			.where(eq(subscribedEvents.userId, session.userId));
+			.where(eq(subscribedEvents.userId, session!.userId));
 
 		// Format events to match schema
 		const formattedEvents = foundSubscribedEvents.map(event => ({
