@@ -1,4 +1,5 @@
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
+import { sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { createSelectSchema } from 'drizzle-zod';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
@@ -855,11 +856,218 @@ v1App.openapi(
 
 v1App.openapi(
 	createRoute({
+		method: 'put',
+		path: '/majors/{major}',
+		tags: ['majors'],
+		summary: 'update major',
+		middleware: [authMiddleWare('admin')],
+		request: {
+			body: {
+				content: {
+					'application/json': {
+						schema: majorSchema,
+					},
+				},
+			},
+			params: z.object({
+				major: z.string(),
+			}),
+		},
+		responses: {
+			[HttpStatusCodes.NO_CONTENT]: {
+				description: 'Successful response',
+			},
+			[HttpStatusCodes.UNAUTHORIZED]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Unauthorized',
+			},
+			[HttpStatusCodes.FORBIDDEN]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Forbidden',
+			},
+			[HttpStatusCodes.CONFLICT]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Conflict',
+			},
+		},
+	}),
+	async (c) => {
+		const { name } = c.req.valid('json');
+		const { major } = c.req.valid('param');
+
+		const newMajor = await db
+			.update(majors)
+			.set({ name })
+			.where(eq(majors.name, major))
+			.returning();
+		if (newMajor.length === 0) {
+			return c.json({ error: 'Major not updated' }, HttpStatusCodes.CONFLICT);
+		}
+		return c.text('', HttpStatusCodes.NO_CONTENT);
+	},
+);
+
+v1App.openapi(
+	createRoute({
+		method: 'delete',
+		path: '/majors/{major}',
+		tags: ['majors'],
+		summary: 'delete major',
+		middleware: [authMiddleWare('admin')],
+		request: {
+			params: z.object({
+				major: z.string(),
+			}),
+		},
+		responses: {
+			[HttpStatusCodes.NO_CONTENT]: {
+				description: 'Successful response',
+			},
+			[HttpStatusCodes.UNAUTHORIZED]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Unauthorized',
+			},
+			[HttpStatusCodes.FORBIDDEN]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Forbidden',
+			},
+			[HttpStatusCodes.NOT_FOUND]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Conflict',
+			},
+		},
+	}),
+	async (c) => {
+		const { major } = c.req.valid('param');
+		console.log("deleting major: ", major);	
+		const newMajor = await db
+			.delete(majors)
+			.where(eq(majors.name, major))
+			.returning();
+
+		if (newMajor.length === 0) {
+			return c.json({ error: 'Major not deleted' }, HttpStatusCodes.NOT_FOUND);
+		}
+		return c.text('', HttpStatusCodes.NO_CONTENT);
+	},
+);
+
+v1App.openapi(
+	createRoute({
+		method: 'post',
+		path: '/majors',
+		tags: ['majors'],
+		summary: 'create major',
+		middleware: [authMiddleWare('admin')],
+		request: {
+			body: {
+				content: {
+					'application/json': {
+						schema: majorSchema,
+					},
+				},
+			},
+		},
+		responses: {
+			[HttpStatusCodes.CREATED]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							major: majorSchema,
+						}),
+					},
+				},
+				description: 'Successful response',
+			},
+			[HttpStatusCodes.UNAUTHORIZED]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Unauthorized',
+			},
+			[HttpStatusCodes.FORBIDDEN]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Forbidden',
+			},
+			[HttpStatusCodes.CONFLICT]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Conflict',
+			},
+		},
+	}),
+	async (c) => {
+		const { name } = c.req.valid('json');
+		const newMajor = await db
+			.insert(majors)
+			.values({ name })
+			.onConflictDoNothing()
+			.returning();
+		if (newMajor.length === 0) {
+			return c.json({ error: 'Major already exists' }, HttpStatusCodes.CONFLICT);
+		}
+		return c.json(newMajor[0], HttpStatusCodes.CREATED);
+	},
+);
+
+v1App.openapi(
+	createRoute({
 		method: 'get',
 		path: '/majors/{majorName}/users',
 		tags: ['majors'],
 		summary: 'List of all users in a major',
-		middleware: [authMiddleWare('user')],
+		middleware: [authMiddleWare('admin')],
 		request: {
 			params: z.object({
 				majorName: z.string(),
@@ -931,6 +1139,7 @@ v1App.openapi(
 			.from(users)
 			.where(eq(users.id, session.userId))
 			.then((res) => res[0]);
+
 
 		return c.json({
 			...user,
@@ -1310,6 +1519,38 @@ v1App.openapi(
       .where(eq(users.id, userId));
 
     return c.json({ success: true }, HttpStatusCodes.OK);
+  },
+);
+
+v1App.openapi(
+  createRoute({
+    method: 'get',
+    path: '/enums/{enumType}',
+    tags: ['enums'],
+	summary: 'Get enum types',
+	request: {
+		params: z.object({
+			enumType: z.string(),
+		}),
+	},
+    responses: {
+      [HttpStatusCodes.OK]: {
+        description: 'Successfully deleted user',
+        content: {
+          'application/json': {
+            schema: z.object({
+              types: z.array(z.string()),
+            }),
+          },
+        },
+      },
+    },
+  }),
+  async (c) => {
+	const { enumType } = c.req.valid('param');
+	const types = await db.execute(sql.raw(`select getEnumValues('${enumType}') as types`));
+	
+    return c.json({ types: types.rows[0].types }, HttpStatusCodes.OK);
   },
 );
 
