@@ -1101,12 +1101,14 @@ v1App.openapi(
 );
 
 const updateUserSchema = z.object({
-  name: z.string().optional(),
   major: z.string().optional(),
   gradDate: z.coerce.date().optional(),
   interests: z.array(z.enum(csFieldsEnum.enumValues)).optional(),
   education_level: z.enum(educationLevelEnum.enumValues).optional(),
-  profilePic: z.string().optional(),
+  discord: z.string().optional(),
+  linkedin: z.string().optional(),
+  github: z.string().optional(),
+  website: z.string().optional(),
 });
 
 // GET /users/my endpoint
@@ -1185,7 +1187,7 @@ v1App.openapi(
 		if (!session) {
 			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
 		}
-
+		
 		const updatedUser = await db
 			.update(users)
 			.set({
