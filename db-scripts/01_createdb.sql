@@ -319,9 +319,14 @@ language plpgsql
 as
 $$
 declare
+   exist boolean;
 	values text[];
 begin
-	select array(select enumlabel from pg_enum where enumtypid=enumName::regtype) into values;
-	return values;
+   select exists (select 1 from pg_type where typname = enumName) into exist;
+   if exist then
+      select array(select enumlabel from pg_enum where enumtypid=enumName::regtype) into values;
+      return values;
+   end if;
+   return array[]::text[];
 end;
 $$;

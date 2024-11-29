@@ -2,7 +2,7 @@ import { createMiddleware } from 'hono/factory';
 import { getCookie } from 'hono/cookie';
 import type { MiddlewareHandler } from 'hono';
 import { z } from 'zod';
-import { UNAUTHORIZED } from 'stoker/http-status-codes';
+import { FORBIDDEN, UNAUTHORIZED } from 'stoker/http-status-codes';
 
 import type { Context } from '@/lib/context';
 import { lucia } from '@/lib/auth';
@@ -19,7 +19,7 @@ export const authMiddleWare = (role: 'user' | 'admin'): MiddlewareHandler => cre
 		return c.json({ error: 'Unauthorized' }, UNAUTHORIZED);
 	}
 	if (role === 'admin' && user.role !== 'admin') {
-		return c.json({ error: 'Unauthorized' }, UNAUTHORIZED);
+		return c.json({ error: 'Forbidden' }, FORBIDDEN);
 	}
 	if (session && session.fresh) {
 		c.header('Set-Cookie', lucia.createSessionCookie(session.id).serialize(), {

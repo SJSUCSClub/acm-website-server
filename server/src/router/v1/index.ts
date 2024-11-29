@@ -6,7 +6,7 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
-import { users, projects, majors, events, eventCompanies, subscribedCompanies, companies, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles, equipmentRentalType, equipmentItem, equipmentRentals, educationLevelEnum, userRoleEnum, equipmentConditionEnum, bookmarkedEvents } from '@/db/schema';
+import { users, projects, majors, events, eventCompanies, subscribedCompanies, companies, subscribedEvents, eventsFiles, files, interestedInProjects, projectsFiles, equipmentRentalType, equipmentItem, equipmentRentals, educationLevelEnum, userRoleEnum, equipmentConditionEnum, bookmarkedEvents, eventsEnum } from '@/db/schema';
 import { eq, count, getTableColumns, and } from 'drizzle-orm';
 import type { User, Project, Event, Company, File, Major, EquipmentRentalType, EquipmentItem, EquipmentRental, SubscribedCompany } from '@/db/schema';
 import { csFieldsEnum } from '@/db/schema';
@@ -877,16 +877,7 @@ v1App.openapi(
 			[HttpStatusCodes.NO_CONTENT]: {
 				description: 'Successful response',
 			},
-			[HttpStatusCodes.UNAUTHORIZED]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Unauthorized',
-			},
+			...unauthorizedRequest,
 			[HttpStatusCodes.FORBIDDEN]: {
 				content: {
 					'application/json': {
@@ -941,16 +932,7 @@ v1App.openapi(
 			[HttpStatusCodes.NO_CONTENT]: {
 				description: 'Successful response',
 			},
-			[HttpStatusCodes.UNAUTHORIZED]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Unauthorized',
-			},
+			...unauthorizedRequest,
 			[HttpStatusCodes.FORBIDDEN]: {
 				content: {
 					'application/json': {
@@ -1013,16 +995,7 @@ v1App.openapi(
 				},
 				description: 'Successful response',
 			},
-			[HttpStatusCodes.UNAUTHORIZED]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Unauthorized',
-			},
+			...unauthorizedRequest,
 			[HttpStatusCodes.FORBIDDEN]: {
 				content: {
 					'application/json': {
@@ -1572,7 +1545,7 @@ v1App.openapi(
 	},
     responses: {
       [HttpStatusCodes.OK]: {
-        description: 'Successfully deleted user',
+        description: 'Get array of values for enum type',
         content: {
           'application/json': {
             schema: z.object({
@@ -1580,14 +1553,27 @@ v1App.openapi(
             }),
           },
         },
-      },
+		},
+		[HttpStatusCodes.NOT_FOUND]: {
+			description: 'Enum type does not exist',
+			content: {
+				'application/json': {
+					schema: z.object({
+						error: z.string(),
+					}),
+				},
+			},
+		},
     },
   }),
   async (c) => {
-	const { enumType } = c.req.valid('param');
-	const types = await db.execute(sql.raw(`select getEnumValues('${enumType}') as types`));
-	
-    return c.json({ types: types.rows[0].types }, HttpStatusCodes.OK);
+	  const { enumType } = c.req.valid('param');
+	  const types = await db.execute(sql.raw(`select getEnumValues('${enumType}') as types`));
+	  const values = types.rows[0].types as string[];
+	  if (!values.length) {
+		  return c.json({error: 'Enum type not found'}, HttpStatusCodes.NOT_FOUND);
+	  }
+	return c.json({ types: types.rows[0].types }, HttpStatusCodes.OK);
   },
 );
 
