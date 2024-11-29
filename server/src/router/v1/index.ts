@@ -609,11 +609,7 @@ v1App.openapi(
 				and(
 					eq(subscribedCompanies.userId, user.id),
 					eq(subscribedCompanies.companyId, companyId),
-<<<<<<< HEAD
 				),
-=======
-				)
->>>>>>> d518cf1... Company endpoints
 			).returning();
 		if (result.length === 0) {
 			return c.json({ error: 'Subscription not found' }, HttpStatusCodes.NOT_FOUND);
