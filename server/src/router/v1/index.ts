@@ -10,7 +10,7 @@ import { users, projects, majors, events, eventCompanies, subscribedCompanies, c
 import { eq, count, getTableColumns, and } from 'drizzle-orm';
 import type { User, Project, Event, Company, File, Major, EquipmentRentalType, EquipmentItem, EquipmentRental, SubscribedCompany } from '@/db/schema';
 import { csFieldsEnum } from '@/db/schema';
-import { authMiddleWare, unauthorizedRequest } from '@/middlewares/auth-middleware';
+import { authMiddleWare, unauthorizedRequest, forbiddenRequest } from '@/middlewares/auth-middleware';
 
 import authRouter from '@/router/v1/auth';
 
@@ -188,26 +188,8 @@ v1App.openapi(
 				},
 				description: 'Successful response',
 			},
-			[HttpStatusCodes.UNAUTHORIZED]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Unauthorized',
-			},
-			[HttpStatusCodes.FORBIDDEN]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Forbidden',
-			},
+			...unauthorizedRequest,
+			...forbiddenRequest,
 		},
 	}),
 	async (c) => {
@@ -432,26 +414,8 @@ v1App.openapi(
 				},
 				description: 'Successful response',
 			},
-			[HttpStatusCodes.UNAUTHORIZED]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Unauthorized',
-			},
-			[HttpStatusCodes.FORBIDDEN]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Forbidden',
-			},
+			...unauthorizedRequest,
+			...forbiddenRequest,
 			[HttpStatusCodes.CONFLICT]: {
 				content: {
 					'application/json': {
@@ -517,16 +481,7 @@ v1App.openapi(
 				},
 				description: 'Already subscribed',
 			},
-			[HttpStatusCodes.UNAUTHORIZED]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Already subscribed',
-			},
+			...unauthorizedRequest,	
 		},
 	}),
 	async (c) => {
@@ -586,16 +541,7 @@ v1App.openapi(
 				},
 				description: 'Not found',
 			},
-			[HttpStatusCodes.UNAUTHORIZED]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Unauthorized',
-			},
+			...unauthorizedRequest,
 		},
 	}),
 	async (c) => {
@@ -878,16 +824,7 @@ v1App.openapi(
 				description: 'Successful response',
 			},
 			...unauthorizedRequest,
-			[HttpStatusCodes.FORBIDDEN]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Forbidden',
-			},
+			...forbiddenRequest,
 			[HttpStatusCodes.CONFLICT]: {
 				content: {
 					'application/json': {
@@ -933,16 +870,7 @@ v1App.openapi(
 				description: 'Successful response',
 			},
 			...unauthorizedRequest,
-			[HttpStatusCodes.FORBIDDEN]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Forbidden',
-			},
+			...forbiddenRequest,
 			[HttpStatusCodes.NOT_FOUND]: {
 				content: {
 					'application/json': {
@@ -996,16 +924,7 @@ v1App.openapi(
 				description: 'Successful response',
 			},
 			...unauthorizedRequest,
-			[HttpStatusCodes.FORBIDDEN]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Forbidden',
-			},
+			...forbiddenRequest,
 			[HttpStatusCodes.CONFLICT]: {
 				content: {
 					'application/json': {

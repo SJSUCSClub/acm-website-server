@@ -48,3 +48,16 @@ export const unauthorizedRequest = {
 		},
 	},
 };
+
+export const forbiddenRequest = {
+	[FORBIDDEN]: {
+		description: 'Forbidden',
+		content: {
+			'application/json': {
+				schema: z.object({
+					error: z.string(),
+				}),
+			},
+		},
+	},
+};
