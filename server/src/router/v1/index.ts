@@ -1,4 +1,5 @@
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
+import { sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { createSelectSchema } from 'drizzle-zod';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
@@ -9,7 +10,7 @@ import { users, projects, majors, events, eventCompanies, subscribedCompanies, c
 import { eq, count, getTableColumns, and } from 'drizzle-orm';
 import type { User, Project, Event, Company, File, Major, EquipmentRentalType, EquipmentItem, EquipmentRental, SubscribedCompany } from '@/db/schema';
 import { csFieldsEnum } from '@/db/schema';
-import { authMiddleWare, unauthorizedRequest } from '@/middlewares/auth-middleware';
+import { authMiddleWare, unauthorizedRequest, forbiddenRequest } from '@/middlewares/auth-middleware';
 
 import authRouter from '@/router/v1/auth';
 
@@ -187,26 +188,8 @@ v1App.openapi(
 				},
 				description: 'Successful response',
 			},
-			[HttpStatusCodes.UNAUTHORIZED]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Unauthorized',
-			},
-			[HttpStatusCodes.FORBIDDEN]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Forbidden',
-			},
+			...unauthorizedRequest,
+			...forbiddenRequest,
 		},
 	}),
 	async (c) => {
@@ -431,26 +414,8 @@ v1App.openapi(
 				},
 				description: 'Successful response',
 			},
-			[HttpStatusCodes.UNAUTHORIZED]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Unauthorized',
-			},
-			[HttpStatusCodes.FORBIDDEN]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Forbidden',
-			},
+			...unauthorizedRequest,
+			...forbiddenRequest,
 			[HttpStatusCodes.CONFLICT]: {
 				content: {
 					'application/json': {
@@ -516,16 +481,7 @@ v1App.openapi(
 				},
 				description: 'Already subscribed',
 			},
-			[HttpStatusCodes.UNAUTHORIZED]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Already subscribed',
-			},
+			...unauthorizedRequest,	
 		},
 	}),
 	async (c) => {
@@ -585,16 +541,7 @@ v1App.openapi(
 				},
 				description: 'Not found',
 			},
-			[HttpStatusCodes.UNAUTHORIZED]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Unauthorized',
-			},
+			...unauthorizedRequest,
 		},
 	}),
 	async (c) => {
@@ -855,11 +802,162 @@ v1App.openapi(
 
 v1App.openapi(
 	createRoute({
+		method: 'put',
+		path: '/majors/{major}',
+		tags: ['majors'],
+		summary: 'update major',
+		middleware: [authMiddleWare('admin')],
+		request: {
+			body: {
+				content: {
+					'application/json': {
+						schema: majorSchema,
+					},
+				},
+			},
+			params: z.object({
+				major: z.string(),
+			}),
+		},
+		responses: {
+			[HttpStatusCodes.NO_CONTENT]: {
+				description: 'Successful response',
+			},
+			...unauthorizedRequest,
+			...forbiddenRequest,
+			[HttpStatusCodes.CONFLICT]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Conflict',
+			},
+		},
+	}),
+	async (c) => {
+		const { name } = c.req.valid('json');
+		const { major } = c.req.valid('param');
+
+		const newMajor = await db
+			.update(majors)
+			.set({ name })
+			.where(eq(majors.name, major))
+			.returning();
+		if (newMajor.length === 0) {
+			return c.json({ error: 'Major not updated' }, HttpStatusCodes.CONFLICT);
+		}
+		return c.text('', HttpStatusCodes.NO_CONTENT);
+	},
+);
+
+v1App.openapi(
+	createRoute({
+		method: 'delete',
+		path: '/majors/{major}',
+		tags: ['majors'],
+		summary: 'delete major',
+		middleware: [authMiddleWare('admin')],
+		request: {
+			params: z.object({
+				major: z.string(),
+			}),
+		},
+		responses: {
+			[HttpStatusCodes.NO_CONTENT]: {
+				description: 'Successful response',
+			},
+			...unauthorizedRequest,
+			...forbiddenRequest,
+			[HttpStatusCodes.NOT_FOUND]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Conflict',
+			},
+		},
+	}),
+	async (c) => {
+		const { major } = c.req.valid('param');
+		
+		const newMajor = await db
+			.delete(majors)
+			.where(eq(majors.name, major))
+			.returning();
+
+		if (newMajor.length === 0) {
+			return c.json({ error: 'Major not deleted' }, HttpStatusCodes.NOT_FOUND);
+		}
+		return c.text('', HttpStatusCodes.NO_CONTENT);
+	},
+);
+
+v1App.openapi(
+	createRoute({
+		method: 'post',
+		path: '/majors',
+		tags: ['majors'],
+		summary: 'create major',
+		middleware: [authMiddleWare('admin')],
+		request: {
+			body: {
+				content: {
+					'application/json': {
+						schema: majorSchema,
+					},
+				},
+			},
+		},
+		responses: {
+			[HttpStatusCodes.CREATED]: {
+				content: {
+					'application/json': {
+						schema: majorSchema,
+					},
+				},
+				description: 'Successful response',
+			},
+			...unauthorizedRequest,
+			...forbiddenRequest,
+			[HttpStatusCodes.CONFLICT]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							error: z.string(),
+						}),
+					},
+				},
+				description: 'Conflict',
+			},
+		},
+	}),
+	async (c) => {
+		const { name } = c.req.valid('json');
+		const newMajor = await db
+			.insert(majors)
+			.values({ name })
+			.onConflictDoNothing()
+			.returning();
+		if (newMajor.length === 0) {
+			return c.json({ error: 'Major already exists' }, HttpStatusCodes.CONFLICT);
+		}
+		return c.json(newMajor[0], HttpStatusCodes.CREATED);
+	},
+);
+
+v1App.openapi(
+	createRoute({
 		method: 'get',
 		path: '/majors/{majorName}/users',
 		tags: ['majors'],
 		summary: 'List of all users in a major',
-		middleware: [authMiddleWare('user')],
+		middleware: [authMiddleWare('admin')],
 		request: {
 			params: z.object({
 				majorName: z.string(),
@@ -893,12 +991,14 @@ v1App.openapi(
 );
 
 const updateUserSchema = z.object({
-  name: z.string().optional(),
   major: z.string().optional(),
   gradDate: z.coerce.date().optional(),
   interests: z.array(z.enum(csFieldsEnum.enumValues)).optional(),
   education_level: z.enum(educationLevelEnum.enumValues).optional(),
-  profilePic: z.string().optional(),
+  discord: z.string().optional(),
+  linkedin: z.string().optional(),
+  github: z.string().optional(),
+  website: z.string().optional(),
 });
 
 // GET /users/my endpoint
@@ -976,7 +1076,7 @@ v1App.openapi(
 		if (!session) {
 			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
 		}
-
+		
 		const updatedUser = await db
 			.update(users)
 			.set({
@@ -1348,6 +1448,51 @@ v1App.openapi(
       .where(eq(users.id, userId));
 
     return c.json({ success: true }, HttpStatusCodes.OK);
+  },
+);
+
+v1App.openapi(
+  createRoute({
+    method: 'get',
+    path: '/enums/{enumType}',
+    tags: ['enums'],
+	summary: 'Get enum types',
+	request: {
+		params: z.object({
+			enumType: z.string(),
+		}),
+	},
+    responses: {
+      [HttpStatusCodes.OK]: {
+        description: 'Get array of values for enum type',
+        content: {
+          'application/json': {
+            schema: z.object({
+              types: z.array(z.string()),
+            }),
+          },
+        },
+		},
+		[HttpStatusCodes.NOT_FOUND]: {
+			description: 'Enum type does not exist',
+			content: {
+				'application/json': {
+					schema: z.object({
+						error: z.string(),
+					}),
+				},
+			},
+		},
+    },
+  }),
+  async (c) => {
+	  const { enumType } = c.req.valid('param');
+	  const types = await db.execute(sql.raw(`select getEnumValues('${enumType}') as types`));
+	  const values = types.rows[0].types as string[];
+	  if (!values.length) {
+		  return c.json({error: 'Enum type not found'}, HttpStatusCodes.NOT_FOUND);
+	  }
+	return c.json({ types: types.rows[0].types }, HttpStatusCodes.OK);
   },
 );
 

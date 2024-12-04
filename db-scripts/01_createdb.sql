@@ -34,6 +34,7 @@ create table if not exists users(
    grad_date Date not null,
    interests cs_fields_enum[] not null default '{}'::cs_fields_enum[],
    profile_pic text,
+   discord text,
    linkedin text,
    github text,
    website text,
@@ -313,22 +314,6 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION getEventAttendeesCount(eventId integer)
-RETURNS INTEGER
-LANGUAGE plpgsql
-AS
-$$
-DECLARE
-    attendeeCount INTEGER;
-BEGIN
-    SELECT COUNT(*) INTO attendeeCount
-    FROM subscribed_events
-    WHERE event_id = eventId;
-
-    RETURN attendeeCount;
-END;
-$$;
-
 CREATE OR REPLACE FUNCTION getYear(userId text)
 RETURNS year_enum 
 LANGUAGE plpgsql
@@ -369,4 +354,22 @@ BEGIN
             RETURN 'alumni';
       END CASE;
 END;
+$$;
+
+create or replace function getEnumValues(enumName text)
+returns text[]
+language plpgsql
+as
+$$
+declare
+   exist boolean;
+	values text[];
+begin
+   select exists (select 1 from pg_type where typname = enumName) into exist;
+   if exist then
+      select array(select enumlabel from pg_enum where enumtypid=enumName::regtype) into values;
+      return values;
+   end if;
+   return array[]::text[];
+end;
 $$;
