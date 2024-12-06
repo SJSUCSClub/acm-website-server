@@ -2,7 +2,7 @@ import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
 import { z } from 'zod';
 import { authMiddleWare } from '@/middlewares/auth-middleware';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
-import { users, events, subscribedCompanies, companies, subscribedEvents, equipmentRentalType, equipmentItem, equipmentRentals, userRoleEnum, equipmentConditionEnum, bookmarkedEvents, educationLevelEnum } from '@/db/schema';
+import { users, events, subscribedCompanies, companies, subscribedEvents, equipmentRentalType, equipmentItem, equipmentRentals, userRoleEnum, equipmentConditionEnum, bookmarkedEvents } from '@/db/schema';
 import { db } from '@/db/db';
 import { eq, getTableColumns } from 'drizzle-orm';
 import { unauthorizedRequest } from '@/middlewares/auth-middleware';
