@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
 import { z } from "zod";
 import { createSelectSchema } from "drizzle-zod";
@@ -1438,5 +1439,29 @@ v1App.openapi(
     return c.json({ success: true }, HttpStatusCodes.OK);
   }
 );
+=======
+import { OpenAPIHono } from '@hono/zod-openapi';
+import type { Context } from '@/lib/context';
+
+import authRouter from '@/router/v1/auth';
+import userRouter from '@/router/v1/users';
+import projectRouter from '@/router/v1/projects';
+import eventRouter from '@/router/v1/events';
+import companyRouter from '@/router/v1/companies';
+import equipmentRentalRouter from '@/router/v1/equipment-rental';
+import majorRouter from '@/router/v1/major';
+import enumRouter from '@/router/v1/enum';
+
+const v1App = new OpenAPIHono<Context>();
+
+v1App.route('/auth', authRouter);
+v1App.route('/users', userRouter);
+v1App.route('/projects', projectRouter);
+v1App.route('/events', eventRouter);
+v1App.route('/companies', companyRouter);
+v1App.route('/equipment-rentals', equipmentRentalRouter);
+v1App.route('/majors', majorRouter);
+v1App.route('/enums', enumRouter);
+>>>>>>> ca0a81ff19f2fd8b29a22cc7efcdf11488a798c6
 
 export default v1App;
