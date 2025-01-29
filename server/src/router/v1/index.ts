@@ -9,6 +9,7 @@ import companyRouter from '@/router/v1/companies';
 import equipmentRentalRouter from '@/router/v1/equipment-rental';
 import majorRouter from '@/router/v1/major';
 import enumRouter from '@/router/v1/enum';
+import sponsorRouter from './sponsor';
 
 const v1App = new OpenAPIHono<Context>();
 
@@ -20,5 +21,6 @@ v1App.route('/companies', companyRouter);
 v1App.route('/equipment-rentals', equipmentRentalRouter);
 v1App.route('/majors', majorRouter);
 v1App.route('/enums', enumRouter);
+v1App.route('/sponsors', sponsorRouter);
 
 export default v1App;

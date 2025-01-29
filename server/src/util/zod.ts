@@ -1,5 +1,5 @@
 import { createSelectSchema } from 'drizzle-zod';
-import { educationLevelEnum, bookmarkedEvents, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files } from '@/db/schema';
+import { educationLevelEnum, bookmarkedEvents, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors } from '@/db/schema';
 import { csFieldsEnum } from '@/db/schema';
 import { z } from 'zod';
 
@@ -41,3 +41,4 @@ export const updateUserSchema = z.object({
 export const userIdSchema = z.object({
   userId: z.string(),
 });
+export const sponsorSchema = createSelectSchema(sponsors);
