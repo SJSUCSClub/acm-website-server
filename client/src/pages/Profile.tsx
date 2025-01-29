@@ -22,6 +22,7 @@ export default function Profile() {
   // Profile fields
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [discord, setDiscord] = useState<string>("");
   const [linkedin, setLinkedin] = useState<string>("");
   const [github, setGithub] = useState<string>("");
   const [website, setWebsite] = useState<string>("");
@@ -53,6 +54,10 @@ export default function Profile() {
         setMajor(data.major);
         setGradDate(data.gradDate);
         setSelectedStatus(data.education_level);
+        setDiscord(data.discord);
+        setLinkedin(data.linkedin);
+        setGithub(data.github);
+        setWebsite(data.website);
       } catch (err: unknown) {
         if (err instanceof Error) {
           console.error(err.message);
@@ -129,6 +134,15 @@ export default function Profile() {
                     {" "}
                     {email}{" "}
                   </div>
+                </div>
+                <div className="space-y-2">
+                  <Input
+                    label="Discord"
+                    required={false}
+                    placeholder="discord#1234"
+                    value={discord}
+                    onChange={(e) => setDiscord(e.target.value)}
+                  />
                 </div>
 
                 <div className="space-y-2">
