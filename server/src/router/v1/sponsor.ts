@@ -21,7 +21,7 @@ sponsorRouter.openapi(
 				content: {
 					'application/json': {
 						schema: z.object({
-							majors: z.array(sponsorSchema),
+							sponsors: z.array(sponsorSchema),
 						}),
 					},
 				},
