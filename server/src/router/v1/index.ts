@@ -24,5 +24,6 @@ v1App.route('/majors', majorRouter);
 v1App.route('/enums', enumRouter);
 v1App.route('/sponsors', sponsorRouter);
 v1App.route('/officers', officerRouter);
+v1App.route('/sponsors', sponsorRouter);
 
 export default v1App;
