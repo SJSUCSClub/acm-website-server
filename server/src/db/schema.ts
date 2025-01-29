@@ -204,7 +204,7 @@ export const sessions = pgTable('session', {
 
 export const sponsors = pgTable('sponsors', {
   name: varchar('name',{ length: 100 }).primaryKey(),
-  logoKey: text('logo_key'),
+  logoKey: text('logo_key').notNull(),
 });
 
 // Update types
