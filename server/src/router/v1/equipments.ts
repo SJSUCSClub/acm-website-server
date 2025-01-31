@@ -207,7 +207,7 @@ equipmentRentalRouter.openapi(
 equipmentRentalRouter.openapi(
 	createRoute({
 		method: 'get',
-		path: '/type/{equipmentTypeID}/item',
+		path: '/type/{equipmentTypeId}/item',
 		tags: ['equipment'],
 		summary: 'List of all equipment items for a type',
 		request: {
