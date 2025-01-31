@@ -48,7 +48,7 @@ export const equipmentTypeIdSchema = z.object({
       param: {
         name: 'equipmentTypeId',
         in: 'path',
-      }
+      },
     }),
 });
 export const officerSchema = createSelectSchema(officers);

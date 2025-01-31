@@ -6,7 +6,7 @@ import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
 import { equipmentRentalType, equipmentItem, equipmentRentals } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import type { EquipmentRentalType, EquipmentItem, EquipmentRental, NewEquipmentRental, NewEquipmentRentalType } from '@/db/schema';
+import type { EquipmentRentalType, EquipmentItem, EquipmentRental } from '@/db/schema';
 import { equipmentRentalTypeSchema, equipmentItemSchema, equipmentRentalSchema, equipmentTypeIdSchema } from '@/util/zod';
 import { authMiddleWare, unauthorizedRequest, forbiddenRequest } from '@/middlewares/auth-middleware';
 
@@ -394,6 +394,5 @@ equipmentRentalRouter.openapi(
 		return c.json(updatedEquipmentItem[0], HttpStatusCodes.OK);
 	},
 );
-
 
 export default equipmentRentalRouter;
