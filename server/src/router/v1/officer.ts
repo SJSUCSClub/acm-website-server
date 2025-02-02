@@ -17,7 +17,6 @@ officerRouter.openapi(
 	  path: '/',
 	  tags: ['officers'],
 	  summary: 'List all officers',
-	  middleware: [authMiddleWare('admin')],
 	  responses: {
 		[HttpStatusCodes.OK]: {
 		  content: {

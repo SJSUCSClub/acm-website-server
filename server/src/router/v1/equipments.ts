@@ -242,6 +242,7 @@ equipmentRentalRouter.openapi(
 		path: '/item/{equipmentItemID}/rental-history',
 		tags: ['equipment'],
 		summary: 'Lists rental history for an equipment item',
+		middleware: [authMiddleWare('admin')],
 		request: {
 			params: z.object({
 				equipmentItemID: z.string(),
