@@ -6,7 +6,6 @@ import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
 import { officers } from '@/db/schema';
 import type { Officer} from '@/db/schema';
-import { authMiddleWare } from '@/middlewares/auth-middleware';
 import { officerSchema } from '@/util/zod';
 
 const officerRouter = new OpenAPIHono<Context>();
