@@ -10,14 +10,49 @@ import { Input } from "../components/atoms/input";
 import { ImageIcon } from "lucide-react";
 import { Edit } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
+import { Alert } from "../components/atoms/alert";
+
+export function validateGitHubUrl(url: string): string | null {
+  if (!url) return null; // Allow empty field
+  const githubRegex = /^https:\/\/github\.com\/[a-zA-Z0-9-]+\/?$/;
+  if (!githubRegex.test(url)) {
+    return "Invalid GitHub URL. It should be in the format: https://github.com/username";
+  }
+  return null;
+}
+
+export function validateLinkedInUrl(url: string): string | null {
+  if (!url) return null; // Allow empty field
+  const linkedinRegex =
+    /^https:\/\/(?:www\.)?linkedin\.com\/in\/[a-zA-Z0-9-]+\/?$/;
+  if (!linkedinRegex.test(url)) {
+    return "Invalid LinkedIn URL. It should be in the format: https://www.linkedin.com/in/username";
+  }
+  return null;
+}
 
 const status: Array<string> = ["Undergraduate", "Graduate"];
 const year: Array<string> = ["2025", "2026", "2027", "2028"];
-const interest: Array<string> = ["Software", "Hardware", "Design"];
+
+const interest: Array<string> = [
+  "Web Development",
+  "Machine Learning",
+  "Cloud Computing",
+  "Artificial Intelligence",
+  "Networking",
+  "Cybersecurity",
+  "Mobile Development",
+  "Game Development",
+  "Data Science",
+];
+
+const major: Array<string> = [];
 
 export default function Profile() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [avatar, setAvatar] = useState<string | undefined>(undefined);
+
+  const [majorList, setMajorList] = useState<Array<string>>([]);
 
   // Profile fields
   const [name, setName] = useState<string>("");
@@ -31,10 +66,28 @@ export default function Profile() {
   const [major, setMajor] = useState<string>("");
   const [selectedInterest, setSelectedInterest] = useState<string>("");
 
+  const [githubError, setGithubError] = useState<string | null>(null);
+  const [linkedinError, setLinkedinError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchMajors = async () => {
+      try {
+        const response = await fetch("/api/v1/majors");
+        const data = await response.json();
+        setMajorList(data.majors.map((major: { name: string }) => major.name));
+        console.log(majorList);
+      } catch (error) {
+        console.error("Error fetching majors:", error);
+      }
+    };
+
+    fetchMajors();
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5001/api/v1/users/my", {
+        const response = await fetch("/api/v1/users/my", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -69,6 +122,60 @@ export default function Profile() {
 
     fetchData();
   }, []);
+
+  const handleUpdateProfile = async () => {
+    const githubValidationError = validateGitHubUrl(github);
+    const linkedinValidationError = validateLinkedInUrl(linkedin);
+
+    setGithubError(githubValidationError);
+    setLinkedinError(linkedinValidationError);
+
+    if (githubValidationError || linkedinValidationError) {
+      alert("Please correct the errors in the form before saving.");
+      return;
+    }
+
+    try {
+      const updateData = {
+        profilePic: avatar,
+        name,
+        email,
+        major,
+        gradDate,
+        education_level: selectedStatus.toLowerCase(),
+        discord,
+        linkedin,
+        github,
+        website,
+        interest: selectedInterest.toLowerCase(),
+      };
+
+      console.log(" Sending update request with data:", updateData);
+
+      const response = await fetch("/api/v1/users/my", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(updateData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          `HTTP error! status: ${response.status}, message: ${result.error}`
+        );
+      }
+
+      console.log("Profile updated successfully:", result);
+
+      window.location.href = window.location.href;
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+    }
+  };
 
   // for avatar
   const handleClick = () => {
@@ -151,8 +258,12 @@ export default function Profile() {
                     required={false}
                     placeholder="https://linkedin.com/john-doe/"
                     value={linkedin}
-                    onChange={(e) => setLinkedin(e.target.value)}
+                    onChange={(e) => {
+                      setLinkedin(e.target.value);
+                      setLinkedinError(validateLinkedInUrl(e.target.value));
+                    }}
                   />
+                  {linkedinError && <Alert message={linkedinError} />}
                 </div>
 
                 <div className="space-y-2">
@@ -161,8 +272,12 @@ export default function Profile() {
                     required={false}
                     placeholder="https://github.com/john.doe/"
                     value={github}
-                    onChange={(e) => setGithub(e.target.value)}
+                    onChange={(e) => {
+                      setGithub(e.target.value);
+                      setGithubError(validateGitHubUrl(e.target.value));
+                    }}
                   />
+                  {githubError && <Alert message={githubError} />}
                 </div>
 
                 <div className="space-y-2">
@@ -196,10 +311,10 @@ export default function Profile() {
                 </div>
 
                 <div className="space-y-2">
-                  <Input
+                  <Dropdown
                     label="Major"
-                    required={false}
-                    placeholder="Major"
+                    required={true}
+                    options={majorList}
                     value={major}
                     onChange={(e) => setMajor(e.target.value)}
                   />
@@ -208,7 +323,7 @@ export default function Profile() {
 
               <div className="space-y-2">
                 <Dropdown
-                  label="Team Interest"
+                  label="Interests"
                   required={false}
                   options={interest}
                   value={selectedInterest}
@@ -219,7 +334,9 @@ export default function Profile() {
 
             <div className="flex justify-end gap-4">
               <Btn variant="tertiary">Cancel</Btn>
-              <Btn variant="secondary">Save</Btn>
+              <Btn variant="secondary" onClick={handleUpdateProfile}>
+                Save
+              </Btn>
             </div>
           </CardContent>
         </Card>
