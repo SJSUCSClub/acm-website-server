@@ -7,10 +7,10 @@ remote_state {
   config = {
     bucket = get_env("TF_VAR_BACKEND_BUCKET")
 
-    key = "services/acm-website/${path_relative_to_include()}/terraform.tfstate"
+    key = "service/acm-website/${path_relative_to_include()}/terraform.tfstate"
     region         = "us-west-2"
     encrypt        = true
-    dynamodb_table = get_env("TF_VAR_DYNAMODB_TALBE")
+    dynamodb_table = get_env("TF_VAR_DYNAMODB_TABLE")
   }
 }
 generate "provider" {
@@ -19,7 +19,9 @@ generate "provider" {
   contents = <<EOF
         provider "aws" {
             region = "us-west-2"
-            profile = "terraformbackend-role-acm"
+            assume_role {
+              role_arn = "arn:aws:iam::588738592350:role/AcmApplicationRoleForLocalTerraform"
+              session_name = "terragrunt-AcmApplicationRoleForLocalTerraform-session"
         }
     EOF
 }
