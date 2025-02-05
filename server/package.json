@@ -25,7 +25,9 @@
 		"pg": "^8.13.1",
 		"pino": "^9.5.0",
 		"pino-pretty": "^11.3.0",
-		"stoker": "^1.2.7"
+		"stoker": "^1.2.7",
+		"@aws-sdk/client-s3": "^3.738.0",
+    	"@aws-sdk/client-sts": "^3.738.0"
 	},
 	"devDependencies": {
 		"@types/bun": "^1.1.12",
