@@ -6,11 +6,53 @@ import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
 import { users, projects, files, interestedInProjects, projectsFiles } from '@/db/schema';
 import { eq, getTableColumns } from 'drizzle-orm';
-import type { User, Project, File } from '@/db/schema';
+import type { User, Project, File as FileSchema } from '@/db/schema'; // naming conflict with File and schema File type
 import { authMiddleWare, unauthorizedRequest, forbiddenRequest } from '@/middlewares/auth-middleware';
 import { projectIDSchema, userSchema, fileSchema, projectSchema } from '@/util/zod';
+import { uploadFile } from '@/lib/aws/iam';
 
 const projectRouter = new OpenAPIHono<Context>();
+const fileRequestSchema = z.object({
+	file: z.custom<File>((v) => v instanceof File).
+			openapi({
+				type: 'string',
+				format: 'binary'
+			})
+});
+
+projectRouter.openapi(
+	createRoute({
+		method: 'post',
+		path: '/projects/{projectID}/files',
+		tags: ['projects'],
+		summary: 'Upload a file to a project',
+		middleware: [authMiddleWare('admin')],
+		request: {
+			body: {
+				content: {
+					'multipart/form-data': {
+						schema: fileRequestSchema
+					}
+				}
+			}
+		},
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful Upload'
+			}
+		}
+	}),
+	async (c) => {
+		const formDataBody = (await c.req.parseBody());
+		const file: File = <File>formDataBody['file'];
+		const res = await uploadFile(file, 'asdfasdf', file);
+		if(res) {
+			return c.json({'status': 'successful'});
+		} else {
+			return c.json({'status': 'error occured uploading file'});
+		}
+	}
+)
 
 projectRouter.openapi(
 	createRoute({
@@ -101,7 +143,7 @@ projectRouter.openapi(
 	}),
 	async (c) => {
 		const { projectID } = c.req.valid('param');
-		const projectFiles: File[] = await db
+		const projectFiles: FileSchema[] = await db
 			.select(getTableColumns(files))
 			.from(projectsFiles)
 			.innerJoin(files, eq(files.key, projectsFiles.fileKey))
