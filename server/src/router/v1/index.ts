@@ -6,10 +6,11 @@ import userRouter from '@/router/v1/users';
 import projectRouter from '@/router/v1/projects';
 import eventRouter from '@/router/v1/events';
 import companyRouter from '@/router/v1/companies';
-import equipmentRentalRouter from '@/router/v1/equipment-rental';
+import equipmentRentalRouter from '@/router/v1/equipments';
 import majorRouter from '@/router/v1/major';
 import enumRouter from '@/router/v1/enum';
 import sponsorRouter from './sponsor';
+import officerRouter from '@/router/v1/officer';
 
 const v1App = new OpenAPIHono<Context>();
 
@@ -18,9 +19,10 @@ v1App.route('/users', userRouter);
 v1App.route('/projects', projectRouter);
 v1App.route('/events', eventRouter);
 v1App.route('/companies', companyRouter);
-v1App.route('/equipment-rentals', equipmentRentalRouter);
+v1App.route('/equipments', equipmentRentalRouter);
 v1App.route('/majors', majorRouter);
 v1App.route('/enums', enumRouter);
 v1App.route('/sponsors', sponsorRouter);
+v1App.route('/officers', officerRouter);
 
 export default v1App;
