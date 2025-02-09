@@ -18,7 +18,6 @@ export const majors = pgTable('majors', {
   name: text('name').primaryKey(),
 });
 
-
 export const users = pgTable('users', {
   id: text('id').primaryKey(),
   createdAt: timestamp('created_at').notNull(),
