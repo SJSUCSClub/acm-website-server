@@ -4,4 +4,5 @@
             assume_role {
               role_arn = "arn:aws:iam::588738592350:role/AcmApplicationRoleForLocalTerraform"
               session_name = "terragrunt-AcmApplicationRoleForLocalTerraform-session"
+            }
         }
