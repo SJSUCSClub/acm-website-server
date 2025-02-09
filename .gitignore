@@ -4,3 +4,6 @@
 
 pg_password.txt
 node_modules/
+**/.terraform.lock.hcl
+**/.terraform/
+**/.terragrunt-cache/
