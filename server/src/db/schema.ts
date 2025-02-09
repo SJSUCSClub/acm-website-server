@@ -1,4 +1,4 @@
-import { text, timestamp, date, integer, bigint, pgEnum, pgTable, serial, time, numeric } from 'drizzle-orm/pg-core';
+import { boolean, text, timestamp, date, integer, bigint, pgEnum, pgTable, serial, time, numeric } from 'drizzle-orm/pg-core';
 
 // Enums
 export const eventsEnum = pgEnum('events_enum', ['workshop', 'seminar', 'hackathon', 'conference', 'meetup', 'test', 'other']);
@@ -107,6 +107,7 @@ export const events = pgTable('events', {
   tags: csFieldsEnum('tags').array().notNull().default([]),
   targetAudience: targetAudienceEnum('target_audience'),
   shortenedEventUrl: integer('shortened_event_url').references(() => urls.id, { onUpdate: 'cascade' }),
+  memberOnly: boolean('member_only').notNull().default(false),
 });
 
 export const files = pgTable('files', {

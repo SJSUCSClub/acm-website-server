@@ -125,6 +125,7 @@ create table if not exists events(
    tags cs_fields_enum[] not null default array[]::cs_fields_enum[],
    target_audience target_audience_enum,
    shortened_event_url integer,
+   member_only boolean not null default false,
    PRIMARY KEY(id),
    FOREIGN KEY(shortened_event_url) REFERENCES urls(id) on update cascade
 );
