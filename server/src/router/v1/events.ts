@@ -24,7 +24,6 @@ eventRouter.openapi(
 		path: '/{eventID}/companies',
 		tags: ['events'],
 		summary: 'List all companies for an event',
-		middleware: [authMiddleWare('user')],
 		request: {
 			params: eventIDSchema,
 		},
@@ -58,7 +57,7 @@ eventRouter.openapi(
 		path: '/{eventID}/subscribers',
 		tags: ['events'],
 		summary: 'List all subscribers for an event',
-		middleware: [authMiddleWare('user')],
+		middleware: [authMiddleWare('admin')],
 		request: {
 			params: eventIDSchema,
 		},
@@ -96,7 +95,7 @@ eventRouter.openapi(
 		path: '/{eventID}/subscribers/count',
 		tags: ['events'],
 		summary: 'Get the number of subscribers for an event',
-		middleware: [authMiddleWare('user')],
+		middleware: [authMiddleWare('admin')],
 		request: {
 			params: eventIDSchema,
 		},
@@ -129,7 +128,6 @@ eventRouter.openapi(
 		path: '/{eventID}/files',
 		tags: ['events'],
 		summary: 'List all files for an event',
-		middleware: [authMiddleWare('user')],
 		request: {
 			params: eventIDSchema,
 		},

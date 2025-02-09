@@ -18,7 +18,6 @@ companyRouter.openapi(
 		path: '/',
 		tags: ['companies'],
 		summary: 'List all companies',
-		middleware: [authMiddleWare('user')],
 		responses: {
 			[HttpStatusCodes.OK]: {
 				content: {
@@ -224,7 +223,6 @@ companyRouter.openapi(
 		path: '/{companyID}/events',
 		tags: ['companies'],
 		summary: 'List all events for a company',
-		middleware: [authMiddleWare('user')],
 		request: {
 			params: companyIDSchema,
 		},
@@ -262,7 +260,7 @@ companyRouter.openapi(
 		path: '/{companyID}/subscribers',
 		tags: ['companies'],
 		summary: 'List all subscribers for a company',
-		middleware: [authMiddleWare('user')],
+		middleware: [authMiddleWare('admin')],
 		request: {
 			params: companyIDSchema,
 		},
@@ -300,7 +298,7 @@ companyRouter.openapi(
 		path: '/{companyID}/subscribers/count',
 		tags: ['companies'],
 		summary: 'Get the number of subscribers for a company',
-		middleware: [authMiddleWare('user')],
+		middleware: [authMiddleWare('admin')],
 		request: {
 			params: companyIDSchema,
 		},

@@ -11,13 +11,14 @@ export const industryEnum = pgEnum('industry_enum', ['banking and finance', 'aer
 export const officerPositionEnum = pgEnum('officer_position_enum', ['president', 'vice president', 'dev team officer', 'treasurer', 'social media manager']);
 export const educationLevelEnum = pgEnum('education_level_enum', ['undergraduate', 'graduate']);
 export const projectStatusEnum = pgEnum('project_status_enum', ['not started', 'looking for members', 'in progress', 'completed']);
+export const feeDurationEnum = pgEnum('fee_duration_enum', ['semester', 'year']);
+export const userRoleEnum = pgEnum('user_role_enum', ['user', 'member', 'admin']);
 
 // Tables
 export const majors = pgTable('majors', {
   name: text('name').primaryKey(),
 });
 
-export const userRoleEnum = pgEnum('user_role_enum', ['user', 'admin']);
 
 export const users = pgTable('users', {
   id: text('id').primaryKey(),
@@ -29,6 +30,7 @@ export const users = pgTable('users', {
   interests: csFieldsEnum('interests').array().notNull().default([]),
   profilePic: text('profile_pic'),
   role: userRoleEnum('role').notNull().default('user'),
+  paid: feeDurationEnum('paid'),
   education_level: educationLevelEnum('education_level').notNull(),
   discord: text('discord'),
   linkedin: text('linkedin'),
