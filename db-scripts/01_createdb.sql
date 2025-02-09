@@ -17,7 +17,6 @@ create type officer_position_enum as enum ('president', 'vice president', 'dev t
 create type user_role_enum as enum ('user', 'member', 'admin');
 create type year_enum as enum ('freshman', 'sophomore', 'junior', 'senior', 'alumni');
 create type project_status_enum as enum ('not started', 'looking for members', 'in progress', 'completed');
-create type fee_duration_enum as enum('semester', 'year');
 
 create table if not exists majors(
    name text not null,
@@ -34,7 +33,7 @@ create table if not exists users(
    education_level education_level_enum not null,
    grad_date Date not null,
    interests cs_fields_enum[] not null default '{}'::cs_fields_enum[],
-   paid fee_duration_enum,
+   paid membership_term_enum,
    profile_pic text,
    discord text,
    linkedin text,
