@@ -1,4 +1,4 @@
-import { boolean, text, timestamp, date, integer, bigint, pgEnum, pgTable, serial, time, numeric } from 'drizzle-orm/pg-core';
+import { boolean, text, timestamp, date, integer, bigint, pgEnum, pgTable, serial, time, numeric, varchar } from 'drizzle-orm/pg-core';
 
 // Enums
 export const eventsEnum = pgEnum('events_enum', ['workshop', 'seminar', 'hackathon', 'conference', 'meetup', 'test', 'other']);
@@ -203,6 +203,11 @@ export const sessions = pgTable('session', {
   }).notNull(),
 });
 
+export const sponsors = pgTable('sponsors', {
+  name: varchar('name',{ length: 100 }).primaryKey(),
+  logoKey: text('logo_key').notNull(),
+});
+
 // Update types
 export type UserKey = typeof userKey.$inferSelect;
 export type NewUserKey = typeof userKey.$inferInsert;
@@ -248,3 +253,4 @@ export type Major = typeof majors.$inferSelect;
 export type NewMajor = typeof majors.$inferInsert;
 export type Session = typeof session.$inferSelect;
 export type NewSession = typeof session.$inferInsert;
+export type Sponsor = typeof sponsors.$inferInsert;
