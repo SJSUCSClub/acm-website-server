@@ -289,3 +289,9 @@ INSERT INTO equipment_item(equipment_type) VALUES
 (5),
 (5),
 (5);
+
+INSERT INTO sponsors VALUES
+('Kohls', '/sponsors/kohls/logo'),
+('Google', '/sponsors/google/logo'),
+('Tesla', '/sponsors/tesla/logo'),
+('FetchAI', '/sponsors/fetchai/logo');
