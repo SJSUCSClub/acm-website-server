@@ -1,5 +1,6 @@
 import { createSelectSchema } from 'drizzle-zod';
 import { educationLevelEnum, bookmarkedEvents, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers } from '@/db/schema';
+
 import { csFieldsEnum } from '@/db/schema';
 import { z } from 'zod';
 
