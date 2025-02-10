@@ -18,7 +18,6 @@ projectRouter.openapi(
 		path: '/',
 		tags: ['projects'],
 		summary: 'List all projects',
-		middleware: [authMiddleWare('user')],
 		responses: {
 				[HttpStatusCodes.OK]: {
 					content: {
@@ -44,7 +43,7 @@ projectRouter.openapi(
 		path: '/{projectID}/interested',
 		tags: ['projects'],
 		summary: 'List all interested users for a project',
-		middleware: [authMiddleWare('user')],
+		middleware: [authMiddleWare('admin')],
 		request: {
 			params: projectIDSchema,
 		},
@@ -84,7 +83,6 @@ projectRouter.openapi(
 		path: '/{projectID}/files',
 		tags: ['projects'],
 		summary: 'List all files for a project',
-		middleware: [authMiddleWare('user')],
 		request: {
 			params: projectIDSchema,
 		},

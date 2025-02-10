@@ -7,7 +7,7 @@ import { FORBIDDEN, UNAUTHORIZED } from 'stoker/http-status-codes';
 import type { Context } from '@/lib/context';
 import { lucia } from '@/lib/auth';
 
-export const authMiddleWare = (role: 'user' | 'admin'): MiddlewareHandler => createMiddleware<Context>(async (c, next) => {
+export const authMiddleWare = (role: 'user' | 'member' | 'admin'): MiddlewareHandler => createMiddleware<Context>(async (c, next) => {
 	const sessionId = getCookie(c, lucia.sessionCookieName) ?? null;
 	if (!sessionId) {
 		c.set('user', null);
@@ -21,6 +21,10 @@ export const authMiddleWare = (role: 'user' | 'admin'): MiddlewareHandler => cre
 	if (role === 'admin' && user.role !== 'admin') {
 		return c.json({ error: 'Forbidden' }, FORBIDDEN);
 	}
+  if (role === 'member' && user.role === 'user') {
+		return c.json({ error: 'Forbidden' }, FORBIDDEN);
+  }
+
 	if (session && session.fresh) {
 		c.header('Set-Cookie', lucia.createSessionCookie(session.id).serialize(), {
 			append: true,
