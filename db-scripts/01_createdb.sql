@@ -14,7 +14,7 @@ create type education_level_enum as enum('undergraduate', 'graduate');
 create type membership_request_status_enum as enum ('pending', 'approved', 'declined');
 create type industry_enum as enum ('banking and finance', 'aerospace', 'healthcare', 'automotive', 'energy', 'technology');
 create type officer_position_enum as enum ('president', 'vice president', 'dev team officer', 'treasurer', 'social media manager');
-create type user_role_enum as enum ('user', 'admin');
+create type user_role_enum as enum ('user', 'member', 'admin');
 create type year_enum as enum ('freshman', 'sophomore', 'junior', 'senior', 'alumni');
 create type project_status_enum as enum ('not started', 'looking for members', 'in progress', 'completed');
 
@@ -33,13 +33,15 @@ create table if not exists users(
    education_level education_level_enum not null,
    grad_date Date not null,
    interests cs_fields_enum[] not null default '{}'::cs_fields_enum[],
+   paid membership_term_enum,
    profile_pic text,
    discord text,
    linkedin text,
    github text,
    website text,
    PRIMARY KEY(id),
-   foreign key(major) references majors(name) on update cascade
+   foreign key(major) references majors(name) on update cascade,
+   constraint check_paid_role check ((paid IS NULL AND role IN ('user', 'admin')) OR (paid IS NOT NULL AND role IN ('member', 'admin')))
 );
 
 create table if not exists session(
@@ -123,6 +125,7 @@ create table if not exists events(
    tags cs_fields_enum[] not null default array[]::cs_fields_enum[],
    target_audience target_audience_enum,
    shortened_event_url integer,
+   member_only boolean not null default false,
    PRIMARY KEY(id),
    FOREIGN KEY(shortened_event_url) REFERENCES urls(id) on update cascade
 );

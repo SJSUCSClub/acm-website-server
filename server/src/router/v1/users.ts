@@ -137,7 +137,7 @@ userRouter.openapi(
 userRouter.openapi(
 	createRoute({
 		method: 'get',
-		path: '/rental-history',
+		path: '/my/rental-history',
 		tags: ['users'],
 		summary: 'Get current user\'s equipment rental history',
 		middleware: [authMiddleWare('user')],
@@ -208,7 +208,7 @@ userRouter.openapi(
 userRouter.openapi(
 	createRoute({
 		method: 'get',
-		path: '/bookmarks',
+		path: '/my/bookmarks',
 		tags: ['users'],
 		summary: 'Get current user\'s bookmarks',
 		middleware: [authMiddleWare('user')],
@@ -243,7 +243,7 @@ userRouter.openapi(
 userRouter.openapi(
 	createRoute({
 		method: 'get',
-		path: '/subscriptions',
+		path: '/my/subscriptions',
 		tags: ['users'],
 		summary: 'Get current user\'s subscriptions',
 		middleware: [authMiddleWare('user')],

@@ -154,18 +154,18 @@ insert into majors(name) values
 ('Women, Gender, and Sexuality Studies, BA');
 
 INSERT INTO users (
-    id, name, email, major, education_level, grad_date, interests, profile_pic, linkedin, github, website
+    id, name, email, major, education_level, grad_date, interests, profile_pic, linkedin, github, website, role, paid 
 ) VALUES 
 ('user1', 'Alice Smith', 'alice.smith@example.com', 'Aerospace Engineering, BS', 'undergraduate', '2025-05-15', 
-  '{"web development", "machine learning"}', NULL, 'https://linkedin.com', 'https://github.com', NULL),
+  '{"web development", "machine learning"}', NULL, 'https://linkedin.com', 'https://github.com', NULL, 'user', NULL),
 ('user2', 'Bob Johnson', 'bob.johnson@example.com', 'Chemistry, BA', 'graduate', '2022-12-10', 
-  '{"networking", "cybersecurity"}', NULL, 'https://linkedin.com', 'https://github.com', NULL),
+  '{"networking", "cybersecurity"}', NULL, 'https://linkedin.com', 'https://github.com', NULL, 'admin', NULL),
 ('user3', 'Charlie Brown', 'charlie.brown@example.com', 'History, BA', 'undergraduate', '2026-08-30', 
-  '{"mobile development", "game development"}', NULL, 'https://www.linkedin.com', NULL, 'https://www.bing.com/'),
+  '{"mobile development", "game development"}', NULL, 'https://www.linkedin.com', NULL, 'https://www.bing.com/', 'member', 'semester'),
 ('user4', 'Diana Evans', 'diana.evans@example.com', 'Computer Science, BS', 'graduate', '2023-11-01', 
-  '{"artificial intelligence"}', NULL, 'https://linkedin.com', 'https://github.com', NULL),
+  '{"artificial intelligence"}', NULL, 'https://linkedin.com', 'https://github.com', NULL, 'user', NULL),
 ('user5', 'Evan Wright', 'evan.wright@example.com', 'Philosophy, BA', 'undergraduate', '2025-04-20', 
-  '{"data science", "cloud computing"}', NULL, NULL, 'https://github.com', 'https://www.google.com/');
+  '{"data science", "cloud computing"}', NULL, NULL, 'https://github.com', 'https://www.google.com/', 'member', 'annual');
 
 -- Insert company 1
 INSERT INTO companies (name, location, description, industry_id) values
@@ -185,24 +185,24 @@ INSERT INTO projects (name, description) values
 -- Insert event 1
 INSERT INTO events (
     name, location, start_date, end_date, description, event_type, 
-    event_capacity, start_time, end_time, tags, target_audience, image
+    event_capacity, start_time, end_time, tags, target_audience, image, member_only
 ) 
 VALUES (
     'Tech Conference 2024', 'San Francisco, CA', '2024-11-01', '2024-11-03', 
     'A three-day conference on the latest in technology and innovation.', 
     'conference', 500, '09:00', '17:00', 
-    '{"artificial intelligence", "machine learning"}', 'students', 'event1.png'
+    '{"artificial intelligence", "machine learning"}', 'students', 'event1.png', false
 ),
 ('Hackathon 2024', 'New York, NY', '2024-12-10', '2024-12-12', 
     'A 48-hour hackathon focused on software development and innovation.', 
     'hackathon', 300, '08:00', '20:00', 
-    '{"networking"}', 'students', 'event2.png'
+    '{"networking"}', 'students', 'event2.png', false
 ),
 (
     'Data Science Workshop', 'Boston, MA', '2024-09-15', '2024-09-15', 
     'A one-day workshop on data science fundamentals and techniques.', 
     'workshop', 150, '10:00', '16:00', 
-    '{"data science"}', 'students', 'event3.png'
+    '{"data science"}', 'students', 'event3.png', true
 );
 
 INSERT INTO event_companies(event_id, company_id) VALUES
@@ -214,17 +214,17 @@ INSERT INTO event_companies(event_id, company_id) VALUES
 (2, 1),
 (2, 3),
 (2, 4),
-(3,5),
+(3, 5),
 (3, 3);
 
 INSERT INTO subscribed_events(user_id, event_id) VALUES
 ('user1', 1),
 ('user1', 2),
-('user1', 3),
 ('user2', 1),
 ('user2', 3),
 ('user4', 2),
 ('user4', 1),
+('user3', 3),
 ('user5', 1),
 ('user5', 2),
 ('user5', 3);
