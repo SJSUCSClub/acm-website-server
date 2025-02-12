@@ -1,53 +1,94 @@
 import { useEffect, useState } from "react";
 import EventCard from "../../components/molecules/event-card";
-import BtnDateFilter from "../../components/molecules/btn-date-filter";
-import BtnTagFilter from "../../components/molecules/btn-tag-filter";
-import { useQuery } from "@/hooks/useFetch";
-import { paths } from "@/types/schema.v1";
 
-// interface Event {
-//   description: string;
-//   endDate: string;
-//   endTime: string;
-//   id: number;
-//   location: string;
-//   name: string;
-//   startDate: string;
-//   startTime: string;
-//   deadline: string;
-//   eventType: string;
-//   tags: string[];
-// }
+interface Event {
+  id: number;
+  title: string;
+  date: string;
+  description: string;
+  location: string;
+  deadline: string;
+  presenter: string;
+  eventType: string;
+  keywords: string[];
+}
 
-type Events = paths["/v1/events"]["get"]["responses"]["200"]["content"]["application/json"]["foundEvents"];
+const mockEvents: Event[] = [
+  {
+    id: 1,
+    eventType: "Event",
+    title: "This is a blank slate",
+    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
+    description:
+      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
+    location: "1 Washington Sq, San Jose, CA 95192",
+    presenter: "John Doe",
+    deadline: "Nov 27, 2023, 12:00 PM",
+    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
+  },
+  {
+    id: 2,
+    eventType: "Event",
+    title: "This is a blank slate",
+    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
+    description:
+      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
+    location: "1 Washington Sq, San Jose, CA 95192",
+    presenter: "John Doe",
+    deadline: "Nov 27, 2023, 12:00 PM",
+    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
+  },
+  {
+    id: 3,
+    eventType: "Event",
+    title: "This is a blank slate",
+    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
+    description:
+      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
+    location: "1 Washington Sq, San Jose, CA 95192",
+    presenter: "John Doe",
+    deadline: "Nov 27, 2023, 12:00 PM",
+    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
+  },
+  {
+    id: 4,
+    eventType: "Event",
+    title: "This is a blank slate",
+    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
+    description:
+      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
+    location: "1 Washington Sq, San Jose, CA 95192",
+    presenter: "John Doe",
+    deadline: "Nov 27, 2023, 12:00 PM",
+    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
+  },
+  {
+    id: 5,
+    eventType: "Event",
+    title: "This is a blank slate",
+    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
+    description:
+      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
+    location: "1 Washington Sq, San Jose, CA 95192",
+    presenter: "John Doe",
+    deadline: "Nov 27, 2023, 12:00 PM",
+    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
+  },
+  {
+    id: 6,
+    eventType: "Event",
+    title: "This is a blank slate",
+    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
+    description:
+      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
+    location: "1 Washington Sq, San Jose, CA 95192",
+    presenter: "John Doe",
+    deadline: "Nov 27, 2023, 12:00 PM",
+    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
+  },
+];
 
-const EventsPage = () => {
-  const [events, setEvents] = useState<Events>([]);
-  const [dateFilter, setDateFilter] = useState<"upcoming" | "today" | "past" | "all">("all");
-  const [tagFilter, setTagFilter] = useState<string[]>([]);
-
-
-
-  const { data: eventData } = useQuery(
-      "get",
-      "/v1/events",
-      {
-        params: {
-          query: {
-            "tags": tagFilter.join(",") || "",
-            "timeframe": dateFilter || "all"
-          },
-        },
-      },
-    )  
-
-
-
-  useEffect(() => {
-    if (eventData) {
-      setEvents(eventData.foundEvents);
-    }
-  }, [dateFilter, tagFilter, eventData]);
+const CalendarPage = () => {
   return (
     <>
       <div className="about text-text my-10 px-[15%]">
@@ -67,12 +108,8 @@ const EventsPage = () => {
           />
           <BtnTagFilter selectedTags={tagFilter} fcn={setTagFilter} />
         </div>
-        {events.length === 0 && (
-          <div className="text-text text-center my-10">No events found</div>
-        )}
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
-          {events.map((event) => (
+          {mockEvents.map((event) => (
             <EventCard
               key={event.id}
               eventType={event.eventType}

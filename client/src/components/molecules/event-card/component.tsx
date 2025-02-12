@@ -35,26 +35,33 @@ export const EventCard: React.FC<Event> = ({
       return `${formattedHour}:${minutes} ${ampm}`;
     }
   return (
-    <Card className="pt-4 shadow-md">
+    <Card className={cn(className, "pt-4 shadow-md")}>
       <CardTitle className="pl-6">
         <p className="text-xs text-neutral">{eventType.toUpperCase()}</p>
-        <p className="text-lg">{name}</p>
+        <p className="text-lg">{title}</p>
       </CardTitle>
       <CardHeader>
-        <p>{`${formatDate(startDate)} ${formatTime(startTime)} - ${formatDate(endDate)} ${formatTime(endTime)}`}</p>
-        <p>{location}</p>
-
+        <p>{date}</p>
+        <p className="text-[#A60000] font-bold">Deadline: {deadline}</p>
+        <a
+          href={"https://www.google.com/maps/search/?api=1&query=" + location}
+          target="_blank"
+          className="underline text-[#196096]"
+        >
+          {location}
+        </a>
+        <p>Presented by {presenter}</p>
       </CardHeader>
       <CardContent>{description}</CardContent>
-      <CardFooter className="flex flex-wrap gap-2">
-        {tags.map((tag) => (
-          <Badge
+      <CardFooter className="grid grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+        {keywords.map((keyword, index) => (
+          <Btn
             variant="secondary"
-            className="bg-[#318BCF] cursor-default p-2 rounded-lg"
-            key={tag}
+            className="bg-[#318BCF] cursor-default px-2"
+            key={index}
           >
-            <p className="text-xs text-white">{tag}</p>
-          </Badge>
+            <p className="text-xs">{keyword}</p>
+          </Btn>
         ))}
       </CardFooter>
     </Card>
