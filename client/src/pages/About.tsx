@@ -117,8 +117,7 @@ const page = () => {
     <div className="about text-text my-10 px-[15%]">
       <div className="intro space-y-4">
         <h1 className="text-4xl font-bold">
-          What is <span className="text-primary">ACM</span> at{" "}
-          <span className="text-secondary">SJSU?</span>
+          What is <span className="text-primary">ACM</span>
         </h1>
         <h2 className="font-bold text-xl">Who we are.</h2>
         <p>
