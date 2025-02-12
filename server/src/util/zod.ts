@@ -55,3 +55,4 @@ export const equipmentTypeIdSchema = z.object({
 });
 export const officerSchema = createSelectSchema(officers);
 export const newBlacklistSchema = createInsertSchema(blacklist);
+export const blacklistSchema = createSelectSchema(blacklist);

@@ -6,11 +6,39 @@ import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
 import { blacklist } from '@/db/schema';
 import type { NewBlacklist, Blacklist } from '@/db/schema';
-import { newBlacklistSchema, userIdSchema } from '@/util/zod';
+import { newBlacklistSchema, userIdSchema, blacklistSchema } from '@/util/zod';
 import { authMiddleWare } from '@/middlewares/auth-middleware';
 import { eq } from 'drizzle-orm';
 
 const blacklistRouter = new OpenAPIHono<Context>();
+
+blacklistRouter.openapi(
+	createRoute({
+		method: 'get',
+		path: '/',
+		tags: ['blacklist'],
+		summary: 'Get all blacklisted users',
+		middleware: [authMiddleWare('admin')],
+		responses: {
+			[HttpStatusCodes.OK]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							blacklist: z.array(blacklistSchema),
+						}),
+					},
+				},
+				description: 'List of all blacklisted users',
+			},
+		},
+	}),
+	async (c) => {
+		const blacklistedUsers: Blacklist[] = await db
+			.select()
+			.from(blacklist);
+		return c.json({ blacklist: blacklistedUsers }, HttpStatusCodes.OK);
+	},
+);
 
 blacklistRouter.openapi(
 	createRoute({
