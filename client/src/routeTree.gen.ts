@@ -12,6 +12,12 @@ import { createFileRoute } from '@tanstack/react-router'
 
 // Import Routes
 
+import { Route as rootRoute } from "./routes/__root";
+import { Route as OnboardingImport } from "./routes/onboarding";
+import { Route as LoginImport } from "./routes/login";
+import { Route as EventsImport } from "./routes/events";
+import { Route as AboutImport } from "./routes/about";
+import { Route as IndexImport } from "./routes/index";
 import { Route as rootRoute } from './routes/__root'
 import { Route as ProjectsImport } from './routes/projects'
 import { Route as ProfileImport } from './routes/profile'
@@ -50,18 +56,19 @@ const ProfileRoute = ProfileImport.update({
 } as any)
 
 const OnboardingRoute = OnboardingImport.update({
-  path: '/onboarding',
+  path: "/onboarding",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const LoginRoute = LoginImport.update({
-  path: '/login',
+  path: "/login",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const EventsRoute = EventsImport.update({
-  path: '/events',
+  path: "/events",
   getParentRoute: () => rootRoute,
+} as any);
 } as any)
 
 const DashboardRoute = DashboardImport.update({
@@ -70,13 +77,14 @@ const DashboardRoute = DashboardImport.update({
 } as any)
 
 const AboutRoute = AboutImport.update({
-  path: '/about',
+  path: "/about",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const IndexRoute = IndexImport.update({
-  path: '/',
+  path: "/",
   getParentRoute: () => rootRoute,
+} as any);
 } as any)
 
 const EventsIndexRoute = EventsIndexImport.update({
@@ -116,8 +124,43 @@ const AdminLayoutProjectsRoute = AdminLayoutProjectsImport.update({
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/about": {
+      id: "/about";
+      path: "/about";
+      fullPath: "/about";
+      preLoaderRoute: typeof AboutImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/events": {
+      id: "/events";
+      path: "/events";
+      fullPath: "/events";
+      preLoaderRoute: typeof EventsImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/login": {
+      id: "/login";
+      path: "/login";
+      fullPath: "/login";
+      preLoaderRoute: typeof LoginImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/onboarding": {
+      id: "/onboarding";
+      path: "/onboarding";
+      fullPath: "/onboarding";
+      preLoaderRoute: typeof OnboardingImport;
+      parentRoute: typeof rootRoute;
+    };
     '/': {
       id: '/'
       path: '/'
@@ -248,6 +291,11 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 export interface FileRoutesByFullPath {
+  "/": typeof IndexRoute;
+  "/about": typeof AboutRoute;
+  "/events": typeof EventsRoute;
+  "/login": typeof LoginRoute;
+  "/onboarding": typeof OnboardingRoute;
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRoute
@@ -264,6 +312,11 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
+  "/": typeof IndexRoute;
+  "/about": typeof AboutRoute;
+  "/events": typeof EventsRoute;
+  "/login": typeof LoginRoute;
+  "/onboarding": typeof OnboardingRoute;
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRoute
@@ -279,6 +332,12 @@ export interface FileRoutesByTo {
 }
 
 export interface FileRoutesById {
+  __root__: typeof rootRoute;
+  "/": typeof IndexRoute;
+  "/about": typeof AboutRoute;
+  "/events": typeof EventsRoute;
+  "/login": typeof LoginRoute;
+  "/onboarding": typeof OnboardingRoute;
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
@@ -297,6 +356,12 @@ export interface FileRoutesById {
 }
 
 export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath;
+  fullPaths: "/" | "/about" | "/events" | "/login" | "/onboarding";
+  fileRoutesByTo: FileRoutesByTo;
+  to: "/" | "/about" | "/events" | "/login" | "/onboarding";
+  id: "__root__" | "/" | "/about" | "/events" | "/login" | "/onboarding";
+  fileRoutesById: FileRoutesById;
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
@@ -346,6 +411,11 @@ export interface FileRouteTypes {
 }
 
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute;
+  AboutRoute: typeof AboutRoute;
+  EventsRoute: typeof EventsRoute;
+  LoginRoute: typeof LoginRoute;
+  OnboardingRoute: typeof OnboardingRoute;
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   DashboardRoute: typeof DashboardRoute
@@ -364,6 +434,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
+};
   ProfileRoute: ProfileRoute,
   ProjectsRoute: ProjectsRoute,
   AdminRoute: AdminRouteWithChildren,
@@ -373,7 +444,7 @@ const rootRouteChildren: RootRouteChildren = {
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
 /* prettier-ignore-end */
 
