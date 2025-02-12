@@ -29,12 +29,15 @@ const uploadFile = async (credentials: any, bucketname: string, file: File): Pro
         const client = new S3Client({region: region, credentials: credentials});
         const uploadObjectCommand = new PutObjectCommand({Bucket: bucketname, Key: File.name, Body: file});
         try {
-            await client.send(uploadObjectCommand);
+            const repsonse = await client.send(uploadObjectCommand);
             return true;
         } catch (e) {
+            console.log('Error uploading to S3');
+            console.log(e);
             return false;
         }
     } else {
+        console.log('Credentials not yet created');
         return false;
     }
 }
@@ -45,6 +48,6 @@ const uploadFile = async (credentials: any, bucketname: string, file: File): Pro
     } catch (e) {
         s3credentials = undefined;
     }
-})
+})()
 
 export {uploadFile};
