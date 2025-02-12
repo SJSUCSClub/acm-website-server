@@ -149,7 +149,7 @@ authRouter.openapi(
 				await db.select().from(users).where(eq(users.email, email))
 			)?.[0];
 			let user = existingUser;
-      let redirectPath = '/'
+      let redirectPath = '/';
 			if (!existingUser) {
 				const newUser = await db
 					.insert(users)
@@ -167,7 +167,7 @@ authRouter.openapi(
 					.returning();
 
 				user = newUser[0];
-        redirectPath = '/onboarding'
+        redirectPath = '/onboarding';
 			}
 			const session = await lucia.createSession(user.id, {});
 			const sessionCookie = lucia.createSessionCookie(session.id).serialize();
