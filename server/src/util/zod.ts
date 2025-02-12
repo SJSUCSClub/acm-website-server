@@ -1,5 +1,5 @@
-import { createSelectSchema } from 'drizzle-zod';
-import { educationLevelEnum, bookmarkedEvents, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers } from '@/db/schema';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { educationLevelEnum, bookmarkedEvents, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers, blacklist } from '@/db/schema';
 
 import { csFieldsEnum } from '@/db/schema';
 import { z } from 'zod';
@@ -54,3 +54,4 @@ export const equipmentTypeIdSchema = z.object({
     }),
 });
 export const officerSchema = createSelectSchema(officers);
+export const newBlacklistSchema = createInsertSchema(blacklist);

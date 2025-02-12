@@ -11,6 +11,7 @@ import majorRouter from '@/router/v1/major';
 import enumRouter from '@/router/v1/enum';
 import sponsorRouter from '@/router/v1/sponsor';
 import officerRouter from '@/router/v1/officer';
+import blacklistRouter from '@/router/v1/blacklist';
 
 const v1App = new OpenAPIHono<Context>();
 
@@ -24,5 +25,6 @@ v1App.route('/majors', majorRouter);
 v1App.route('/enums', enumRouter);
 v1App.route('/sponsors', sponsorRouter);
 v1App.route('/officers', officerRouter);
+v1App.route('/blacklist', blacklistRouter);
 
 export default v1App;
