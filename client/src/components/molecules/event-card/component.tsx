@@ -4,57 +4,42 @@ import Card, {
   CardHeader,
   CardTitle,
 } from "../../atoms/card";
-import { Badge } from "@/components/ui/badge"
-import { paths } from "@/types/schema.v1";
+import { Btn } from "../../atoms/btn";
+import { cn } from "../../../utils/cn";
 
-type FullEvent = paths["/v1/events"]["get"]["responses"]["200"]["content"]["application/json"]["foundEvents"][0];
-type Event = Omit<FullEvent, "id" | "deadline" | "createdAt" | "updatedAt" | "urls" | "eventCapacity" | "image" | "targetAudience" | "shortenedEventUrl" |  "memberOnly">;
-export const EventCard: React.FC<Event> = ({
-  name,
+export type EventCardProps = Omit<
+  React.ComponentProps<typeof Btn>,
+  "variant" | "children" | "href"
+> & {
+  title: string;
+  location: string;
+  date: string;
+  deadline: string;
+  description: string;
+  keywords: string[];
+};
+
+export const EventCard: React.FC<EventCardProps> = ({
+  title,
   location,
-  startDate,
-  endDate,
-  startTime,
-  endTime,
+  date,
+  deadline,
   description,
-  eventType,
-  tags,
+  keywords,
+  className,
 }) => {
-    function formatDate(date: string) {
-      const dateObj = new Date(date);
-      const month = dateObj.toLocaleString("default", { month: "short" });
-      const day = dateObj.getDate();
-      const year = dateObj.getFullYear();
-      return `${month} ${day}, ${year}`;
-    }
-    function formatTime(time: string) {
-      const [hours, minutes] = time.substring(0, 5).split(":");
-      const hour = parseInt(hours);
-      const ampm = hour >= 12 ? "PM" : "AM";
-      const formattedHour = hour % 12 || 12;
-      return `${formattedHour}:${minutes} ${ampm}`;
-    }
   return (
-    <Card className="pt-4 shadow-md">
-      <CardTitle className="pl-6">
-        <p className="text-xs text-neutral">{eventType.toUpperCase()}</p>
-        <p className="text-lg">{name}</p>
-      </CardTitle>
-      <CardHeader>
-        <p>{`${formatDate(startDate)} ${formatTime(startTime)} - ${formatDate(endDate)} ${formatTime(endTime)}`}</p>
-        <p>{location}</p>
-
-      </CardHeader>
-      <CardContent>{description}</CardContent>
-      <CardFooter className="flex flex-wrap gap-2">
-        {tags.map((tag) => (
-          <Badge
-            variant="secondary"
-            className="bg-[#318BCF] cursor-default p-2 rounded-lg"
-            key={tag}
-          >
-            <p className="text-xs text-white">{tag}</p>
-          </Badge>
+    <Card className={cn(className, "pt-4")}>
+      <CardTitle className="pl-4">{title}</CardTitle>
+      <CardHeader>{date}</CardHeader>
+      <CardHeader>{location}</CardHeader>
+      <CardHeader className="text-destructive">{deadline}</CardHeader>
+      <CardContent>
+        <p>{description}</p>
+      </CardContent>
+      <CardFooter>
+        {keywords.map((keyword, index) => (
+            <p className="pr-4" key={index}>{keyword}</p>
         ))}
       </CardFooter>
     </Card>
