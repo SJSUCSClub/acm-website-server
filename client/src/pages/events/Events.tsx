@@ -7,36 +7,47 @@ interface Event {
   description: string;
   location: string;
   deadline: string;
+  presenter: string;
+  eventType: string;
   keywords: string[];
 }
 
 const mockEvents: Event[] = [
   {
     id: 1,
-    title: "Intro to Web Development",
-    date: "2024-04-01",
-    description: "Learn the basics of HTML, CSS, and JavaScript",
-    location: "CS Building Room 101",
-    deadline: "2024-03-30",
-    keywords: ["web", "html", "css", "javascript", "beginner"],
+    eventType: "Event",
+    title: "This is a blank slate",
+    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
+    description:
+      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
+    location: "1 Washington Sq, San Jose, CA 95192",
+    presenter: "John Doe",
+    deadline: "Nov 27, 2023, 12:00 PM",
+    keywords: ["Undergrad", "Javascript", "HTML", "CSS", "Networking"],
   },
   {
     id: 2,
-    title: "Hackathon Workshop",
-    date: "2024-04-15",
-    description: "Prepare for upcoming hackathons",
-    location: "Engineering Hall",
-    deadline: "2024-04-14",
-    keywords: ["hackathon", "coding", "teamwork"],
+    eventType: "Event",
+    title: "This is a blank slate",
+    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
+    description:
+      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
+    location: "1 Washington Sq, San Jose, CA 95192",
+    presenter: "John Doe",
+    deadline: "Nov 27, 2023, 12:00 PM",
+    keywords: ["Undergrad", "Javascript", "HTML", "CSS", "Networking"],
   },
   {
     id: 3,
-    title: "Resume Review Session",
-    date: "2024-04-30",
-    description: "Get your tech resume reviewed by industry professionals",
-    location: "Virtual",
-    deadline: "2024-04-28",
-    keywords: ["career", "professional", "resume"],
+    eventType: "Event",
+    title: "This is a blank slate",
+    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
+    description:
+      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
+    location: "1 Washington Sq, San Jose, CA 95192",
+    presenter: "John Doe",
+    deadline: "Nov 27, 2023, 12:00 PM",
+    keywords: ["Undergrad", "Javascript", "HTML", "CSS", "Networking"],
   },
 ];
 
@@ -56,15 +67,17 @@ const CalendarPage = () => {
             irrespective of their major or prior experience.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 mt-8">
           {mockEvents.map((event) => (
             <EventCard
               key={event.id}
+              eventType={event.eventType}
               title={event.title}
               date={event.date}
               location={event.location}
               description={event.description}
               deadline={event.deadline}
+              presenter={event.presenter}
               keywords={event.keywords}
             />
           ))}
