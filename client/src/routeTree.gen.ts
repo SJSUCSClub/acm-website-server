@@ -12,20 +12,26 @@ import { createFileRoute } from '@tanstack/react-router';
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root';
-import { Route as ProjectsImport } from './routes/projects';
-import { Route as ProfileImport } from './routes/profile';
-import { Route as OnboardingImport } from './routes/onboarding';
-import { Route as LoginImport } from './routes/login';
-import { Route as DashboardImport } from './routes/dashboard';
-import { Route as AboutImport } from './routes/about';
-import { Route as IndexImport } from './routes/index';
-import { Route as EventsIndexImport } from './routes/events/index';
-import { Route as EventsEventIdImport } from './routes/events/$eventId';
-import { Route as AdminLayoutImport } from './routes/admin/_layout';
-import { Route as AdminLayoutIndexImport } from './routes/admin/_layout/index';
-import { Route as AdminLayoutUsersImport } from './routes/admin/_layout/users';
-import { Route as AdminLayoutProjectsImport } from './routes/admin/_layout/projects';
+import { Route as rootRoute } from "./routes/__root";
+import { Route as OnboardingImport } from "./routes/onboarding";
+import { Route as LoginImport } from "./routes/login";
+import { Route as EventsImport } from "./routes/events";
+import { Route as AboutImport } from "./routes/about";
+import { Route as IndexImport } from "./routes/index";
+import { Route as rootRoute } from './routes/__root'
+import { Route as ProjectsImport } from './routes/projects'
+import { Route as ProfileImport } from './routes/profile'
+import { Route as OnboardingImport } from './routes/onboarding'
+import { Route as LoginImport } from './routes/login'
+import { Route as DashboardImport } from './routes/dashboard'
+import { Route as AboutImport } from './routes/about'
+import { Route as IndexImport } from './routes/index'
+import { Route as EventsIndexImport } from './routes/events/index'
+import { Route as EventsEventIdImport } from './routes/events/$eventId'
+import { Route as AdminLayoutImport } from './routes/admin/_layout'
+import { Route as AdminLayoutIndexImport } from './routes/admin/_layout/index'
+import { Route as AdminLayoutUsersImport } from './routes/admin/_layout/users'
+import { Route as AdminLayoutProjectsImport } from './routes/admin/_layout/projects'
 
 // Create Virtual Routes
 
@@ -50,18 +56,19 @@ const ProfileRoute = ProfileImport.update({
 } as any);
 
 const OnboardingRoute = OnboardingImport.update({
-  path: '/onboarding',
+  path: "/onboarding",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const LoginRoute = LoginImport.update({
-  path: '/login',
+  path: "/login",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const EventsRoute = EventsImport.update({
-  path: '/events',
+  path: "/events",
   getParentRoute: () => rootRoute,
+} as any);
 } as any)
 
 const DashboardRoute = DashboardImport.update({
@@ -70,13 +77,14 @@ const DashboardRoute = DashboardImport.update({
 } as any);
 
 const AboutRoute = AboutImport.update({
-  path: '/about',
+  path: "/about",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const IndexRoute = IndexImport.update({
-  path: '/',
+  path: "/",
   getParentRoute: () => rootRoute,
+} as any);
 } as any)
 
 const EventsIndexRoute = EventsIndexImport.update({
@@ -116,8 +124,43 @@ const AdminLayoutProjectsRoute = AdminLayoutProjectsImport.update({
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/about": {
+      id: "/about";
+      path: "/about";
+      fullPath: "/about";
+      preLoaderRoute: typeof AboutImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/events": {
+      id: "/events";
+      path: "/events";
+      fullPath: "/events";
+      preLoaderRoute: typeof EventsImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/login": {
+      id: "/login";
+      path: "/login";
+      fullPath: "/login";
+      preLoaderRoute: typeof LoginImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/onboarding": {
+      id: "/onboarding";
+      path: "/onboarding";
+      fullPath: "/onboarding";
+      preLoaderRoute: typeof OnboardingImport;
+      parentRoute: typeof rootRoute;
+    };
     '/': {
       id: '/';
       path: '/';
@@ -246,56 +289,78 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute;
-  '/about': typeof AboutRoute;
-  '/dashboard': typeof DashboardRoute;
-  '/login': typeof LoginRoute;
-  '/onboarding': typeof OnboardingRoute;
-  '/profile': typeof ProfileRoute;
-  '/projects': typeof ProjectsRoute;
-  '/admin': typeof AdminLayoutRouteWithChildren;
-  '/events/$eventId': typeof EventsEventIdRoute;
-  '/events': typeof EventsIndexRoute;
-  '/admin/projects': typeof AdminLayoutProjectsRoute;
-  '/admin/users': typeof AdminLayoutUsersRoute;
-  '/admin/': typeof AdminLayoutIndexRoute;
+  "/": typeof IndexRoute;
+  "/about": typeof AboutRoute;
+  "/events": typeof EventsRoute;
+  "/login": typeof LoginRoute;
+  "/onboarding": typeof OnboardingRoute;
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/profile': typeof ProfileRoute
+  '/projects': typeof ProjectsRoute
+  '/admin': typeof AdminLayoutRouteWithChildren
+  '/events/$eventId': typeof EventsEventIdRoute
+  '/events': typeof EventsIndexRoute
+  '/admin/projects': typeof AdminLayoutProjectsRoute
+  '/admin/users': typeof AdminLayoutUsersRoute
+  '/admin/': typeof AdminLayoutIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute;
-  '/about': typeof AboutRoute;
-  '/dashboard': typeof DashboardRoute;
-  '/login': typeof LoginRoute;
-  '/onboarding': typeof OnboardingRoute;
-  '/profile': typeof ProfileRoute;
-  '/projects': typeof ProjectsRoute;
-  '/admin': typeof AdminLayoutIndexRoute;
-  '/events/$eventId': typeof EventsEventIdRoute;
-  '/events': typeof EventsIndexRoute;
-  '/admin/projects': typeof AdminLayoutProjectsRoute;
-  '/admin/users': typeof AdminLayoutUsersRoute;
+  "/": typeof IndexRoute;
+  "/about": typeof AboutRoute;
+  "/events": typeof EventsRoute;
+  "/login": typeof LoginRoute;
+  "/onboarding": typeof OnboardingRoute;
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/profile': typeof ProfileRoute
+  '/projects': typeof ProjectsRoute
+  '/admin': typeof AdminLayoutIndexRoute
+  '/events/$eventId': typeof EventsEventIdRoute
+  '/events': typeof EventsIndexRoute
+  '/admin/projects': typeof AdminLayoutProjectsRoute
+  '/admin/users': typeof AdminLayoutUsersRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute;
-  '/': typeof IndexRoute;
-  '/about': typeof AboutRoute;
-  '/dashboard': typeof DashboardRoute;
-  '/login': typeof LoginRoute;
-  '/onboarding': typeof OnboardingRoute;
-  '/profile': typeof ProfileRoute;
-  '/projects': typeof ProjectsRoute;
-  '/admin': typeof AdminRouteWithChildren;
-  '/admin/_layout': typeof AdminLayoutRouteWithChildren;
-  '/events/$eventId': typeof EventsEventIdRoute;
-  '/events/': typeof EventsIndexRoute;
-  '/admin/_layout/projects': typeof AdminLayoutProjectsRoute;
-  '/admin/_layout/users': typeof AdminLayoutUsersRoute;
-  '/admin/_layout/': typeof AdminLayoutIndexRoute;
+  "/": typeof IndexRoute;
+  "/about": typeof AboutRoute;
+  "/events": typeof EventsRoute;
+  "/login": typeof LoginRoute;
+  "/onboarding": typeof OnboardingRoute;
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/profile': typeof ProfileRoute
+  '/projects': typeof ProjectsRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/admin/_layout': typeof AdminLayoutRouteWithChildren
+  '/events/$eventId': typeof EventsEventIdRoute
+  '/events/': typeof EventsIndexRoute
+  '/admin/_layout/projects': typeof AdminLayoutProjectsRoute
+  '/admin/_layout/users': typeof AdminLayoutUsersRoute
+  '/admin/_layout/': typeof AdminLayoutIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
+  fullPaths: "/" | "/about" | "/events" | "/login" | "/onboarding";
+  fileRoutesByTo: FileRoutesByTo;
+  to: "/" | "/about" | "/events" | "/login" | "/onboarding";
+  id: "__root__" | "/" | "/about" | "/events" | "/login" | "/onboarding";
+  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
@@ -346,14 +411,19 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
   AboutRoute: typeof AboutRoute;
-  DashboardRoute: typeof DashboardRoute;
+  EventsRoute: typeof EventsRoute;
   LoginRoute: typeof LoginRoute;
   OnboardingRoute: typeof OnboardingRoute;
-  ProfileRoute: typeof ProfileRoute;
-  ProjectsRoute: typeof ProjectsRoute;
-  AdminRoute: typeof AdminRouteWithChildren;
-  EventsEventIdRoute: typeof EventsEventIdRoute;
-  EventsIndexRoute: typeof EventsIndexRoute;
+  IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  DashboardRoute: typeof DashboardRoute
+  LoginRoute: typeof LoginRoute
+  OnboardingRoute: typeof OnboardingRoute
+  ProfileRoute: typeof ProfileRoute
+  ProjectsRoute: typeof ProjectsRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  EventsEventIdRoute: typeof EventsEventIdRoute
+  EventsIndexRoute: typeof EventsIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -362,6 +432,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
+};
   ProfileRoute: ProfileRoute,
   ProjectsRoute: ProjectsRoute,
   AdminRoute: AdminRouteWithChildren,
@@ -371,7 +442,7 @@ const rootRouteChildren: RootRouteChildren = {
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
 /* prettier-ignore-end */
 
