@@ -49,6 +49,7 @@ projectRouter.openapi(
 		if(res) {
 			return c.json({'status': 'successful'});
 		} else {
+			c.status(400);
 			return c.json({'status': 'error occured uploading file'});
 		}
 	}
