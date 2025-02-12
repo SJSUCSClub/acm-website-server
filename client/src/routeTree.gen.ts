@@ -54,13 +54,19 @@ const ProfileRoute = ProfileImport.update({
 const OnboardingRoute = OnboardingImport.update({
   id: '/onboarding',
   path: '/onboarding',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any);
 
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
+} as any);
+
+const EventsRoute = EventsImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRoute,
 } as any);
 
 const DashboardRoute = DashboardImport.update({
@@ -72,13 +78,13 @@ const DashboardRoute = DashboardImport.update({
 const AboutRoute = AboutImport.update({
   id: '/about',
   path: '/about',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any);
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any);
 
 const EventsIndexRoute = EventsIndexImport.update({
@@ -118,7 +124,7 @@ const AdminLayoutProjectsRoute = AdminLayoutProjectsImport.update({
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
     '/': {
       id: '/';
