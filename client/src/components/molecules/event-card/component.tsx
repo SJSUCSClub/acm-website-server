@@ -33,23 +33,31 @@ export const EventCard: React.FC<EventCardProps> = ({
   className,
 }) => {
   return (
-    <Card className={cn(className, "pt-4 shadow-xl")}>
+    <Card className={cn(className, "pt-4 shadow-md")}>
       <CardTitle className="pl-6">
-        <p className="text-sm text-muted-foreground">
-          {eventType.toUpperCase()}
-        </p>
+        <p className="text-xs text-neutral">{eventType.toUpperCase()}</p>
         <p className="text-lg">{title}</p>
       </CardTitle>
       <CardHeader>
-        <p>Date: {date}</p>
-        <p className="text-destructive font-bold">Deadline: {deadline}</p>
-        <a href="#">Location: {location}</a>
-        <p>Presenter(s): {presenter}</p>
+        <p>{date}</p>
+        <p className="text-[#A60000] font-bold">Deadline: {deadline}</p>
+        <a
+          href={"https://www.google.com/maps/search/?api=1&query=" + location}
+          target="_blank"
+          className="underline text-[#196096]"
+        >
+          {location}
+        </a>
+        <p>Presented by {presenter}</p>
       </CardHeader>
       <CardContent>{description}</CardContent>
-      <CardFooter className="grid grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
+      <CardFooter className="grid grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-2">
         {keywords.map((keyword, index) => (
-          <Btn variant="secondary" className="bg-[#318BCF]" key={index}>
+          <Btn
+            variant="secondary"
+            className="bg-[#318BCF] cursor-default px-2"
+            key={index}
+          >
             <p className="text-xs">{keyword}</p>
           </Btn>
         ))}

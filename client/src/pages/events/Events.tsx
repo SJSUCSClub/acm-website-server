@@ -23,7 +23,7 @@ const mockEvents: Event[] = [
     location: "1 Washington Sq, San Jose, CA 95192",
     presenter: "John Doe",
     deadline: "Nov 27, 2023, 12:00 PM",
-    keywords: ["Undergrad", "Javascript", "HTML", "CSS", "Networking"],
+    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
   },
   {
     id: 2,
@@ -35,7 +35,7 @@ const mockEvents: Event[] = [
     location: "1 Washington Sq, San Jose, CA 95192",
     presenter: "John Doe",
     deadline: "Nov 27, 2023, 12:00 PM",
-    keywords: ["Undergrad", "Javascript", "HTML", "CSS", "Networking"],
+    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
   },
   {
     id: 3,
@@ -47,7 +47,43 @@ const mockEvents: Event[] = [
     location: "1 Washington Sq, San Jose, CA 95192",
     presenter: "John Doe",
     deadline: "Nov 27, 2023, 12:00 PM",
-    keywords: ["Undergrad", "Javascript", "HTML", "CSS", "Networking"],
+    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
+  },
+  {
+    id: 4,
+    eventType: "Event",
+    title: "This is a blank slate",
+    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
+    description:
+      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
+    location: "1 Washington Sq, San Jose, CA 95192",
+    presenter: "John Doe",
+    deadline: "Nov 27, 2023, 12:00 PM",
+    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
+  },
+  {
+    id: 5,
+    eventType: "Event",
+    title: "This is a blank slate",
+    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
+    description:
+      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
+    location: "1 Washington Sq, San Jose, CA 95192",
+    presenter: "John Doe",
+    deadline: "Nov 27, 2023, 12:00 PM",
+    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
+  },
+  {
+    id: 6,
+    eventType: "Event",
+    title: "This is a blank slate",
+    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
+    description:
+      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
+    location: "1 Washington Sq, San Jose, CA 95192",
+    presenter: "John Doe",
+    deadline: "Nov 27, 2023, 12:00 PM",
+    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
   },
 ];
 
@@ -67,7 +103,7 @@ const CalendarPage = () => {
             irrespective of their major or prior experience.
           </p>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 mt-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
           {mockEvents.map((event) => (
             <EventCard
               key={event.id}
