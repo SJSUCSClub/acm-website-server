@@ -1,6 +1,6 @@
 import { env } from "@/env";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { AssumeRoleCommand, Credentials, STSClient } from "@aws-sdk/client-sts"
+import { AssumeRoleCommand, Credentials, STSClient } from "@aws-sdk/client-sts";
 
 const region = 'us-west-2';
 
