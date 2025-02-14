@@ -8,12 +8,14 @@ import { Btn } from "../components/atoms/btn";
 import { Card, CardContent } from "../components/atoms/card";
 import { Input } from "../components/atoms/input";
 import { ImageIcon } from "lucide-react";
-import { Edit } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { Alert } from "../components/atoms/alert";
+import { DatePicker } from "../components/molecules/date-picker";
+import { format } from "date-fns";
+import { profile } from "console";
 
 export function validateGitHubUrl(url: string): string | null {
-  if (!url) return null; // Allow empty field
+  if (!url) return null;
   const githubRegex = /^https:\/\/github\.com\/[a-zA-Z0-9-]+\/?$/;
   if (!githubRegex.test(url)) {
     return "Invalid GitHub URL. It should be in the format: https://github.com/username";
@@ -22,7 +24,7 @@ export function validateGitHubUrl(url: string): string | null {
 }
 
 export function validateLinkedInUrl(url: string): string | null {
-  if (!url) return null; // Allow empty field
+  if (!url) return null;
   const linkedinRegex =
     /^https:\/\/(?:www\.)?linkedin\.com\/in\/[a-zA-Z0-9-]+\/?$/;
   if (!linkedinRegex.test(url)) {
@@ -32,7 +34,6 @@ export function validateLinkedInUrl(url: string): string | null {
 }
 
 const status: Array<string> = ["Undergraduate", "Graduate"];
-const year: Array<string> = ["2025", "2026", "2027", "2028"];
 
 const interest: Array<string> = [
   "Web Development",
@@ -46,12 +47,8 @@ const interest: Array<string> = [
   "Data Science",
 ];
 
-const major: Array<string> = [];
-
 export default function Profile() {
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [avatar, setAvatar] = useState<string | undefined>(undefined);
-
+  const [profilePic, setProfilePic] = useState<string>("");
   const [majorList, setMajorList] = useState<Array<string>>([]);
 
   // Profile fields
@@ -62,10 +59,9 @@ export default function Profile() {
   const [github, setGithub] = useState<string>("");
   const [website, setWebsite] = useState<string>("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
-  const [gradDate, setGradDate] = useState<string>("");
+  const [gradDate, setGradDate] = useState<Date | undefined>(undefined);
   const [major, setMajor] = useState<string>("");
   const [selectedInterest, setSelectedInterest] = useState<string>("");
-
   const [githubError, setGithubError] = useState<string | null>(null);
   const [linkedinError, setLinkedinError] = useState<string | null>(null);
 
@@ -101,16 +97,19 @@ export default function Profile() {
         const data = await response.json();
         console.log(data);
 
-        setAvatar(data.profilePic);
+        setProfilePic(data.profilePic);
         setName(data.name);
         setEmail(data.email);
         setMajor(data.major);
         setGradDate(data.gradDate);
-        setSelectedStatus(data.education_level);
-        setDiscord(data.discord);
-        setLinkedin(data.linkedin);
-        setGithub(data.github);
-        setWebsite(data.website);
+        setSelectedStatus(
+          data.education_level.charAt(0).toUpperCase() +
+            data.education_level.slice(1)
+        );
+        setDiscord(data.discord || "");
+        setLinkedin(data.linkedin || "");
+        setGithub(data.github || "");
+        setWebsite(data.website || "");
       } catch (err: unknown) {
         if (err instanceof Error) {
           console.error(err.message);
@@ -123,6 +122,7 @@ export default function Profile() {
     fetchData();
   }, []);
 
+  // update and save profile
   const handleUpdateProfile = async () => {
     const githubValidationError = validateGitHubUrl(github);
     const linkedinValidationError = validateLinkedInUrl(linkedin);
@@ -137,11 +137,10 @@ export default function Profile() {
 
     try {
       const updateData = {
-        profilePic: avatar,
         name,
         email,
         major,
-        gradDate,
+        gradDate: format(gradDate!, "yyyy-MM-dd"),
         education_level: selectedStatus.toLowerCase(),
         discord,
         linkedin,
@@ -150,7 +149,7 @@ export default function Profile() {
         interest: selectedInterest.toLowerCase(),
       };
 
-      console.log(" Sending update request with data:", updateData);
+      console.log("Sending update request with data:", updateData);
 
       const response = await fetch("/api/v1/users/my", {
         method: "PUT",
@@ -177,17 +176,10 @@ export default function Profile() {
     }
   };
 
-  // for avatar
-  const handleClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const fileURL = URL.createObjectURL(file);
-      setAvatar(fileURL);
-    }
+  // for date picker
+  const handleDateChange = (date: Date | undefined) => {
+    setGradDate(date);
+    console.log("new graddate" + gradDate);
   };
 
   return (
@@ -202,31 +194,13 @@ export default function Profile() {
                 <div className="flex flex-rows space-y-2">
                   <div className="relative flex items-center gap-4">
                     <Avatar className="w-24 h-24">
-                      <AvatarImage src={avatar} alt="Profile picture" />
+                      <AvatarImage src={profilePic} alt="Profile picture" />
                       <AvatarFallback>
                         <ImageIcon className="w-12 h-12 text-muted-foreground" />
                       </AvatarFallback>
                     </Avatar>
-
-                    <div
-                      className="absolute top-0 right-0 transform translate-x-1/2 translate-y-full"
-                      onClick={handleClick}
-                    >
-                      <button className="bg-gray-200 p-1 rounded-full shadow-md hover:bg-gray-300">
-                        <Edit className=" text-gray-500" />
-                      </button>
-
-                      <input
-                        type="file"
-                        accept="image/*"
-                        ref={fileInputRef}
-                        style={{ display: "none" }}
-                        onChange={handleFileChange}
-                      />
-                    </div>
                   </div>
                 </div>
-
                 <div className="space-y-2">
                   <p className="text-neutral font-semibold mb-2">Name</p>
                   <div className="rounded-xl bg-border text-gray-500 px-[16px] py-[10px] focus:outline-none w-full placeholder-neutral mb-2 border-border-hovered border-2">
@@ -300,14 +274,14 @@ export default function Profile() {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Dropdown
-                    label="Graduation Year"
-                    required={true}
-                    options={year}
-                    value={gradDate}
-                    onChange={(e) => setGradDate(e.target.value)}
-                  />
+                <div className="flex flex-row space-y-2">
+                  <div className="relative">
+                    <DatePicker
+                      label="Graduation Date"
+                      value={gradDate}
+                      onChange={handleDateChange}
+                    />
+                  </div>
                 </div>
 
                 <div className="space-y-2">

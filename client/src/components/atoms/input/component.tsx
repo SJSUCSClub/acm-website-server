@@ -25,7 +25,7 @@ export const Input: React.FC<IInputProps> = ({
     <input
       className={cn(
         "rounded-xl bg-border text-text px-[16px] py-[10px] focus:outline-none w-full placeholder-neutral mb-2 border-border-hovered border-2 text-[14px]",
-        className,
+        className
       )}
       placeholder={placeholder}
       {...props}
