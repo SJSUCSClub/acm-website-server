@@ -7,7 +7,7 @@ import { db } from '@/db/db';
 import { blacklist } from '@/db/schema';
 import type { NewBlacklist, Blacklist } from '@/db/schema';
 import { newBlacklistSchema, userIdSchema, blacklistSchema } from '@/util/zod';
-import { authMiddleWare } from '@/middlewares/auth-middleware';
+import { authMiddleWare, unauthorizedRequest, forbiddenRequest } from '@/middlewares/auth-middleware';
 import { eq } from 'drizzle-orm';
 
 const blacklistRouter = new OpenAPIHono<Context>();
@@ -31,6 +31,8 @@ blacklistRouter.openapi(
 				description: 'List of all blacklisted users',
 			},
 		},
+		...unauthorizedRequest,
+		...forbiddenRequest,
 	}),
 	async (c) => {
 		const blacklistedUsers: Blacklist[] = await db
@@ -68,6 +70,8 @@ blacklistRouter.openapi(
 			description: 'User successfully blacklisted',
 		},
 	  },
+	  ...unauthorizedRequest,
+	  ...forbiddenRequest,
 	}),
 	async (c) => {
 		const { userId, reason } = c.req.valid('json');
@@ -102,6 +106,8 @@ blacklistRouter.openapi(
 			description: 'User removed from blacklist',
 		},
 	  },
+	  ...unauthorizedRequest,
+	  ...forbiddenRequest,
 	}),
 	async (c) => {
 		const { userId } = c.req.valid('param');
