@@ -8,11 +8,26 @@ import { Btn } from "../components/atoms/btn";
 import { Card, CardContent } from "../components/atoms/card";
 import { Input } from "../components/atoms/input";
 import { ImageIcon } from "lucide-react";
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Alert } from "../components/atoms/alert";
 import { DatePicker } from "../components/molecules/date-picker";
 import { format } from "date-fns";
 import { Select } from "../components/atoms/select";
+import { Spinner } from "../components/atoms/spinner";
+
+const status: Array<string> = ["Undergraduate", "Graduate"];
+
+const interests: Array<string> = [
+  "Web Development",
+  "Machine Learning",
+  "Cloud Computing",
+  "Artificial Intelligence",
+  "Networking",
+  "Cybersecurity",
+  "Mobile Development",
+  "Game Development",
+  "Data Science",
+];
 
 export function validateGitHubUrl(url: string): string | null {
   if (!url) return null;
@@ -33,26 +48,11 @@ export function validateLinkedInUrl(url: string): string | null {
   return null;
 }
 
-const status: Array<string> = ["Undergraduate", "Graduate"];
-
-const interests: Array<string> = [
-  "Web Development",
-  "Machine Learning",
-  "Cloud Computing",
-  "Artificial Intelligence",
-  "Networking",
-  "Cybersecurity",
-  "Mobile Development",
-  "Game Development",
-  "Data Science",
-];
-
 export default function Profile() {
-  const [profilePic, setProfilePic] = useState<string | undefined>(undefined);
-
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [majorList, setMajorList] = useState<Array<string>>([]);
 
-  // Profile fields
+  const [profilePic, setProfilePic] = useState<string | undefined>(undefined);
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [discord, setDiscord] = useState<string>("");
@@ -85,6 +85,7 @@ export default function Profile() {
   // fetch user data
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch("/api/v1/users/my", {
           method: "GET",
@@ -115,6 +116,8 @@ export default function Profile() {
         setSelectedInterests(data.interests || []);
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -157,14 +160,6 @@ export default function Profile() {
         body: JSON.stringify(updateData),
       });
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          `HTTP error! status: ${response.status}, message: ${result.error}`
-        );
-      }
-
       window.location.href = window.location.href;
     } catch (error) {
       console.error("Failed to update profile:", error);
@@ -187,6 +182,10 @@ export default function Profile() {
   const handleDateChange = (date: Date | undefined) => {
     setGradDate(date);
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="max-w-7xl mx-auto grid p-16 gap-16 ">
