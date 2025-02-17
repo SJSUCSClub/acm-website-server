@@ -188,37 +188,37 @@ export default function Profile() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto grid p-16 gap-16 ">
-      <p className="font-extrabold text-5xl tracking-tighter"> Profile</p>
-      <div className="grid gap-16">
-        <Card className="w-full max-w-7xl mx-auto p-8">
-          <CardContent className="space-y-6">
+    <div className="max-w-6xl mx-auto grid p-4 sm:p-8 md:p-16 gap-8 sm:gap-16">
+      <p className="font-extrabold text-3xl sm:text-4xl md:text-5xl tracking-tighter">
+        Profile
+      </p>
+      <div className="grid gap-8 sm:gap-16">
+        <Card className="w-full max-w-7xl mx-auto p-4 sm:p-6 md:p-8">
+          <CardContent className="space-y-4 sm:space-y-6">
             <div>
               <h2 className="text-lg font-medium mb-4">Public Profile</h2>
               <div className="space-y-4">
                 <div className="flex flex-rows space-y-2">
                   <div className="relative flex items-center gap-4">
-                    <Avatar className="w-24 h-24">
+                    <Avatar className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24">
                       <AvatarImage src={profilePic} alt="Profile picture" />
                       <AvatarFallback>
-                        <ImageIcon className="w-12 h-12 text-muted-foreground" />
+                        <ImageIcon className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-muted-foreground" />
                       </AvatarFallback>
                     </Avatar>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <p className="text-neutral font-semibold mb-2">Name</p>
-                  <div className="rounded-xl bg-border text-gray-500 px-[16px] py-[10px] focus:outline-none w-full placeholder-neutral mb-2 border-border-hovered border-2">
-                    {" "}
-                    {name}{" "}
+                  <div className="rounded-xl bg-border text-gray-500 px-4 py-2 focus:outline-none w-full placeholder-neutral mb-2 border-border-hovered border-2">
+                    {name}
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <p className="text-neutral font-semibold mb-2">Email</p>
-                  <div className="rounded-xl bg-border text-gray-500 px-[16px] py-[10px] focus:outline-none w-full placeholder-neutral mb-2 border-border-hovered border-2">
-                    {" "}
-                    {email}{" "}
+                  <div className="rounded-xl bg-border text-gray-500 px-4 py-2 focus:outline-none w-full placeholder-neutral mb-2 border-border-hovered border-2">
+                    {email}
                   </div>
                 </div>
                 <div className="space-y-2">
