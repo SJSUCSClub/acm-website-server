@@ -12,7 +12,7 @@ import { useState, useEffect } from "react";
 import { Alert } from "../components/atoms/alert";
 import { DatePicker } from "../components/molecules/date-picker";
 import { format } from "date-fns";
-import { Select } from "../components/atoms/select";
+import { MultiSelect } from "../components/atoms/multiselect";
 import { Spinner } from "../components/atoms/spinner";
 
 const status: Array<string> = ["Undergraduate", "Graduate"];
@@ -302,7 +302,7 @@ export default function Profile() {
 
               <div className="space-y-2">
                 <p className="font-semibold text-neutral">Interest(s)</p>
-                <Select
+                <MultiSelect
                   label=""
                   multiple={true}
                   required={false}
@@ -314,8 +314,8 @@ export default function Profile() {
             </div>
 
             <div className="flex justify-end gap-4">
-              <Btn variant="tertiary">Cancel</Btn>
-              <Btn variant="secondary" onClick={handleUpdateProfile}>
+              <Btn variant="secondary">Cancel</Btn>
+              <Btn variant="primary" onClick={handleUpdateProfile}>
                 Save
               </Btn>
             </div>
