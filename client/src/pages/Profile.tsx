@@ -12,7 +12,7 @@ import { useRef, useState, useEffect } from "react";
 import { Alert } from "../components/atoms/alert";
 import { DatePicker } from "../components/molecules/date-picker";
 import { format } from "date-fns";
-import { profile } from "console";
+import { Select } from "../components/atoms/select";
 
 export function validateGitHubUrl(url: string): string | null {
   if (!url) return null;
@@ -35,7 +35,7 @@ export function validateLinkedInUrl(url: string): string | null {
 
 const status: Array<string> = ["Undergraduate", "Graduate"];
 
-const interest: Array<string> = [
+const interests: Array<string> = [
   "Web Development",
   "Machine Learning",
   "Cloud Computing",
@@ -48,7 +48,8 @@ const interest: Array<string> = [
 ];
 
 export default function Profile() {
-  const [profilePic, setProfilePic] = useState<string>("");
+  const [profilePic, setProfilePic] = useState<string | undefined>(undefined);
+
   const [majorList, setMajorList] = useState<Array<string>>([]);
 
   // Profile fields
@@ -61,17 +62,18 @@ export default function Profile() {
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [gradDate, setGradDate] = useState<Date | undefined>(undefined);
   const [major, setMajor] = useState<string>("");
-  const [selectedInterest, setSelectedInterest] = useState<string>("");
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+
   const [githubError, setGithubError] = useState<string | null>(null);
   const [linkedinError, setLinkedinError] = useState<string | null>(null);
 
+  // fetch major list
   useEffect(() => {
     const fetchMajors = async () => {
       try {
         const response = await fetch("/api/v1/majors");
         const data = await response.json();
         setMajorList(data.majors.map((major: { name: string }) => major.name));
-        console.log(majorList);
       } catch (error) {
         console.error("Error fetching majors:", error);
       }
@@ -80,6 +82,7 @@ export default function Profile() {
     fetchMajors();
   }, []);
 
+  // fetch user data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -95,7 +98,6 @@ export default function Profile() {
         }
 
         const data = await response.json();
-        console.log(data);
 
         setProfilePic(data.profilePic);
         setName(data.name);
@@ -110,12 +112,9 @@ export default function Profile() {
         setLinkedin(data.linkedin || "");
         setGithub(data.github || "");
         setWebsite(data.website || "");
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          console.error(err.message);
-        } else {
-          console.error("An unknown error occurred");
-        }
+        setSelectedInterests(data.interests || []);
+      } catch (error) {
+        console.error(error);
       }
     };
 
@@ -146,10 +145,8 @@ export default function Profile() {
         linkedin,
         github,
         website,
-        interest: selectedInterest.toLowerCase(),
+        interests: selectedInterests.map((i) => i.toLowerCase()),
       };
-
-      console.log("Sending update request with data:", updateData);
 
       const response = await fetch("/api/v1/users/my", {
         method: "PUT",
@@ -168,18 +165,27 @@ export default function Profile() {
         );
       }
 
-      console.log("Profile updated successfully:", result);
-
       window.location.href = window.location.href;
     } catch (error) {
       console.error("Failed to update profile:", error);
     }
   };
 
+  // for interests
+  const handleInterestChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    option: string
+  ) => {
+    setSelectedInterests((prevSelectedOptions) =>
+      prevSelectedOptions.includes(option)
+        ? prevSelectedOptions.filter((item) => item !== option)
+        : [...prevSelectedOptions, option]
+    );
+  };
+
   // for date picker
   const handleDateChange = (date: Date | undefined) => {
     setGradDate(date);
-    console.log("new graddate" + gradDate);
   };
 
   return (
@@ -296,12 +302,14 @@ export default function Profile() {
               </div>
 
               <div className="space-y-2">
-                <Dropdown
-                  label="Interests"
+                <p className="font-semibold text-neutral">Interest(s)</p>
+                <Select
+                  label=""
+                  multiple={true}
                   required={false}
-                  options={interest}
-                  value={selectedInterest}
-                  onChange={(e) => setSelectedInterest(e.target.value)}
+                  options={interests}
+                  selectedOptions={selectedInterests}
+                  changeFunction={handleInterestChange}
                 />
               </div>
             </div>
