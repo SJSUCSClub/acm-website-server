@@ -14,7 +14,6 @@ export type EventCardProps = Omit<
   title: string;
   location: string;
   date: string;
-  deadline: string;
   description: string;
   keywords: string[];
 };
@@ -23,21 +22,28 @@ export const EventCard: React.FC<EventCardProps> = ({
   title,
   location,
   date,
-  deadline,
   description,
   keywords,
   className,
 }) => {
   return (
-    <Card className={cn(className, "pt-4")}>
-      <CardTitle className="pl-4">{title}</CardTitle>
-      <CardHeader>{date}</CardHeader>
-      <CardHeader>{location}</CardHeader>
-      <CardHeader className="text-destructive">{deadline}</CardHeader>
-      <CardContent>
-        <p>{description}</p>
-      </CardContent>
-      <CardFooter>
+    <Card className={cn(className, "pt-4 shadow-md")}>
+      <CardTitle className="pl-6">
+        <p className="text-xs text-neutral">{eventType.toUpperCase()}</p>
+        <p className="text-lg">{title}</p>
+      </CardTitle>
+      <CardHeader>
+        <p>{date}</p>
+        <a
+          href={"https://www.google.com/maps/search/?api=1&query=" + location}
+          target="_blank"
+          className="underline text-[#196096]"
+        >
+          {location}
+        </a>
+      </CardHeader>
+      <CardContent>{description}</CardContent>
+      <CardFooter className="grid grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-2">
         {keywords.map((keyword, index) => (
             <p className="pr-4" key={index}>{keyword}</p>
         ))}
