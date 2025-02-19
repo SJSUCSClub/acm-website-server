@@ -22,27 +22,11 @@ import {
 	attendingEvents,
 } from '@/db/schema';
 import { db } from '@/db/db';
-import { eq, count, getTableColumns, and } from 'drizzle-orm';
+import { eq, getTableColumns, and } from 'drizzle-orm';
 import { unauthorizedRequest } from '@/middlewares/auth-middleware';
 import type { User, Event, NewAttendingEvent } from '@/db/schema';
 import type { Context } from '@/lib/context';
-import {
-	userSchema,
-	updateUserSchema,
-	userIdSchema,
-	eventIDSchema,
-	companyIDSchema,
-	projectSchema,
-	bookmarkedEvent,
-	subscribedEvent,
-	subscribedCompany,
-	errorSchema,
-	attendingEvent,
-	subscribedEventSchema,
-	subscribedCompanySchema,
-	attendingEventSchema,
-	bookmarkedEventSchema,
-} from '@/util/zod';
+import { userSchema, companySchema, bookmarkSchema, updateUserSchema, userIdSchema, eventSchema, eventIDSchema, companyIDSchema } from '@/util/zod';
 
 const userRouter = new OpenAPIHono<Context>();
 
@@ -293,9 +277,9 @@ userRouter.openapi(
 		tags: ['users'],
 		summary: 'Check if current user has bookmarked an event',
 		middleware: [authMiddleWare('user')],
-		request: {
-			params: eventIDSchema,
-		},
+    request: {
+      params: eventIDSchema,
+    },
 		responses: {
 			[HttpStatusCodes.OK]: {
 				description: 'Successful response',
@@ -310,150 +294,18 @@ userRouter.openapi(
 			...unauthorizedRequest,
 		},
 	}),
-	async c => {
+	async (c) => {
 		const session = c.get('session');
 		if (!session) {
 			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
 		}
-		const { eventID } = c.req.valid('param');
+    const { eventID } = c.req.valid('param');
 		const bookmark = await db
 			.select()
 			.from(bookmarkedEvents)
-			.where(
-				and(
-					eq(bookmarkedEvents.userId, session.userId),
-					eq(bookmarkedEvents.eventId, parseInt(eventID)),
-				),
-			);
+			.where(and(eq(bookmarkedEvents.userId, session.userId), eq(bookmarkedEvents.eventId, parseInt(eventID))));
 
 		return c.json({ bookmarked: bookmark.length > 0 }, HttpStatusCodes.OK);
-	},
-);
-
-userRouter.openapi(
-	createRoute({
-		method: 'post',
-		path: '/my/bookmarked/{eventID}',
-		tags: ['users'],
-		summary: 'User bookmarks an event',
-		middleware: [authMiddleWare('user')],
-		request: {
-			params: eventIDSchema,
-		},
-		responses: {
-			[HttpStatusCodes.OK]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							newBookmark: bookmarkedEventSchema,
-						}),
-					},
-				},
-				description: 'Successful response',
-			},
-			[HttpStatusCodes.CONFLICT]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Conflict',
-			},
-			...unauthorizedRequest,
-			...forbiddenRequest,
-		},
-	}),
-	async c => {
-		const user = c.get('user');
-		const { eventID } = c.req.valid('param');
-
-		if (!user) {
-			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-		}
-
-		const newBookmark = await db
-			.insert(bookmarkedEvents)
-			.values({ userId: user.id, eventId: parseInt(eventID) })
-			.onConflictDoNothing()
-			.returning();
-
-		if (newBookmark.length === 0) {
-			return c.json(
-				{ error: 'Bookmark already exists' },
-				HttpStatusCodes.CONFLICT,
-			);
-		}
-
-		return c.json({ newBookmark: newBookmark[0] }, HttpStatusCodes.OK);
-	},
-);
-
-userRouter.openapi(
-	createRoute({
-		method: 'delete',
-		path: '/my/bookmarked/{eventID}',
-		tags: ['users'],
-		summary: 'Delete a bookmarked event',
-		middleware: [authMiddleWare('user')],
-		request: {
-			params: eventIDSchema,
-		},
-		responses: {
-			[HttpStatusCodes.NO_CONTENT]: {
-				description: 'Successful response',
-			},
-			[HttpStatusCodes.BAD_REQUEST]: {
-				description: 'Bad request',
-				content: {
-					'application/json': {
-						schema: errorSchema,
-					},
-				},
-			},
-			[HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
-				description: 'Internal server error',
-				content: {
-					'application/json': {
-						schema: errorSchema,
-					},
-				},
-			},
-			...unauthorizedRequest,
-		},
-	}),
-	async c => {
-		try {
-			const session = c.get('session');
-			if (!session) {
-				return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-			}
-
-			const eventID = c.req.param('eventID');
-			if (!eventID) {
-				return c.json(
-					{ error: 'Event ID not provided' },
-					HttpStatusCodes.BAD_REQUEST,
-				);
-			}
-
-			await db
-				.delete(bookmarkedEvents)
-				.where(
-					and(
-						eq(bookmarkedEvents.userId, session.userId),
-						eq(bookmarkedEvents.eventId, parseInt(eventID)),
-					),
-				);
-
-			return c.text('', HttpStatusCodes.NO_CONTENT);
-		} catch (error) {
-			return c.json(
-				{ error: `Failed to delete bookmarked event: ${error}` },
-				HttpStatusCodes.INTERNAL_SERVER_ERROR,
-			);
-		}
 	},
 );
 
@@ -462,7 +314,7 @@ userRouter.openapi(
 		method: 'get',
 		path: '/my/subscribed-events',
 		tags: ['users'],
-		summary: "Get authenticated user's subscribed events",
+		summary: 'Get authenticated user\'s subscribed events',
 		middleware: [authMiddleWare('user')],
 		responses: {
 			[HttpStatusCodes.OK]: {
@@ -470,7 +322,7 @@ userRouter.openapi(
 				content: {
 					'application/json': {
 						schema: z.object({
-							events: z.array(subscribedEvent),
+							events: z.array(eventSchema),
 						}),
 					},
 				},
@@ -478,28 +330,22 @@ userRouter.openapi(
 			...unauthorizedRequest,
 		},
 	}),
-	async c => {
+	async (c) => {
 		const session = c.get('session');
 		if (!session) {
 			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
 		}
 
 		// Get subscribed events
-		const foundSubscribedEvents = await db
-			.select({
-				...getTableColumns(events),
-				subscribedDate: subscribedEvents.subscribedDate,
-			})
+		const foundSubscribedEvents: Event[] = await db
+			.select(getTableColumns(events))
 			.from(subscribedEvents)
 			.innerJoin(events, eq(events.id, subscribedEvents.eventId))
 			.where(eq(subscribedEvents.userId, session.userId));
-
-		return c.json(
-			{
-				events: foundSubscribedEvents,
-			},
-			HttpStatusCodes.OK,
-		);
+      
+		return c.json({
+			events: foundSubscribedEvents,
+		}, HttpStatusCodes.OK);
 	},
 );
 
@@ -510,9 +356,9 @@ userRouter.openapi(
 		tags: ['users'],
 		summary: 'Check if current user has subscribed to an event',
 		middleware: [authMiddleWare('user')],
-		request: {
-			params: eventIDSchema,
-		},
+    request: {
+      params: eventIDSchema,
+    },
 		responses: {
 			[HttpStatusCodes.OK]: {
 				description: 'Successful response',
@@ -527,166 +373,18 @@ userRouter.openapi(
 			...unauthorizedRequest,
 		},
 	}),
-	async c => {
+	async (c) => {
 		const session = c.get('session');
 		if (!session) {
 			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
 		}
-		const { eventID } = c.req.valid('param');
+    const { eventID } = c.req.valid('param');
 		const sub = await db
 			.select()
 			.from(subscribedEvents)
-			.where(
-				and(
-					eq(subscribedEvents.userId, session.userId),
-					eq(subscribedEvents.eventId, parseInt(eventID)),
-				),
-			);
+			.where(and(eq(subscribedEvents.userId, session.userId), eq(subscribedEvents.eventId, parseInt(eventID))));
 
 		return c.json({ subscribed: sub.length > 0 }, HttpStatusCodes.OK);
-	},
-);
-
-userRouter.openapi(
-	createRoute({
-		method: 'post',
-		path: '/my/subscribed-events/{eventID}',
-		tags: ['users'],
-		summary: 'User subscribes to an event',
-		middleware: [authMiddleWare('user')],
-		request: {
-			params: eventIDSchema,
-		},
-		responses: {
-			[HttpStatusCodes.OK]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							newSubscription: subscribedEventSchema,
-						}),
-					},
-				},
-				description: 'Successful response',
-			},
-			[HttpStatusCodes.NOT_FOUND]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Not Found',
-			},
-			[HttpStatusCodes.CONFLICT]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Conflict',
-			},
-			...unauthorizedRequest,
-		},
-	}),
-	async c => {
-		const user = c.get('user');
-		const { eventID } = c.req.valid('param');
-
-		if (!user) {
-			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-		}
-
-		const foundEvents = await db
-			.select()
-			.from(events)
-			.where(eq(events.id, parseInt(eventID)));
-
-		if (foundEvents.length === 0) {
-			return c.json({ error: 'Event not found' }, HttpStatusCodes.NOT_FOUND);
-		}
-		const newSubscription = await db
-			.insert(subscribedEvents)
-			.values({ userId: user.id, eventId: parseInt(eventID) })
-			.onConflictDoNothing()
-			.returning();
-
-		if (newSubscription.length === 0) {
-			return c.json(
-				{ error: 'Subscription already exists' },
-				HttpStatusCodes.CONFLICT,
-			);
-		}
-
-		return c.json({ newSubscription: newSubscription[0] }, HttpStatusCodes.OK);
-	},
-);
-
-userRouter.openapi(
-	createRoute({
-		method: 'delete',
-		path: '/my/subscribed-events/{eventID}',
-		tags: ['users'],
-		summary: 'Delete a subscribed event',
-		middleware: [authMiddleWare('user')],
-		request: {
-			params: eventIDSchema,
-		},
-		responses: {
-			[HttpStatusCodes.NO_CONTENT]: {
-				description: 'Successful response',
-			},
-			[HttpStatusCodes.BAD_REQUEST]: {
-				description: 'Bad request',
-				content: {
-					'application/json': {
-						schema: errorSchema,
-					},
-				},
-			},
-			[HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
-				description: 'Internal server error',
-				content: {
-					'application/json': {
-						schema: errorSchema,
-					},
-				},
-			},
-			...unauthorizedRequest,
-		},
-	}),
-	async c => {
-		try {
-			const session = c.get('session');
-			if (!session) {
-				return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-			}
-			const eventID = c.req.param('eventID');
-			if (!eventID) {
-				return c.json(
-					{ error: 'Event ID not provided' },
-					HttpStatusCodes.BAD_REQUEST,
-				);
-			}
-
-			await db
-				.delete(subscribedEvents)
-				.where(
-					and(
-						eq(subscribedEvents.userId, session.userId),
-						eq(subscribedEvents.eventId, parseInt(eventID)),
-					),
-				);
-
-			return c.text('', HttpStatusCodes.NO_CONTENT);
-		} catch (error) {
-			return c.json(
-				{ error: `Failed to delete subscribed event: ${error}` },
-				HttpStatusCodes.INTERNAL_SERVER_ERROR,
-			);
-		}
 	},
 );
 
@@ -695,7 +393,7 @@ userRouter.openapi(
 		method: 'get',
 		path: '/my/subscribed-companies',
 		tags: ['users'],
-		summary: "Get authenticated user's subscribed companies",
+		summary: 'Get authenticated user\'s subscribed companies',
 		middleware: [authMiddleWare('user')],
 		responses: {
 			[HttpStatusCodes.OK]: {
@@ -703,7 +401,7 @@ userRouter.openapi(
 				content: {
 					'application/json': {
 						schema: z.object({
-							companies: z.array(subscribedCompany),
+							companies: z.array(companySchema),
 						}),
 					},
 				},
@@ -711,198 +409,20 @@ userRouter.openapi(
 			...unauthorizedRequest,
 		},
 	}),
-	async c => {
+	async (c) => {
 		const session = c.get('session');
 		if (!session) {
 			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
 		}
-
-		// Get subscribed companies
-		const foundSubscribedCompanies = await db
-			.select({
-				...getTableColumns(companies),
-				subscribedDate: subscribedCompanies.subscribedDate,
-			})
-			.from(subscribedCompanies)
-			.innerJoin(companies, eq(companies.id, subscribedCompanies.companyId))
-			.where(eq(subscribedCompanies.userId, session.userId));
-
-		return c.json(
-			{
-				companies: foundSubscribedCompanies,
-			},
-			HttpStatusCodes.OK,
-		);
-	},
-);
-
-userRouter.openapi(
-	createRoute({
-		method: 'get',
-		path: '/my/subscribed-companies/{companyID}',
-		tags: ['users'],
-		summary: 'Check if current user has subscribed to a company',
-		middleware: [authMiddleWare('user')],
-		request: {
-			params: companyIDSchema,
-		},
-		responses: {
-			[HttpStatusCodes.OK]: {
-				description: 'Successful response',
-				content: {
-					'application/json': {
-						schema: z.object({
-							subscribed: z.boolean(),
-						}),
-					},
-				},
-			},
-			...unauthorizedRequest,
-		},
-	}),
-	async c => {
-		const session = c.get('session');
-		if (!session) {
-			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-		}
-		const { companyID } = c.req.valid('param');
+    const { companyID } = c.req.valid('param');
 		const sub = await db
 			.select()
 			.from(subscribedCompanies)
-			.where(
-				and(
-					eq(subscribedCompanies.userId, session.userId),
-					eq(subscribedCompanies.companyId, parseInt(companyID)),
-				),
-			);
+			.where(and(eq(subscribedCompanies.userId, session.userId), eq(subscribedCompanies.companyId, parseInt(companyID))));
 
-		return c.json({ subscribed: sub.length > 0 }, HttpStatusCodes.OK);
-	},
-);
-
-userRouter.openapi(
-	createRoute({
-		method: 'post',
-		path: '/my/subscribed-companies/{companyID}',
-		tags: ['users'],
-		summary: 'Subscribe to a company',
-		middleware: [authMiddleWare('user')],
-		request: {
-			params: companyIDSchema,
-		},
-		responses: {
-			[HttpStatusCodes.CREATED]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							subscription: subscribedCompanySchema,
-						}),
-					},
-				},
-				description: 'Successfully subscribed',
-			},
-			[HttpStatusCodes.CONFLICT]: {
-				content: {
-					'application/json': {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
-				},
-				description: 'Already subscribed',
-			},
-			...unauthorizedRequest,
-		},
-	}),
-	async c => {
-		const user = c.get('user');
-		if (!user) {
-			return c.json({ error: 'User not found' }, HttpStatusCodes.UNAUTHORIZED);
-		}
-		const { companyID } = c.req.valid('param');
-		const newSubscription = await db
-			.insert(subscribedCompanies)
-			.values({
-				userId: user.id,
-				companyId: parseInt(companyID),
-				subscribedDate: new Date(),
-			})
-			.onConflictDoNothing()
-			.returning();
-		if (newSubscription.length === 0) {
-			return c.json({ error: 'Already subscribed' }, HttpStatusCodes.CONFLICT);
-		}
-		return c.json(
-			{ subscription: newSubscription[0] },
-			HttpStatusCodes.CREATED,
-		);
-	},
-);
-
-userRouter.openapi(
-	createRoute({
-		method: 'delete',
-		path: '/my/subscribed-companies/{companyID}',
-		tags: ['users'],
-		summary: "Delete a company from a user's subscribed companies",
-		middleware: [authMiddleWare('user')],
-		request: {
-			params: companyIDSchema,
-		},
-		responses: {
-			[HttpStatusCodes.NO_CONTENT]: {
-				description: 'Successful response',
-			},
-			[HttpStatusCodes.BAD_REQUEST]: {
-				description: 'Bad request',
-				content: {
-					'application/json': {
-						schema: errorSchema,
-					},
-				},
-			},
-			[HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
-				description: 'Internal server error',
-				content: {
-					'application/json': {
-						schema: errorSchema,
-					},
-				},
-			},
-			...unauthorizedRequest,
-		},
-	}),
-	async c => {
-		try {
-			const session = c.get('session');
-			if (!session) {
-				return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-			}
-
-			const companyID = c.req.param('companyID');
-			if (!companyID) {
-				return c.json(
-					{ error: 'Company ID not provided' },
-					HttpStatusCodes.BAD_REQUEST,
-				);
-			}
-
-			await db
-				.delete(subscribedCompanies)
-				.where(
-					and(
-						eq(subscribedCompanies.userId, session.userId),
-						eq(subscribedCompanies.companyId, parseInt(companyID)),
-					),
-				);
-
-			return c.text('', HttpStatusCodes.NO_CONTENT);
-		} catch (error) {
-			return c.json(
-				{ error: `Failed to delete subscribed company: ${error}` },
-				HttpStatusCodes.INTERNAL_SERVER_ERROR,
-			);
-		}
+		return c.json({
+			companies: foundSubscribedCompanies,
+		}, HttpStatusCodes.OK);
 	},
 );
 
