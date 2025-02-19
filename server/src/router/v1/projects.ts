@@ -45,7 +45,9 @@ projectRouter.openapi(
 	async (c) => {
 		const formDataBody = (await c.req.parseBody());
 		const file: File = <File>formDataBody['file'];
-		const res = await uploadFile(file, 'asdfasdf', file);
+		console.log('File: ');
+		console.log(file);
+		const res = await uploadFile(file);
 		if(res) {
 			return c.json({'status': 'successful'});
 		} else {
