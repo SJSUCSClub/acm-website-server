@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useEffect, useState } from "react";
 import EventCard from "../../components/molecules/event-card";
+import BtnDateFilter from "../../components/molecules/btn-date-filter";
 
 interface Event {
   description: string;
@@ -60,11 +61,9 @@ const CalendarPage = () => {
             These events are accessible to all those who are interested,
             irrespective of their major or prior experience.
           </p>
-          <BtnDateFilter
-            fcn={setDateFilter}
-          />
-          <BtnTagFilter selectedTags={tagFilter} fcn={setTagFilter} />
+          <BtnDateFilter tab1="Upcoming" tab2="Past" />
         </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
           {events.map((event) => (
             <EventCard
