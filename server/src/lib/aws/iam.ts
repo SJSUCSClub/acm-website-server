@@ -5,7 +5,7 @@ import { AssumeRoleCommand, Credentials, STSClient } from "@aws-sdk/client-sts";
 const region = 'us-west-2';
 
 let s3credentials: Credentials | undefined;
-const BUCKET_NAME = 'us-west-2-global-terraform-state-backend';
+const BUCKET_NAME = 'acmwebsite-dev-588738592350-us-west-2';
 
 const getRoleCredentials = async () : Promise<Credentials> => {
     const client = new STSClient({region: region, credentials: {
@@ -20,17 +20,21 @@ const getRoleCredentials = async () : Promise<Credentials> => {
     if(response.Credentials == undefined) {
         throw new Error("Error getting credentials");
     } else {
-        return <Credentials>response.Credentials;
+        return response.Credentials;
     }
 }
 
-const uploadFile = async (credentials: any, bucketname: string, file: File): Promise<Boolean> => { 
+const uploadFile = async (file: File): Promise<Boolean> => { 
     if(s3credentials) {
-        const client = new S3Client({region: region, credentials: credentials});
-        const uploadObjectCommand = new PutObjectCommand({Bucket: bucketname, Key: File.name, Body: file});
+        const client = new S3Client({region: region, credentials: {
+            accessKeyId: <string> s3credentials.AccessKeyId,
+            secretAccessKey: <string> s3credentials.SecretAccessKey,
+            sessionToken: <string> s3credentials.SessionToken
+        }});
+        const uploadObjectCommand = new PutObjectCommand({Bucket: BUCKET_NAME, Key: file.name, Body: (await file.arrayBuffer())});
         try {
             const repsonse = await client.send(uploadObjectCommand);
-            return true;
+            return true;  
         } catch (e) {
             console.log('Error uploading to S3');
             console.log(e);
