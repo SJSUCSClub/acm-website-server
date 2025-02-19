@@ -15,7 +15,7 @@ import {
   urls,
   bookmarkedEvents,
 } from '@/db/schema';
-import { eq, count, getTableColumns, and } from 'drizzle-orm';
+import { eq, count, getTableColumns, and, lt, gt, arrayContains } from 'drizzle-orm';
 import type { User, Company, File, Event, Url } from '@/db/schema';
 import {
   authMiddleWare,
@@ -29,6 +29,8 @@ import {
   userSchema,
   fileSchema,
   eventSchema,
+  csFieldsEnumSchema,
+  timestampEnumSchema,
 } from '@/util/zod';
 
 const eventRouter = new OpenAPIHono<Context>();
@@ -186,6 +188,12 @@ eventRouter.openapi(
     path: '/',
     tags: ['events'],
     summary: 'List all events',
+    request: {
+      query: z.object({
+        tags: z.string().optional(),
+        timeframe: timestampEnumSchema.optional(),
+      }),
+    },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
@@ -200,7 +208,30 @@ eventRouter.openapi(
     },
   }),
   async (c) => {
-    const foundEvents: Event[] = await db.select().from(events);
+    const {  tags = '', timeframe = 'all' } = c.req.valid('query');
+
+    const conditions = [];
+
+    if (timeframe !== 'all') {
+      const today = new Date().toISOString().split('T')[0];
+
+      conditions.push(
+        timeframe === 'upcoming' ? gt(events.startDate, today) :
+        timeframe === 'past' ? lt(events.startDate, today) :
+        eq(events.startDate, today),
+      );
+    }
+
+    const validTags = tags
+      .split(',')
+      .filter(tag => csFieldsEnumSchema._def.values.includes(tag as z.infer<typeof csFieldsEnumSchema>))
+      .map(tag => tag as z.infer<typeof csFieldsEnumSchema>);
+
+    if (tags?.length > 0) {
+      conditions.push(arrayContains(events.tags, validTags));
+    }
+
+    const foundEvents: Event[] = await db.select().from(events).where(and(...conditions));
     return c.json({ foundEvents }, HttpStatusCodes.OK);
   },
 );
