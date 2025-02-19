@@ -34,6 +34,8 @@ import type {
   Event,
   Url,
 } from '@/db/schema';
+import { eq, count, getTableColumns, and, lt, gt, arrayContains } from 'drizzle-orm';
+import type { User, Company, File, Event, Url } from '@/db/schema';
 import {
   authMiddleWare,
   forbiddenRequest,
@@ -233,7 +235,7 @@ eventRouter.openapi(
     },
   }),
   async (c) => {
-    const { tags = '', timeframe = 'all' } = c.req.valid('query');
+    const {  tags = '', timeframe = 'all' } = c.req.valid('query');
 
     const conditions = [];
 
@@ -241,31 +243,22 @@ eventRouter.openapi(
       const today = new Date().toISOString().split('T')[0];
 
       conditions.push(
-        timeframe === 'upcoming'
-          ? gt(events.startDate, today)
-          : timeframe === 'past'
-            ? lt(events.startDate, today)
-            : eq(events.startDate, today),
+        timeframe === 'upcoming' ? gt(events.startDate, today) :
+        timeframe === 'past' ? lt(events.startDate, today) :
+        eq(events.startDate, today),
       );
     }
 
     const validTags = tags
       .split(',')
-      .filter((tag) =>
-        csFieldsEnumSchema._def.values.includes(
-          tag as z.infer<typeof csFieldsEnumSchema>,
-        ),
-      )
-      .map((tag) => tag as z.infer<typeof csFieldsEnumSchema>);
+      .filter(tag => csFieldsEnumSchema._def.values.includes(tag as z.infer<typeof csFieldsEnumSchema>))
+      .map(tag => tag as z.infer<typeof csFieldsEnumSchema>);
 
     if (tags?.length > 0) {
       conditions.push(arrayContains(events.tags, validTags));
     }
 
-    const foundEvents: Event[] = await db
-      .select()
-      .from(events)
-      .where(and(...conditions));
+    const foundEvents: Event[] = await db.select().from(events).where(and(...conditions));
     return c.json({ foundEvents }, HttpStatusCodes.OK);
   },
 );
