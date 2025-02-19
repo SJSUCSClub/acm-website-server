@@ -1,7 +1,6 @@
 import { createSelectSchema } from 'drizzle-zod';
-import { educationLevelEnum, bookmarkedEvents, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers } from '@/db/schema';
+import { educationLevelEnum, bookmarkedEvents, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers, csFieldsEnum } from '@/db/schema';
 
-import { csFieldsEnum } from '@/db/schema';
 import { z } from 'zod';
 
 export const companySchema = createSelectSchema(companies);
@@ -13,6 +12,8 @@ export const eventSchema = createSelectSchema(events).extend({
 	tags: z.array(z.enum(csFieldsEnum.enumValues)),
 	urls: z.array(z.string()),
 });
+export const csFieldsEnumSchema = z.enum(csFieldsEnum.enumValues);
+export const timestampEnumSchema = z.enum(['upcoming', 'today', 'past', 'all']);
 export const userSchema = createSelectSchema(users).extend({
 	interests: z.array(z.enum(csFieldsEnum.enumValues)),
 });
