@@ -909,28 +909,20 @@ userRouter.openapi(
 userRouter.openapi(
 	createRoute({
 		method: 'get',
-		path: '/{userId}',
+		path: '/my/subscribed-companies/{companyID}',
 		tags: ['users'],
-		summary: 'Admin Get a user by ID',
-		middleware: [authMiddleWare('admin')],
-		request: {
-			params: userIdSchema,
-		},
+		summary: 'Check if current user has subscribed to a company',
+		middleware: [authMiddleWare('user')],
+    request: {
+      params: companyIDSchema,
+    },
 		responses: {
 			[HttpStatusCodes.OK]: {
 				description: 'Successful response',
 				content: {
 					'application/json': {
-						schema: userSchema,
-					},
-				},
-			},
-			[HttpStatusCodes.NOT_FOUND]: {
-				description: 'User not found',
-				content: {
-					'application/json': {
 						schema: z.object({
-							error: z.string(),
+							subscribed: z.boolean(),
 						}),
 					},
 				},
@@ -938,13 +930,60 @@ userRouter.openapi(
 			...unauthorizedRequest,
 		},
 	}),
-	async c => {
-		const { userId } = c.req.valid('param');
-		const user = await db
+	async (c) => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+    const { companyID } = c.req.valid('param');
+		const sub = await db
 			.select()
-			.from(users)
-			.where(eq(users.id, userId))
-			.then(res => res[0]);
+			.from(subscribedCompanies)
+			.where(and(eq(subscribedCompanies.userId, session.userId), eq(subscribedCompanies.companyId, parseInt(companyID))));
+
+		return c.json({ subscribed: sub.length > 0 }, HttpStatusCodes.OK);
+	},
+);
+
+userRouter.openapi(
+  createRoute({
+    method: 'get',
+    path: '/{userId}',
+    tags: ['users'],
+    summary: 'Admin Get a user by ID',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: userIdSchema,
+    },
+    responses: {
+      [HttpStatusCodes.OK]: {
+        description: 'Successful response',
+        content: {
+          'application/json': {
+            schema: userSchema,
+          },
+        },
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        description: 'User not found',
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+      },
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const { userId } = c.req.valid('param');
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .then((res) => res[0]);
 
 		if (!user) {
 			return c.json({ error: 'User not found' }, HttpStatusCodes.NOT_FOUND);
