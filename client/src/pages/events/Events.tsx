@@ -33,7 +33,7 @@ const CalendarPage = () => {
     return `${formattedHour}:${minutes} ${ampm}`;
   }
   useEffect(() => {
-    fetch("http://localhost/api/v1/events", {
+    fetch("/api/v1/events", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
