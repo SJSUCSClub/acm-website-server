@@ -930,6 +930,45 @@ userRouter.openapi(
 );
 
 userRouter.openapi(
+	createRoute({
+		method: 'get',
+		path: '/my/subscribed-companies/{companyID}',
+		tags: ['users'],
+		summary: 'Check if current user has subscribed to a company',
+		middleware: [authMiddleWare('user')],
+    request: {
+      params: companyIDSchema,
+    },
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful response',
+				content: {
+					'application/json': {
+						schema: z.object({
+							subscribed: z.boolean(),
+						}),
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+    const { companyID } = c.req.valid('param');
+		const sub = await db
+			.select()
+			.from(subscribedCompanies)
+			.where(and(eq(subscribedCompanies.userId, session.userId), eq(subscribedCompanies.companyId, parseInt(companyID))));
+
+		return c.json({ subscribed: sub.length > 0 }, HttpStatusCodes.OK);
+	},
+);
+
+userRouter.openapi(
   createRoute({
     method: 'get',
     path: '/{userId}',
