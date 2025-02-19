@@ -233,7 +233,7 @@ export default function Profile() {
 
                 <div className="space-y-2">
                   <Input
-                    label="Linkedin"
+                    label="LinkedIn"
                     required={false}
                     placeholder="https://linkedin.com/john-doe/"
                     value={linkedin}
@@ -247,7 +247,7 @@ export default function Profile() {
 
                 <div className="space-y-2">
                   <Input
-                    label="Github"
+                    label="GitHub"
                     required={false}
                     placeholder="https://github.com/john.doe/"
                     value={github}
