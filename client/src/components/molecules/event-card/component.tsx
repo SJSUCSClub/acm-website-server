@@ -4,18 +4,25 @@ import Card, {
   CardHeader,
   CardTitle,
 } from "../../atoms/card";
-import { Badge } from "@/components/ui/badge"
-import { paths } from "@/types/schema.v1";
+import { Btn } from "../../atoms/btn";
+import { cn } from "../../../utils/cn";
 
-type FullEvent = paths["/v1/events"]["get"]["responses"]["200"]["content"]["application/json"]["foundEvents"][0];
-type Event = Omit<FullEvent, "id" | "deadline" | "createdAt" | "updatedAt" | "urls" | "eventCapacity" | "image" | "targetAudience" | "shortenedEventUrl" |  "memberOnly">;
-export const EventCard: React.FC<Event> = ({
-  name,
+export type EventCardProps = Omit<
+  React.ComponentProps<typeof Btn>,
+  "variant" | "children" | "href"
+> & {
+  title: string;
+  location: string;
+  date: string;
+  description: string;
+  eventType: string;
+  keywords: string[];
+};
+
+export const EventCard: React.FC<EventCardProps> = ({
+  title,
   location,
-  startDate,
-  endDate,
-  startTime,
-  endTime,
+  date,
   description,
   eventType,
   tags,
@@ -42,7 +49,6 @@ export const EventCard: React.FC<Event> = ({
       </CardTitle>
       <CardHeader>
         <p>{date}</p>
-        <p className="text-[#A60000] font-bold">Deadline: {deadline}</p>
         <a
           href={"https://www.google.com/maps/search/?api=1&query=" + location}
           target="_blank"
@@ -50,7 +56,6 @@ export const EventCard: React.FC<Event> = ({
         >
           {location}
         </a>
-        <p>Presented by {presenter}</p>
       </CardHeader>
       <CardContent>{description}</CardContent>
       <CardFooter className="grid grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-2">
