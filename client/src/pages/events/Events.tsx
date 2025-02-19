@@ -1,93 +1,50 @@
+import { useEffect, useState } from "react";
 import EventCard from "../../components/molecules/event-card";
 
 interface Event {
-  id: number;
-  title: string;
-  date: string;
   description: string;
+  endDate: string;
+  endTime: string;
+  id: number;
   location: string;
+  name: string;
+  startDate: string;
+  startTime: string;
   deadline: string;
-  presenter: string;
   eventType: string;
-  keywords: string[];
+  tags: string[];
 }
 
-const mockEvents: Event[] = [
-  {
-    id: 1,
-    eventType: "Event",
-    title: "This is a blank slate",
-    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
-    description:
-      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
-    location: "1 Washington Sq, San Jose, CA 95192",
-    presenter: "John Doe",
-    deadline: "Nov 27, 2023, 12:00 PM",
-    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
-  },
-  {
-    id: 2,
-    eventType: "Event",
-    title: "This is a blank slate",
-    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
-    description:
-      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
-    location: "1 Washington Sq, San Jose, CA 95192",
-    presenter: "John Doe",
-    deadline: "Nov 27, 2023, 12:00 PM",
-    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
-  },
-  {
-    id: 3,
-    eventType: "Event",
-    title: "This is a blank slate",
-    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
-    description:
-      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
-    location: "1 Washington Sq, San Jose, CA 95192",
-    presenter: "John Doe",
-    deadline: "Nov 27, 2023, 12:00 PM",
-    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
-  },
-  {
-    id: 4,
-    eventType: "Event",
-    title: "This is a blank slate",
-    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
-    description:
-      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
-    location: "1 Washington Sq, San Jose, CA 95192",
-    presenter: "John Doe",
-    deadline: "Nov 27, 2023, 12:00 PM",
-    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
-  },
-  {
-    id: 5,
-    eventType: "Event",
-    title: "This is a blank slate",
-    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
-    description:
-      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
-    location: "1 Washington Sq, San Jose, CA 95192",
-    presenter: "John Doe",
-    deadline: "Nov 27, 2023, 12:00 PM",
-    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
-  },
-  {
-    id: 6,
-    eventType: "Event",
-    title: "This is a blank slate",
-    date: "Nov 28, 2023, 9:00 AM - 12:00 PM",
-    description:
-      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
-    location: "1 Washington Sq, San Jose, CA 95192",
-    presenter: "John Doe",
-    deadline: "Nov 27, 2023, 12:00 PM",
-    keywords: ["Undergraduate", "Javascript", "HTML", "CSS", "Networking"],
-  },
-];
-
 const CalendarPage = () => {
+  const [events, setEvents] = useState<Event[]>([]);
+
+  function formatDate(date: string) {
+    const dateObj = new Date(date);
+    const month = dateObj.toLocaleString("default", { month: "short" });
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+    return `${month} ${day}, ${year}`;
+  }
+  function formatTime(time: string) {
+    const [hours, minutes] = time.substring(0, 5).split(":");
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12;
+    return `${formattedHour}:${minutes} ${ampm}`;
+  }
+  useEffect(() => {
+    fetch("http://localhost/api/v1/events", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setEvents(data.foundEvents);
+      });
+  }, []);
   return (
     <>
       <div className="about text-text my-10 px-[15%]">
@@ -104,17 +61,15 @@ const CalendarPage = () => {
           </p>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
-          {mockEvents.map((event) => (
+          {events.map((event) => (
             <EventCard
               key={event.id}
               eventType={event.eventType}
-              title={event.title}
-              date={event.date}
+              title={event.name}
+              date={`${formatDate(event.startDate)} ${formatTime(event.startTime)} - ${formatDate(event.endDate)} ${formatTime(event.endTime)}`}
               location={event.location}
               description={event.description}
-              deadline={event.deadline}
-              presenter={event.presenter}
-              keywords={event.keywords}
+              keywords={event.tags}
             />
           ))}
         </div>

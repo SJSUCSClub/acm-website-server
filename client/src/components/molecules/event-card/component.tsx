@@ -14,8 +14,6 @@ export type EventCardProps = Omit<
   title: string;
   location: string;
   date: string;
-  deadline: string;
-  presenter: string;
   description: string;
   eventType: string;
   keywords: string[];
@@ -25,8 +23,6 @@ export const EventCard: React.FC<EventCardProps> = ({
   title,
   location,
   date,
-  deadline,
-  presenter,
   description,
   eventType,
   keywords,
@@ -40,7 +36,6 @@ export const EventCard: React.FC<EventCardProps> = ({
       </CardTitle>
       <CardHeader>
         <p>{date}</p>
-        <p className="text-[#A60000] font-bold">Deadline: {deadline}</p>
         <a
           href={"https://www.google.com/maps/search/?api=1&query=" + location}
           target="_blank"
@@ -48,7 +43,6 @@ export const EventCard: React.FC<EventCardProps> = ({
         >
           {location}
         </a>
-        <p>Presented by {presenter}</p>
       </CardHeader>
       <CardContent>{description}</CardContent>
       <CardFooter className="grid grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-2">
