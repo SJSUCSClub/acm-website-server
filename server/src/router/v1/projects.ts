@@ -9,7 +9,7 @@ import { eq, getTableColumns } from 'drizzle-orm';
 import type { User, Project, File as FileSchema } from '@/db/schema'; // naming conflict with File and schema File type
 import { authMiddleWare, unauthorizedRequest, forbiddenRequest } from '@/middlewares/auth-middleware';
 import { projectIDSchema, userSchema, fileSchema, projectSchema } from '@/util/zod';
-import { deleteFile, uploadFile } from '@/lib/aws/iam';
+import { uploadFile, deleteFile } from '@/lib/aws/s3';
 
 const projectRouter = new OpenAPIHono<Context>();
 const fileRequestSchema = z.object({

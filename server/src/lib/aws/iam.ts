@@ -1,103 +1,57 @@
 import { env } from "@/env";
-import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { AssumeRoleCommand, Credentials, GetCallerIdentityCommand, STSClient } from "@aws-sdk/client-sts";
+import { S3Client } from "@aws-sdk/client-s3";
+import { AssumeRoleCommand, GetCallerIdentityCommand, STSClient } from "@aws-sdk/client-sts";
 
 const region = 'us-west-2';
-
-let s3credentials: Credentials | undefined;
 let s3client: S3Client;
-let stsClient: STSClient;
-const BUCKET_NAME = 'acmwebsite-dev-588738592350-us-west-2';
+let stsClient: STSClient = new STSClient({
+    region: region, 
+    credentials: {
+        accessKeyId: env.ACCESS_KEY_ID,
+        secretAccessKey: env.SECRET_ACCESS_KEY
+    }
+});
 
-const getRoleCredentials = async () : Promise<Credentials> => {
+const initializeS3client = async () => {
     try {
-        if(!stsClient) {
-            stsClient = new STSClient({region: region, credentials: {
-                accessKeyId: env.ACCESS_KEY_ID,
-                secretAccessKey: env.SECRET_ACCESS_KEY
-            }});
-        }
         const input = new AssumeRoleCommand({
             RoleArn: 'arn:aws:iam::588738592350:role/AcmApplicationServerRoleForLocal',
             RoleSessionName: 'user_file_upload_session'
         });
         const response = await stsClient.send(input);
         if(response.Credentials == undefined) {
-            throw new Error("Error getting credentials");
+            return false;
         } else {
-            return response.Credentials;
+            const credentials = response.Credentials;
+            s3client = new S3Client({region: region, credentials: {
+                accessKeyId: <string> credentials.AccessKeyId,
+                secretAccessKey: <string> credentials.SecretAccessKey,
+                sessionToken: <string> credentials.SessionToken
+            }});
+            return true;
         }
-    } catch (e) {
-        throw new Error("Error getting credentials");
+    } catch {
+        return false;
     }
 }
 
-let credentialsRefresh = async () => {
+const getS3Client = async (): Promise<S3Client | Boolean> => {
     try {
-        await stsClient.send(new GetCallerIdentityCommand({}));
+        await stsClient.send(new GetCallerIdentityCommand());
         if(!s3client) {
-            s3credentials = await getRoleCredentials();
-            s3client = new S3Client({region: region, credentials: {
-                accessKeyId: <string> s3credentials.AccessKeyId,
-                secretAccessKey: <string> s3credentials.SecretAccessKey,
-                sessionToken: <string> s3credentials.SessionToken
-            }});
+            const intitialized = await initializeS3client();
+            if(!intitialized) {
+                return false;
+            }
         }
-        return true;
+        return s3client;
     } catch {
-        try {
-            s3credentials = await getRoleCredentials();
-            s3client = new S3Client({region: region, credentials: {
-                accessKeyId: <string> s3credentials.AccessKeyId,
-                secretAccessKey: <string> s3credentials.SecretAccessKey,
-                sessionToken: <string> s3credentials.SessionToken
-            }});
-            return true;
-        } catch {
-            return false; // error refreshing credentials
-        }
-    }
-}
-
-const uploadFile = async (file: File): Promise<Boolean> => {
-    try {
-        await credentialsRefresh();
-        const uploadObjectCommand = new PutObjectCommand({Bucket: BUCKET_NAME, Key: file.name, Body: (await file.arrayBuffer())});
-        try {
-            const repsonse = await s3client.send(uploadObjectCommand);
-            return true;  
-        } catch (e) {
-            console.log(e);
-            console.log('Error uploading to S3');
+        const intitialized = await initializeS3client();
+        if(!intitialized) {
             return false;
         }
-    } catch {
-        return false;
+        return s3client;
     }
 }
 
-const deleteFile = async (fileKey: string): Promise<Boolean> => {
-    try {
-        await credentialsRefresh();
-        const deleteObjectCommand = new DeleteObjectCommand({Bucket: BUCKET_NAME, Key: fileKey});
-        try {
-            const response = await s3client.send(deleteObjectCommand);
-            return true;
-        } catch (e) {
-            console.log(e);
-            return false;
-        }
-    } catch {
-        return false;
-    }
-}
-
-(async () => {
-    try {
-        s3credentials = await getRoleCredentials();
-    } catch (e) {
-        s3credentials = undefined;
-    }
-})()
-
-export {uploadFile, deleteFile, credentialsRefresh, getRoleCredentials};
+export { getS3Client };
