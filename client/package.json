@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit --skipLibCheck",
+    "format": "prettier --write .",
     "generate-types": "npx openapi-typescript http://localhost/api/docs -o src/types/schema.v1.d.ts"
   },
   "dependencies": {
