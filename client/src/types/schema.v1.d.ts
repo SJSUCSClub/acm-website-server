@@ -596,7 +596,11 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/users/my/subscribed-events": {
+=======
+    "/api/v1/users/my/subscribed-events": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -630,17 +634,29 @@ export interface paths {
                                 description: string;
                                 urls: string[];
                                 /** @enum {string} */
+<<<<<<< HEAD
                                 eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
+=======
+                                eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 eventCapacity: number | null;
                                 image: string;
                                 startTime: string;
                                 endTime: string;
+<<<<<<< HEAD
                                 tags: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 /** @enum {string|null} */
                                 targetAudience: "Students" | null;
                                 shortenedEventUrl: number | null;
                                 memberOnly: boolean;
                                 subscribedDate: string;
+=======
+                                tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                                /** @enum {string|null} */
+                                targetAudience: "students" | null;
+                                shortenedEventUrl: number | null;
+                                memberOnly: boolean;
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                             }[];
                         };
                     };
@@ -666,7 +682,11 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/users/my/subscribed-events/{eventID}": {
+=======
+    "/api/v1/users/my/subscribed-events/{eventID}": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -708,6 +728,7 @@ export interface paths {
                     };
                 };
             };
+<<<<<<< HEAD
           };
         };
         put?: never;
@@ -827,12 +848,22 @@ export interface paths {
                 };
             };
         };
+=======
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/users/my/subscribed-companies": {
+=======
+    "/api/v1/users/my/subscribed-companies": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -862,9 +893,14 @@ export interface paths {
                                 location: string | null;
                                 description: string;
                                 /** @enum {string} */
+<<<<<<< HEAD
                                 industryId: "Banking and Finance" | "Aerospace" | "Healthcare" | "Automotive" | "Energy" | "Technology";
                                 logo: string | null;
                                 subscribedDate: string;
+=======
+                                industryId: "banking and finance" | "aerospace" | "healthcare" | "automotive" | "energy" | "technology";
+                                logo: string | null;
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                             }[];
                         };
                     };
@@ -881,6 +917,7 @@ export interface paths {
                     };
                 };
             };
+<<<<<<< HEAD
           };
         };
         /** @description Unauthorized */
@@ -897,6 +934,18 @@ export interface paths {
       };
     };
     "/v1/users/my/subscribed-companies/{companyID}": {
+=======
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/users/my/subscribed-companies/{companyID}": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -940,6 +989,7 @@ export interface paths {
             };
         };
         put?: never;
+<<<<<<< HEAD
         /** Subscribe to a company */
         post: {
             parameters: {
@@ -1045,12 +1095,20 @@ export interface paths {
                 };
             };
         };
+=======
+        post?: never;
+        delete?: never;
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/users/{userId}": {
+=======
+    "/api/v1/users/{userId}": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -1082,14 +1140,24 @@ export interface paths {
                             email: string;
                             major: string;
                             gradDate: string;
+<<<<<<< HEAD
                             interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
+=======
+                            interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                             profilePic: string | null;
                             /** @enum {string} */
                             role: "user" | "member" | "admin";
                             /** @enum {string|null} */
+<<<<<<< HEAD
                             paid: "Semester" | "Annual" | null;
                             /** @enum {string} */
                             education_level: "Undergraduate" | "Graduate";
+=======
+                            paid: "semester" | "annual" | null;
+                            /** @enum {string} */
+                            education_level: "undergraduate" | "graduate";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                             discord: string | null;
                             linkedin: string | null;
                             github: string | null;
@@ -1120,7 +1188,10 @@ export interface paths {
                     };
                 };
             };
+<<<<<<< HEAD
           };
+=======
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         };
         /** Admin Update a user */
         put: {
@@ -1137,6 +1208,7 @@ export interface paths {
                     "application/json": {
                         major?: string;
                         gradDate?: string | null;
+<<<<<<< HEAD
                         interests?: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                         /** @enum {string} */
                         education_level?: "Undergraduate" | "Graduate";
@@ -1146,6 +1218,15 @@ export interface paths {
                         linkedin?: string | null;
                         github?: string | null;
                         website?: string | null;
+=======
+                        interests?: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                        /** @enum {string} */
+                        education_level?: "undergraduate" | "graduate";
+                        discord?: string;
+                        linkedin?: string;
+                        github?: string;
+                        website?: string;
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                         /** @enum {string} */
                         role?: "user" | "member" | "admin";
                     };
@@ -1165,14 +1246,24 @@ export interface paths {
                             email: string;
                             major: string;
                             gradDate: string;
+<<<<<<< HEAD
                             interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
+=======
+                            interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                             profilePic: string | null;
                             /** @enum {string} */
                             role: "user" | "member" | "admin";
                             /** @enum {string|null} */
+<<<<<<< HEAD
                             paid: "Semester" | "Annual" | null;
                             /** @enum {string} */
                             education_level: "Undergraduate" | "Graduate";
+=======
+                            paid: "semester" | "annual" | null;
+                            /** @enum {string} */
+                            education_level: "undergraduate" | "graduate";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                             discord: string | null;
                             linkedin: string | null;
                             github: string | null;
@@ -1257,14 +1348,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/users/my/projects-interest": {
+=======
+    "/api/v1/projects": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+<<<<<<< HEAD
         /** List all project ids that the user is interested in */
+=======
+        /** List all projects */
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         get: {
             parameters: {
                 query?: never;
@@ -1286,12 +1385,17 @@ export interface paths {
                                 name: string;
                                 description: string;
                                 /** @enum {string} */
+<<<<<<< HEAD
                                 status: "Not Started" | "Looking for Members" | "In Progress" | "Completed";
+=======
+                                status: "not started" | "looking for members" | "in progress" | "completed";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 githubLink: string | null;
                             }[];
                         };
                     };
                 };
+<<<<<<< HEAD
                 /** @description Unauthorized */
                 401: {
                     headers: {
@@ -1323,10 +1427,17 @@ export interface paths {
         get?: never;
         put?: never;
         /** Show interest in a project */
+=======
+            };
+        };
+        put?: never;
+        /** Creates a new project */
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         post: {
             parameters: {
                 query?: never;
                 header?: never;
+<<<<<<< HEAD
                 path: {
                     projectID: string;
                 };
@@ -1432,11 +1543,32 @@ export interface paths {
             responses: {
                 /** @description Successful response */
                 200: {
+=======
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        id: number;
+                        name: string;
+                        description: string;
+                        /** @enum {string} */
+                        status: "not started" | "looking for members" | "in progress" | "completed";
+                        githubLink: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Successful response */
+                201: {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                     headers: {
                         [name: string]: unknown;
                     };
                     content: {
                         "application/json": {
+<<<<<<< HEAD
                             events: {
                                 id: number;
                                 createdAt: string;
@@ -1578,6 +1710,15 @@ export interface paths {
                                 userId: string;
                                 eventId: number;
                                 attendingDate: string;
+=======
+                            project: {
+                                id: number;
+                                name: string;
+                                description: string;
+                                /** @enum {string} */
+                                status: "not started" | "looking for members" | "in progress" | "completed";
+                                githubLink: string | null;
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                             };
                         };
                     };
@@ -1604,6 +1745,7 @@ export interface paths {
                         };
                     };
                 };
+<<<<<<< HEAD
                 /** @description Not Found */
                 404: {
                     headers: {
@@ -1641,17 +1783,41 @@ export interface paths {
         };
         /** User removes attendance for an event */
         delete: {
+=======
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{projectID}/interested": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all interested users for a project */
+        get: {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
             parameters: {
                 query?: never;
                 header?: never;
                 path: {
+<<<<<<< HEAD
                     eventID: string;
+=======
+                    projectID: string;
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                 };
                 cookie?: never;
             };
             requestBody?: never;
             responses: {
                 /** @description Successful response */
+<<<<<<< HEAD
                 204: {
                     headers: {
                         [name: string]: unknown;
@@ -1660,11 +1826,15 @@ export interface paths {
                 };
                 /** @description Unauthorized */
                 401: {
+=======
+                200: {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                     headers: {
                         [name: string]: unknown;
                     };
                     content: {
                         "application/json": {
+<<<<<<< HEAD
                             error: string;
                         };
                     };
@@ -1699,17 +1869,49 @@ export interface paths {
                     content: {
                         "application/json": {
                             error: string;
+=======
+                            interestedUsers: {
+                                id: string;
+                                createdAt: string;
+                                name: string;
+                                email: string;
+                                major: string;
+                                gradDate: string;
+                                interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                                profilePic: string | null;
+                                /** @enum {string} */
+                                role: "user" | "member" | "admin";
+                                /** @enum {string|null} */
+                                paid: "semester" | "annual" | null;
+                                /** @enum {string} */
+                                education_level: "undergraduate" | "graduate";
+                                discord: string | null;
+                                linkedin: string | null;
+                                github: string | null;
+                                website: string | null;
+                            }[];
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                         };
                     };
                 };
             };
         };
+<<<<<<< HEAD
+=======
+        put?: never;
+        post?: never;
+        delete?: never;
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/projects/{projectID}/files": {
+=======
+    "/api/v1/projects/{projectID}/files": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -1746,6 +1948,7 @@ export interface paths {
             };
         };
         put?: never;
+<<<<<<< HEAD
         /** Upload a file to a project */
         post: {
             parameters: {
@@ -2017,6 +2220,8 @@ export interface paths {
             };
         };
         put?: never;
+=======
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         post?: never;
         delete?: never;
         options?: never;
@@ -2024,7 +2229,11 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/events/{eventID}/companies": {
+=======
+    "/api/v1/events/{eventID}/companies": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -2050,19 +2259,28 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
+<<<<<<< HEAD
                             eventCompanies: {
+=======
+                            foundEventCompanies: {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 id: number;
                                 name: string;
                                 location: string | null;
                                 description: string;
                                 /** @enum {string} */
+<<<<<<< HEAD
                                 industryId: "Banking and Finance" | "Aerospace" | "Healthcare" | "Automotive" | "Energy" | "Technology";
+=======
+                                industryId: "banking and finance" | "aerospace" | "healthcare" | "automotive" | "energy" | "technology";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 logo: string | null;
                             }[];
                         };
                     };
                 };
             };
+<<<<<<< HEAD
           };
         };
         /** @description Unauthorized */
@@ -2079,6 +2297,18 @@ export interface paths {
       };
     };
     "/v1/events/{eventID}/subscribers": {
+=======
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{eventID}/subscribers": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -2111,14 +2341,24 @@ export interface paths {
                                 email: string;
                                 major: string;
                                 gradDate: string;
+<<<<<<< HEAD
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
+=======
+                                interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 profilePic: string | null;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
+<<<<<<< HEAD
                                 paid: "Semester" | "Annual" | null;
                                 /** @enum {string} */
                                 education_level: "Undergraduate" | "Graduate";
+=======
+                                paid: "semester" | "annual" | null;
+                                /** @enum {string} */
+                                education_level: "undergraduate" | "graduate";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 discord: string | null;
                                 linkedin: string | null;
                                 github: string | null;
@@ -2137,7 +2377,11 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/events/{eventID}/subscribers/count": {
+=======
+    "/api/v1/events/{eventID}/subscribers/count": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -2168,6 +2412,7 @@ export interface paths {
                     };
                 };
             };
+<<<<<<< HEAD
           };
         };
         /** @description Unauthorized */
@@ -2184,6 +2429,18 @@ export interface paths {
       };
     };
     "/v1/events/{eventID}/files": {
+=======
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{eventID}/files": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -2227,7 +2484,11 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/events": {
+=======
+    "/api/v1/events": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -2237,10 +2498,14 @@ export interface paths {
         /** List all events */
         get: {
             parameters: {
+<<<<<<< HEAD
                 query?: {
                     tags?: string;
                     timeframe?: "upcoming" | "today" | "past" | "all";
                 };
+=======
+                query?: never;
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                 header?: never;
                 path?: never;
                 cookie?: never;
@@ -2264,14 +2529,24 @@ export interface paths {
                                 description: string;
                                 urls: string[];
                                 /** @enum {string} */
+<<<<<<< HEAD
                                 eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
+=======
+                                eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 eventCapacity: number | null;
                                 image: string;
                                 startTime: string;
                                 endTime: string;
+<<<<<<< HEAD
                                 tags: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 /** @enum {string|null} */
                                 targetAudience: "Students" | null;
+=======
+                                tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                                /** @enum {string|null} */
+                                targetAudience: "students" | null;
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 shortenedEventUrl: number | null;
                                 memberOnly: boolean;
                             }[];
@@ -2279,7 +2554,10 @@ export interface paths {
                     };
                 };
             };
+<<<<<<< HEAD
           };
+=======
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         };
         put?: never;
         /** Create an event */
@@ -2300,14 +2578,24 @@ export interface paths {
                         description: string;
                         urls: string[];
                         /** @enum {string} */
+<<<<<<< HEAD
                         eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
+=======
+                        eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                         eventCapacity: number | null;
                         image: string;
                         startTime: string;
                         endTime: string;
+<<<<<<< HEAD
                         tags: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                         /** @enum {string|null} */
                         targetAudience: "Students" | null;
+=======
+                        tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                        /** @enum {string|null} */
+                        targetAudience: "students" | null;
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                         shortenedEventUrl: number | null;
                         memberOnly: boolean;
                     };
@@ -2331,14 +2619,24 @@ export interface paths {
                                 description: string;
                                 urls: string[];
                                 /** @enum {string} */
+<<<<<<< HEAD
                                 eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
+=======
+                                eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 eventCapacity: number | null;
                                 image: string;
                                 startTime: string;
                                 endTime: string;
+<<<<<<< HEAD
                                 tags: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 /** @enum {string|null} */
                                 targetAudience: "Students" | null;
+=======
+                                tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                                /** @enum {string|null} */
+                                targetAudience: "students" | null;
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 shortenedEventUrl: number | null;
                                 memberOnly: boolean;
                             };
@@ -2368,11 +2666,22 @@ export interface paths {
                     };
                 };
             };
+<<<<<<< HEAD
           };
         };
       };
     };
     "/v1/events/{eventID}": {
+=======
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{eventID}": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -2398,7 +2707,11 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
+<<<<<<< HEAD
                             event: {
+=======
+                            foundEvent: {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 id: number;
                                 createdAt: string;
                                 name: string;
@@ -2408,14 +2721,24 @@ export interface paths {
                                 description: string;
                                 urls: string[];
                                 /** @enum {string} */
+<<<<<<< HEAD
                                 eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
+=======
+                                eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 eventCapacity: number | null;
                                 image: string;
                                 startTime: string;
                                 endTime: string;
+<<<<<<< HEAD
                                 tags: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 /** @enum {string|null} */
                                 targetAudience: "Students" | null;
+=======
+                                tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                                /** @enum {string|null} */
+                                targetAudience: "students" | null;
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 shortenedEventUrl: number | null;
                                 memberOnly: boolean;
                             };
@@ -2443,13 +2766,18 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/events/{eventID}/subscribe": {
+=======
+    "/api/v1/events/{eventID}/subscribe": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+<<<<<<< HEAD
         /** @description Unauthorized */
         401: {
           headers: {
@@ -2464,6 +2792,151 @@ export interface paths {
       };
     };
     "/v1/events/{eventID}/url": {
+=======
+        get?: never;
+        put?: never;
+        /** User subscribes to an event */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    eventID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            newSubscription: {
+                                userId: string;
+                                eventId: number;
+                                subscribedDate: string;
+                            };
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        /** User unsubscribes to an event */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    eventID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            deletedSubscription: {
+                                userId: string;
+                                eventId: number;
+                                subscribedDate: string;
+                            };
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{eventID}/url": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -2507,13 +2980,18 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/events/{eventID}/bookmark": {
+=======
+    "/api/v1/events/{eventID}/bookmark": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+<<<<<<< HEAD
         cookie?: never;
       };
       requestBody?: never;
@@ -2551,6 +3029,12 @@ export interface paths {
         };
         /** List all attendees for an event */
         get: {
+=======
+        get?: never;
+        put?: never;
+        /** User bookmarks an event */
+        post: {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
             parameters: {
                 query?: never;
                 header?: never;
@@ -2568,6 +3052,7 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
+<<<<<<< HEAD
                             eventAttendees: {
                                 id: string;
                                 createdAt: string;
@@ -2588,6 +3073,13 @@ export interface paths {
                                 github: string | null;
                                 website: string | null;
                             }[];
+=======
+                            newBookmark: {
+                                userId: string;
+                                eventId: number;
+                                bookmarkedDate: string;
+                            };
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                         };
                     };
                 };
@@ -2613,8 +3105,13 @@ export interface paths {
                         };
                     };
                 };
+<<<<<<< HEAD
                 /** @description Internal Server Error */
                 500: {
+=======
+                /** @description Conflict */
+                409: {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                     headers: {
                         [name: string]: unknown;
                     };
@@ -2626,6 +3123,7 @@ export interface paths {
                 };
             };
         };
+<<<<<<< HEAD
         put?: never;
         post?: never;
         delete?: never;
@@ -2643,6 +3141,10 @@ export interface paths {
         };
         /** Get the number of attendees for an event */
         get: {
+=======
+        /** User unbookmarks an event */
+        delete: {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
             parameters: {
                 query?: never;
                 header?: never;
@@ -2660,7 +3162,15 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
+<<<<<<< HEAD
                             attendeesCount: number;
+=======
+                            deletedBookmark: {
+                                userId: string;
+                                eventId: number;
+                                bookmarkedDate: string;
+                            };
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                         };
                     };
                 };
@@ -2686,8 +3196,13 @@ export interface paths {
                         };
                     };
                 };
+<<<<<<< HEAD
                 /** @description Internal Server Error */
                 500: {
+=======
+                /** @description Not Found */
+                404: {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                     headers: {
                         [name: string]: unknown;
                     };
@@ -2699,15 +3214,22 @@ export interface paths {
                 };
             };
         };
+<<<<<<< HEAD
         put?: never;
         post?: never;
         delete?: never;
+=======
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/companies": {
+=======
+    "/api/v1/companies": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -2737,7 +3259,11 @@ export interface paths {
                                 location: string | null;
                                 description: string;
                                 /** @enum {string} */
+<<<<<<< HEAD
                                 industryId: "Banking and Finance" | "Aerospace" | "Healthcare" | "Automotive" | "Energy" | "Technology";
+=======
+                                industryId: "banking and finance" | "aerospace" | "healthcare" | "automotive" | "energy" | "technology";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 logo: string | null;
                             }[];
                         };
@@ -2762,7 +3288,11 @@ export interface paths {
                         location: string | null;
                         description: string;
                         /** @enum {string} */
+<<<<<<< HEAD
                         industryId: "Banking and Finance" | "Aerospace" | "Healthcare" | "Automotive" | "Energy" | "Technology";
+=======
+                        industryId: "banking and finance" | "aerospace" | "healthcare" | "automotive" | "energy" | "technology";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                         logo: string | null;
                     };
                 };
@@ -2781,7 +3311,11 @@ export interface paths {
                                 location: string | null;
                                 description: string;
                                 /** @enum {string} */
+<<<<<<< HEAD
                                 industryId: "Banking and Finance" | "Aerospace" | "Healthcare" | "Automotive" | "Energy" | "Technology";
+=======
+                                industryId: "banking and finance" | "aerospace" | "healthcare" | "automotive" | "energy" | "technology";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 logo: string | null;
                             };
                         };
@@ -2828,13 +3362,18 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/companies/{companyID}": {
+=======
+    "/api/v1/companies/subscribe": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+<<<<<<< HEAD
         cookie?: never;
       };
       requestBody?: never;
@@ -2902,6 +3441,122 @@ export interface paths {
       };
     };
     "/v1/companies/{companyID}/events": {
+=======
+        get?: never;
+        put?: never;
+        /** Subscribe to a company */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        companyId: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Successfully subscribed */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            subscription: {
+                                userId: string;
+                                companyId: number;
+                                subscribedDate: string;
+                            };
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Already subscribed */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        /** Unsubscribe from a company */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        companyId: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Successfully unsubscribed */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/companies/{companyID}/events": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -2937,14 +3592,24 @@ export interface paths {
                                 description: string;
                                 urls: string[];
                                 /** @enum {string} */
+<<<<<<< HEAD
                                 eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
+=======
+                                eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 eventCapacity: number | null;
                                 image: string;
                                 startTime: string;
                                 endTime: string;
+<<<<<<< HEAD
                                 tags: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 /** @enum {string|null} */
                                 targetAudience: "Students" | null;
+=======
+                                tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                                /** @enum {string|null} */
+                                targetAudience: "students" | null;
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 shortenedEventUrl: number | null;
                                 memberOnly: boolean;
                             }[];
@@ -2953,6 +3618,7 @@ export interface paths {
                 };
             };
         };
+<<<<<<< HEAD
       };
       responses: {
         /** @description Successfully updated user */
@@ -3018,6 +3684,17 @@ export interface paths {
       };
     };
     "/v1/companies/{companyID}/subscribers": {
+=======
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/companies/{companyID}/subscribers": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -3050,14 +3727,24 @@ export interface paths {
                                 email: string;
                                 major: string;
                                 gradDate: string;
+<<<<<<< HEAD
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
+=======
+                                interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 profilePic: string | null;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
+<<<<<<< HEAD
                                 paid: "Semester" | "Annual" | null;
                                 /** @enum {string} */
                                 education_level: "Undergraduate" | "Graduate";
+=======
+                                paid: "semester" | "annual" | null;
+                                /** @enum {string} */
+                                education_level: "undergraduate" | "graduate";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 discord: string | null;
                                 linkedin: string | null;
                                 github: string | null;
@@ -3067,6 +3754,7 @@ export interface paths {
                     };
                 };
             };
+<<<<<<< HEAD
           };
         };
         /** @description Unauthorized */
@@ -3094,6 +3782,18 @@ export interface paths {
       };
     };
     "/v1/companies/{companyID}/subscribers/count": {
+=======
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/companies/{companyID}/subscribers/count": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -3133,7 +3833,11 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/equipments/types": {
+=======
+    "/api/v1/equipments/types": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -3169,11 +3873,24 @@ export interface paths {
                     };
                 };
             };
+<<<<<<< HEAD
           };
         };
       };
     };
     "/v1/equipments/rentals": {
+=======
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/equipments/rentals": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -3199,7 +3916,11 @@ export interface paths {
                         returnDate: string;
                         price: string;
                         /** @enum {string} */
+<<<<<<< HEAD
                         condition: "Ready" | "Broken" | "In Maintenance";
+=======
+                        condition: "ready" | "broken" | "in maintenance";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                     };
                 };
             };
@@ -3217,7 +3938,11 @@ export interface paths {
                             returnDate: string;
                             price: string;
                             /** @enum {string} */
+<<<<<<< HEAD
                             condition: "Ready" | "Broken" | "In Maintenance";
+=======
+                            condition: "ready" | "broken" | "in maintenance";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                         };
                     };
                 };
@@ -3244,6 +3969,7 @@ export interface paths {
                     };
                 };
             };
+<<<<<<< HEAD
           };
         };
         /** @description Unauthorized */
@@ -3271,6 +3997,16 @@ export interface paths {
       };
     };
     "/v1/equipments/type": {
+=======
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/equipments/type": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -3346,13 +4082,18 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/equipments/type/{equipmentTypeID}": {
+=======
+    "/api/v1/equipments/type/{equipmentTypeID}": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+<<<<<<< HEAD
         cookie?: never;
       };
       requestBody?: never;
@@ -3400,6 +4141,53 @@ export interface paths {
       };
     };
     "/v1/equipments/type/{equipmentTypeId}": {
+=======
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete an equipment type */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    equipmentTypeID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successfully deleted user */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            success: boolean;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/equipments/type/{equipmentTypeId}": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -3466,13 +4254,18 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/equipments/type/{equipmentTypeId}/item": {
+=======
+    "/api/v1/equipments/type/{equipmentTypeId}/item": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+<<<<<<< HEAD
         cookie?: never;
       };
       requestBody?: never;
@@ -3495,6 +4288,46 @@ export interface paths {
       };
     };
     "/v1/equipments/item/{equipmentItemID}/rental-history": {
+=======
+        /** List of all equipment items for a type */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    equipmentTypeId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            equipmentItems: {
+                                id: number;
+                                createdAt: string;
+                                equipmentType: number;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/equipments/item/{equipmentItemID}/rental-history": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -3527,7 +4360,11 @@ export interface paths {
                                 returnDate: string;
                                 price: string;
                                 /** @enum {string} */
+<<<<<<< HEAD
                                 condition: "Ready" | "Broken" | "In Maintenance";
+=======
+                                condition: "ready" | "broken" | "in maintenance";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                             }[];
                         };
                     };
@@ -3542,13 +4379,18 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/equipments/item": {
+=======
+    "/api/v1/equipments/item": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+<<<<<<< HEAD
         cookie?: never;
       };
       requestBody?: never;
@@ -3581,6 +4423,72 @@ export interface paths {
       };
     };
     "/v1/equipments/item/{equipmentItemID}": {
+=======
+        get?: never;
+        put?: never;
+        /** Create a new equipment item */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        id: number;
+                        createdAt: string;
+                        equipmentType: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            createdAt: string;
+                            equipmentType: number;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/equipments/item/{equipmentItemID}": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -3698,13 +4606,18 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/majors": {
+=======
+    "/api/v1/majors": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+<<<<<<< HEAD
         cookie?: never;
       };
       requestBody?: never;
@@ -3752,6 +4665,103 @@ export interface paths {
       };
     };
     "/v1/majors/{major}": {
+=======
+        /** List all majors */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            majors: {
+                                name: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** create major */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        name: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Successful response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            name: string;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/majors/{major}": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -3879,7 +4889,11 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/majors/{majorName}/users": {
+=======
+    "/api/v1/majors/{majorName}/users": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -3912,14 +4926,24 @@ export interface paths {
                                 email: string;
                                 major: string;
                                 gradDate: string;
+<<<<<<< HEAD
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
+=======
+                                interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 profilePic: string | null;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
+<<<<<<< HEAD
                                 paid: "Semester" | "Annual" | null;
                                 /** @enum {string} */
                                 education_level: "Undergraduate" | "Graduate";
+=======
+                                paid: "semester" | "annual" | null;
+                                /** @enum {string} */
+                                education_level: "undergraduate" | "graduate";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 discord: string | null;
                                 linkedin: string | null;
                                 github: string | null;
@@ -3929,11 +4953,24 @@ export interface paths {
                     };
                 };
             };
+<<<<<<< HEAD
           };
         };
       };
     };
     "/v1/enums/{enumType}": {
+=======
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/enums/{enumType}": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -3984,13 +5021,18 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/sponsors": {
+=======
+    "/api/v1/sponsors": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+<<<<<<< HEAD
         cookie?: never;
       };
       requestBody?: never;
@@ -4013,6 +5055,43 @@ export interface paths {
       };
     };
     "/v1/officers": {
+=======
+        /** List all sponsors */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            sponsors: {
+                                name: string;
+                                logoKey: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/officers": {
+>>>>>>> e644e06 (feat: auto-generate types (#86))
         parameters: {
             query?: never;
             header?: never;
@@ -4040,7 +5119,11 @@ export interface paths {
                                 id: number;
                                 userId: string;
                                 /** @enum {string} */
+<<<<<<< HEAD
                                 position: "President" | "Vice President" | "Dev Team Officer" | "Treasurer" | "Social Media Manager";
+=======
+                                position: "president" | "vice president" | "dev team officer" | "treasurer" | "social media manager";
+>>>>>>> e644e06 (feat: auto-generate types (#86))
                                 linkedin: string | null;
                                 photo: string | null;
                             }[];
@@ -4057,6 +5140,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+<<<<<<< HEAD
     "/v1/blacklist": {
         parameters: {
             query?: never;
@@ -4863,6 +5947,17 @@ export interface components {
   requestBodies: never;
   headers: never;
   pathItems: never;
+=======
+}
+export type webhooks = Record<string, never>;
+export interface components {
+    schemas: never;
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
+>>>>>>> e644e06 (feat: auto-generate types (#86))
 }
 export type $defs = Record<string, never>;
 export type operations = Record<string, never>;
