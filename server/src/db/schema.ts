@@ -1,17 +1,18 @@
 import { boolean, text, timestamp, date, integer, bigint, pgEnum, pgTable, serial, time, numeric, varchar } from 'drizzle-orm/pg-core';
 
 // Enums
-export const eventsEnum = pgEnum('events_enum', ['workshop', 'seminar', 'hackathon', 'conference', 'meetup', 'test', 'other']);
-export const csFieldsEnum = pgEnum('cs_fields_enum', ['web development', 'machine learning', 'cloud computing', 'artificial intelligence', 'networking', 'cybersecurity', 'mobile development', 'game development', 'data science']);
-export const targetAudienceEnum = pgEnum('target_audience_enum', ['students']);
-export const equipmentConditionEnum = pgEnum('equipment_condition_enum', ['ready', 'broken', 'in maintenance']);
-export const membershipTermEnum = pgEnum('membership_term_enum', ['semester', 'annual']);
-export const membershipRequestStatusEnum = pgEnum('membership_request_status_enum', ['pending', 'approved', 'declined']);
-export const industryEnum = pgEnum('industry_enum', ['banking and finance', 'aerospace', 'healthcare', 'automotive', 'energy', 'technology']);
-export const officerPositionEnum = pgEnum('officer_position_enum', ['president', 'vice president', 'dev team officer', 'treasurer', 'social media manager']);
-export const educationLevelEnum = pgEnum('education_level_enum', ['undergraduate', 'graduate']);
-export const projectStatusEnum = pgEnum('project_status_enum', ['not started', 'looking for members', 'in progress', 'completed']);
+export const eventsEnum = pgEnum('events_enum', ['Workshop', 'seminar', 'Hackathon', 'Conference', 'Meetup', 'Tech Talk', 'Other']);
+export const csFieldsEnum = pgEnum('cs_fields_enum', ['Web Development', 'Machine Learning', 'Cloud Computing', 'Artificial Intelligence', 'Networking', 'Cybersecurity', 'Mobile Development', 'Game Development', 'Data Science']);
+export const targetAudienceEnum = pgEnum('target_audience_enum', ['Students']);
+export const equipmentConditionEnum = pgEnum('equipment_condition_enum', ['Ready', 'Broken', 'In Maintenance']);
+export const membershipTermEnum = pgEnum('membership_term_enum', ['Semester', 'Annual']);
+export const membershipRequestStatusEnum = pgEnum('membership_request_status_enum', ['Pending', 'Approved', 'Declined']);
+export const industryEnum = pgEnum('industry_enum', ['Banking and Finance', 'Aerospace', 'Healthcare', 'Automotive', 'Energy', 'Technology']);
+export const officerPositionEnum = pgEnum('officer_position_enum', ['President', 'Vice President', 'Dev Team Officer', 'Treasurer', 'Social Media Manager']);
+export const educationLevelEnum = pgEnum('education_level_enum', ['Undergraduate', 'Graduate']);
+export const projectStatusEnum = pgEnum('project_status_enum', ['Not Started', 'Looking for Members', 'In Progress', 'Completed']);
 export const userRoleEnum = pgEnum('user_role_enum', ['user', 'member', 'admin']);
+export const yearEnum = pgEnum('year_enum', ['Freshman', 'Sophomore', 'Junior', 'Senior', 'Alumni']);
 
 // Tables
 export const majors = pgTable('majors', {
@@ -72,7 +73,7 @@ export const equipmentRentals = pgTable('equipment_rentals', {
   dateBorrowed: date('date_borrowed').notNull().defaultNow(),
   returnDate: date('return_date').notNull(),
   price: numeric('price', { precision: 10, scale: 2 }).notNull(),
-  condition: equipmentConditionEnum('condition').notNull().default('ready'),
+  condition: equipmentConditionEnum('condition').notNull().default('Ready'),
 }, (table) => ({
   primaryKey: [table.userId, table.itemId],
 }));
@@ -117,7 +118,7 @@ export const files = pgTable('files', {
 
 export const eventsFiles = pgTable('events_files', {
   eventId: integer('event_id').notNull().references(() => events.id, { onUpdate: 'cascade', onDelete: 'cascade' }),
-  fileKey: text('file_key').notNull().references(() => files.key, { onUpdate: 'cascade', onDelete: 'cascade' }),
+  fileKey: text('file_key').notNull().references(() => files.key, { onUpdate: 'cascade' }),
 }, (table) => ({
   primaryKey: [table.eventId, table.fileKey],
 }));
@@ -166,13 +167,13 @@ export const projects = pgTable('projects', {
   id: serial('id').primaryKey(),
   name: text('name').notNull(),
   description: text('description').notNull(),
-  status: projectStatusEnum('status').notNull().default('not started'),
+  status: projectStatusEnum('status').notNull().default('Not Started'),
   githubLink: text('github_link'),
 });
 
 export const projectsFiles = pgTable('projects_files', {
   projectId: integer('project_id').notNull().references(() => projects.id, { onUpdate: 'cascade', onDelete: 'cascade' }),
-  fileKey: text('file_key').notNull().references(() => files.key, { onUpdate: 'cascade', onDelete: 'cascade' }),
+  fileKey: text('file_key').notNull().references(() => files.key, { onUpdate: 'cascade' }),
 }, (table) => ({
   primaryKey: [table.projectId, table.fileKey],
 }));
@@ -206,6 +207,26 @@ export const sessions = pgTable('session', {
 export const sponsors = pgTable('sponsors', {
   name: varchar('name',{ length: 100 }).primaryKey(),
   logoKey: text('logo_key').notNull(),
+});
+
+export const clubLinks = pgTable('club_links', {
+  id: serial('id').primaryKey(),
+  instagram: text('instagram'),
+  discord: text('discord'),
+  linkedin: text('linkedin'),
+  memberApplication: text('member_application'),
+});
+
+export const landingSpotlights = pgTable('landing_spotlights', {
+  id: serial('id').primaryKey(),
+  eventId: integer('event_id').notNull().references(() => events.id, { onUpdate: 'cascade' }),
+  imageKey: text('image_key').notNull().references(() => files.key, { onUpdate: 'cascade' }),
+});
+
+export const landingQuestions = pgTable('landing_questions', {
+  id: serial('id').primaryKey(),
+  question: text('question').notNull(),
+  answer: text('answer').notNull(),
 });
 
 // Update types
@@ -254,3 +275,9 @@ export type NewMajor = typeof majors.$inferInsert;
 export type Session = typeof session.$inferSelect;
 export type NewSession = typeof session.$inferInsert;
 export type Sponsor = typeof sponsors.$inferInsert;
+export type ClubLink = typeof clubLinks.$inferSelect;
+export type NewClubLink = typeof clubLinks.$inferInsert;
+export type LandingSpotlight = typeof landingSpotlights.$inferSelect;
+export type NewLandingSpotlight = typeof landingSpotlights.$inferInsert;
+export type LandingQuestion = typeof landingQuestions.$inferSelect;
+export type NewLandingQuestion = typeof landingQuestions.$inferInsert;
