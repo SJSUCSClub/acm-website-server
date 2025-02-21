@@ -9,7 +9,7 @@ import { eq, getTableColumns } from 'drizzle-orm';
 import type { User, Project, File as FileSchema } from '@/db/schema'; // naming conflict with File and schema File type
 import { authMiddleWare, unauthorizedRequest, forbiddenRequest } from '@/middlewares/auth-middleware';
 import { projectIDSchema, userSchema, fileSchema, projectSchema } from '@/util/zod';
-import { uploadFile } from '@/lib/aws/iam';
+import { deleteFile, uploadFile } from '@/lib/aws/iam';
 
 const projectRouter = new OpenAPIHono<Context>();
 const fileRequestSchema = z.object({
@@ -23,7 +23,7 @@ const fileRequestSchema = z.object({
 projectRouter.openapi(
 	createRoute({
 		method: 'post',
-		path: '/projects/{projectID}/files',
+		path: '/{projectID}/files',
 		tags: ['projects'],
 		summary: 'Upload a file to a project',
 		middleware: [authMiddleWare('admin')],
@@ -45,8 +45,6 @@ projectRouter.openapi(
 	async (c) => {
 		const formDataBody = (await c.req.parseBody());
 		const file: File = <File>formDataBody['file'];
-		console.log('File: ');
-		console.log(file);
 		const res = await uploadFile(file);
 		if(res) {
 			return c.json({'status': 'successful'});
@@ -56,6 +54,37 @@ projectRouter.openapi(
 		}
 	}
 )
+
+projectRouter.openapi(
+	createRoute({
+		method: 'delete',
+		path: '/{projectID}/files/{fileKey}',
+		tags: ['projects'],
+		summary: 'Delete a file from a project',
+		middleware: [authMiddleWare('admin')],
+		request: {
+			params: projectIDSchema,
+		},
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful response',
+			},
+			...unauthorizedRequest,
+			...forbiddenRequest,
+		},
+	}),
+	async (c) => {
+		const projectId: string = c.req.param('projectID');
+		const fileKey: string = c.req.param('fileKey'); 
+		const res = await deleteFile(fileKey);
+		if(res) {
+			return c.json({'status': 'successful'});
+		} else {
+			c.status(400);
+			return c.json({'status': 'error occured deleting file'});
+		}
+	}
+);
 
 projectRouter.openapi(
 	createRoute({
