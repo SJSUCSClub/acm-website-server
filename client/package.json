@@ -9,7 +9,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit --skipLibCheck"
+    "typecheck": "tsc --noEmit --skipLibCheck",
+    "generate-types": "npx openapi-typescript http://localhost/api/docs -o src/types/schema.v1.d.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
