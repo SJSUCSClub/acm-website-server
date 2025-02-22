@@ -1,7 +1,7 @@
 services:
   nginx:
     image: nginx:latest
-    ports:  
+    ports:
       - 80:80
     configs:
       - source: nginx_config
