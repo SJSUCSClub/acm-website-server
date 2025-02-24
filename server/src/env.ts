@@ -14,7 +14,7 @@ const EnvSchema = z.object({
 	GOOGLE_CLIENT_SECRET: z.string().default(''),
 	GOOGLE_REDIRECT_URI: z.string().default(''),
 	ACCESS_KEY_ID: z.string().default(''),
-	SECRET_ACCESS_KEY: z.string().default('')
+	SECRET_ACCESS_KEY: z.string().default(''),
 });
 
 export type Env = z.infer<typeof EnvSchema>;
