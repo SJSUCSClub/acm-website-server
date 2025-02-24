@@ -16,8 +16,8 @@ const fileRequestSchema = z.object({
 	file: z.custom<File>((v) => v instanceof File).
 			openapi({
 				type: 'string',
-				format: 'binary'
-			})
+				format: 'binary',
+			}),
 });
 
 projectRouter.openapi(
@@ -31,16 +31,16 @@ projectRouter.openapi(
 			body: {
 				content: {
 					'multipart/form-data': {
-						schema: fileRequestSchema
-					}
-				}
-			}
+						schema: fileRequestSchema,
+					},
+				},
+			},
 		},
 		responses: {
 			[HttpStatusCodes.OK]: {
-				description: 'Successful Upload'
-			}
-		}
+				description: 'Successful Upload',
+			},
+		},
 	}),
 	async (c) => {
 		const formDataBody = (await c.req.parseBody());
@@ -52,8 +52,8 @@ projectRouter.openapi(
 			c.status(400);
 			return c.json({'status': 'error occured uploading file'});
 		}
-	}
-)
+	},
+);
 
 projectRouter.openapi(
 	createRoute({
@@ -74,7 +74,6 @@ projectRouter.openapi(
 		},
 	}),
 	async (c) => {
-		const projectId: string = c.req.param('projectID');
 		const fileKey: string = c.req.param('fileKey'); 
 		const res = await deleteFile(fileKey);
 		if(res) {
@@ -83,7 +82,7 @@ projectRouter.openapi(
 			c.status(400);
 			return c.json({'status': 'error occured deleting file'});
 		}
-	}
+	},
 );
 
 projectRouter.openapi(
