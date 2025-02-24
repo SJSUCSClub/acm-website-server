@@ -8,7 +8,6 @@ import { Context } from '@/lib/context';
 import { env } from '@/env';
 const app = new OpenAPIHono<Context>({ strict: false });
 import configureOpenAPI from '@/lib/configure-openapi';
-import { csrf } from 'hono/csrf';
 
 app.use(pinoLogger());
 
@@ -25,13 +24,6 @@ app.use('/*', cors({
 	maxAge: 600,
 	credentials: true,
 }));
-
-// app.use('/*', async (c, next) => {
-//     if (c.req.method !== 'OPTIONS') {
-//         return csrf()(c, next);
-//     }
-//     return next();
-// });
 
 app.get('/', c =>
 	c.json(

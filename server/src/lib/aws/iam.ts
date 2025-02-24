@@ -12,7 +12,7 @@ const stsClient: STSClient = new STSClient({
     },
 });
 
-const initializeS3client = async () => {
+const initializeS3client = async (): Promise<boolean> => {
     try {
         const input = new AssumeRoleCommand({
             RoleArn: 'arn:aws:iam::588738592350:role/AcmApplicationServerRoleForLocal',
