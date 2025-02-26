@@ -9,11 +9,12 @@ const uploadFile = async (file: File): Promise<boolean> => {
         return false;
     } else {
         try {
+            // ReadableStream
             const uploadObjectCommand = new PutObjectCommand(
                 {
                     Bucket: BUCKET_NAME,
                     Key: file.name,
-                    Body: (await file.arrayBuffer()),
+                    Body: (new Buffer(await file.arrayBuffer())),
                 });
             await (<S3Client>s3client).send(uploadObjectCommand);
             return true;
