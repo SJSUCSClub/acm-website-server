@@ -19,6 +19,7 @@ interface Event {
 
 const CalendarPage = () => {
   const [events, setEvents] = useState<Event[]>([]);
+  const [dateFilter, setDateFilter] = useState("all");
 
   function formatDate(date: string) {
     const dateObj = new Date(date);
@@ -35,7 +36,7 @@ const CalendarPage = () => {
     return `${formattedHour}:${minutes} ${ampm}`;
   }
   useEffect(() => {
-    fetch("http://localhost/api/v1/events", {
+    fetch(`http://localhost/api/v1/events?timeframe=${dateFilter}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +47,7 @@ const CalendarPage = () => {
         console.log(data);
         setEvents(data.foundEvents);
       });
-  }, []);
+  }, [dateFilter]);
   return (
     <>
       <div className="about text-text my-10 px-[15%]">
@@ -61,7 +62,7 @@ const CalendarPage = () => {
             These events are accessible to all those who are interested,
             irrespective of their major or prior experience.
           </p>
-          <BtnDateFilter tab1="Upcoming" tab2="Past" />
+          <BtnDateFilter tab1="Future" tab2="Past" fcn={setDateFilter} />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
