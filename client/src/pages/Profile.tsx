@@ -63,7 +63,7 @@ export default function Profile() {
     github: "",
     website: "",
     selectedStatus: "",
-    gradDate: undefined,
+    gradDate: new Date(),
     major: "",
     selectedInterests: [],
   });
