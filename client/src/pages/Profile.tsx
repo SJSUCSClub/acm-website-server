@@ -29,20 +29,6 @@ interface UserData {
   selectedInterests: string[];
 }
 
-const status: Array<string> = ["Undergraduate", "Graduate"];
-
-const interests: Array<string> = [
-  "Web Development",
-  "Machine Learning",
-  "Cloud Computing",
-  "Artificial Intelligence",
-  "Networking",
-  "Cybersecurity",
-  "Mobile Development",
-  "Game Development",
-  "Data Science",
-];
-
 export function validateGitHubUrl(url: string): string | null {
   if (!url) return null;
   const githubRegex = /^https:\/\/github\.com\/[a-zA-Z0-9-]+\/?$/;
@@ -65,6 +51,8 @@ export function validateLinkedInUrl(url: string): string | null {
 export default function Profile() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [majorList, setMajorList] = useState<Array<string>>([]);
+  const [interestsList, setInterestsList] = useState<Array<string>>([]);
+  const [educationLevels, setEducationLevels] = useState<Array<string>>([]);
 
   const [userData, setUserData] = useState<UserData>({
     profilePic: "",
@@ -82,6 +70,40 @@ export default function Profile() {
 
   const [githubError, setGithubError] = useState<string | null>(null);
   const [linkedinError, setLinkedinError] = useState<string | null>(null);
+
+  //fetch education levels
+  useEffect(() => {
+    const fetchEducationLevels = async () => {
+      try {
+        const response = await fetch("/api/v1/enums/education_level_enum");
+        const data = await response.json();
+
+        setEducationLevels(
+          data.types.map((educationLevel: string) => educationLevel)
+        );
+      } catch (error) {
+        console.error("Error fetching majors:", error);
+      }
+    };
+
+    fetchEducationLevels();
+  }, []);
+
+  //fetch cs fields (interests)
+  useEffect(() => {
+    const fetchInterests = async () => {
+      try {
+        const response = await fetch("/api/v1/enums/cs_fields_enum");
+        const data = await response.json();
+
+        setInterestsList(data.types.map((interest: string) => interest));
+      } catch (error) {
+        console.error("Error fetching majors:", error);
+      }
+    };
+
+    fetchInterests();
+  }, []);
 
   // fetch major list
   useEffect(() => {
@@ -124,9 +146,7 @@ export default function Profile() {
           linkedin: data.linkedin || "",
           github: data.github || "",
           website: data.website || "",
-          selectedStatus:
-            data.education_level.charAt(0).toUpperCase() +
-            data.education_level.slice(1),
+          selectedStatus: data.education_level,
           gradDate: new Date(data.gradDate),
           major: data.major,
           selectedInterests: data.interests || [],
@@ -158,12 +178,12 @@ export default function Profile() {
       const updateData = {
         major: userData.major,
         gradDate: format(userData.gradDate!, "yyyy-MM-dd"),
-        education_level: userData.selectedStatus.toLowerCase(),
+        education_level: userData.selectedStatus,
         discord: userData.discord,
         linkedin: userData.linkedin,
         github: userData.github,
         website: userData.website,
-        interests: userData.selectedInterests.map((i) => i.toLowerCase()),
+        interests: userData.selectedInterests,
       };
 
       const response = await fetch("/api/v1/users/my", {
@@ -174,7 +194,9 @@ export default function Profile() {
         credentials: "include",
         body: JSON.stringify(updateData),
       });
-
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       await alert("Profile updated successfully!");
     } catch (error) {
       console.error("Failed to update profile:", error);
@@ -295,7 +317,7 @@ export default function Profile() {
                   <Dropdown
                     label="Status"
                     required={true}
-                    options={status}
+                    options={educationLevels}
                     value={userData.selectedStatus}
                     onChange={(e) =>
                       setUserData({
@@ -335,7 +357,7 @@ export default function Profile() {
                   label=""
                   multiple={true}
                   required={false}
-                  options={interests}
+                  options={interestsList}
                   selectedOptions={userData.selectedInterests}
                   changeFunction={handleInterestChange}
                 />

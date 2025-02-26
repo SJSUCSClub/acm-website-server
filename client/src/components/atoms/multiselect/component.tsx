@@ -34,8 +34,8 @@ export const MultiSelect: React.FC<ISelectProps> = ({
             label=""
             required={required}
             className="hide checkmark"
-            checked={selectedOptions.includes(option.toLowerCase())}
-            onChange={(e) => changeFunction(e, option.toLowerCase())}
+            checked={selectedOptions.includes(option)}
+            onChange={(e) => changeFunction(e, option)}
           />
           <label
             className="mt-2 text-text text-[14px]"
