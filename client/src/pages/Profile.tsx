@@ -15,6 +15,20 @@ import { format } from "date-fns";
 import { MultiSelect } from "../components/atoms/multiselect";
 import { Spinner } from "../components/atoms/spinner";
 
+interface UserData {
+  profilePic?: string;
+  name: string;
+  email: string;
+  discord: string;
+  linkedin: string;
+  github: string;
+  website: string;
+  selectedStatus: string;
+  gradDate?: Date;
+  major: string;
+  selectedInterests: string[];
+}
+
 const status: Array<string> = ["Undergraduate", "Graduate"];
 
 const interests: Array<string> = [
@@ -52,17 +66,19 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [majorList, setMajorList] = useState<Array<string>>([]);
 
-  const [profilePic, setProfilePic] = useState<string | undefined>(undefined);
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [discord, setDiscord] = useState<string>("");
-  const [linkedin, setLinkedin] = useState<string>("");
-  const [github, setGithub] = useState<string>("");
-  const [website, setWebsite] = useState<string>("");
-  const [selectedStatus, setSelectedStatus] = useState<string>("");
-  const [gradDate, setGradDate] = useState<Date | undefined>(undefined);
-  const [major, setMajor] = useState<string>("");
-  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [userData, setUserData] = useState<UserData>({
+    profilePic: "",
+    name: "",
+    email: "",
+    discord: "",
+    linkedin: "",
+    github: "",
+    website: "",
+    selectedStatus: "",
+    gradDate: undefined,
+    major: "",
+    selectedInterests: [],
+  });
 
   const [githubError, setGithubError] = useState<string | null>(null);
   const [linkedinError, setLinkedinError] = useState<string | null>(null);
@@ -100,20 +116,21 @@ export default function Profile() {
 
         const data = await response.json();
 
-        setProfilePic(data.profilePic);
-        setName(data.name);
-        setEmail(data.email);
-        setMajor(data.major);
-        setGradDate(data.gradDate);
-        setSelectedStatus(
-          data.education_level.charAt(0).toUpperCase() +
-            data.education_level.slice(1)
-        );
-        setDiscord(data.discord || "");
-        setLinkedin(data.linkedin || "");
-        setGithub(data.github || "");
-        setWebsite(data.website || "");
-        setSelectedInterests(data.interests || []);
+        setUserData({
+          profilePic: data.profilePic,
+          name: data.name,
+          email: data.email,
+          discord: data.discord || "",
+          linkedin: data.linkedin || "",
+          github: data.github || "",
+          website: data.website || "",
+          selectedStatus:
+            data.education_level.charAt(0).toUpperCase() +
+            data.education_level.slice(1),
+          gradDate: new Date(data.gradDate),
+          major: data.major,
+          selectedInterests: data.interests || [],
+        });
       } catch (error) {
         console.error(error);
       } finally {
@@ -126,8 +143,8 @@ export default function Profile() {
 
   // update and save profile
   const handleUpdateProfile = async () => {
-    const githubValidationError = validateGitHubUrl(github);
-    const linkedinValidationError = validateLinkedInUrl(linkedin);
+    const githubValidationError = validateGitHubUrl(userData.github);
+    const linkedinValidationError = validateLinkedInUrl(userData.linkedin);
 
     setGithubError(githubValidationError);
     setLinkedinError(linkedinValidationError);
@@ -139,16 +156,14 @@ export default function Profile() {
 
     try {
       const updateData = {
-        name,
-        email,
-        major,
-        gradDate: format(gradDate!, "yyyy-MM-dd"),
-        education_level: selectedStatus.toLowerCase(),
-        discord,
-        linkedin,
-        github,
-        website,
-        interests: selectedInterests.map((i) => i.toLowerCase()),
+        major: userData.major,
+        gradDate: format(userData.gradDate!, "yyyy-MM-dd"),
+        education_level: userData.selectedStatus.toLowerCase(),
+        discord: userData.discord,
+        linkedin: userData.linkedin,
+        github: userData.github,
+        website: userData.website,
+        interests: userData.selectedInterests.map((i) => i.toLowerCase()),
       };
 
       const response = await fetch("/api/v1/users/my", {
@@ -160,7 +175,7 @@ export default function Profile() {
         body: JSON.stringify(updateData),
       });
 
-      window.location.href = window.location.href;
+      await alert("Profile updated successfully!");
     } catch (error) {
       console.error("Failed to update profile:", error);
     }
@@ -171,16 +186,16 @@ export default function Profile() {
     e: React.ChangeEvent<HTMLInputElement>,
     option: string
   ) => {
-    setSelectedInterests((prevSelectedOptions) =>
-      prevSelectedOptions.includes(option)
-        ? prevSelectedOptions.filter((item) => item !== option)
-        : [...prevSelectedOptions, option]
-    );
+    const updatedInterests = userData.selectedInterests.includes(option)
+      ? userData.selectedInterests.filter((item) => item !== option)
+      : [...userData.selectedInterests, option];
+
+    setUserData({ ...userData, selectedInterests: updatedInterests });
   };
 
   // for date picker
   const handleDateChange = (date: Date | undefined) => {
-    setGradDate(date);
+    setUserData({ ...userData, gradDate: date });
   };
 
   if (isLoading) {
@@ -201,7 +216,10 @@ export default function Profile() {
                 <div className="flex flex-rows space-y-2">
                   <div className="relative flex items-center gap-4">
                     <Avatar className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24">
-                      <AvatarImage src={profilePic} alt="Profile picture" />
+                      <AvatarImage
+                        src={userData.profilePic}
+                        alt="Profile picture"
+                      />
                       <AvatarFallback>
                         <ImageIcon className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-muted-foreground" />
                       </AvatarFallback>
@@ -211,14 +229,14 @@ export default function Profile() {
                 <div className="space-y-2">
                   <p className="text-neutral font-semibold mb-2">Name</p>
                   <div className="rounded-xl bg-border text-gray-500 px-4 py-2 focus:outline-none w-full placeholder-neutral mb-2 border-border-hovered border-2">
-                    {name}
+                    {userData.name}
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <p className="text-neutral font-semibold mb-2">Email</p>
                   <div className="rounded-xl bg-border text-gray-500 px-4 py-2 focus:outline-none w-full placeholder-neutral mb-2 border-border-hovered border-2">
-                    {email}
+                    {userData.email}
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -226,8 +244,10 @@ export default function Profile() {
                     label="Discord"
                     required={false}
                     placeholder="discord#1234"
-                    value={discord}
-                    onChange={(e) => setDiscord(e.target.value)}
+                    value={userData.discord}
+                    onChange={(e) =>
+                      setUserData({ ...userData, discord: e.target.value })
+                    }
                   />
                 </div>
 
@@ -236,10 +256,10 @@ export default function Profile() {
                     label="LinkedIn"
                     required={false}
                     placeholder="https://linkedin.com/john-doe/"
-                    value={linkedin}
+                    value={userData.linkedin}
                     onChange={(e) => {
-                      setLinkedin(e.target.value);
-                      setLinkedinError(validateLinkedInUrl(e.target.value));
+                      setUserData({ ...userData, linkedin: e.target.value }),
+                        setLinkedinError(validateLinkedInUrl(e.target.value));
                     }}
                   />
                   {linkedinError && <Alert message={linkedinError} />}
@@ -250,10 +270,10 @@ export default function Profile() {
                     label="GitHub"
                     required={false}
                     placeholder="https://github.com/john.doe/"
-                    value={github}
+                    value={userData.github}
                     onChange={(e) => {
-                      setGithub(e.target.value);
-                      setGithubError(validateGitHubUrl(e.target.value));
+                      setUserData({ ...userData, github: e.target.value }),
+                        setGithubError(validateGitHubUrl(e.target.value));
                     }}
                   />
                   {githubError && <Alert message={githubError} />}
@@ -264,8 +284,10 @@ export default function Profile() {
                     label="Website"
                     required={false}
                     placeholder="https://myportfolio.com/john.doe/"
-                    value={website}
-                    onChange={(e) => setWebsite(e.target.value)}
+                    value={userData.website}
+                    onChange={(e) =>
+                      setUserData({ ...userData, website: e.target.value })
+                    }
                   />
                 </div>
 
@@ -274,8 +296,13 @@ export default function Profile() {
                     label="Status"
                     required={true}
                     options={status}
-                    value={selectedStatus}
-                    onChange={(e) => setSelectedStatus(e.target.value)}
+                    value={userData.selectedStatus}
+                    onChange={(e) =>
+                      setUserData({
+                        ...userData,
+                        selectedStatus: e.target.value,
+                      })
+                    }
                   />
                 </div>
 
@@ -283,7 +310,7 @@ export default function Profile() {
                   <div className="relative">
                     <DatePicker
                       label="Graduation Date"
-                      value={gradDate}
+                      value={userData.gradDate}
                       onChange={handleDateChange}
                     />
                   </div>
@@ -294,8 +321,10 @@ export default function Profile() {
                     label="Major"
                     required={true}
                     options={majorList}
-                    value={major}
-                    onChange={(e) => setMajor(e.target.value)}
+                    value={userData.major}
+                    onChange={(e) =>
+                      setUserData({ ...userData, major: e.target.value })
+                    }
                   />
                 </div>
               </div>
@@ -307,7 +336,7 @@ export default function Profile() {
                   multiple={true}
                   required={false}
                   options={interests}
-                  selectedOptions={selectedInterests}
+                  selectedOptions={userData.selectedInterests}
                   changeFunction={handleInterestChange}
                 />
               </div>
