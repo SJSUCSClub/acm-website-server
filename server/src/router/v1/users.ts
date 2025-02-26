@@ -4,11 +4,11 @@ import { authMiddleWare } from '@/middlewares/auth-middleware';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { users, events, subscribedCompanies, companies, subscribedEvents, equipmentRentalType, equipmentItem, equipmentRentals, userRoleEnum, equipmentConditionEnum, bookmarkedEvents } from '@/db/schema';
 import { db } from '@/db/db';
-import { eq, getTableColumns } from 'drizzle-orm';
+import { eq, getTableColumns, and } from 'drizzle-orm';
 import { unauthorizedRequest } from '@/middlewares/auth-middleware';
 import type { User, Event, Company } from '@/db/schema';
 import type { Context } from '@/lib/context';
-import { userSchema, companySchema, bookmarkSchema, updateUserSchema, userIdSchema, eventSchema } from '@/util/zod';
+import { userSchema, companySchema, bookmarkSchema, updateUserSchema, userIdSchema, eventSchema, eventIDSchema, companyIDSchema } from '@/util/zod';
 
 const userRouter = new OpenAPIHono<Context>();
 
@@ -243,9 +243,127 @@ userRouter.openapi(
 userRouter.openapi(
 	createRoute({
 		method: 'get',
-		path: '/my/subscriptions',
+		path: '/my/bookmarked/{eventID}',
 		tags: ['users'],
-		summary: 'Get current user\'s subscriptions',
+		summary: 'Check if current user has bookmarked an event',
+		middleware: [authMiddleWare('user')],
+    request: {
+      params: eventIDSchema,
+    },
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful response',
+				content: {
+					'application/json': {
+						schema: z.object({
+							bookmarked: z.boolean(),
+						}),
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+    const { eventID } = c.req.valid('param');
+		const bookmark = await db
+			.select()
+			.from(bookmarkedEvents)
+			.where(and(eq(bookmarkedEvents.userId, session.userId), eq(bookmarkedEvents.eventId, parseInt(eventID))));
+
+		return c.json({ bookmarked: bookmark.length > 0 }, HttpStatusCodes.OK);
+	},
+);
+
+userRouter.openapi(
+	createRoute({
+		method: 'get',
+		path: '/my/subscribed-events',
+		tags: ['users'],
+		summary: 'Get authenticated user\'s subscribed events',
+		middleware: [authMiddleWare('user')],
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful response',
+				content: {
+					'application/json': {
+						schema: z.object({
+							events: z.array(eventSchema),
+						}),
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+
+		// Get subscribed events
+		const foundSubscribedEvents: Event[] = await db
+			.select(getTableColumns(events))
+			.from(subscribedEvents)
+			.innerJoin(events, eq(events.id, subscribedEvents.eventId))
+			.where(eq(subscribedEvents.userId, session.userId));
+      
+		return c.json({
+			events: foundSubscribedEvents,
+		}, HttpStatusCodes.OK);
+	},
+);
+
+userRouter.openapi(
+	createRoute({
+		method: 'get',
+		path: '/my/subscribed-events/{eventID}',
+		tags: ['users'],
+		summary: 'Check if current user has subscribed to an event',
+		middleware: [authMiddleWare('user')],
+    request: {
+      params: eventIDSchema,
+    },
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful response',
+				content: {
+					'application/json': {
+						schema: z.object({
+							subscribed: z.boolean(),
+						}),
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+    const { eventID } = c.req.valid('param');
+		const sub = await db
+			.select()
+			.from(subscribedEvents)
+			.where(and(eq(subscribedEvents.userId, session.userId), eq(subscribedEvents.eventId, parseInt(eventID))));
+
+		return c.json({ subscribed: sub.length > 0 }, HttpStatusCodes.OK);
+	},
+);
+
+userRouter.openapi(
+	createRoute({
+		method: 'get',
+		path: '/my/subscribed-companies',
+		tags: ['users'],
+		summary: 'Get authenticated user\'s subscribed companies',
 		middleware: [authMiddleWare('user')],
 		responses: {
 			[HttpStatusCodes.OK]: {
@@ -254,7 +372,6 @@ userRouter.openapi(
 					'application/json': {
 						schema: z.object({
 							companies: z.array(companySchema),
-							events: z.array(eventSchema),
 						}),
 					},
 				},
@@ -275,23 +392,48 @@ userRouter.openapi(
 			.innerJoin(companies, eq(companies.id, subscribedCompanies.companyId))
 			.where(eq(subscribedCompanies.userId, session.userId));
 
-		// Get subscribed events
-		const foundSubscribedEvents: Event[] = await db
-			.select(getTableColumns(events))
-			.from(subscribedEvents)
-			.innerJoin(events, eq(events.id, subscribedEvents.eventId))
-			.where(eq(subscribedEvents.userId, session.userId));
-
-		// Format events to match schema
-		const formattedEvents = foundSubscribedEvents.map(event => ({
-			...event,
-			createdAt: event.createdAt.toISOString(),
-		}));
-
 		return c.json({
 			companies: foundSubscribedCompanies,
-			events: formattedEvents,
 		}, HttpStatusCodes.OK);
+	},
+);
+
+userRouter.openapi(
+	createRoute({
+		method: 'get',
+		path: '/my/subscribed-companies/{companyID}',
+		tags: ['users'],
+		summary: 'Check if current user has subscribed to a company',
+		middleware: [authMiddleWare('user')],
+    request: {
+      params: companyIDSchema,
+    },
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful response',
+				content: {
+					'application/json': {
+						schema: z.object({
+							subscribed: z.boolean(),
+						}),
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+    const { companyID } = c.req.valid('param');
+		const sub = await db
+			.select()
+			.from(subscribedCompanies)
+			.where(and(eq(subscribedCompanies.userId, session.userId), eq(subscribedCompanies.companyId, parseInt(companyID))));
+
+		return c.json({ subscribed: sub.length > 0 }, HttpStatusCodes.OK);
 	},
 );
 
