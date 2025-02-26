@@ -81,9 +81,12 @@ const EventsPage = () => {
             These events are accessible to all those who are interested,
             irrespective of their major or prior experience.
           </p>
+          <BtnDateFilter tab1="All" tab2="Upcoming" tab3="Today" tab4="Past" fcn={setDateFilter} />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-8">
-          {mockEvents.map((event) => (
+        {events.length === 0 && <div className="text-text text-center my-10">No events found</div>}
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
+          {events.map((event) => (
             <EventCard
               key={event.id}
               title={event.title}
