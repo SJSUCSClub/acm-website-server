@@ -1,235 +1,284 @@
+import React, { useState, useEffect } from "react";
 import Input from "../components/atoms/input";
 import Dropdown from "../components/atoms/dropdown";
-import OnboardingCard from "../components/molecules/onboarding-card";
 import ProgressBar from "../components/molecules/progress-bar";
-import { useState } from "react";
 import Btn from "../components/atoms/btn";
 import RightArrow from "/about/rightarrow.svg";
 import Select from "../components/atoms/select";
-import createFetchClient from "openapi-fetch";
-import createClient from "openapi-react-query";
-import type { paths } from "@/types/schema.v1"
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import Card, {
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/atoms/card";
+import { useQuery, useMutation } from "@/hooks/useFetch";
+import { paths } from "@/types/schema.v1";
+import { Link } from "@tanstack/react-router";
 
-type tempUserType = {
-  name: string;
-};
+type User =
+  paths["/api/v1/users/my"]["get"]["responses"]["200"]["content"]["application/json"];
+type discord = User["discord"];
 
-const tempUser: tempUserType = {
-  name: "Naya",
-};
+interface OnboardingTabProps {
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  setUpdatedUser: React.Dispatch<React.SetStateAction<User | null>>;
+  updatedUser: User;
+}
 
-const educationLevelOptions: Array<string> = ["Undergraduate", "Graduate"];
-
-const tempMajorOptions: Array<string> = [
-  "Computer Science",
-  "Data Science",
-  "Computer Engineering",
-  "Software Engineering",
-];
-
-const purposeOptions: Array<string> = ["Networking", "Other"];
-
-const interestOptions: Array<string> = [
-  "Web Development",
-  "Machine Learning",
-  "Cloud Computing",
-  "Artificial Intelligence",
-];
-
-type User = {
-  educationLevel: string;
-  major: string;
-  gradDate: Date;
-  purpose: string;
-  interests: Array<string>;
-  linkedin: string;
-  github: string;
-  website: string;
-};
-
-const fetchClient = createFetchClient<paths>({});
-const $api = createClient(fetchClient);
+interface SocialsProps extends OnboardingTabProps {
+  setComplete: () => void;
+}
 
 const Page = () => {
-  const { data, error, isLoading } = $api.useQuery(
-    "get",
-    "/api/v1/users/my",
-  );
-  console.log('date: ', data);
-  const [progress, setProgress] = useState<number>(0.0);
   const [page, setPage] = useState<number>(0);
+  const { data: user } = useQuery("get", "/api/v1/users/my");
+  const { mutate } = useMutation("put", "/api/v1/users/my");
+  const [updatedUser, setUpdatedUser] = useState<User | null>(null);
 
-  const [user, setUser] = useState<User>({
-    educationLevel: educationLevelOptions[0],
-    major: "",
-    gradDate: new Date(),
-    purpose: purposeOptions[0],
-    interests: [],
-    linkedin: "",
-    github: "",
-    website: "",
-  });
-  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
-  const [selectedPurpose, setSelectedPurpose] = useState<string[]>([]);
+  useEffect(() => {
+    const getUser = () => {
+      setUpdatedUser(user || null);
+    };
+    getUser();
+  }, [user]);
 
-  const handleInterestChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    option: string,
-  ) => {
-    console.log(option);
-    setSelectedInterests((prevSelectedOptions) =>
-      prevSelectedOptions.includes(option)
-        ? prevSelectedOptions.filter((item) => item !== option)
-        : [...prevSelectedOptions, option],
-    );
+  const setComplete = () => {
+    if (!updatedUser) return;
+    mutate({
+      body: updatedUser,
+    });
+    setPage(2);
   };
-
-  const handlePurposeChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    option: string,
-  ) => {
-    console.log(option);
-    setSelectedPurpose((prevSelectedOptions) =>
-      prevSelectedOptions.includes(option)
-        ? prevSelectedOptions.filter((item) => item !== option)
-        : [...prevSelectedOptions, option],
-    );
-  };
-
-  const handleChange = (key: string, value: string) => {
-    setUser({ ...user, [key]: value });
-  };
-
-  function nextPage() {
-    if (page < 2) {
-      console.log(user);
-      console.log(selectedInterests);
-      console.log(selectedPurpose);
-      setPage(page + 1);
-      setProgress(progress + 0.5);
-    } else {
-      window.location.href = "/";
-    }
-  }
-
-  function backPage() {
-    setPage(page - 1);
-    setProgress(progress - 0.5);
-  }
-
-  function renderContinueButton(text: string = "Continue") {
-    return (
-      <>
-        <br />
-        <div className="flex justify-between">
-          <Btn
-            variant="primary"
-            className="bg-transparent text-primary border-none pl-0 hover:bg-transparent disabled:bg-transparent"
-            disabled={page < 1}
-            onClick={() => backPage()}
-          >
-            {"< Back"}
-          </Btn>
-          <Btn variant="primary" onClick={() => nextPage()}>
-            <span className="">{text}</span>
-            <img src={RightArrow} alt="right arrow" />
-          </Btn>
-        </div>
-      </>
-    );
-  }
 
   return (
-    <div className="flex justify-center items-center">
-      <div className="w-[75%] md:w-[50%] lg:w-[40%]">
-        <div>
-          <br />
-          <br />
-          <ProgressBar value={progress} max={1} />
-          <br />
-          <br />
+    <div className="flex justify-center items-center py-10">
+      <div className="w-[75%] md:w-[50%] lg:w-[40%] space-y-10">
+        <ProgressBar value={page} max={1} />
 
-          {page === 0 && (
-            <OnboardingCard
-              header="Welcome"
-              boldHeader={`${tempUser.name}!`}
-              subtitle="We'd love to know a bit more about you"
-            >
-              <Dropdown
-                label="Education"
-                required={true}
-                options={educationLevelOptions}
-                onChange={(e) => handleChange("status", e.target.value)}
-              />
-              <Dropdown
-                label="Major"
-                required={true}
-                footer="All majors are welcome :)"
-                options={tempMajorOptions}
-                onChange={(e) => handleChange("major", e.target.value)}
-              />
-              <Input type="date" label="Graduation Date" required={true} />
-              <Select
-                label="Purpose"
-                required={false}
-                options={purposeOptions}
-                footer="Tell us what brings you to the ACM club"
-                changeFunction={handlePurposeChange}
-              />
-              <Select
-                label="Interest(s)"
-                multiple={true}
-                required={false}
-                options={interestOptions}
-                changeFunction={handleInterestChange}
-              />
-              {renderContinueButton()}
-            </OnboardingCard>
-          )}
-          {page === 1 && (
-            <OnboardingCard
-              header="Connect your social profiles"
-              boldHeader=""
-              subtitle=""
-            >
-              <Input
-                label="LinkedIn"
-                required={false}
-                icon="/src/assets/Link.svg"
-                placeholder="https://linkedin.com/in/john-doe"
-                onChange={(e) => handleChange("linkedin", e.target.value)}
-              />
-              <Input
-                label="Github"
-                required={false}
-                icon="/src/assets/Link.svg"
-                placeholder="https://github.com/john-doe"
-                onChange={(e) => handleChange("github", e.target.value)}
-              />
-              <Input
-                label="Website"
-                required={false}
-                icon="/src/assets/Link.svg"
-                placeholder="https://johndoe.com"
-                onChange={(e) => handleChange("website", e.target.value)}
-              />
-              {renderContinueButton()}
-            </OnboardingCard>
-          )}
-          {page === 2 && (
-            <OnboardingCard
-              image="/src/assets/trophy.svg"
-              header=""
-              boldHeader="Congratulations!"
-              subtitle="You're all set! Welcome to the ACM Club at San José State University. Make the most out of your experience with us."
-            >
-              <div></div>
-              {renderContinueButton("Start Exploring")}
-            </OnboardingCard>
-          )}
-          <br />
-        </div>
+        {updatedUser && (
+          <Card>
+            <CardHeader>
+              <div className="flex flex-col items-center space-y-2">
+                <Avatar className="w-[100px] h-[100px]">
+                  <AvatarImage
+                    src={updatedUser.profilePic || ""}
+                    alt={"User Profile"}
+                  />
+                </Avatar>
+                <CardTitle>Welcome {updatedUser.name}!</CardTitle>
+                <CardDescription>
+                  We would love to know a bit more about you.
+                </CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="w-full">
+                {page === 0 && (
+                  <PersonalInfo
+                    setPage={setPage}
+                    setUpdatedUser={setUpdatedUser}
+                    updatedUser={updatedUser}
+                  />
+                )}
+                {page === 1 && (
+                  <Socials
+                    setPage={setPage}
+                    updatedUser={updatedUser}
+                    setUpdatedUser={setUpdatedUser}
+                    setComplete={setComplete}
+                  />
+                )}
+                {page === 2 && <Done />}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
+    </div>
+  );
+};
+
+const PersonalInfo: React.FC<OnboardingTabProps> = ({
+  updatedUser,
+  setPage,
+  setUpdatedUser,
+}) => {
+  const { data: educationOptions } = useQuery(
+    "get",
+    "/api/v1/enums/{enumType}",
+    {
+      params: {
+        path: {
+          enumType: "education_level_enum",
+        },
+      },
+    },
+  );
+  const { data: interestOptions } = useQuery(
+    "get",
+    "/api/v1/enums/{enumType}",
+    {
+      params: {
+        path: {
+          enumType: "cs_fields_enum",
+        },
+      },
+    },
+  );
+  const { data: majorOptions } = useQuery("get", "/api/v1/majors");
+  return (
+    <>
+      <Dropdown
+        label="Education"
+        required={true}
+        options={educationOptions?.types || []}
+        value={updatedUser.education_level || ""}
+        onChange={(e) =>
+          setUpdatedUser((prev) =>
+            prev
+              ? {
+                ...prev,
+                education_level: e.target.value as User["education_level"],
+              }
+              : prev,
+          )
+        }
+      />
+      <Dropdown
+        label="Major"
+        required={true}
+        options={majorOptions?.majors.map((major) => major.name) || []}
+        value={updatedUser.major || ""}
+        onChange={(e) => {
+          setUpdatedUser((prev) =>
+            prev ? { ...prev, major: e.target.value as User["major"] } : prev,
+          );
+        }}
+      />
+      <Input
+        type="date"
+        label="Graduation Date"
+        value={updatedUser.gradDate || undefined}
+        onChange={(e) => {
+          setUpdatedUser((prev) =>
+            prev ? { ...prev, gradDate: e.target.value } : prev,
+          );
+        }}
+        required={true}
+      />
+      <Select
+        label="Interest(s)"
+        multiple={true}
+        required={false}
+        options={interestOptions?.types || []}
+        selected={updatedUser.interests || []}
+        changeFunction={(_, option) => {
+          setUpdatedUser((prev) =>
+            prev
+              ? {
+                ...prev,
+                interests: prev.interests.includes(
+                  option as User["interests"][number],
+                )
+                  ? prev.interests.filter((item) => item !== option)
+                  : [...prev.interests, option as User["interests"][number]],
+              }
+              : prev,
+          );
+        }}
+      />
+      <div className="flex justify-end">
+        <Btn variant="primary" onClick={() => setPage(1)}>
+          <span className="">Continue</span>
+          <img src={RightArrow} alt="right arrow" />
+        </Btn>
+      </div>
+    </>
+  );
+};
+
+const Socials: React.FC<SocialsProps> = ({
+  updatedUser,
+  setPage,
+  setUpdatedUser,
+  setComplete,
+}) => {
+  return (
+    <>
+      <Input
+        label="LinkedIn"
+        required={false}
+        icon="/src/assets/Link.svg"
+        placeholder="https://linkedin.com/in/john-doe"
+        value={updatedUser.linkedin || ""}
+        onChange={(e) => {
+          setUpdatedUser((prev) =>
+            prev ? { ...prev, linkedin: e.target.value } : prev,
+          );
+        }}
+      />
+      <Input
+        label="Github"
+        required={false}
+        icon="/src/assets/Link.svg"
+        placeholder="https://github.com/john-doe"
+        value={updatedUser.github || ""}
+        onChange={(e) => {
+          setUpdatedUser((prev) =>
+            prev ? { ...prev, github: e.target.value } : prev,
+          );
+        }}
+      />
+      <Input
+        label="Discord Username"
+        required={false}
+        icon="/src/assets/Link.svg"
+        placeholder="JohnDoe"
+        value={updatedUser.discord || ""}
+        onChange={(e) => {
+          setUpdatedUser((prev) =>
+            prev ? { ...prev, discord: e.target.value } : prev,
+          );
+        }}
+      />
+      <Input
+        label="Website"
+        required={false}
+        icon="/src/assets/Link.svg"
+        placeholder="https://johndoe.com"
+        value={updatedUser.website || ""}
+        onChange={(e) => {
+          setUpdatedUser((prev) =>
+            prev ? { ...prev, website: e.target.value } : prev,
+          );
+        }}
+      />
+      <div className="flex justify-between">
+        <Btn
+          variant="primary"
+          className="bg-transparent text-primary border-none pl-0 hover:bg-transparent disabled:bg-transparent"
+          onClick={() => setPage(0)}
+        >
+          {"< Back"}
+        </Btn>
+        <Btn variant="primary" onClick={setComplete}>
+          <span className="">Complete</span>
+          <img src={RightArrow} alt="right arrow" />
+        </Btn>
+      </div>
+    </>
+  );
+};
+
+const Done = () => {
+  return (
+    <div className="flex justify-between">
+      <Btn variant="primary" className="w-full">
+        <Link to="/">
+          <span className="">Go to Home</span>
+        </Link>
+      </Btn>
     </div>
   );
 };
