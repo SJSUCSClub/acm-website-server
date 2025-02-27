@@ -15,6 +15,7 @@ import Card, {
 import { useQuery, useMutation } from "@/hooks/useFetch";
 import { paths } from "@/types/schema.v1";
 import { useNavigate } from "@tanstack/react-router";
+import OnboardingCard from "@/components/molecules/onboarding-card";
 
 type User =
   paths["/api/v1/users/my"]["get"]["responses"]["200"]["content"]["application/json"];
@@ -53,45 +54,27 @@ const Page = () => {
   return (
     <div className="flex justify-center items-center py-10">
       <div className="w-[75%] md:w-[50%] lg:w-[40%] space-y-10">
-        <ProgressBar value={page*0.5} max={1} />
+        <ProgressBar value={page * 0.5} max={1} />
 
         {updatedUser && (
-          <Card>
-            <CardHeader>
-              <div className="flex flex-col items-center space-y-2">
-                <Avatar className="w-[100px] h-[100px]">
-                  <AvatarImage
-                    src={updatedUser.profilePic || ""}
-                    alt={"User Profile"}
-                  />
-                </Avatar>
-                <CardTitle>Welcome {updatedUser.name}!</CardTitle>
-                <CardDescription>
-                  We would love to know a bit more about you.
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="w-full">
-                {page === 0 && (
-                  <PersonalInfo
-                    setPage={setPage}
-                    setUpdatedUser={setUpdatedUser}
-                    updatedUser={updatedUser}
-                  />
-                )}
-                {page === 1 && (
-                  <Socials
-                    setPage={setPage}
-                    updatedUser={updatedUser}
-                    setUpdatedUser={setUpdatedUser}
-                    setComplete={setComplete}
-                  />
-                )}
-                {page === 2 && <Done />}
-              </div>
-            </CardContent>
-          </Card>
+          <div>
+            {page === 0 && (
+              <PersonalInfo
+                setPage={setPage}
+                setUpdatedUser={setUpdatedUser}
+                updatedUser={updatedUser}
+              />
+            )}
+            {page === 1 && (
+              <Socials
+                setPage={setPage}
+                updatedUser={updatedUser}
+                setUpdatedUser={setUpdatedUser}
+                setComplete={setComplete}
+              />
+            )}
+            {page === 2 && <Done />}
+          </div>
         )}
       </div>
     </div>
@@ -127,7 +110,11 @@ const PersonalInfo: React.FC<OnboardingTabProps> = ({
   );
   const { data: majorOptions } = useQuery("get", "/api/v1/majors");
   return (
-    <>
+    <OnboardingCard
+      image={updatedUser.profilePic || ""}
+      header={`Welcome ${updatedUser.name}`}
+      subtitle="We would love to know a bit more about you."
+    >
       <Dropdown
         label="Education"
         required={true}
@@ -137,9 +124,9 @@ const PersonalInfo: React.FC<OnboardingTabProps> = ({
           setUpdatedUser((prev) =>
             prev
               ? {
-                ...prev,
-                education_level: e.target.value as User["education_level"],
-              }
+                  ...prev,
+                  education_level: e.target.value as User["education_level"],
+                }
               : prev,
           )
         }
@@ -176,13 +163,13 @@ const PersonalInfo: React.FC<OnboardingTabProps> = ({
           setUpdatedUser((prev) =>
             prev
               ? {
-                ...prev,
-                interests: prev.interests.includes(
-                  option as User["interests"][number],
-                )
-                  ? prev.interests.filter((item) => item !== option)
-                  : [...prev.interests, option as User["interests"][number]],
-              }
+                  ...prev,
+                  interests: prev.interests.includes(
+                    option as User["interests"][number],
+                  )
+                    ? prev.interests.filter((item) => item !== option)
+                    : [...prev.interests, option as User["interests"][number]],
+                }
               : prev,
           );
         }}
@@ -193,7 +180,7 @@ const PersonalInfo: React.FC<OnboardingTabProps> = ({
           <img src={RightArrow} alt="right arrow" />
         </Btn>
       </div>
-    </>
+    </OnboardingCard>
   );
 };
 
@@ -204,7 +191,10 @@ const Socials: React.FC<SocialsProps> = ({
   setComplete,
 }) => {
   return (
-    <>
+    <OnboardingCard
+      image={updatedUser.profilePic || ""}
+      header="Connect your social profiles"
+    >
       <Input
         label="LinkedIn"
         required={false}
@@ -266,7 +256,7 @@ const Socials: React.FC<SocialsProps> = ({
           <img src={RightArrow} alt="right arrow" />
         </Btn>
       </div>
-    </>
+    </OnboardingCard>
   );
 };
 
@@ -274,11 +264,21 @@ const Done = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex justify-between">
-      <Btn variant="primary" className="w-full" onClick={() => navigate({ to: "/"})}>
+    <OnboardingCard
+    image="/src/assets/trophy.svg"
+      header="Congratulations!"
+      subtitle="You're all set! Welcome to the ACM Club at San José State University. Make the most out of your experience with us."
+    >
+      <div className="flex justify-between">
+        <Btn
+          variant="primary"
+          className="w-full"
+          onClick={() => navigate({ to: "/" })}
+        >
           <span className="">Go to Home</span>
-      </Btn>
-    </div>
+        </Btn>
+      </div>
+    </OnboardingCard>
   );
 };
 
