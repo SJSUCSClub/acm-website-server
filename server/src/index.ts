@@ -43,7 +43,7 @@ app.get('/', c =>
 );
 
 // V1 API
-app.route('/api/v1', v1App);
+app.route('/v1', v1App);
 
 configureOpenAPI(app);
 
