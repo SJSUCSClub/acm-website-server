@@ -169,14 +169,14 @@ export interface paths {
                                 email: string;
                                 major: string;
                                 gradDate: string;
-                                interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                                interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 profilePic: string | null;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
-                                paid: "semester" | "annual" | null;
+                                paid: "Semester" | "Annual" | null;
                                 /** @enum {string} */
-                                education_level: "undergraduate" | "graduate";
+                                education_level: "Undergraduate" | "Graduate";
                                 discord: string | null;
                                 linkedin: string | null;
                                 github: string | null;
@@ -225,14 +225,14 @@ export interface paths {
                             email: string;
                             major: string;
                             gradDate: string;
-                            interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                            interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                             profilePic: string | null;
                             /** @enum {string} */
                             role: "user" | "member" | "admin";
                             /** @enum {string|null} */
-                            paid: "semester" | "annual" | null;
+                            paid: "Semester" | "Annual" | null;
                             /** @enum {string} */
-                            education_level: "undergraduate" | "graduate";
+                            education_level: "Undergraduate" | "Graduate";
                             discord: string | null;
                             linkedin: string | null;
                             github: string | null;
@@ -266,9 +266,9 @@ export interface paths {
                     "application/json": {
                         major?: string;
                         gradDate?: string | null;
-                        interests?: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                        interests?: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                         /** @enum {string} */
-                        education_level?: "undergraduate" | "graduate";
+                        education_level?: "Undergraduate" | "Graduate";
                         discord?: string;
                         linkedin?: string;
                         github?: string;
@@ -290,14 +290,14 @@ export interface paths {
                             email: string;
                             major: string;
                             gradDate: string;
-                            interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                            interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                             profilePic: string | null;
                             /** @enum {string} */
                             role: "user" | "member" | "admin";
                             /** @enum {string|null} */
-                            paid: "semester" | "annual" | null;
+                            paid: "Semester" | "Annual" | null;
                             /** @enum {string} */
-                            education_level: "undergraduate" | "graduate";
+                            education_level: "Undergraduate" | "Graduate";
                             discord: string | null;
                             linkedin: string | null;
                             github: string | null;
@@ -355,7 +355,7 @@ export interface paths {
                                 returnDate: string;
                                 price: number;
                                 /** @enum {string} */
-                                condition: "ready" | "broken" | "in maintenance";
+                                condition: "Ready" | "Broken" | "In Maintenance";
                                 equipmentType: {
                                     name: string;
                                     description: string | null;
@@ -523,14 +523,14 @@ export interface paths {
                                 description: string;
                                 urls: string[];
                                 /** @enum {string} */
-                                eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
+                                eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
                                 eventCapacity: number | null;
                                 image: string;
                                 startTime: string;
                                 endTime: string;
-                                tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                                tags: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 /** @enum {string|null} */
-                                targetAudience: "students" | null;
+                                targetAudience: "Students" | null;
                                 shortenedEventUrl: number | null;
                                 memberOnly: boolean;
                             }[];
@@ -639,7 +639,7 @@ export interface paths {
                                 location: string | null;
                                 description: string;
                                 /** @enum {string} */
-                                industryId: "banking and finance" | "aerospace" | "healthcare" | "automotive" | "energy" | "technology";
+                                industryId: "Banking and Finance" | "Aerospace" | "Healthcare" | "Automotive" | "Energy" | "Technology";
                                 logo: string | null;
                             }[];
                         };
@@ -749,14 +749,14 @@ export interface paths {
                             email: string;
                             major: string;
                             gradDate: string;
-                            interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                            interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                             profilePic: string | null;
                             /** @enum {string} */
                             role: "user" | "member" | "admin";
                             /** @enum {string|null} */
-                            paid: "semester" | "annual" | null;
+                            paid: "Semester" | "Annual" | null;
                             /** @enum {string} */
-                            education_level: "undergraduate" | "graduate";
+                            education_level: "Undergraduate" | "Graduate";
                             discord: string | null;
                             linkedin: string | null;
                             github: string | null;
@@ -803,9 +803,9 @@ export interface paths {
                     "application/json": {
                         major?: string;
                         gradDate?: string | null;
-                        interests?: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                        interests?: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                         /** @enum {string} */
-                        education_level?: "undergraduate" | "graduate";
+                        education_level?: "Undergraduate" | "Graduate";
                         discord?: string;
                         linkedin?: string;
                         github?: string;
@@ -829,14 +829,14 @@ export interface paths {
                             email: string;
                             major: string;
                             gradDate: string;
-                            interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                            interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                             profilePic: string | null;
                             /** @enum {string} */
                             role: "user" | "member" | "admin";
                             /** @enum {string|null} */
-                            paid: "semester" | "annual" | null;
+                            paid: "Semester" | "Annual" | null;
                             /** @enum {string} */
-                            education_level: "undergraduate" | "graduate";
+                            education_level: "Undergraduate" | "Graduate";
                             discord: string | null;
                             linkedin: string | null;
                             github: string | null;
@@ -950,7 +950,7 @@ export interface paths {
                                 name: string;
                                 description: string;
                                 /** @enum {string} */
-                                status: "not started" | "looking for members" | "in progress" | "completed";
+                                status: "Not Started" | "Looking for Members" | "In Progress" | "Completed";
                                 githubLink: string | null;
                             }[];
                         };
@@ -974,7 +974,7 @@ export interface paths {
                         name: string;
                         description: string;
                         /** @enum {string} */
-                        status: "not started" | "looking for members" | "in progress" | "completed";
+                        status: "Not Started" | "Looking for Members" | "In Progress" | "Completed";
                         githubLink: string | null;
                     };
                 };
@@ -992,7 +992,7 @@ export interface paths {
                                 name: string;
                                 description: string;
                                 /** @enum {string} */
-                                status: "not started" | "looking for members" | "in progress" | "completed";
+                                status: "Not Started" | "Looking for Members" | "In Progress" | "Completed";
                                 githubLink: string | null;
                             };
                         };
@@ -1061,14 +1061,14 @@ export interface paths {
                                 email: string;
                                 major: string;
                                 gradDate: string;
-                                interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                                interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 profilePic: string | null;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
-                                paid: "semester" | "annual" | null;
+                                paid: "Semester" | "Annual" | null;
                                 /** @enum {string} */
-                                education_level: "undergraduate" | "graduate";
+                                education_level: "Undergraduate" | "Graduate";
                                 discord: string | null;
                                 linkedin: string | null;
                                 github: string | null;
@@ -1163,7 +1163,7 @@ export interface paths {
                                 location: string | null;
                                 description: string;
                                 /** @enum {string} */
-                                industryId: "banking and finance" | "aerospace" | "healthcare" | "automotive" | "energy" | "technology";
+                                industryId: "Banking and Finance" | "Aerospace" | "Healthcare" | "Automotive" | "Energy" | "Technology";
                                 logo: string | null;
                             }[];
                         };
@@ -1212,14 +1212,14 @@ export interface paths {
                                 email: string;
                                 major: string;
                                 gradDate: string;
-                                interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                                interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 profilePic: string | null;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
-                                paid: "semester" | "annual" | null;
+                                paid: "Semester" | "Annual" | null;
                                 /** @enum {string} */
-                                education_level: "undergraduate" | "graduate";
+                                education_level: "Undergraduate" | "Graduate";
                                 discord: string | null;
                                 linkedin: string | null;
                                 github: string | null;
@@ -1332,7 +1332,10 @@ export interface paths {
         /** List all events */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    tags?: string;
+                    timeframe?: "upcoming" | "today" | "past" | "all";
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;
@@ -1356,14 +1359,14 @@ export interface paths {
                                 description: string;
                                 urls: string[];
                                 /** @enum {string} */
-                                eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
+                                eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
                                 eventCapacity: number | null;
                                 image: string;
                                 startTime: string;
                                 endTime: string;
-                                tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                                tags: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 /** @enum {string|null} */
-                                targetAudience: "students" | null;
+                                targetAudience: "Students" | null;
                                 shortenedEventUrl: number | null;
                                 memberOnly: boolean;
                             }[];
@@ -1391,14 +1394,14 @@ export interface paths {
                         description: string;
                         urls: string[];
                         /** @enum {string} */
-                        eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
+                        eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
                         eventCapacity: number | null;
                         image: string;
                         startTime: string;
                         endTime: string;
-                        tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                        tags: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                         /** @enum {string|null} */
-                        targetAudience: "students" | null;
+                        targetAudience: "Students" | null;
                         shortenedEventUrl: number | null;
                         memberOnly: boolean;
                     };
@@ -1422,14 +1425,14 @@ export interface paths {
                                 description: string;
                                 urls: string[];
                                 /** @enum {string} */
-                                eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
+                                eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
                                 eventCapacity: number | null;
                                 image: string;
                                 startTime: string;
                                 endTime: string;
-                                tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                                tags: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 /** @enum {string|null} */
-                                targetAudience: "students" | null;
+                                targetAudience: "Students" | null;
                                 shortenedEventUrl: number | null;
                                 memberOnly: boolean;
                             };
@@ -1502,14 +1505,14 @@ export interface paths {
                                 description: string;
                                 urls: string[];
                                 /** @enum {string} */
-                                eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
+                                eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
                                 eventCapacity: number | null;
                                 image: string;
                                 startTime: string;
                                 endTime: string;
-                                tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                                tags: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 /** @enum {string|null} */
-                                targetAudience: "students" | null;
+                                targetAudience: "Students" | null;
                                 shortenedEventUrl: number | null;
                                 memberOnly: boolean;
                             };
@@ -1898,7 +1901,7 @@ export interface paths {
                                 location: string | null;
                                 description: string;
                                 /** @enum {string} */
-                                industryId: "banking and finance" | "aerospace" | "healthcare" | "automotive" | "energy" | "technology";
+                                industryId: "Banking and Finance" | "Aerospace" | "Healthcare" | "Automotive" | "Energy" | "Technology";
                                 logo: string | null;
                             }[];
                         };
@@ -1923,7 +1926,7 @@ export interface paths {
                         location: string | null;
                         description: string;
                         /** @enum {string} */
-                        industryId: "banking and finance" | "aerospace" | "healthcare" | "automotive" | "energy" | "technology";
+                        industryId: "Banking and Finance" | "Aerospace" | "Healthcare" | "Automotive" | "Energy" | "Technology";
                         logo: string | null;
                     };
                 };
@@ -1942,7 +1945,7 @@ export interface paths {
                                 location: string | null;
                                 description: string;
                                 /** @enum {string} */
-                                industryId: "banking and finance" | "aerospace" | "healthcare" | "automotive" | "energy" | "technology";
+                                industryId: "Banking and Finance" | "Aerospace" | "Healthcare" | "Automotive" | "Energy" | "Technology";
                                 logo: string | null;
                             };
                         };
@@ -2145,14 +2148,14 @@ export interface paths {
                                 description: string;
                                 urls: string[];
                                 /** @enum {string} */
-                                eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
+                                eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
                                 eventCapacity: number | null;
                                 image: string;
                                 startTime: string;
                                 endTime: string;
-                                tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                                tags: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 /** @enum {string|null} */
-                                targetAudience: "students" | null;
+                                targetAudience: "Students" | null;
                                 shortenedEventUrl: number | null;
                                 memberOnly: boolean;
                             }[];
@@ -2202,14 +2205,14 @@ export interface paths {
                                 email: string;
                                 major: string;
                                 gradDate: string;
-                                interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                                interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 profilePic: string | null;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
-                                paid: "semester" | "annual" | null;
+                                paid: "Semester" | "Annual" | null;
                                 /** @enum {string} */
-                                education_level: "undergraduate" | "graduate";
+                                education_level: "Undergraduate" | "Graduate";
                                 discord: string | null;
                                 linkedin: string | null;
                                 github: string | null;
@@ -2339,7 +2342,7 @@ export interface paths {
                         returnDate: string;
                         price: string;
                         /** @enum {string} */
-                        condition: "ready" | "broken" | "in maintenance";
+                        condition: "Ready" | "Broken" | "In Maintenance";
                     };
                 };
             };
@@ -2357,7 +2360,7 @@ export interface paths {
                             returnDate: string;
                             price: string;
                             /** @enum {string} */
-                            condition: "ready" | "broken" | "in maintenance";
+                            condition: "Ready" | "Broken" | "In Maintenance";
                         };
                     };
                 };
@@ -2662,7 +2665,7 @@ export interface paths {
                                 returnDate: string;
                                 price: string;
                                 /** @enum {string} */
-                                condition: "ready" | "broken" | "in maintenance";
+                                condition: "Ready" | "Broken" | "In Maintenance";
                             }[];
                         };
                     };
@@ -3127,14 +3130,14 @@ export interface paths {
                                 email: string;
                                 major: string;
                                 gradDate: string;
-                                interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
+                                interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 profilePic: string | null;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
-                                paid: "semester" | "annual" | null;
+                                paid: "Semester" | "Annual" | null;
                                 /** @enum {string} */
-                                education_level: "undergraduate" | "graduate";
+                                education_level: "Undergraduate" | "Graduate";
                                 discord: string | null;
                                 linkedin: string | null;
                                 github: string | null;
@@ -3273,7 +3276,7 @@ export interface paths {
                                 id: number;
                                 userId: string;
                                 /** @enum {string} */
-                                position: "president" | "vice president" | "dev team officer" | "treasurer" | "social media manager";
+                                position: "President" | "Vice President" | "Dev Team Officer" | "Treasurer" | "Social Media Manager";
                                 linkedin: string | null;
                                 photo: string | null;
                             }[];
@@ -3283,6 +3286,594 @@ export interface paths {
             };
         };
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/blacklist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all blacklisted users */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description List of all blacklisted users */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            blacklist: {
+                                userId: string;
+                                reason: string;
+                                dateBlacklisted: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Blacklist a user */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        userId: string;
+                        reason: string;
+                        dateBlacklisted?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description User successfully blacklisted */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            blacklist: {
+                                userId: string;
+                                reason: string;
+                                dateBlacklisted?: string;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/blacklist/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove a user from blacklist */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description User removed from blacklist */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            success: boolean;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/club/links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all club links */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            links: {
+                                id: number;
+                                instagram: string | null;
+                                discord: string | null;
+                                linkedin: string | null;
+                                memberApplication: string | null;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        /** Update club link */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        instagram: string | null;
+                        discord: string | null;
+                        linkedin: string | null;
+                        memberApplication: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description No content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/club/spotlights": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all spotlights */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            spotlights: {
+                                id: number;
+                                eventId: number;
+                                imageKey: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Create club spotlight */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        eventId: number;
+                        imageKey: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Create spotlight */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            spotlight: {
+                                id: number;
+                                eventId: number;
+                                imageKey: string;
+                            };
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/club/spotlights/{spotlightID}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update club spotlight */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    spotlightID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        eventId: number;
+                        imageKey: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description No content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/club/questions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all questions */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            questions: {
+                                id: number;
+                                question: string;
+                                answer: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Create club question */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        question: string;
+                        answer: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Create question */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            question: {
+                                id: number;
+                                question: string;
+                                answer: string;
+                            };
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/club/questions/{questionID}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update club question */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    questionID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        question: string;
+                        answer: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description No content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
         post?: never;
         delete?: never;
         options?: never;

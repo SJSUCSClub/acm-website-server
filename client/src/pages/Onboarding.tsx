@@ -6,6 +6,9 @@ import { useState } from "react";
 import Btn from "../components/atoms/btn";
 import RightArrow from "/about/rightarrow.svg";
 import Select from "../components/atoms/select";
+import createFetchClient from "openapi-fetch";
+import createClient from "openapi-react-query";
+import type { paths } from "@/types/schema.v1"
 
 type tempUserType = {
   name: string;
@@ -44,7 +47,15 @@ type User = {
   website: string;
 };
 
+const fetchClient = createFetchClient<paths>({});
+const $api = createClient(fetchClient);
+
 const Page = () => {
+  const { data, error, isLoading } = $api.useQuery(
+    "get",
+    "/api/v1/users/my",
+  );
+  console.log('date: ', data);
   const [progress, setProgress] = useState<number>(0.0);
   const [page, setPage] = useState<number>(0);
 
