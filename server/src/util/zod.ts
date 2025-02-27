@@ -1,5 +1,5 @@
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { educationLevelEnum, bookmarkedEvents, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers, blacklist, csFieldsEnum, clubLinks, landingQuestions, landingSpotlights } from '@/db/schema';
+import { educationLevelEnum, bookmarkedEvents, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers, blacklist, csFieldsEnum, clubLinks, landingQuestions, landingSpotlights, membershipTermEnum } from '@/db/schema';
 
 import { z } from 'zod';
 
@@ -35,10 +35,11 @@ export const updateUserSchema = z.object({
   gradDate: z.coerce.date().optional(),
   interests: z.array(z.enum(csFieldsEnum.enumValues)).optional(),
   education_level: z.enum(educationLevelEnum.enumValues).optional(),
-  discord: z.string().optional(),
-  linkedin: z.string().optional(),
-  github: z.string().optional(),
-  website: z.string().optional(),
+  paid: z.enum(membershipTermEnum.enumValues).nullable().optional(),
+  discord: z.string().nullable().optional(),
+  linkedin: z.string().nullable().optional(),
+  github: z.string().nullable().optional(),
+  website: z.string().nullable().optional(),
 });
 export const userIdSchema = z.object({
   userId: z.string(),
