@@ -269,10 +269,12 @@ export interface paths {
                         interests?: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                         /** @enum {string} */
                         education_level?: "Undergraduate" | "Graduate";
-                        discord?: string;
-                        linkedin?: string;
-                        github?: string;
-                        website?: string;
+                        /** @enum {string|null} */
+                        paid?: "Semester" | "Annual" | null;
+                        discord?: string | null;
+                        linkedin?: string | null;
+                        github?: string | null;
+                        website?: string | null;
                     };
                 };
             };
@@ -806,10 +808,12 @@ export interface paths {
                         interests?: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                         /** @enum {string} */
                         education_level?: "Undergraduate" | "Graduate";
-                        discord?: string;
-                        linkedin?: string;
-                        github?: string;
-                        website?: string;
+                        /** @enum {string|null} */
+                        paid?: "Semester" | "Annual" | null;
+                        discord?: string | null;
+                        linkedin?: string | null;
+                        github?: string | null;
+                        website?: string | null;
                         /** @enum {string} */
                         role?: "user" | "member" | "admin";
                     };
