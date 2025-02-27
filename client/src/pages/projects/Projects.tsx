@@ -1,11 +1,18 @@
 import React from "react";
 import { paths } from "@/types/schema.v1";
-import { Badge } from "@/components/ui/badge"
-import Card, { CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/atoms/card";
+import { Badge } from "@/components/ui/badge";
+import Card, {
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/atoms/card";
 import { RxGithubLogo } from "react-icons/rx";
+import Page from "@/components/templates/Page";
 
 type Projects =
-  paths["/api/v1/projects"]["get"]["responses"]["200"]["content"]["application/json"]['projects']
+  paths["/api/v1/projects"]["get"]["responses"]["200"]["content"]["application/json"]["projects"];
 const projects: Projects = [
   {
     id: 1,
@@ -41,46 +48,44 @@ const projects: Projects = [
     name: "Inventory System",
     description:
       "A desktop application for managing inventory in small businesses",
-    githubLink: 'https://github.com/SJSUCSClub/acm-website-server/pulls',
+    githubLink: "https://github.com/SJSUCSClub/acm-website-server/pulls",
     status: "not started",
   },
 ];
 
 const Projects = () => {
   return (
-    <div className="p-10 space-y-10">
-      <h1 className="text-4xl font-bold">Projects</h1>
-      <div className="grid grid-cols-3 gap-4">
-        {projects.map((project) => {
-          return (
-            <Card key={project.id}>
-              <CardHeader>
-                <CardTitle>{project.name}</CardTitle>
-                <CardDescription>
-                  <Badge variant='outline'>
-                    {project.status}
-                  </Badge>
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {project.description}
-              </CardContent>
-              <CardFooter>
-                    <span className={project.githubLink || "hidden"}>
-                        <a
-                          href={project.githubLink || ""}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <RxGithubLogo size={30} />
-                        </a>
-                    </span>
-              </CardFooter>
-            </Card>
-          );
-        })}
+    <Page>
+      <div className="space-y-5">
+        <h1 className="text-4xl font-bold">Projects</h1>
+        <div className="grid grid-cols-3 gap-4">
+          {projects.map((project) => {
+            return (
+              <Card key={project.id}>
+                <CardHeader>
+                  <CardTitle>{project.name}</CardTitle>
+                  <CardDescription>
+                    <Badge variant="outline">{project.status}</Badge>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>{project.description}</CardContent>
+                <CardFooter>
+                  <span className={project.githubLink || "hidden"}>
+                    <a
+                      href={project.githubLink || ""}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <RxGithubLogo size={30} />
+                    </a>
+                  </span>
+                </CardFooter>
+              </Card>
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </Page>
   );
 };
 
