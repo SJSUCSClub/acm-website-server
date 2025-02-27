@@ -14,11 +14,10 @@ import Card, {
 } from "@/components/atoms/card";
 import { useQuery, useMutation } from "@/hooks/useFetch";
 import { paths } from "@/types/schema.v1";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 
 type User =
   paths["/api/v1/users/my"]["get"]["responses"]["200"]["content"]["application/json"];
-type discord = User["discord"];
 
 interface OnboardingTabProps {
   setPage: React.Dispatch<React.SetStateAction<number>>;
@@ -54,7 +53,7 @@ const Page = () => {
   return (
     <div className="flex justify-center items-center py-10">
       <div className="w-[75%] md:w-[50%] lg:w-[40%] space-y-10">
-        <ProgressBar value={page} max={1} />
+        <ProgressBar value={page*0.5} max={1} />
 
         {updatedUser && (
           <Card>
@@ -272,12 +271,12 @@ const Socials: React.FC<SocialsProps> = ({
 };
 
 const Done = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="flex justify-between">
-      <Btn variant="primary" className="w-full">
-        <Link to="/">
+      <Btn variant="primary" className="w-full" onClick={() => navigate({ to: "/"})}>
           <span className="">Go to Home</span>
-        </Link>
       </Btn>
     </div>
   );
