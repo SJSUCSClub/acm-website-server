@@ -54,7 +54,7 @@ const getPresignedUrlPutObj = async (key: string): Promise<string | false> => {
                 });
             const url = await getSignedUrl(
                 <Client<ServiceInputTypes, ServiceOutputTypes, S3ClientResolvedConfig>> s3client, 
-                putObjectCommand, { expiresIn: 30 },
+                putObjectCommand, { expiresIn: 60 * 5 },
             );
             return url;
         } catch {
