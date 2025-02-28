@@ -7,6 +7,11 @@ import { FORBIDDEN, UNAUTHORIZED } from 'stoker/http-status-codes';
 import type { Context } from '@/lib/context';
 import { lucia } from '@/lib/auth';
 
+import { db } from '@/db/db';
+import { blacklist } from '@/db/schema';
+import type { Blacklist } from '@/db/schema';
+import { eq } from 'drizzle-orm';
+
 export const authMiddleWare = (role: 'user' | 'member' | 'admin'): MiddlewareHandler => createMiddleware<Context>(async (c, next) => {
 	const sessionId = getCookie(c, lucia.sessionCookieName) ?? null;
 	if (!sessionId) {
@@ -18,12 +23,21 @@ export const authMiddleWare = (role: 'user' | 'member' | 'admin'): MiddlewareHan
 	if (!user) {
 		return c.json({ error: 'Unauthorized' }, UNAUTHORIZED);
 	}
+	const blacklistedUser: Blacklist | undefined = await db
+		.select()
+		.from(blacklist)
+		.where(eq(blacklist.userId, user.id))
+		.then((res) => res[0]);
+	
+	if (blacklistedUser) {
+		return c.json({ error: 'Blacklisted', message: blacklistedUser.reason }, FORBIDDEN);
+	}
 	if (role === 'admin' && user.role !== 'admin') {
 		return c.json({ error: 'Forbidden' }, FORBIDDEN);
 	}
-  if (role === 'member' && user.role === 'user') {
-		return c.json({ error: 'Forbidden' }, FORBIDDEN);
-  }
+	if (role === 'member' && user.role === 'user') {
+			return c.json({ error: 'Forbidden' }, FORBIDDEN);
+	}
 
 	if (session && session.fresh) {
 		c.header('Set-Cookie', lucia.createSessionCookie(session.id).serialize(), {
@@ -56,6 +70,19 @@ export const unauthorizedRequest = {
 export const forbiddenRequest = {
 	[FORBIDDEN]: {
 		description: 'Forbidden',
+		content: {
+			'application/json': {
+				schema: z.object({
+					error: z.string(),
+				}),
+			},
+		},
+	},
+};
+
+export const blacklistedRequest = {
+	[FORBIDDEN]: {
+		description: 'Blacklisted',
 		content: {
 			'application/json': {
 				schema: z.object({

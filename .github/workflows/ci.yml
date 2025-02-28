@@ -70,8 +70,6 @@ jobs:
         image: postgres:latest
         ports:
           - 5432:5432
-        volumes:
-          - ./db-scripts:/docker-entrypoint-initdb.d/
         env:
           POSTGRES_PASSWORD: postgres
           POSTGRES_USER: postgres
@@ -87,6 +85,15 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           os: ${{ runner.os }}
+
+      - name: Validate SQL Scripts
+        run: |
+          EXIT_CODE=0
+          echo "Validating 01_createdb.sql"
+          PGPASSWORD=postgres psql -h localhost -p 5432 -U postgres -d acm_website -v ON_ERROR_STOP=1 -f ./db-scripts/01_createdb.sql || EXIT_CODE=$?
+          echo "Validating 02_insert_data.sql"
+          PGPASSWORD=postgres psql -h localhost -p 5432 -U postgres -d acm_website -v ON_ERROR_STOP=1 -f ./db-scripts/02_insert_data.sql || EXIT_CODE=$?
+          exit $EXIT_CODE
 
       - name: Run tests
         env:
