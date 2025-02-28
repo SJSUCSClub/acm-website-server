@@ -24,10 +24,6 @@ create table if not exists majors(
 );
 
 create table if not exists users(
-   id text not null,
-   created_at timestamp not null default CURRENT_TIMESTAMP,
-   name text not null,
-   email text not null,
    role user_role_enum not null default 'user',
    major text not null,
    education_level education_level_enum not null,
