@@ -4,8 +4,8 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
-import { clubLinks, landingQuestions, landingSpotlights } from '@/db/schema';
-import type { ClubLink, LandingQuestion, LandingSpotlight } from '@/db/schema';
+import { clubLinks, events, landingQuestions, landingSpotlights } from '@/db/schema';
+import type { ClubLink, LandingQuestion } from '@/db/schema';
 import {
   clubLinkSchema,
   landingQuestionSchema,
@@ -108,7 +108,7 @@ clubRouter.openapi(
         content: {
           'application/json': {
             schema: z.object({
-              spotlights: z.array(landingSpotlightSchema),
+              spotlights: z.array(z.any()),
             }),
           },
         },
@@ -117,9 +117,10 @@ clubRouter.openapi(
     },
   }),
   async (c) => {
-    const spotlights: LandingSpotlight[] = await db
+    const spotlights = await db
       .select()
-      .from(landingSpotlights);
+      .from(landingSpotlights)
+      .innerJoin(events, eq(landingSpotlights.eventId, events.id));
     return c.json({ spotlights }, HttpStatusCodes.OK);
   },
 );

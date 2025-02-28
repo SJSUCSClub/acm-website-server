@@ -3,7 +3,7 @@ import GetInvolvedCard from "../components/molecules/get-involved-card";
 import SpotLightCard from "../components/molecules/spotlight-card";
 import TestimonialCard from "../components/molecules/testimonial-card";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MemberBtn from "../components/molecules/member-btn";
 import GetInvolvedBtn from "../components/molecules/get-involved-btn";
 import SocialBtn from "../components/molecules/social-btn";
@@ -47,8 +47,28 @@ interface ISpotlight {
 }
 
 const Hero = () => {
-  const [card] = useState(spotlights);
   const { data: links } = useQuery("get", "/v1/club/links");
+  const [card, updateCard] = useState([]);
+
+  useEffect(() => {
+    const cookie = document.cookie;
+    let authCookie = '';
+    cookie.split(';').forEach((item) => {
+      if (item.startsWith('auth_session')) {
+        authCookie = item.split('=')[1].substring(0, item.indexOf(";")); 
+      }
+    });
+    fetch('http://localhost:5001/v1/club/spotlights', {
+      method: 'GET',
+    }).then((res) => {
+      res.json().then((data) => {
+        updateCard(data.spotlights);
+      }).catch(err => {
+        console.log(err);
+      });
+    });
+  }, []);
+
   return (
     <Page>
     <div className="text-center flex-col items-center justify-between">
@@ -196,13 +216,14 @@ const Hero = () => {
         </h2>
         <div className="flex-cols gap-3 md:flex items-center md:gap-5 overflow-auto p-10 mb-5">
           {card.map((event) => {
+            console.log(event);
             return (
               <SpotLightCard
-                type={event.type}
-                image={event.image}
-                title={event.title}
-                description={event.description}
-                key={event.id}
+                type={event.events.eventType}
+                image={event.landing_spotlights.imageKey}
+                title={event.events.name}
+                description={event.events.description}
+                key={event.events.id}
               />
             );
           })}

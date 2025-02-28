@@ -17,7 +17,7 @@ export const SpotLightCard: React.FC<ISpotLightCardProps> = ({
   <Card className="flex-none grid grid-cols-2 gap-5 p-5 place-items-center bg-white h-auto w-[100%] md:w-[800px] rounded-lg shadow-lg transition ease-in-out hover:shadow-xl mb-3">
     <div className=" w-[100%] h-auto">
       <img
-        src={image}
+        src={'https://acmwebsite-dev-588738592350-us-west-2.s3.us-west-2.amazonaws.com/' + image}
         width={200}
         height={100}
         className="w-[100%] h-auto"
