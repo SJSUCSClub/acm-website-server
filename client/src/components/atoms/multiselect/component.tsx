@@ -1,3 +1,4 @@
+import type React from "react";
 import Input from "../input";
 
 export interface ISelectProps
@@ -6,42 +7,45 @@ export interface ISelectProps
   footer?: string;
   options: string[];
   required: boolean;
+  selectedOptions: string[];
   changeFunction: (
     e: React.ChangeEvent<HTMLInputElement>,
-    option: string,
+    option: string
   ) => void;
 }
 
-export const Select: React.FC<ISelectProps> = ({
+export const MultiSelect: React.FC<ISelectProps> = ({
   label,
   required,
   options,
   footer,
+  selectedOptions,
   changeFunction,
 }) => {
   return (
     <div>
       <p className="text-neutral font-semibold mb-2 text-[14px]">{label}</p>
       {options.map((option) => (
-        <div className="flex gap-2">
+        <div key={option} className="flex gap-2">
           <Input
-            id="select"
-            name="select"
+            id={`select-${option}`}
+            name={`select-${option}`}
             type="checkbox"
             label=""
             required={required}
             className="hide checkmark"
+            checked={selectedOptions.includes(option)}
             onChange={(e) => changeFunction(e, option)}
           />
-          <label className="mt-2 text-text text-[14px]" htmlFor="Select">
+          <label
+            className="mt-2 text-text text-[14px]"
+            htmlFor={`select-${option}`}
+          >
             {option}
           </label>
-          <br />
         </div>
       ))}
-      {footer !== "" && (
-        <p className="text-neutral mb-2 text-[14px]">{footer}</p>
-      )}
+      {footer && <p className="text-neutral mb-2 text-[14px]">{footer}</p>}
     </div>
   );
 };
