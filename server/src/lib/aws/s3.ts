@@ -50,11 +50,11 @@ const getPresignedUrlPutObj = async (key: string): Promise<string | false> => {
             const putObjectCommand = new PutObjectCommand(
                 {
                     Bucket: BUCKET_NAME,
-                    Key: key
+                    Key: key,
                 });
             const url = await getSignedUrl(
                 <Client<ServiceInputTypes, ServiceOutputTypes, S3ClientResolvedConfig>> s3client, 
-                putObjectCommand, { expiresIn: 30 }
+                putObjectCommand, { expiresIn: 30 },
             );
             return url;
         } catch {
@@ -63,4 +63,4 @@ const getPresignedUrlPutObj = async (key: string): Promise<string | false> => {
     }
 };
 
-export { uploadFile, deleteFile };
+export { uploadFile, deleteFile, getPresignedUrlPutObj };
