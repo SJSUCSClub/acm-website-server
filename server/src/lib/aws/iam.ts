@@ -35,20 +35,20 @@ const initializeS3client = async (): Promise<boolean> => {
     }
 };
 
-const getS3Client = async (): Promise<S3Client | boolean> => {
+const getS3Client = async (): Promise<S3Client | null> => {
     try {
         await stsClient.send(new GetCallerIdentityCommand());
         if(!s3client) {
             const intitialized = await initializeS3client();
             if(!intitialized) {
-                return false;
+                return null;
             }
         }
         return s3client;
     } catch {
         const intitialized = await initializeS3client();
         if(!intitialized) {
-            return false;
+            return null;
         }
         return s3client;
     }

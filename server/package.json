@@ -27,9 +27,12 @@
 		"pino-pretty": "^11.3.0",
 		"stoker": "^1.2.7",
 		"@aws-sdk/client-s3": "^3.738.0",
-    	"@aws-sdk/client-sts": "^3.738.0"
+		"@aws-sdk/client-sts": "^3.738.0",
+		"@aws-sdk/s3-request-presigner": "^3.738.0"
 	},
 	"devDependencies": {
+		"@aws-sdk/types": "^3.734.0",
+		"@smithy/types": "^4.1.0",
 		"@types/bun": "^1.1.12",
 		"@types/pg": "^8.11.10",
 		"@typescript-eslint/eslint-plugin": "^8.11.0",
@@ -38,7 +41,6 @@
 		"eslint": "^9.13.0",
 		"eslint-plugin-drizzle": "0.2.3",
 		"typescript": "5.5.3",
-		"typescript-eslint": "^8.11.0",
-		"@aws-sdk/types": "^3.734.0"
+		"typescript-eslint": "^8.11.0"
 	}
 }
