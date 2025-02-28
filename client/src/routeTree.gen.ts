@@ -11,7 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as ProfileImport } from './routes/profile'
+import { Route as ProjectsImport } from './routes/projects'
 import { Route as OnboardingImport } from './routes/onboarding'
 import { Route as LoginImport } from './routes/login'
 import { Route as EventsImport } from './routes/events'
@@ -20,8 +20,8 @@ import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
 
-const ProfileRoute = ProfileImport.update({
-  path: '/profile',
+const ProjectsRoute = ProjectsImport.update({
+  path: '/projects',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -89,11 +89,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingImport
       parentRoute: typeof rootRoute
     }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileImport
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsImport
       parentRoute: typeof rootRoute
     }
   }
@@ -107,7 +107,7 @@ export interface FileRoutesByFullPath {
   '/events': typeof EventsRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
-  '/profile': typeof ProfileRoute
+  '/projects': typeof ProjectsRoute
 }
 
 export interface FileRoutesByTo {
@@ -116,7 +116,7 @@ export interface FileRoutesByTo {
   '/events': typeof EventsRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
-  '/profile': typeof ProfileRoute
+  '/projects': typeof ProjectsRoute
 }
 
 export interface FileRoutesById {
@@ -126,14 +126,14 @@ export interface FileRoutesById {
   '/events': typeof EventsRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
-  '/profile': typeof ProfileRoute
+  '/projects': typeof ProjectsRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/events' | '/login' | '/onboarding' | '/profile'
+  fullPaths: '/' | '/about' | '/events' | '/login' | '/onboarding' | '/projects'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/events' | '/login' | '/onboarding' | '/profile'
+  to: '/' | '/about' | '/events' | '/login' | '/onboarding' | '/projects'
   id:
     | '__root__'
     | '/'
@@ -141,7 +141,7 @@ export interface FileRouteTypes {
     | '/events'
     | '/login'
     | '/onboarding'
-    | '/profile'
+    | '/projects'
   fileRoutesById: FileRoutesById
 }
 
@@ -151,7 +151,7 @@ export interface RootRouteChildren {
   EventsRoute: typeof EventsRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
-  ProfileRoute: typeof ProfileRoute
+  ProjectsRoute: typeof ProjectsRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -160,7 +160,7 @@ const rootRouteChildren: RootRouteChildren = {
   EventsRoute: EventsRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
-  ProfileRoute: ProfileRoute,
+  ProjectsRoute: ProjectsRoute,
 }
 
 export const routeTree = rootRoute
@@ -180,7 +180,7 @@ export const routeTree = rootRoute
         "/events",
         "/login",
         "/onboarding",
-        "/profile"
+        "/projects"
       ]
     },
     "/": {
@@ -198,8 +198,8 @@ export const routeTree = rootRoute
     "/onboarding": {
       "filePath": "onboarding.tsx"
     },
-    "/profile": {
-      "filePath": "profile.tsx"
+    "/projects": {
+      "filePath": "projects.tsx"
     }
   }
 }

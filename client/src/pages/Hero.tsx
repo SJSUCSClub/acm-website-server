@@ -7,6 +7,7 @@ import { useState } from "react";
 import MemberBtn from "../components/molecules/member-btn";
 import GetInvolvedBtn from "../components/molecules/get-involved-btn";
 import SocialBtn from "../components/molecules/social-btn";
+import Page from "../components/templates/Page";
 
 const spotlights: ISpotlight[] = [
   {
@@ -109,7 +110,8 @@ const annualPlan = {
 const Hero = () => {
   const [card] = useState(spotlights);
   return (
-    <div className="text-center min-w-full flex-col items-center justify-between pt-10 pb-20 px-[5%]">
+    <Page>
+    <div className="text-center flex-col items-center justify-between">
       <div className="min-h-screen">
         <div className="flex place-content-center md:scale-100">
           <ACMCSHero />
@@ -325,6 +327,7 @@ const Hero = () => {
         <GetInvolvedBtn />
       </div>
     </div>
+    </Page >
   );
 };
 

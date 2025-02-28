@@ -22,9 +22,10 @@ export const NavBar: React.FC = () => {
           />
         </a>
 
-        <div className="md:flex grid grid-flow-col gap-4 items-center text-right justify-right">
+        <div className="sm:hidden md:flex grid grid-flow-col gap-4 items-center text-right justify-right">
           <LinkCard path="/about" pathName="About Us" />
           <LinkCard path="/events" pathName="Events" />
+          <LinkCard path="/projects" pathName="Projects" />
           <LinkCard path="/login" pathName="Log In" />
         </div>
 
@@ -69,6 +70,8 @@ export const NavBar: React.FC = () => {
       >
         <LinkCard path="/about" pathName="About Us" />
         <LinkCard path="/events" pathName="Events" />
+        <LinkCard path="/projects" pathName="Projects" />
+        <LinkCard path="/login" pathName="Log In" />
       </div>
     </div>
   );
