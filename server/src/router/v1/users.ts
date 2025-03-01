@@ -663,7 +663,7 @@ userRouter.openapi(
     request: {
       params: z.object({
         projectID: z.string(),
-      })
+      }),
     },
 		responses: {
 			[HttpStatusCodes.NO_CONTENT]: {
@@ -694,7 +694,7 @@ userRouter.openapi(
       await db.insert(interestedInProjects).values({
         userId: user.id,
         projectId: parseInt(projectID),
-      })
+      });
 
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
@@ -713,7 +713,7 @@ userRouter.openapi(
     request: {
       params: z.object({
         projectID: z.string(),
-      })
+      }),
     },
 		responses: {
 			[HttpStatusCodes.NO_CONTENT]: {
