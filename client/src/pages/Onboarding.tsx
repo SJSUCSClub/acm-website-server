@@ -18,7 +18,7 @@ import { useNavigate } from "@tanstack/react-router";
 import OnboardingCard from "@/components/molecules/onboarding-card";
 
 type User =
-  paths["/api/v1/users/my"]["get"]["responses"]["200"]["content"]["application/json"];
+  paths["/v1/users/my"]["get"]["responses"]["200"]["content"]["application/json"];
 
 interface OnboardingTabProps {
   setPage: React.Dispatch<React.SetStateAction<number>>;
@@ -32,8 +32,8 @@ interface SocialsProps extends OnboardingTabProps {
 
 const Page = () => {
   const [page, setPage] = useState<number>(0);
-  const { data: user } = useQuery("get", "/api/v1/users/my");
-  const { mutate } = useMutation("put", "/api/v1/users/my");
+  const { data: user } = useQuery("get", "/v1/users/my");
+  const { mutate } = useMutation("put", "/v1/users/my");
   const [updatedUser, setUpdatedUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -88,7 +88,7 @@ const PersonalInfo: React.FC<OnboardingTabProps> = ({
 }) => {
   const { data: educationOptions } = useQuery(
     "get",
-    "/api/v1/enums/{enumType}",
+    "/v1/enums/{enumType}",
     {
       params: {
         path: {
@@ -99,7 +99,7 @@ const PersonalInfo: React.FC<OnboardingTabProps> = ({
   );
   const { data: interestOptions } = useQuery(
     "get",
-    "/api/v1/enums/{enumType}",
+    "/v1/enums/{enumType}",
     {
       params: {
         path: {
@@ -108,7 +108,7 @@ const PersonalInfo: React.FC<OnboardingTabProps> = ({
       },
     },
   );
-  const { data: majorOptions } = useQuery("get", "/api/v1/majors");
+  const { data: majorOptions } = useQuery("get", "/v1/majors");
   return (
     <OnboardingCard
       image={updatedUser.profilePic || ""}
