@@ -2,13 +2,13 @@ import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
 import { z } from 'zod';
 import { authMiddleWare } from '@/middlewares/auth-middleware';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
-import { users, events, subscribedCompanies, companies, subscribedEvents, equipmentRentalType, equipmentItem, equipmentRentals, userRoleEnum, equipmentConditionEnum, bookmarkedEvents } from '@/db/schema';
+import { users, events, subscribedCompanies, companies, subscribedEvents, equipmentRentalType, equipmentItem, equipmentRentals, userRoleEnum, equipmentConditionEnum, bookmarkedEvents, projects, interestedInProjects } from '@/db/schema';
 import { db } from '@/db/db';
 import { eq, getTableColumns, and } from 'drizzle-orm';
 import { unauthorizedRequest } from '@/middlewares/auth-middleware';
 import type { User, Event, Company } from '@/db/schema';
 import type { Context } from '@/lib/context';
-import { userSchema, companySchema, bookmarkSchema, updateUserSchema, userIdSchema, eventSchema, eventIDSchema, companyIDSchema } from '@/util/zod';
+import { userSchema, companySchema, bookmarkSchema, updateUserSchema, userIdSchema, eventSchema, eventIDSchema, companyIDSchema, projectSchema } from '@/util/zod';
 
 const userRouter = new OpenAPIHono<Context>();
 
@@ -618,6 +618,136 @@ userRouter.openapi(
 
     return c.json({ success: true }, HttpStatusCodes.OK);
   },
+);
+
+userRouter.openapi(
+	createRoute({
+		method: 'get',
+		path: '/my/projects-interest',
+		tags: ['users'],
+		summary: 'List all project ids that the user is interested in',
+		middleware: [authMiddleWare('user')],
+		responses: {
+			[HttpStatusCodes.OK]: {
+				content: {
+					'application/json': {
+						schema: z.object({
+							projects: z.array(projectSchema),
+						}),
+					},
+				},
+				description: 'Successful response',
+			},
+      ...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+    const user = c.get('user');
+
+    const projectsInInterest = await db.select(getTableColumns(projects))
+      .from(interestedInProjects)
+      .innerJoin(projects, eq(projects.id, interestedInProjects.projectId))
+      .where(eq(interestedInProjects.userId, user?.id || ''));
+
+		return c.json({ projects: projectsInInterest }, HttpStatusCodes.OK);
+	},
+);
+
+userRouter.openapi(
+	createRoute({
+		method: 'post',
+		path: '/my/projects-interest/{projectID}',
+		tags: ['users'],
+		summary: 'Show interest in a project',
+		middleware: [authMiddleWare('user')],
+    request: {
+      params: z.object({
+        projectID: z.string(),
+      }),
+    },
+		responses: {
+			[HttpStatusCodes.NO_CONTENT]: {
+				description: 'Successful response',
+			},
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        description: 'Internal server error',
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+      },
+      ...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+    try {
+      const user = c.get('user');
+      const projectID = c.req.param('projectID');
+
+      if (!user || !projectID) {
+        return c.text('', HttpStatusCodes.UNAUTHORIZED);
+      }
+
+      await db.insert(interestedInProjects).values({
+        userId: user.id,
+        projectId: parseInt(projectID),
+      });
+
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+	},
+);
+
+userRouter.openapi(
+	createRoute({
+		method: 'delete',
+		path: '/my/projects-interest/{projectID}',
+		tags: ['users'],
+		summary: 'Delete interest in a project',
+		middleware: [authMiddleWare('user')],
+    request: {
+      params: z.object({
+        projectID: z.string(),
+      }),
+    },
+		responses: {
+			[HttpStatusCodes.NO_CONTENT]: {
+				description: 'Successful response',
+			},
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        description: 'Internal server error',
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+      },
+      ...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+    try {
+      const user = c.get('user');
+      const projectID = c.req.param('projectID');
+
+      if (!user || !projectID) {
+        return c.text('', HttpStatusCodes.UNAUTHORIZED);
+      }
+
+      await db.delete(interestedInProjects).where(and(eq(interestedInProjects.userId, user.id), eq(interestedInProjects.projectId, parseInt(projectID))));
+
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+	},
 );
 
 export default userRouter;
