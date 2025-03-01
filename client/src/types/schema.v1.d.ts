@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/api/v1/auth/login": {
+    "/v1/auth/login": {
         parameters: {
             query?: never;
             header?: never;
@@ -45,7 +45,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/auth/callback": {
+    "/v1/auth/callback": {
         parameters: {
             query?: never;
             header?: never;
@@ -104,7 +104,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/auth/logout": {
+    "/v1/auth/logout": {
         parameters: {
             query?: never;
             header?: never;
@@ -138,7 +138,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/users": {
+    "/v1/users": {
         parameters: {
             query?: never;
             header?: never;
@@ -195,7 +195,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/users/my": {
+    "/v1/users/my": {
         parameters: {
             query?: never;
             header?: never;
@@ -327,7 +327,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/users/my/rental-history": {
+    "/v1/users/my/rental-history": {
         parameters: {
             query?: never;
             header?: never;
@@ -387,7 +387,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/users/my/bookmarks": {
+    "/v1/users/my/bookmarks": {
         parameters: {
             query?: never;
             header?: never;
@@ -440,7 +440,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/users/my/bookmarked/{eventID}": {
+    "/v1/users/my/bookmarked/{eventID}": {
         parameters: {
             query?: never;
             header?: never;
@@ -491,7 +491,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/users/my/subscribed-events": {
+    "/v1/users/my/subscribed-events": {
         parameters: {
             query?: never;
             header?: never;
@@ -560,7 +560,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/users/my/subscribed-events/{eventID}": {
+    "/v1/users/my/subscribed-events/{eventID}": {
         parameters: {
             query?: never;
             header?: never;
@@ -611,7 +611,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/users/my/subscribed-companies": {
+    "/v1/users/my/subscribed-companies": {
         parameters: {
             query?: never;
             header?: never;
@@ -668,7 +668,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/users/my/subscribed-companies/{companyID}": {
+    "/v1/users/my/subscribed-companies/{companyID}": {
         parameters: {
             query?: never;
             header?: never;
@@ -719,7 +719,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/users/{userId}": {
+    "/v1/users/{userId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -925,7 +925,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/projects": {
+    "/v1/projects": {
         parameters: {
             query?: never;
             header?: never;
@@ -1032,7 +1032,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/projects/{projectID}/interested": {
+    "/v1/projects/{projectID}/interested": {
         parameters: {
             query?: never;
             header?: never;
@@ -1091,7 +1091,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/projects/{projectID}/files": {
+    "/v1/projects/{projectID}/files": {
         parameters: {
             query?: never;
             header?: never;
@@ -1135,7 +1135,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/events/{eventID}/companies": {
+    "/v1/events/{eventID}/companies": {
         parameters: {
             query?: never;
             header?: never;
@@ -1183,7 +1183,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/events/{eventID}/subscribers": {
+    "/v1/events/{eventID}/subscribers": {
         parameters: {
             query?: never;
             header?: never;
@@ -1242,7 +1242,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/events/{eventID}/subscribers/count": {
+    "/v1/events/{eventID}/subscribers/count": {
         parameters: {
             query?: never;
             header?: never;
@@ -1282,7 +1282,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/events/{eventID}/files": {
+    "/v1/events/{eventID}/files": {
         parameters: {
             query?: never;
             header?: never;
@@ -1326,7 +1326,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/events": {
+    "/v1/events": {
         parameters: {
             query?: never;
             header?: never;
@@ -1473,7 +1473,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/events/{eventID}": {
+    "/v1/events/{eventID}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1544,7 +1544,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/events/{eventID}/subscribe": {
+    "/v1/events/{eventID}/subscribe": {
         parameters: {
             query?: never;
             header?: never;
@@ -1693,7 +1693,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/events/{eventID}/url": {
+    "/v1/events/{eventID}/url": {
         parameters: {
             query?: never;
             header?: never;
@@ -1737,7 +1737,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/events/{eventID}/bookmark": {
+    "/v1/events/{eventID}/bookmark": {
         parameters: {
             query?: never;
             header?: never;
@@ -1875,7 +1875,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/companies": {
+    "/v1/companies": {
         parameters: {
             query?: never;
             header?: never;
@@ -1996,7 +1996,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/companies/subscribe": {
+    "/v1/companies/subscribe": {
         parameters: {
             query?: never;
             header?: never;
@@ -2116,7 +2116,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/companies/{companyID}/events": {
+    "/v1/companies/{companyID}/events": {
         parameters: {
             query?: never;
             header?: never;
@@ -2176,7 +2176,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/companies/{companyID}/subscribers": {
+    "/v1/companies/{companyID}/subscribers": {
         parameters: {
             query?: never;
             header?: never;
@@ -2235,7 +2235,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/companies/{companyID}/subscribers/count": {
+    "/v1/companies/{companyID}/subscribers/count": {
         parameters: {
             query?: never;
             header?: never;
@@ -2275,7 +2275,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/equipments/types": {
+    "/v1/equipments/types": {
         parameters: {
             query?: never;
             header?: never;
@@ -2320,7 +2320,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/equipments/rentals": {
+    "/v1/equipments/rentals": {
         parameters: {
             query?: never;
             header?: never;
@@ -2398,7 +2398,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/equipments/type": {
+    "/v1/equipments/type": {
         parameters: {
             query?: never;
             header?: never;
@@ -2474,7 +2474,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/equipments/type/{equipmentTypeID}": {
+    "/v1/equipments/type/{equipmentTypeID}": {
         parameters: {
             query?: never;
             header?: never;
@@ -2525,7 +2525,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/equipments/type/{equipmentTypeId}": {
+    "/v1/equipments/type/{equipmentTypeId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -2592,7 +2592,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/equipments/type/{equipmentTypeId}/item": {
+    "/v1/equipments/type/{equipmentTypeId}/item": {
         parameters: {
             query?: never;
             header?: never;
@@ -2636,7 +2636,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/equipments/item/{equipmentItemID}/rental-history": {
+    "/v1/equipments/item/{equipmentItemID}/rental-history": {
         parameters: {
             query?: never;
             header?: never;
@@ -2684,7 +2684,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/equipments/item": {
+    "/v1/equipments/item": {
         parameters: {
             query?: never;
             header?: never;
@@ -2754,7 +2754,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/equipments/item/{equipmentItemID}": {
+    "/v1/equipments/item/{equipmentItemID}": {
         parameters: {
             query?: never;
             header?: never;
@@ -2872,7 +2872,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/majors": {
+    "/v1/majors": {
         parameters: {
             query?: never;
             header?: never;
@@ -2973,7 +2973,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/majors/{major}": {
+    "/v1/majors/{major}": {
         parameters: {
             query?: never;
             header?: never;
@@ -3101,7 +3101,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/majors/{majorName}/users": {
+    "/v1/majors/{majorName}/users": {
         parameters: {
             query?: never;
             header?: never;
@@ -3160,7 +3160,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/enums/{enumType}": {
+    "/v1/enums/{enumType}": {
         parameters: {
             query?: never;
             header?: never;
@@ -3211,7 +3211,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/sponsors": {
+    "/v1/sponsors": {
         parameters: {
             query?: never;
             header?: never;
@@ -3252,7 +3252,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/officers": {
+    "/v1/officers": {
         parameters: {
             query?: never;
             header?: never;
@@ -3297,7 +3297,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/blacklist": {
+    "/v1/blacklist": {
         parameters: {
             query?: never;
             header?: never;
@@ -3373,7 +3373,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/blacklist/{userId}": {
+    "/v1/blacklist/{userId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -3413,7 +3413,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/club/links": {
+    "/v1/club/links": {
         parameters: {
             query?: never;
             header?: never;
@@ -3517,7 +3517,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/club/spotlights": {
+    "/v1/club/spotlights": {
         parameters: {
             query?: never;
             header?: never;
@@ -3625,7 +3625,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/club/spotlights/{spotlightID}": {
+    "/v1/club/spotlights/{spotlightID}": {
         parameters: {
             query?: never;
             header?: never;
@@ -3701,7 +3701,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/club/questions": {
+    "/v1/club/questions": {
         parameters: {
             query?: never;
             header?: never;
@@ -3809,7 +3809,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/club/questions/{questionID}": {
+    "/v1/club/questions/{questionID}": {
         parameters: {
             query?: never;
             header?: never;

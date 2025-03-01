@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit --skipLibCheck",
-    "generate-types": "npx openapi-typescript http://localhost:5001/docs -o src/types/schema.v1.d.ts"
+    "generate-types": "npx openapi-typescript http://localhost/api/docs -o src/types/schema.v1.d.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
