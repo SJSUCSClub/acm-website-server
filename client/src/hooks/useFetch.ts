@@ -3,23 +3,25 @@ import createFetchClient, { Middleware } from "openapi-fetch";
 import { redirect } from '@tanstack/react-router'
 import createClient from "openapi-react-query";
 
-const api = createFetchClient<paths>();
+const api = createFetchClient<paths>({
+  baseUrl: '/api/'
+});
 
 const middleware: Middleware = {
   async onResponse({  response }) {
     console.log("API middleware response: ", response.status);
-    if (!response.ok) {
-      if (response.status === 401) {
-        throw redirect({
-          to: "/login"
-        });
-      }
-      else if (response.status === 403) {
-        throw redirect({
-          to: "/login"
-        });
-      }
-    }
+    // if (!response.ok) {
+    //   if (response.status === 401) {
+    //     throw redirect({
+    //       to: "/login"
+    //     });
+    //   }
+    //   else if (response.status === 403) {
+    //     throw redirect({
+    //       to: "/login"
+    //     });
+    //   }
+    // }
     return response;
   },
   async onError({error}) {
