@@ -273,7 +273,7 @@ const Done = () => {
         <Btn
           variant="primary"
           className="w-full"
-          onClick={() => navigate({ to: "/" })}
+          onClick={() => navigate({ to: "/dashboard" })}
         >
           <span className="">Go to Home</span>
         </Btn>
