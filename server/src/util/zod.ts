@@ -29,7 +29,15 @@ export const projectIDSchema = z.object({
 	projectID: z.string(),
 });
 export const projectSchema = createSelectSchema(projects);
-export const bookmarkSchema = createSelectSchema(bookmarkedEvents);	
+export const bookmarkedEvent = createSelectSchema(events).extend({
+  bookmarkedDate: z.string(),
+});	
+export const subscribedEvent = createSelectSchema(events).extend({
+  subscribedDate: z.string(),
+});	
+export const subscribedCompany = createSelectSchema(companies).extend({
+  subscribedDate: z.string(),
+});	
 export const updateUserSchema = z.object({
   major: z.string().optional(),
   gradDate: z.coerce.date().optional(),
@@ -61,3 +69,6 @@ export const blacklistSchema = createSelectSchema(blacklist);
 export const clubLinkSchema = createSelectSchema(clubLinks);
 export const landingSpotlightSchema = createSelectSchema(landingSpotlights);
 export const landingQuestionSchema = createSelectSchema(landingQuestions);
+export const errorSchema = z.object({
+  error: z.string(),
+});
