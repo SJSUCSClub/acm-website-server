@@ -1,6 +1,5 @@
 import { paths } from "@/types/schema.v1";
 import createFetchClient, { Middleware } from "openapi-fetch";
-import { redirect } from '@tanstack/react-router'
 import createClient from "openapi-react-query";
 
 const api = createFetchClient<paths>({
