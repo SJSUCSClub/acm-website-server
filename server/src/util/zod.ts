@@ -1,5 +1,5 @@
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { educationLevelEnum, bookmarkedEvents, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers, blacklist, csFieldsEnum, clubLinks, landingQuestions, landingSpotlights, membershipTermEnum } from '@/db/schema';
+import { educationLevelEnum, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers, blacklist, csFieldsEnum, clubLinks, landingQuestions, landingSpotlights, membershipTermEnum } from '@/db/schema';
 
 import { z } from 'zod';
 
