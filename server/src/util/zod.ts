@@ -1,5 +1,5 @@
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { educationLevelEnum, bookmarkedEvents, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers, blacklist, csFieldsEnum, clubLinks, landingQuestions, landingSpotlights, membershipTermEnum } from '@/db/schema';
+import { educationLevelEnum, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers, blacklist, csFieldsEnum, clubLinks, landingQuestions, landingSpotlights, membershipTermEnum } from '@/db/schema';
 
 import { z } from 'zod';
 
@@ -29,7 +29,15 @@ export const projectIDSchema = z.object({
 	projectID: z.string(),
 });
 export const projectSchema = createSelectSchema(projects);
-export const bookmarkSchema = createSelectSchema(bookmarkedEvents);	
+export const bookmarkedEvent = eventSchema.extend({
+  bookmarkedDate: z.string(),
+});	
+export const subscribedEvent = eventSchema.extend({
+  subscribedDate: z.string(),
+});	
+export const subscribedCompany = companySchema.extend({
+  subscribedDate: z.string(),
+});	
 export const updateUserSchema = z.object({
   major: z.string().optional(),
   gradDate: z.coerce.date().optional(),
@@ -61,3 +69,6 @@ export const blacklistSchema = createSelectSchema(blacklist);
 export const clubLinkSchema = createSelectSchema(clubLinks);
 export const landingSpotlightSchema = createSelectSchema(landingSpotlights);
 export const landingQuestionSchema = createSelectSchema(landingQuestions);
+export const errorSchema = z.object({
+  error: z.string(),
+});

@@ -5,13 +5,6 @@ import ProgressBar from "../components/molecules/progress-bar";
 import Btn from "../components/atoms/btn";
 import RightArrow from "/about/rightarrow.svg";
 import Select from "../components/atoms/select";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import Card, {
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/atoms/card";
 import { useQuery, useMutation } from "@/hooks/useFetch";
 import { paths } from "@/types/schema.v1";
 import { useNavigate } from "@tanstack/react-router";
@@ -273,7 +266,7 @@ const Done = () => {
         <Btn
           variant="primary"
           className="w-full"
-          onClick={() => navigate({ to: "/" })}
+          onClick={() => navigate({ to: "/dashboard" })}
         >
           <span className="">Go to Home</span>
         </Btn>

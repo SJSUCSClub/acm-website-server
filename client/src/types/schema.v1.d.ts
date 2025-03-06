@@ -412,8 +412,25 @@ export interface paths {
                     content: {
                         "application/json": {
                             bookmarks: {
-                                userId: string;
-                                eventId: number;
+                                id: number;
+                                createdAt: string;
+                                name: string;
+                                location: string;
+                                startDate: string;
+                                endDate: string;
+                                description: string;
+                                urls: string[];
+                                /** @enum {string} */
+                                eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
+                                eventCapacity: number | null;
+                                image: string;
+                                startTime: string;
+                                endTime: string;
+                                tags: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
+                                /** @enum {string|null} */
+                                targetAudience: "Students" | null;
+                                shortenedEventUrl: number | null;
+                                memberOnly: boolean;
                                 bookmarkedDate: string;
                             }[];
                         };
@@ -485,7 +502,60 @@ export interface paths {
         };
         put?: never;
         post?: never;
-        delete?: never;
+        /** Delete a bookmarked event */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    eventID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;
@@ -535,6 +605,7 @@ export interface paths {
                                 targetAudience: "Students" | null;
                                 shortenedEventUrl: number | null;
                                 memberOnly: boolean;
+                                subscribedDate: string;
                             }[];
                         };
                     };
@@ -605,7 +676,60 @@ export interface paths {
         };
         put?: never;
         post?: never;
-        delete?: never;
+        /** Delete a subscribed event */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    eventID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;
@@ -643,6 +767,7 @@ export interface paths {
                                 /** @enum {string} */
                                 industryId: "Banking and Finance" | "Aerospace" | "Healthcare" | "Automotive" | "Energy" | "Technology";
                                 logo: string | null;
+                                subscribedDate: string;
                             }[];
                         };
                     };
@@ -713,7 +838,60 @@ export interface paths {
         };
         put?: never;
         post?: never;
-        delete?: never;
+        /** Delete a company from a user's subscribed companies */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    companyID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;

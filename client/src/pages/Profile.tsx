@@ -79,7 +79,7 @@ export default function Profile() {
         const data = await response.json();
 
         setEducationLevels(
-          data.types.map((educationLevel: string) => educationLevel)
+          data.types.map((educationLevel: string) => educationLevel),
         );
       } catch (error) {
         console.error("Error fetching majors:", error);
@@ -197,7 +197,7 @@ export default function Profile() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      await alert("Profile updated successfully!");
+      alert("Profile updated successfully!");
     } catch (error) {
       console.error("Failed to update profile:", error);
     }
@@ -206,7 +206,7 @@ export default function Profile() {
   // for interests
   const handleInterestChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    option: string
+    option: string,
   ) => {
     const updatedInterests = userData.selectedInterests.includes(option)
       ? userData.selectedInterests.filter((item) => item !== option)
@@ -280,8 +280,8 @@ export default function Profile() {
                     placeholder="https://linkedin.com/john-doe/"
                     value={userData.linkedin}
                     onChange={(e) => {
-                      setUserData({ ...userData, linkedin: e.target.value }),
-                        setLinkedinError(validateLinkedInUrl(e.target.value));
+                      setUserData({ ...userData, linkedin: e.target.value });
+                      setLinkedinError(validateLinkedInUrl(e.target.value));
                     }}
                   />
                   {linkedinError && <Alert message={linkedinError} />}
@@ -294,8 +294,8 @@ export default function Profile() {
                     placeholder="https://github.com/john.doe/"
                     value={userData.github}
                     onChange={(e) => {
-                      setUserData({ ...userData, github: e.target.value }),
-                        setGithubError(validateGitHubUrl(e.target.value));
+                      setUserData({ ...userData, github: e.target.value });
+                      setGithubError(validateGitHubUrl(e.target.value));
                     }}
                   />
                   {githubError && <Alert message={githubError} />}
