@@ -20,7 +20,7 @@ import {
 import { db } from '@/db/db';
 import { eq, getTableColumns, and } from 'drizzle-orm';
 import { unauthorizedRequest } from '@/middlewares/auth-middleware';
-import type { User, Event, Company } from '@/db/schema';
+import type { User } from '@/db/schema';
 import type { Context } from '@/lib/context';
 import {
   userSchema,
