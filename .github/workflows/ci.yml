@@ -182,7 +182,7 @@ jobs:
         working-directory: ./client
         run: |
           bun install 
-          bun run generate-types
+          bun x openapi-typescript http://localhost:5001/docs -o ./src/types/schema.v1.d.ts
 
       - name: Configure git
         run: |
