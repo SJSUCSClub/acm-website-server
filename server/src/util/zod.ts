@@ -29,13 +29,13 @@ export const projectIDSchema = z.object({
 	projectID: z.string(),
 });
 export const projectSchema = createSelectSchema(projects);
-export const bookmarkedEvent = createSelectSchema(events).extend({
+export const bookmarkedEvent = eventSchema.extend({
   bookmarkedDate: z.string(),
 });	
-export const subscribedEvent = createSelectSchema(events).extend({
+export const subscribedEvent = eventSchema.extend({
   subscribedDate: z.string(),
 });	
-export const subscribedCompany = createSelectSchema(companies).extend({
+export const subscribedCompany = eventSchema.extend({
   subscribedDate: z.string(),
 });	
 export const updateUserSchema = z.object({
