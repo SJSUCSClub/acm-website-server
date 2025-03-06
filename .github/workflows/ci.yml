@@ -113,6 +113,68 @@ jobs:
             -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
             acm-website-server bun test
 
+  generate-types:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4 
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - uses: ./.github/actions/setup
+        with:
+          os: ${{ runner.os }}
+
+      - name: Start server
+        run: |
+          docker run --network host \
+            -e NODE_ENV -e PORT -e POSTGRES_HOST -e POSTGRES_PORT -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB \
+            -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
+            acm-website-server
+
+      - name: Wait for backend OpenAPI documentation endpoint to be available
+        run: |
+          max_retries=30
+          retry_count=0
+          poll_interval=1          
+
+          until curl --silent --fail http://localhost:5001/docs; do
+            sleep $poll_interval
+            retry_count=$((retry_count + 1))
+            if [ $retry_count -ge $max_retries ]; then
+              echo "http://localhost:5001/docs not available"
+              exit 1
+            fi
+          done
+
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Generate types
+        working-directory: ./client
+        run: |
+          bun install 
+          bun run generate-types
+
+      - name: Configure git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push generated types
+        working-directory: ./client
+        run: |
+          if git diff --quiet HEAD -- "src/types/schema.v1.d.ts"; then
+            echo "No generated types to commit"
+          else
+            echo "Commiting and pushing generated types"
+            git add src/types/schema.v1.d.ts
+            git commit -m "generate openapi types [skip ci]"
+            git push origin ${{ github.event.pull_request.head.ref }}
+          fi
+
 #  build:
 #    needs: [typecheck, lint, test]
 #    runs-on: ubuntu-latest
