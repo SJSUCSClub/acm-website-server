@@ -153,10 +153,10 @@ jobs:
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           GOOGLE_REDIRECT_URI: http://localhost:5001/api/v1/auth/callback
         run: |
-          docker run --network host \
+          docker run -d --network host \
             -e NODE_ENV -e PORT -e POSTGRES_HOST -e POSTGRES_PORT -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB \
             -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
-            acm-website-server
+            acm-website-server bun run dev
 
       - name: Wait for backend OpenAPI documentation endpoint to be available
         run: |
