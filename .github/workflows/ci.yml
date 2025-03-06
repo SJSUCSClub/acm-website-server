@@ -158,7 +158,7 @@ jobs:
             -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
             acm-website-server bun run dev
 
-      - name: Wait for backend OpenAPI documentation endpoint to be available
+      - name: Wait for server OpenAPI documentation endpoint /docs to be available
         run: |
           max_retries=6
           retry_count=0

@@ -55,6 +55,14 @@ userRouter.openapi(
         },
         description: 'Successful response',
       },
+      [HttpStatusCodes.UNAUTHORIZED]: {
+        description: 'Unauthorized',
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+      },
     },
   }),
   async (c) => {
