@@ -136,7 +136,7 @@ jobs:
         run: |
           max_retries=30
           retry_count=0
-          poll_interval=1          
+          poll_interval=5          
 
           until curl --silent --fail http://localhost:5001/docs; do
             sleep $poll_interval
