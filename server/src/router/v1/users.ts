@@ -413,7 +413,7 @@ userRouter.openapi(
     }
 
     // Get subscribed events
-    const foundSubscribedEvents: Event[] = await db
+    const foundSubscribedEvents = await db
       .select({
         ...getTableColumns(events),
         subscribedDate: subscribedEvents.subscribedDate,
@@ -566,7 +566,7 @@ userRouter.openapi(
     }
 
     // Get subscribed companies
-    const foundSubscribedCompanies: Company[] = await db
+    const foundSubscribedCompanies = await db
       .select({
         ...getTableColumns(companies),
         subscribedDate: subscribedCompanies.subscribedDate,
