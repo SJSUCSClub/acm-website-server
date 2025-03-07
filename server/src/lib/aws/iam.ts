@@ -1,5 +1,5 @@
 import { env } from '@/env';
-import { AssumeRoleCommand, Credentials, GetCallerIdentityCommand, STSClient } from '@aws-sdk/client-sts';
+import { AssumeRoleCommand, Credentials, STSClient } from '@aws-sdk/client-sts';
 
 const region = 'us-west-2';
 let credentials: Credentials | null = null;
@@ -30,6 +30,6 @@ const getCredentials = async (): Promise<Credentials | null> => {
         }
     }
     return credentials;
-}
+};
 
 export { getCredentials };
