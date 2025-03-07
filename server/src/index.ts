@@ -29,12 +29,14 @@ app.use(
   }),
 );
 
-app.use('/*', async (c, next) => {
-  if (c.req.method !== 'OPTIONS') {
-    return csrf()(c, next);
-  }
-  return next();
-});
+if (env.NODE_ENV === 'production') {
+  app.use('/*', async (c, next) => {
+    if (c.req.method !== 'OPTIONS') {
+      return csrf()(c, next);
+    }
+    return next();
+  });
+}
 
 app.get('/', (c) =>
   c.json(
