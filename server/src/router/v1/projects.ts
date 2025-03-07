@@ -26,7 +26,7 @@ projectRouter.openapi(
 		path: '/{projectID}/files',
 		tags: ['projects'],
 		summary: 'Upload a file to a project',
-		middleware: [authMiddleWare('admin')],
+		// middleware: [authMiddleWare('admin')],
 		request: {
 			body: {
 				content: {
@@ -45,7 +45,8 @@ projectRouter.openapi(
 	async (c) => {
 		const formDataBody = (await c.req.parseBody());
 		const file: File = <File>formDataBody['file'];
-		const res = await uploadFile(file);
+		const projectId: string = c.req.param('projectID');
+		const res = await uploadFile(file, `projects/${projectId}/${file.name}`);
 		if(res) {
 			return c.json({'status': 'successful'});
 		} else {

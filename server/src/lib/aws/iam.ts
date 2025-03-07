@@ -1,9 +1,9 @@
 import { env } from '@/env';
 import { S3Client } from '@aws-sdk/client-s3';
-import { AssumeRoleCommand, GetCallerIdentityCommand, STSClient } from '@aws-sdk/client-sts';
+import { AssumeRoleCommand, Credentials, GetCallerIdentityCommand, STSClient } from '@aws-sdk/client-sts';
 
 const region = 'us-west-2';
-let s3client: S3Client;
+let credentials: Credentials | null = null;
 const stsClient: STSClient = new STSClient({
     region, 
     credentials: {
@@ -12,46 +12,22 @@ const stsClient: STSClient = new STSClient({
     },
 });
 
-const initializeS3client = async (): Promise<boolean> => {
+const getCredentials = async (): Promise<Credentials | null> => {
     try {
+        await stsClient.send(new GetCallerIdentityCommand());
+    } catch {
         const input = new AssumeRoleCommand({
             RoleArn: 'arn:aws:iam::588738592350:role/AcmApplicationServerRoleForLocal',
             RoleSessionName: 'user_file_upload_session',
         });
         const response = await stsClient.send(input);
         if(response.Credentials === undefined) {
-            return false;
+            credentials = null;
         } else {
-            const credentials = response.Credentials;
-            s3client = new S3Client({region, credentials: {
-                accessKeyId: <string> credentials.AccessKeyId,
-                secretAccessKey: <string> credentials.SecretAccessKey,
-                sessionToken: <string> credentials.SessionToken,    
-            }});
-            return true;
+            credentials = response.Credentials;
         }
-    } catch {
-        return false;
     }
-};
+    return credentials;
+}
 
-const getS3Client = async (): Promise<S3Client | null> => {
-    try {
-        await stsClient.send(new GetCallerIdentityCommand());
-        if(!s3client) {
-            const intitialized = await initializeS3client();
-            if(!intitialized) {
-                return null;
-            }
-        }
-        return s3client;
-    } catch {
-        const intitialized = await initializeS3client();
-        if(!intitialized) {
-            return null;
-        }
-        return s3client;
-    }
-};
-
-export { getS3Client };
+export { getCredentials };
