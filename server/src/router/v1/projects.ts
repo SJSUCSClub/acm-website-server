@@ -42,7 +42,7 @@ projectRouter.openapi(
     path: '/{projectID}/files',
     tags: ['projects'],
     summary: 'Upload a file to a project',
-    // middleware: [authMiddleWare('admin')],
+    middleware: [authMiddleWare('admin')],
     request: {
       body: {
         content: {
@@ -55,6 +55,12 @@ projectRouter.openapi(
     responses: {
       [HttpStatusCodes.OK]: {
         description: 'Successful Upload',
+      },
+      [HttpStatusCodes.UNAUTHORIZED]: {
+        description: 'Unauthorized',
+      },
+      [HttpStatusCodes.FORBIDDEN]: {
+        description: 'Forbidden',
       },
     },
   }),

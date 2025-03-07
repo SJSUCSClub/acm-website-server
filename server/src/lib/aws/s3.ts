@@ -58,10 +58,10 @@ const deleteFile = async (key: string): Promise<boolean> => {
     }
 };
 
-const getPresignedUrlPutObj = async (key: string): Promise<string | false> => {
+const getPresignedUrlPutObj = async (key: string): Promise<string | null> => {
     const s3client: S3Client | null = await getS3Client();
     if(s3client === null) { 
-        return false;
+        return null;
     } else {
         try {
             const putObjectCommand = new PutObjectCommand(
@@ -75,7 +75,7 @@ const getPresignedUrlPutObj = async (key: string): Promise<string | false> => {
             );
             return url;
         } catch {
-            return false;
+            return null;
         }
     }
 };
