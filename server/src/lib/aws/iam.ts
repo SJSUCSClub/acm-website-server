@@ -18,8 +18,9 @@ const getCredentials = async (): Promise<Credentials | null> => {
           throw new Error('No credentials found');
         }
     } catch {
+        const {ROLE_ARM: role_arm} = env;
         const input = new AssumeRoleCommand({
-            RoleArn: 'arn:aws:iam::588738592350:role/AcmApplicationServerRoleForLocal',
+            RoleArn: role_arm,
             RoleSessionName: 'user_file_upload_session',
         });
         const response = await stsClient.send(input);
