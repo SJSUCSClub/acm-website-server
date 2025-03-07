@@ -17,7 +17,7 @@ const EnvSchema = z.object({
 	SECRET_ACCESS_KEY: z.string().default(''),
 	BUCKET_NAME: z.string().default('acmwebsite-dev-588738592350-us-west-2'),
 	REGION: z.string().default('us-west-2'),
-	ROLE_ARM: z.string().default('arn:aws:iam::588738592350:role/AcmApplicationServerRoleForLocal'),
+	ROLE_ARN: z.string().default('arn:aws:iam::588738592350:role/AcmApplicationServerRoleForLocal'),
 });
 
 export type Env = z.infer<typeof EnvSchema>;
