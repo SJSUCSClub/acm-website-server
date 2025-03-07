@@ -63,7 +63,7 @@ projectRouter.openapi(
   async (c) => {
     const formDataBody = await c.req.parseBody();
     const file: File = <File>formDataBody['file'];
-    const projectId: string = c.req.param('projectID');
+    const projectId: string = <string> c.req.param('projectID');
     const res = await uploadFile(file, `projects/${projectId}/${file.name}`);
     if (res) {
       return c.json({ status: 'successful' });

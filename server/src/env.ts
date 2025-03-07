@@ -15,6 +15,8 @@ const EnvSchema = z.object({
 	GOOGLE_REDIRECT_URI: z.string().default(''),
 	ACCESS_KEY_ID: z.string().default(''),
 	SECRET_ACCESS_KEY: z.string().default(''),
+	BUCKET_NAME: z.string().default('acmwebsite-dev-588738592350-us-west-2'),
+	REGION: z.string().default('us-west-2'),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

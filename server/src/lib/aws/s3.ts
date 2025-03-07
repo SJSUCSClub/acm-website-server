@@ -2,10 +2,7 @@ import { DeleteObjectCommand, PutObjectCommand, S3Client, S3ClientResolvedConfig
 import type { Client } from '@smithy/types';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { getCredentials } from './iam';
-
-// env
-const BUCKET_NAME = 'acmwebsite-dev-588738592350-us-west-2';
-const region = 'us-west-2';
+import { env } from '@/env';
 
 let s3client: S3Client | null = null;
 
@@ -14,6 +11,7 @@ const getS3Client = async (): Promise<S3Client | null> => {
     if(credentials === null) {
         return null;
     } 
+    const {REGION: region} = env;
     s3client = new S3Client({region, credentials: {
         accessKeyId: <string> credentials.AccessKeyId,
         secretAccessKey: <string> credentials.SecretAccessKey,
@@ -28,10 +26,11 @@ const uploadFile = async (file: File, key: string): Promise<boolean> => {
         return false;
     } else {
         try {
+            const {BUCKET_NAME: bucket_name} = env;
             // ReadableStream
             const uploadObjectCommand = new PutObjectCommand(
                 {
-                    Bucket: BUCKET_NAME,
+                    Bucket: bucket_name,
                     Key: key,
                     Body: (new Buffer(await file.arrayBuffer())),
                 });
@@ -49,7 +48,8 @@ const deleteFile = async (key: string): Promise<boolean> => {
         return false;
     } else {
         try {
-            const deleteObjectCommand = new DeleteObjectCommand({Bucket: BUCKET_NAME, Key: key});
+            const {BUCKET_NAME: bucket_name} = env;
+            const deleteObjectCommand = new DeleteObjectCommand({Bucket: bucket_name, Key: key});
             await (<S3Client>s3client).send(deleteObjectCommand);
             return true;
         } catch {
@@ -64,9 +64,10 @@ const getPresignedUrlPutObj = async (key: string): Promise<string | null> => {
         return null;
     } else {
         try {
+            const {BUCKET_NAME: bucket_name} = env;
             const putObjectCommand = new PutObjectCommand(
                 {
-                    Bucket: BUCKET_NAME,
+                    Bucket: bucket_name,
                     Key: key,
                 });
             const url = await getSignedUrl(
