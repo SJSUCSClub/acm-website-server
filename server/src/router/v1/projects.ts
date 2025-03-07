@@ -56,12 +56,8 @@ projectRouter.openapi(
       [HttpStatusCodes.OK]: {
         description: 'Successful Upload',
       },
-      [HttpStatusCodes.UNAUTHORIZED]: {
-        description: 'Unauthorized',
-      },
-      [HttpStatusCodes.FORBIDDEN]: {
-        description: 'Forbidden',
-      },
+      ...forbiddenRequest,
+      ...unauthorizedRequest,
     },
   }),
   async (c) => {
