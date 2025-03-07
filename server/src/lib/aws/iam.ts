@@ -1,5 +1,4 @@
 import { env } from '@/env';
-import { S3Client } from '@aws-sdk/client-s3';
 import { AssumeRoleCommand, Credentials, GetCallerIdentityCommand, STSClient } from '@aws-sdk/client-sts';
 
 const region = 'us-west-2';
@@ -14,7 +13,10 @@ const stsClient: STSClient = new STSClient({
 
 const getCredentials = async (): Promise<Credentials | null> => {
     try {
-        await stsClient.send(new GetCallerIdentityCommand());
+        const credentials = await stsClient.config.credentials();
+        if (!credentials || !credentials.sessionToken) {
+          throw new Error('No credentials found');
+        }
     } catch {
         const input = new AssumeRoleCommand({
             RoleArn: 'arn:aws:iam::588738592350:role/AcmApplicationServerRoleForLocal',
