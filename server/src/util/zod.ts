@@ -35,6 +35,9 @@ export const bookmarkedEvent = eventSchema.extend({
 export const subscribedEvent = eventSchema.extend({
   subscribedDate: z.string(),
 });	
+export const attendingEvent = eventSchema.extend({
+  attendingDate: z.string(),
+});
 export const subscribedCompany = companySchema.extend({
   subscribedDate: z.string(),
 });	

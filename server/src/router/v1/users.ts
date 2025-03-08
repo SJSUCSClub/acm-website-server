@@ -16,6 +16,7 @@ import {
   bookmarkedEvents,
   projects,
   interestedInProjects,
+  attendingEvents,
 } from '@/db/schema';
 import { db } from '@/db/db';
 import { eq, getTableColumns, and } from 'drizzle-orm';
@@ -33,6 +34,7 @@ import {
   subscribedEvent,
   subscribedCompany,
   errorSchema,
+  attendingEvent,
 } from '@/util/zod';
 
 const userRouter = new OpenAPIHono<Context>();
@@ -1014,6 +1016,91 @@ userRouter.openapi(
     } catch (error) {
       return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
+  },
+);
+
+userRouter.openapi(
+  createRoute({
+    method: 'get',
+    path: '/my/attending-events',
+    tags: ['users'],
+    summary: 'Get all events a user is attending',
+    middleware: [authMiddleWare('user')],
+    responses: {
+      [HttpStatusCodes.OK]: {
+        description: 'Successful response',
+        content: {
+          'application/json': {
+            schema: z.object({
+              events: z.array(attendingEvent),
+            }),
+          },
+        },
+      },
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const user = c.get('user');
+
+    if (!user) {
+      return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+    }
+
+    const foundAttendingEvents = await db
+      .select({
+        ...getTableColumns(events),
+        attendingDate: attendingEvents.attendingDate,
+      })
+      .from(attendingEvents)
+      .innerJoin(events, eq(events.id, attendingEvents.eventId))
+      .where(eq(attendingEvents.userId, user.id));
+
+    return c.json({ events: foundAttendingEvents }, HttpStatusCodes.OK);
+  },
+);
+
+userRouter.openapi(
+  createRoute({
+    method: 'get',
+    path: '/my/attending-events/{eventID}',
+    tags: ['users'],
+    summary: 'Check if user is attending an event',
+    middleware: [authMiddleWare('user')],
+    request: {
+      params: eventIDSchema,
+    },
+    responses: {
+      [HttpStatusCodes.OK]: {
+        description: 'Successful response',
+        content: {
+          'application/json': {
+            schema: z.object({
+              attending: z.boolean(),
+            }),
+          },
+        },
+      },
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const session = c.get('session');
+    if (!session) {
+      return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+    }
+    const { eventID } = c.req.valid('param');
+    const attendance = await db
+      .select()
+      .from(attendingEvents)
+      .where(
+        and(
+          eq(attendingEvents.userId, session.userId),
+          eq(attendingEvents.eventId, parseInt(eventID)),
+        ),
+      );
+
+    return c.json({ attending: attendance.length > 0 }, HttpStatusCodes.OK);
   },
 );
 
