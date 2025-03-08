@@ -695,7 +695,7 @@ eventRouter.openapi(
       }));
       return c.json({ eventAttendees: formattedEventAttendees }, HttpStatusCodes.OK);
     } catch (error) {
-      return c.json({ error: 'Internal server error' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json({ error: `Internal server error: ${ error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
   },
 );
@@ -743,7 +743,7 @@ eventRouter.openapi(
         .where(eq(attendingEvents.eventId, parseInt(eventID)));
       return c.json({ attendeesCount: attendeesCount[0].count }, HttpStatusCodes.OK);
     } catch (error) {
-      return c.json({ error: 'Internal server error' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json({ error: `Internal server error: ${ error }` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
   },
 );
@@ -857,7 +857,7 @@ eventRouter.openapi(
 
       return c.json({ newAttendance: formattedAttendance }, HttpStatusCodes.OK);
     } catch (error) {
-      return c.json({ error: 'Internal server error' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json({ error: `Internal server error: ${ error }` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
   },
 );
@@ -920,7 +920,7 @@ eventRouter.openapi(
       }
       return c.json({ message: '' }, HttpStatusCodes.NO_CONTENT);
     } catch (error) {
-      return c.json({ error: 'Internal server error' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json({ error: `Internal server error: ${  error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
   },
 );

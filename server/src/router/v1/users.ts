@@ -382,7 +382,7 @@ userRouter.openapi(
 
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
-      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json({ error: `Failed to delete bookmarked event: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
   },
 );
@@ -535,7 +535,7 @@ userRouter.openapi(
 
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
-      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json({ error: `Failed to delete subscribed event: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
   },
 );
@@ -689,7 +689,7 @@ userRouter.openapi(
 
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
-      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json({ error: `Failed to delete subscribed company: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
   },
 );
@@ -962,7 +962,7 @@ userRouter.openapi(
 
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
-      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json({ error: `Failed to show project interest: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
   },
 );
@@ -1014,7 +1014,7 @@ userRouter.openapi(
 
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
-      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json({ error: `Failed to delete project interest: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
   },
 );
@@ -1069,7 +1069,7 @@ userRouter.openapi(
 
       return c.json({ events: foundAttendingEvents }, HttpStatusCodes.OK);
     } catch (error) {
-      return c.json({ error: 'Internal server error' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json({ error: `Internal server error: ${ error }` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
   },
 );
@@ -1127,7 +1127,7 @@ userRouter.openapi(
 
       return c.json({ attending: attendance.length > 0 }, HttpStatusCodes.OK);
     } catch (error) {
-      return c.json({ error: 'Internal server error' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json({ error: `Failed to check event attendance: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
   },
 );
