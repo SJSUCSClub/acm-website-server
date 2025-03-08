@@ -1,5 +1,5 @@
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { educationLevelEnum, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers, blacklist, csFieldsEnum, clubLinks, landingQuestions, landingSpotlights, membershipTermEnum } from '@/db/schema';
+import { educationLevelEnum, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers, blacklist, csFieldsEnum, clubLinks, landingQuestions, landingSpotlights, membershipTermEnum, bookmarkedEvents, subscribedEvents, attendingEvents, urls } from '@/db/schema';
 
 import { z } from 'zod';
 
@@ -31,10 +31,14 @@ export const projectIDSchema = z.object({
 export const projectSchema = createSelectSchema(projects);
 export const bookmarkedEvent = eventSchema.extend({
   bookmarkedDate: z.string(),
-});	
+});
+export const bookmarkedEventSchema = createSelectSchema(bookmarkedEvents);	
 export const subscribedEvent = eventSchema.extend({
   subscribedDate: z.string(),
-});	
+});
+export const subscribedEventSchema = createSelectSchema(subscribedEvents);
+export const attendingEventSchema = createSelectSchema(attendingEvents);
+export const urlSchema = createSelectSchema(urls);	
 export const attendingEvent = eventSchema.extend({
   attendingDate: z.string(),
 });

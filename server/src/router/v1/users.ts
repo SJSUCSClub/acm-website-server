@@ -1037,26 +1037,40 @@ userRouter.openapi(
           },
         },
       },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        description: 'Internal server error',
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+      },
       ...unauthorizedRequest,
     },
   }),
   async (c) => {
-    const user = c.get('user');
+    try {
+      const user = c.get('user');
 
-    if (!user) {
-      return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+      if (!user) {
+        return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+      }
+
+      const foundAttendingEvents = await db
+        .select({
+          ...getTableColumns(events),
+          attendingDate: attendingEvents.attendingDate,
+        })
+        .from(attendingEvents)
+        .innerJoin(events, eq(events.id, attendingEvents.eventId))
+        .where(eq(attendingEvents.userId, user.id));
+
+      return c.json({ events: foundAttendingEvents }, HttpStatusCodes.OK);
+    } catch (error) {
+      return c.json({ error: 'Internal server error' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
-
-    const foundAttendingEvents = await db
-      .select({
-        ...getTableColumns(events),
-        attendingDate: attendingEvents.attendingDate,
-      })
-      .from(attendingEvents)
-      .innerJoin(events, eq(events.id, attendingEvents.eventId))
-      .where(eq(attendingEvents.userId, user.id));
-
-    return c.json({ events: foundAttendingEvents }, HttpStatusCodes.OK);
   },
 );
 
@@ -1081,26 +1095,40 @@ userRouter.openapi(
           },
         },
       },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        description: 'Internal server error',
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+      },
       ...unauthorizedRequest,
     },
   }),
   async (c) => {
-    const session = c.get('session');
-    if (!session) {
-      return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-    }
-    const { eventID } = c.req.valid('param');
-    const attendance = await db
-      .select()
-      .from(attendingEvents)
-      .where(
-        and(
-          eq(attendingEvents.userId, session.userId),
-          eq(attendingEvents.eventId, parseInt(eventID)),
-        ),
-      );
+    try {
+      const session = c.get('session');
+      if (!session) {
+        return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+      }
+      const { eventID } = c.req.valid('param');
+      const attendance = await db
+        .select()
+        .from(attendingEvents)
+        .where(
+          and(
+            eq(attendingEvents.userId, session.userId),
+            eq(attendingEvents.eventId, parseInt(eventID)),
+          ),
+        );
 
-    return c.json({ attending: attendance.length > 0 }, HttpStatusCodes.OK);
+      return c.json({ attending: attendance.length > 0 }, HttpStatusCodes.OK);
+    } catch (error) {
+      return c.json({ error: 'Internal server error' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
   },
 );
 

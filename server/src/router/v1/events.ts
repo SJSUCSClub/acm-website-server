@@ -1,6 +1,7 @@
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
 import { z } from 'zod';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
+import { urlSchema, attendingEventSchema, subscribedEventSchema, bookmarkedEventSchema } from '@/util/zod';
 
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
@@ -23,7 +24,6 @@ import {
   forbiddenRequest,
   unauthorizedRequest,
 } from '@/middlewares/auth-middleware';
-import { createSelectSchema } from 'drizzle-zod';
 import {
   companySchema,
   eventIDSchema,
@@ -35,11 +35,6 @@ import {
 } from '@/util/zod';
 
 const eventRouter = new OpenAPIHono<Context>();
-
-const subscribedEventSchema = createSelectSchema(subscribedEvents);
-const bookmarkedEventSchema = createSelectSchema(bookmarkedEvents);
-const attendingEventSchema = createSelectSchema(attendingEvents);
-const urlSchema = createSelectSchema(urls);
 
 eventRouter.openapi(
   createRoute({
@@ -404,6 +399,10 @@ eventRouter.openapi(
     const user = c.get('user');
     const { eventID } = c.req.valid('param');
 
+    if (!user) {
+      return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+    }
+
     const foundEvents: Event[] = await db
       .select()
       .from(events)
@@ -413,7 +412,7 @@ eventRouter.openapi(
       return c.json({ error: 'Event not found' }, HttpStatusCodes.NOT_FOUND);
     }
     const event = foundEvents[0];
-    if (event.memberOnly && user?.role === 'user') {
+    if (event.memberOnly && user.role === 'user') {
       return c.json({ error: 'Not member' }, HttpStatusCodes.FORBIDDEN);
     }
 
@@ -668,22 +667,36 @@ eventRouter.openapi(
         },
         description: 'Successful response',
       },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: 'Internal Server Error',
+      },
       ...unauthorizedRequest,
       ...forbiddenRequest,
     },
   }),
   async (c) => {
-    const { eventID } = c.req.valid('param');
-    const eventAttendees: User[] = await db
-      .select(getTableColumns(users))
-      .from(attendingEvents)
-      .innerJoin(users, eq(users.id, attendingEvents.userId))
-      .where(eq(attendingEvents.eventId, parseInt(eventID)));
-    const formattedEventAttendees = eventAttendees.map((user) => ({
-      ...user,
-      createdAt: user.createdAt.toISOString(),
-    }));
-    return c.json({ eventAttendees: formattedEventAttendees }, HttpStatusCodes.OK);
+    try {
+      const { eventID } = c.req.valid('param');
+      const eventAttendees: User[] = await db
+        .select(getTableColumns(users))
+        .from(attendingEvents)
+        .innerJoin(users, eq(users.id, attendingEvents.userId))
+        .where(eq(attendingEvents.eventId, parseInt(eventID)));
+      const formattedEventAttendees = eventAttendees.map((user) => ({
+        ...user,
+        createdAt: user.createdAt.toISOString(),
+      }));
+      return c.json({ eventAttendees: formattedEventAttendees }, HttpStatusCodes.OK);
+    } catch (error) {
+      return c.json({ error: 'Internal server error' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
   },
 );
 
@@ -693,7 +706,6 @@ eventRouter.openapi(
     path: '/{eventID}/attendance/count',
     tags: ['events'],
     summary: 'Get the number of attendees for an event',
-    middleware: [authMiddleWare('admin')],
     request: {
       params: eventIDSchema,
     },
@@ -708,17 +720,31 @@ eventRouter.openapi(
         },
         description: 'Successful response',
       },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: 'Internal Server Error',
+      },
       ...unauthorizedRequest,
       ...forbiddenRequest,
     },
   }),
   async (c) => {
-    const { eventID } = c.req.valid('param');
-    const attendeesCount = await db
-      .select({ count: count() })
-      .from(attendingEvents)
-      .where(eq(attendingEvents.eventId, parseInt(eventID)));
-    return c.json({ attendeesCount: attendeesCount[0].count }, HttpStatusCodes.OK);
+    try {
+      const { eventID } = c.req.valid('param');
+      const attendeesCount = await db
+        .select({ count: count() })
+        .from(attendingEvents)
+        .where(eq(attendingEvents.eventId, parseInt(eventID)));
+      return c.json({ attendeesCount: attendeesCount[0].count }, HttpStatusCodes.OK);
+    } catch (error) {
+      return c.json({ error: 'Internal server error' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
   },
 );
 
@@ -763,62 +789,76 @@ eventRouter.openapi(
         },
         description: 'Conflict',
       },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: 'Internal Server Error',
+      },
       ...unauthorizedRequest,
       ...forbiddenRequest,
     },
   }),
   async (c) => {
-    const user = c.get('user');
-    const { eventID } = c.req.valid('param');
+    try {
+      const user = c.get('user');
+      const { eventID } = c.req.valid('param');
 
-    const event : Event | undefined = await db
-      .select()
-      .from(events)
-      .where(eq(events.id, parseInt(eventID)))
-      .limit(1)
-      .then(rows => rows[0]);
+      const event : Event | undefined = await db
+        .select()
+        .from(events)
+        .where(eq(events.id, parseInt(eventID)))
+        .limit(1)
+        .then(rows => rows[0]);
 
-    if (!event) {
-      return c.json({ error: 'Event not found' }, HttpStatusCodes.NOT_FOUND);
-    }
-    
-    if (event.memberOnly && user?.role === 'user') {
-      return c.json({ error: 'Member only event' }, HttpStatusCodes.FORBIDDEN);
-    }
-
-    if (event.eventCapacity !== null && event.eventCapacity > 0) {
-      const attendeesCount = await db
-        .select({ count: count() })
-        .from(attendingEvents)
-        .where(eq(attendingEvents.eventId, parseInt(eventID)));
-      
-      if (attendeesCount[0].count >= event.eventCapacity) {
-        return c.json({ error: 'Event capacity reached' }, HttpStatusCodes.FORBIDDEN);
+      if (!event) {
+        return c.json({ error: 'Event not found' }, HttpStatusCodes.NOT_FOUND);
       }
+      
+      if (event.memberOnly && user?.role === 'user') {
+        return c.json({ error: 'Member only event' }, HttpStatusCodes.FORBIDDEN);
+      }
+
+      if (event.eventCapacity !== null && event.eventCapacity > 0) {
+        const attendeesCount = await db
+          .select({ count: count() })
+          .from(attendingEvents)
+          .where(eq(attendingEvents.eventId, parseInt(eventID)));
+        
+        if (attendeesCount[0].count >= event.eventCapacity) {
+          return c.json({ error: 'Event capacity reached' }, HttpStatusCodes.FORBIDDEN);
+        }
+      }
+
+      const newAttendance : NewAttendingEvent[] = await db
+        .insert(attendingEvents)
+        .values({ 
+          userId: user!.id, 
+          eventId: parseInt(eventID),
+        })
+        .onConflictDoNothing()
+        .returning();
+
+      if (newAttendance.length === 0) {
+        return c.json(
+          { error: 'Attendance already marked' },
+          HttpStatusCodes.CONFLICT,
+        );
+      }
+
+      const formattedAttendance = {
+        ...newAttendance[0],
+        attendingDate: newAttendance[0].attendingDate?.toISOString() || new Date().toISOString(),
+      };
+
+      return c.json({ newAttendance: formattedAttendance }, HttpStatusCodes.OK);
+    } catch (error) {
+      return c.json({ error: 'Internal server error' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
-
-    const newAttendance : NewAttendingEvent[] = await db
-      .insert(attendingEvents)
-      .values({ 
-        userId: user!.id, 
-        eventId: parseInt(eventID),
-      })
-      .onConflictDoNothing()
-      .returning();
-
-    if (newAttendance.length === 0) {
-      return c.json(
-        { error: 'Attendance already marked' },
-        HttpStatusCodes.CONFLICT,
-      );
-    }
-
-    const formattedAttendance = {
-      ...newAttendance[0],
-      attendingDate: newAttendance[0].attendingDate?.toISOString() || new Date().toISOString(),
-    };
-
-    return c.json({ newAttendance: formattedAttendance }, HttpStatusCodes.OK);
   },
 );
 
@@ -833,16 +873,9 @@ eventRouter.openapi(
       params: eventIDSchema,
     },
     responses: {
-      [HttpStatusCodes.OK]: {
-        content: {
-          'application/json': {
-            schema: z.object({
-              deletedAttendance: attendingEventSchema,
-            }),
-          },
-        },
-        description: 'Successful response',
-      },
+			[HttpStatusCodes.NO_CONTENT]: {
+				description: 'Successful response',
+			},
       [HttpStatusCodes.NOT_FOUND]: {
         content: {
           'application/json': {
@@ -853,31 +886,42 @@ eventRouter.openapi(
         },
         description: 'Not Found',
       },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: 'Internal Server Error',
+      },
       ...unauthorizedRequest,
       ...forbiddenRequest,
     },
   }),
   async (c) => {
-    const user = c.get('user');
-    const { eventID } = c.req.valid('param');
+    try {
+      const user = c.get('user');
+      const { eventID } = c.req.valid('param');
 
-    const deletedAttendance = await db
-      .delete(attendingEvents)
-      .where(
-        and(
-          eq(attendingEvents.userId, user!.id),
-          eq(attendingEvents.eventId, parseInt(eventID)),
-        ),
-      )
-      .returning();
+      const deletedAttendance = await db
+        .delete(attendingEvents)
+        .where(
+          and(
+            eq(attendingEvents.userId, user!.id),
+            eq(attendingEvents.eventId, parseInt(eventID)),
+          ),
+        )
+        .returning();
 
-    if (deletedAttendance.length === 0) {
-      return c.json({ error: 'Failed to delete attendance' }, HttpStatusCodes.NOT_FOUND);
+      if (deletedAttendance.length === 0) {
+        return c.json({ error: 'Failed to delete attendance' }, HttpStatusCodes.NOT_FOUND);
+      }
+      return c.json({ message: '' }, HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error: 'Internal server error' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
-    return c.json({ deletedAttendance: {
-      ...deletedAttendance[0],
-      attendingDate: deletedAttendance[0].attendingDate?.toISOString(),
-    }}, HttpStatusCodes.OK);
   },
 );
 
