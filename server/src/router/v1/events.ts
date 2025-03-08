@@ -683,6 +683,11 @@ eventRouter.openapi(
   }),
   async (c) => {
     try {
+      const user = c.get('user');
+      if (!user) {
+        return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+      }
+
       const { eventID } = c.req.valid('param');
       const eventAttendees: User[] = await db
         .select(getTableColumns(users))
@@ -918,7 +923,7 @@ eventRouter.openapi(
       if (deletedAttendance.length === 0) {
         return c.json({ error: 'Failed to delete attendance' }, HttpStatusCodes.NOT_FOUND);
       }
-      return c.json({ message: '' }, HttpStatusCodes.NO_CONTENT);
+      return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
       return c.json({ error: `Internal server error: ${  error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
