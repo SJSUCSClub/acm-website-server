@@ -164,6 +164,15 @@ create table if not exists subscribed_events(
    FOREIGN KEY(event_id) REFERENCES events(id) on update cascade on delete cascade
 );
 
+create table if not exists attending_events(
+   user_id text not null,
+   event_id integer not null,
+   attending_date timestamp not null default CURRENT_TIMESTAMP,
+   PRIMARY KEY(user_id, event_id),
+   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade,
+   FOREIGN KEY(event_id) REFERENCES events(id) on update cascade on delete cascade
+);
+
 create table if not exists companies(
    id serial,
    name text not null,

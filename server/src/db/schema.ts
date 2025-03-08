@@ -139,6 +139,14 @@ export const subscribedEvents = pgTable('subscribed_events', {
   primaryKey: [table.userId, table.eventId],
 }));
 
+export const attendingEvents = pgTable('attending_events', {
+  userId: text('user_id').notNull().references(() => users.id, { onUpdate: 'cascade', onDelete: 'cascade' }),
+  eventId: integer('event_id').notNull().references(() => events.id, { onUpdate: 'cascade', onDelete: 'cascade' }),
+  attendingDate: timestamp('attending_date').notNull().defaultNow(),
+}, (table) => ({
+  primaryKey: [table.userId, table.eventId],
+}));
+
 export const companies = pgTable('companies', {
   id: serial('id').primaryKey(),
   name: text('name').notNull(),
@@ -258,6 +266,8 @@ export type BookmarkedEvent = typeof bookmarkedEvents.$inferSelect;
 export type NewBookmarkedEvent = typeof bookmarkedEvents.$inferInsert;
 export type SubscribedEvent = typeof subscribedEvents.$inferSelect;
 export type NewSubscribedEvent = typeof subscribedEvents.$inferInsert;
+export type AttendingEvent = typeof attendingEvents.$inferSelect;
+export type NewAttendingEvent = typeof attendingEvents.$inferInsert;
 export type Company = typeof companies.$inferSelect;
 export type NewCompany = typeof companies.$inferInsert;
 export type EventCompany = typeof eventCompanies.$inferSelect;
