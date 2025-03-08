@@ -8,6 +8,8 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
@@ -19,8 +21,22 @@ import { Route as EventsImport } from './routes/events'
 import { Route as DashboardImport } from './routes/dashboard'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
+import { Route as AdminLayoutImport } from './routes/admin/_layout'
+import { Route as AdminLayoutIndexImport } from './routes/admin/_layout/index'
+import { Route as AdminLayoutUsersImport } from './routes/admin/_layout/users'
+import { Route as AdminLayoutProjectsImport } from './routes/admin/_layout/projects'
+
+// Create Virtual Routes
+
+const AdminImport = createFileRoute('/admin')()
 
 // Create/Update Routes
+
+const AdminRoute = AdminImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const ProjectsRoute = ProjectsImport.update({
   id: '/projects',
@@ -68,6 +84,29 @@ const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const AdminLayoutRoute = AdminLayoutImport.update({
+  id: '/_layout',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminLayoutIndexRoute = AdminLayoutIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminLayoutRoute,
+} as any)
+
+const AdminLayoutUsersRoute = AdminLayoutUsersImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminLayoutRoute,
+} as any)
+
+const AdminLayoutProjectsRoute = AdminLayoutProjectsImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => AdminLayoutRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -130,10 +169,71 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsImport
       parentRoute: typeof rootRoute
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/_layout': {
+      id: '/admin/_layout'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminLayoutImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/_layout/projects': {
+      id: '/admin/_layout/projects'
+      path: '/projects'
+      fullPath: '/admin/projects'
+      preLoaderRoute: typeof AdminLayoutProjectsImport
+      parentRoute: typeof AdminLayoutImport
+    }
+    '/admin/_layout/users': {
+      id: '/admin/_layout/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminLayoutUsersImport
+      parentRoute: typeof AdminLayoutImport
+    }
+    '/admin/_layout/': {
+      id: '/admin/_layout/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminLayoutIndexImport
+      parentRoute: typeof AdminLayoutImport
+    }
   }
 }
 
 // Create and export the route tree
+
+interface AdminLayoutRouteChildren {
+  AdminLayoutProjectsRoute: typeof AdminLayoutProjectsRoute
+  AdminLayoutUsersRoute: typeof AdminLayoutUsersRoute
+  AdminLayoutIndexRoute: typeof AdminLayoutIndexRoute
+}
+
+const AdminLayoutRouteChildren: AdminLayoutRouteChildren = {
+  AdminLayoutProjectsRoute: AdminLayoutProjectsRoute,
+  AdminLayoutUsersRoute: AdminLayoutUsersRoute,
+  AdminLayoutIndexRoute: AdminLayoutIndexRoute,
+}
+
+const AdminLayoutRouteWithChildren = AdminLayoutRoute._addFileChildren(
+  AdminLayoutRouteChildren,
+)
+
+interface AdminRouteChildren {
+  AdminLayoutRoute: typeof AdminLayoutRouteWithChildren
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminLayoutRoute: AdminLayoutRouteWithChildren,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -144,6 +244,10 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/projects': typeof ProjectsRoute
+  '/admin': typeof AdminLayoutRouteWithChildren
+  '/admin/projects': typeof AdminLayoutProjectsRoute
+  '/admin/users': typeof AdminLayoutUsersRoute
+  '/admin/': typeof AdminLayoutIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -155,6 +259,9 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/projects': typeof ProjectsRoute
+  '/admin': typeof AdminLayoutIndexRoute
+  '/admin/projects': typeof AdminLayoutProjectsRoute
+  '/admin/users': typeof AdminLayoutUsersRoute
 }
 
 export interface FileRoutesById {
@@ -167,6 +274,11 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/projects': typeof ProjectsRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/admin/_layout': typeof AdminLayoutRouteWithChildren
+  '/admin/_layout/projects': typeof AdminLayoutProjectsRoute
+  '/admin/_layout/users': typeof AdminLayoutUsersRoute
+  '/admin/_layout/': typeof AdminLayoutIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -180,6 +292,10 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/profile'
     | '/projects'
+    | '/admin'
+    | '/admin/projects'
+    | '/admin/users'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -190,6 +306,9 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/profile'
     | '/projects'
+    | '/admin'
+    | '/admin/projects'
+    | '/admin/users'
   id:
     | '__root__'
     | '/'
@@ -200,6 +319,11 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/profile'
     | '/projects'
+    | '/admin'
+    | '/admin/_layout'
+    | '/admin/_layout/projects'
+    | '/admin/_layout/users'
+    | '/admin/_layout/'
   fileRoutesById: FileRoutesById
 }
 
@@ -212,6 +336,7 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   ProfileRoute: typeof ProfileRoute
   ProjectsRoute: typeof ProjectsRoute
+  AdminRoute: typeof AdminRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -223,6 +348,7 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   ProfileRoute: ProfileRoute,
   ProjectsRoute: ProjectsRoute,
+  AdminRoute: AdminRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -242,7 +368,8 @@ export const routeTree = rootRoute
         "/login",
         "/onboarding",
         "/profile",
-        "/projects"
+        "/projects",
+        "/admin"
       ]
     },
     "/": {
@@ -268,6 +395,33 @@ export const routeTree = rootRoute
     },
     "/projects": {
       "filePath": "projects.tsx"
+    },
+    "/admin": {
+      "filePath": "admin",
+      "children": [
+        "/admin/_layout"
+      ]
+    },
+    "/admin/_layout": {
+      "filePath": "admin/_layout.tsx",
+      "parent": "/admin",
+      "children": [
+        "/admin/_layout/projects",
+        "/admin/_layout/users",
+        "/admin/_layout/"
+      ]
+    },
+    "/admin/_layout/projects": {
+      "filePath": "admin/_layout/projects.tsx",
+      "parent": "/admin/_layout"
+    },
+    "/admin/_layout/users": {
+      "filePath": "admin/_layout/users.tsx",
+      "parent": "/admin/_layout"
+    },
+    "/admin/_layout/": {
+      "filePath": "admin/_layout/index.tsx",
+      "parent": "/admin/_layout"
     }
   }
 }
