@@ -237,6 +237,12 @@ export const landingQuestions = pgTable('landing_questions', {
   answer: text('answer').notNull(),
 });
 
+export const paymentLinks = pgTable('payment_links', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  link: text('link').notNull(),
+});
+
 // Update types
 export type UserKey = typeof userKey.$inferSelect;
 export type NewUserKey = typeof userKey.$inferInsert;
@@ -291,3 +297,5 @@ export type LandingSpotlight = typeof landingSpotlights.$inferSelect;
 export type NewLandingSpotlight = typeof landingSpotlights.$inferInsert;
 export type LandingQuestion = typeof landingQuestions.$inferSelect;
 export type NewLandingQuestion = typeof landingQuestions.$inferInsert;
+export type PaymentLink = typeof paymentLinks.$inferSelect;
+export type NewPaymentLink = typeof paymentLinks.$inferInsert;

@@ -268,6 +268,13 @@ create table if not exists landing_questions(
   primary key(id)
 );
 
+create table if not exists payment_links(
+   id serial,
+   name text not null,
+   link text not null,
+   PRIMARY KEY(id)
+);
+
 create index projects_name_trgm_idx on projects using gin (name gin_trgm_ops);
 create index companies_name_trgm_idx on companies using gin (name gin_trgm_ops);
 create index events_name_trgm_idx on events using gin (name gin_trgm_ops);
