@@ -6,7 +6,7 @@ import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
 import { paymentLinks } from '@/db/schema';
 import type { PaymentLink } from '@/db/schema';
-import { paymentIdSchema, paymentLinkSchema } from '@/util/zod';
+import { paymentIdSchema, paymentLinkSchema, newPaymentLinkSchema } from '@/util/zod';
 import { authMiddleWare, unauthorizedRequest, forbiddenRequest } from '@/middlewares/auth-middleware';
 import { eq } from 'drizzle-orm';
 
@@ -46,7 +46,7 @@ paymentRouter.openapi(
                 .from(paymentLinks);
             return c.json({ paymentLinks: payments }, HttpStatusCodes.OK);
         } catch (error) {
-            return c.json({ error: `Failed to get payment links: ${ error }` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+            return c.json({ error: `Failed to get payment links: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
         }
 	},
 );
@@ -62,7 +62,7 @@ paymentRouter.openapi(
 		body: {
 			content: {
 				'application/json': {
-					schema: paymentLinkSchema,
+					schema: newPaymentLinkSchema,
 				},
 			},
 		},
@@ -103,9 +103,9 @@ paymentRouter.openapi(
                 return c.json({ error: 'Failed to create payment link' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
             }
 
-		    return c.json({ paymentLink: newPaymentLink[0] }, HttpStatusCodes.CREATED);
+            return c.json({ paymentLink: newPaymentLink[0] }, HttpStatusCodes.CREATED);
         } catch (error) {
-            return c.json({ error: `Failed to create payment link: ${ error }` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+            return c.json({ error: `Failed to create payment link: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
         }
 	},
 );
@@ -122,7 +122,7 @@ paymentRouter.openapi(
         body: {
             content: {
                 'application/json': {
-                    schema: paymentLinkSchema,
+                    schema: newPaymentLinkSchema,
                 },
             },
         },
@@ -137,6 +137,14 @@ paymentRouter.openapi(
                 },
             },
             description: 'Updated payment link',
+        },
+        [HttpStatusCodes.NOT_FOUND]: {
+            content: {
+                'application/json': {
+                    schema: z.object({ error: z.string() }),
+                },
+            },
+            description: 'Payment link not found',
         },
         [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
             content: {
@@ -162,12 +170,12 @@ paymentRouter.openapi(
                 .returning();
 
             if (!updatedPaymentLink[0]) {
-                return c.json({ error: 'Failed to update payment link' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+                return c.json({ error: 'Payment link not found' }, HttpStatusCodes.NOT_FOUND);
             }
 
             return c.json({ paymentLink: updatedPaymentLink[0] }, HttpStatusCodes.OK);
         } catch (error) {
-            return c.json({ error: `Failed to update payment link: ${ error }` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+            return c.json({ error: `Failed to update payment link: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
         }
 	},
 );
@@ -219,7 +227,7 @@ paymentRouter.openapi(
             }
             return c.text('', HttpStatusCodes.NO_CONTENT);
         } catch (error) {
-            return c.json({ error: `Failed to delete payment link: ${ error }` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+            return c.json({ error: `Failed to delete payment link: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
         }
     },
 );

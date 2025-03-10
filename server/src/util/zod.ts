@@ -80,6 +80,7 @@ export const errorSchema = z.object({
   error: z.string(),
 });
 export const paymentLinkSchema = createSelectSchema(paymentLinks);
+export const newPaymentLinkSchema = createInsertSchema(paymentLinks);
 export const paymentIdSchema = z.object({
   paymentId: z
     .string()
