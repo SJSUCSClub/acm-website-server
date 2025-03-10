@@ -128,15 +128,8 @@ paymentRouter.openapi(
         },
 	  },
 	  responses: {
-        [HttpStatusCodes.OK]: {
-            content: {
-                'application/json': {
-                    schema: z.object({
-                        paymentLink: paymentLinkSchema,
-                    }),
-                },
-            },
-            description: 'Updated payment link',
+        [HttpStatusCodes.NO_CONTENT]: {
+            description: 'Payment link updated',
         },
         [HttpStatusCodes.NOT_FOUND]: {
             content: {
@@ -169,11 +162,11 @@ paymentRouter.openapi(
                 .where(eq(paymentLinks.id, parseInt(paymentId)))
                 .returning();
 
-            if (!updatedPaymentLink[0]) {
+            if (updatedPaymentLink.length === 0) {
                 return c.json({ error: 'Payment link not found' }, HttpStatusCodes.NOT_FOUND);
             }
 
-            return c.json({ paymentLink: updatedPaymentLink[0] }, HttpStatusCodes.OK);
+            return c.text('', HttpStatusCodes.NO_CONTENT);
         } catch (error) {
             return c.json({ error: `Failed to update payment link: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
         }
