@@ -4905,20 +4905,12 @@ export interface paths {
                 };
             };
             responses: {
-                /** @description Updated payment link */
-                200: {
+                /** @description Payment link updated */
+                204: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content: {
-                        "application/json": {
-                            paymentLink: {
-                                id: number;
-                                name: string;
-                                link: string;
-                            };
-                        };
-                    };
+                    content?: never;
                 };
                 /** @description Payment link not found */
                 404: {
