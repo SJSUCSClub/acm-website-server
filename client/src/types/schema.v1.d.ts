@@ -4836,7 +4836,7 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
-                        id: number;
+                        id?: number;
                         name: string;
                         link: string;
                     };
@@ -4898,7 +4898,7 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
-                        id: number;
+                        id?: number;
                         name: string;
                         link: string;
                     };
@@ -4917,6 +4917,17 @@ export interface paths {
                                 name: string;
                                 link: string;
                             };
+                        };
+                    };
+                };
+                /** @description Payment link not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
                         };
                     };
                 };
