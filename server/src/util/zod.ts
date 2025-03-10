@@ -1,5 +1,5 @@
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { educationLevelEnum, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers, blacklist, csFieldsEnum, clubLinks, landingQuestions, landingSpotlights, membershipTermEnum, bookmarkedEvents, subscribedEvents, attendingEvents, urls } from '@/db/schema';
+import { educationLevelEnum, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers, blacklist, csFieldsEnum, clubLinks, landingQuestions, landingSpotlights, membershipTermEnum, bookmarkedEvents, subscribedEvents, attendingEvents, urls, paymentLinks } from '@/db/schema';
 
 import { z } from 'zod';
 
@@ -78,4 +78,15 @@ export const landingSpotlightSchema = createSelectSchema(landingSpotlights);
 export const landingQuestionSchema = createSelectSchema(landingQuestions);
 export const errorSchema = z.object({
   error: z.string(),
+});
+export const paymentLinkSchema = createSelectSchema(paymentLinks);
+export const paymentIdSchema = z.object({
+  paymentId: z
+    .string()
+    .openapi({
+      param: {
+        name: 'paymentId',
+        in: 'path',
+      },
+    }),
 });
