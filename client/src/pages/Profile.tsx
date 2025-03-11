@@ -9,25 +9,16 @@ import { Card, CardContent } from "../components/atoms/card";
 import { Input } from "../components/atoms/input";
 import { ImageIcon } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useMutation, useQuery } from "@/hooks/useFetch";
 import { Alert } from "../components/atoms/alert";
 import { DatePicker } from "../components/molecules/date-picker";
 import { format } from "date-fns";
 import { MultiSelect } from "../components/atoms/multiselect";
 import { Spinner } from "../components/atoms/spinner";
+import { paths } from "../types/schema.v1";
 
-interface UserData {
-  profilePic?: string;
-  name: string;
-  email: string;
-  discord: string;
-  linkedin: string;
-  github: string;
-  website: string;
-  selectedStatus: string;
-  gradDate?: Date;
-  major: string;
-  selectedInterests: string[];
-}
+type User =
+  paths["/v1/users/my"]["get"]["responses"]["200"]["content"]["application/json"];
 
 export function validateGitHubUrl(url: string): string | null {
   if (!url) return null;
@@ -49,122 +40,42 @@ export function validateLinkedInUrl(url: string): string | null {
 }
 
 export default function Profile() {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [majorList, setMajorList] = useState<Array<string>>([]);
-  const [interestsList, setInterestsList] = useState<Array<string>>([]);
-  const [educationLevels, setEducationLevels] = useState<Array<string>>([]);
-
-  const [userData, setUserData] = useState<UserData>({
-    profilePic: "",
-    name: "",
-    email: "",
-    discord: "",
-    linkedin: "",
-    github: "",
-    website: "",
-    selectedStatus: "",
-    gradDate: new Date(),
-    major: "",
-    selectedInterests: [],
+  const { data: user, isLoading } = useQuery("get", "/v1/users/my");
+  const { data: majorList } = useQuery("get", "/v1/majors");
+  const { data: interestsList } = useQuery("get", "/v1/enums/{enumType}", {
+    params: {
+      path: {
+        enumType: "cs_fields_enum",
+      },
+    },
   });
+  const { data: educationLevels } = useQuery("get", "/v1/enums/{enumType}", {
+    params: {
+      path: {
+        enumType: "education_level_enum",
+      },
+    },
+  });
+  const { mutate } = useMutation("put", "/v1/users/my");
 
+  const [updatedUser, setUpdatedUser] = useState<User | null>(null);
   const [githubError, setGithubError] = useState<string | null>(null);
   const [linkedinError, setLinkedinError] = useState<string | null>(null);
 
-  //fetch education levels
   useEffect(() => {
-    const fetchEducationLevels = async () => {
-      try {
-        const response = await fetch("/api/v1/enums/education_level_enum");
-        const data = await response.json();
-
-        setEducationLevels(
-          data.types.map((educationLevel: string) => educationLevel),
-        );
-      } catch (error) {
-        console.error("Error fetching majors:", error);
-      }
+    const getUser = () => {
+      setUpdatedUser(user || null);
     };
-
-    fetchEducationLevels();
-  }, []);
-
-  //fetch cs fields (interests)
-  useEffect(() => {
-    const fetchInterests = async () => {
-      try {
-        const response = await fetch("/api/v1/enums/cs_fields_enum");
-        const data = await response.json();
-
-        setInterestsList(data.types.map((interest: string) => interest));
-      } catch (error) {
-        console.error("Error fetching majors:", error);
-      }
-    };
-
-    fetchInterests();
-  }, []);
-
-  // fetch major list
-  useEffect(() => {
-    const fetchMajors = async () => {
-      try {
-        const response = await fetch("/api/v1/majors");
-        const data = await response.json();
-        setMajorList(data.majors.map((major: { name: string }) => major.name));
-      } catch (error) {
-        console.error("Error fetching majors:", error);
-      }
-    };
-
-    fetchMajors();
-  }, []);
-
-  // fetch user data
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch("/api/v1/users/my", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        setUserData({
-          profilePic: data.profilePic,
-          name: data.name,
-          email: data.email,
-          discord: data.discord || "",
-          linkedin: data.linkedin || "",
-          github: data.github || "",
-          website: data.website || "",
-          selectedStatus: data.education_level,
-          gradDate: new Date(data.gradDate),
-          major: data.major,
-          selectedInterests: data.interests || [],
-        });
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+    getUser();
+  }, [user]);
 
   // update and save profile
   const handleUpdateProfile = async () => {
-    const githubValidationError = validateGitHubUrl(userData.github);
-    const linkedinValidationError = validateLinkedInUrl(userData.linkedin);
+    if (!updatedUser) return;
+    const githubValidationError = validateGitHubUrl(updatedUser.github || "");
+    const linkedinValidationError = validateLinkedInUrl(
+      updatedUser.linkedin || ""
+    );
 
     setGithubError(githubValidationError);
     setLinkedinError(linkedinValidationError);
@@ -174,50 +85,15 @@ export default function Profile() {
       return;
     }
 
-    try {
-      const updateData = {
-        major: userData.major,
-        gradDate: format(userData.gradDate!, "yyyy-MM-dd"),
-        education_level: userData.selectedStatus,
-        discord: userData.discord,
-        linkedin: userData.linkedin,
-        github: userData.github,
-        website: userData.website,
-        interests: userData.selectedInterests,
-      };
+    const setUser = {
+      ...updatedUser,
+      gradDate: updatedUser.gradDate,
+    };
 
-      const response = await fetch("/api/v1/users/my", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(updateData),
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      alert("Profile updated successfully!");
-    } catch (error) {
-      console.error("Failed to update profile:", error);
-    }
-  };
-
-  // for interests
-  const handleInterestChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    option: string,
-  ) => {
-    const updatedInterests = userData.selectedInterests.includes(option)
-      ? userData.selectedInterests.filter((item) => item !== option)
-      : [...userData.selectedInterests, option];
-
-    setUserData({ ...userData, selectedInterests: updatedInterests });
-  };
-
-  // for date picker
-  const handleDateChange = (date: Date | undefined) => {
-    setUserData({ ...userData, gradDate: date });
+    mutate({
+      body: setUser,
+    });
+    alert("Profile updated successfully!");
   };
 
   if (isLoading) {
@@ -239,7 +115,7 @@ export default function Profile() {
                   <div className="relative flex items-center gap-4">
                     <Avatar className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24">
                       <AvatarImage
-                        src={userData.profilePic}
+                        src={updatedUser?.profilePic || ""}
                         alt="Profile picture"
                       />
                       <AvatarFallback>
@@ -251,14 +127,14 @@ export default function Profile() {
                 <div className="space-y-2">
                   <p className="text-neutral font-semibold mb-2">Name</p>
                   <div className="rounded-xl bg-border text-gray-500 px-4 py-2 focus:outline-none w-full placeholder-neutral mb-2 border-border-hovered border-2">
-                    {userData.name}
+                    {updatedUser?.name}
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <p className="text-neutral font-semibold mb-2">Email</p>
                   <div className="rounded-xl bg-border text-gray-500 px-4 py-2 focus:outline-none w-full placeholder-neutral mb-2 border-border-hovered border-2">
-                    {userData.email}
+                    {updatedUser?.email}
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -266,9 +142,11 @@ export default function Profile() {
                     label="Discord"
                     required={false}
                     placeholder="discord#1234"
-                    value={userData.discord}
+                    value={updatedUser?.discord || ""}
                     onChange={(e) =>
-                      setUserData({ ...userData, discord: e.target.value })
+                      setUpdatedUser((prev) =>
+                        prev ? { ...prev, discord: e.target.value } : prev
+                      )
                     }
                   />
                 </div>
@@ -278,11 +156,12 @@ export default function Profile() {
                     label="LinkedIn"
                     required={false}
                     placeholder="https://linkedin.com/john-doe/"
-                    value={userData.linkedin}
-                    onChange={(e) => {
-                      setUserData({ ...userData, linkedin: e.target.value });
-                      setLinkedinError(validateLinkedInUrl(e.target.value));
-                    }}
+                    value={updatedUser?.linkedin || ""}
+                    onChange={(e) =>
+                      setUpdatedUser((prev) =>
+                        prev ? { ...prev, linkedin: e.target.value } : prev
+                      )
+                    }
                   />
                   {linkedinError && <Alert message={linkedinError} />}
                 </div>
@@ -292,11 +171,12 @@ export default function Profile() {
                     label="GitHub"
                     required={false}
                     placeholder="https://github.com/john.doe/"
-                    value={userData.github}
-                    onChange={(e) => {
-                      setUserData({ ...userData, github: e.target.value });
-                      setGithubError(validateGitHubUrl(e.target.value));
-                    }}
+                    value={updatedUser?.github || ""}
+                    onChange={(e) =>
+                      setUpdatedUser((prev) =>
+                        prev ? { ...prev, github: e.target.value } : prev
+                      )
+                    }
                   />
                   {githubError && <Alert message={githubError} />}
                 </div>
@@ -306,9 +186,11 @@ export default function Profile() {
                     label="Website"
                     required={false}
                     placeholder="https://myportfolio.com/john.doe/"
-                    value={userData.website}
+                    value={updatedUser?.website || ""}
                     onChange={(e) =>
-                      setUserData({ ...userData, website: e.target.value })
+                      setUpdatedUser((prev) =>
+                        prev ? { ...prev, website: e.target.value } : prev
+                      )
                     }
                   />
                 </div>
@@ -317,23 +199,48 @@ export default function Profile() {
                   <Dropdown
                     label="Status"
                     required={true}
-                    options={educationLevels}
-                    value={userData.selectedStatus}
+                    options={educationLevels?.types || []}
+                    value={updatedUser?.education_level || ""}
                     onChange={(e) =>
-                      setUserData({
-                        ...userData,
-                        selectedStatus: e.target.value,
-                      })
+                      setUpdatedUser((prev) =>
+                        prev
+                          ? {
+                              ...prev,
+                              education_level: e.target
+                                .value as User["education_level"],
+                            }
+                          : prev
+                      )
                     }
                   />
                 </div>
 
                 <div className="flex flex-row space-y-2">
                   <div className="relative">
-                    <DatePicker
+                    {/* <DatePicker
                       label="Graduation Date"
-                      value={userData.gradDate}
-                      onChange={handleDateChange}
+                      value={new Date(updatedUser?.gradDate || "")}
+                      onChange={(date) =>
+                        setUpdatedUser((prev) =>
+                          prev
+                            ? {
+                                ...prev,
+                                gradDate: date ? date.toISOString() : "",
+                              }
+                            : prev
+                        )
+                      }
+                    /> */}
+                    <Input
+                      type="date"
+                      label="Graduation Date"
+                      value={updatedUser?.gradDate || ""}
+                      onChange={(e) => {
+                        setUpdatedUser((prev) =>
+                          prev ? { ...prev, gradDate: e.target.value } : prev
+                        );
+                      }}
+                      required={true}
                     />
                   </div>
                 </div>
@@ -342,10 +249,16 @@ export default function Profile() {
                   <Dropdown
                     label="Major"
                     required={true}
-                    options={majorList}
-                    value={userData.major}
+                    options={
+                      majorList?.majors.map(
+                        (major: { name: string }) => major.name
+                      ) || []
+                    }
+                    value={updatedUser?.major || ""}
                     onChange={(e) =>
-                      setUserData({ ...userData, major: e.target.value })
+                      setUpdatedUser((prev) =>
+                        prev ? { ...prev, major: e.target.value } : prev
+                      )
                     }
                   />
                 </div>
@@ -357,9 +270,29 @@ export default function Profile() {
                   label=""
                   multiple={true}
                   required={false}
-                  options={interestsList}
-                  selectedOptions={userData.selectedInterests}
-                  changeFunction={handleInterestChange}
+                  options={interestsList?.types || []}
+                  selectedOptions={
+                    Array.isArray(updatedUser?.interests)
+                      ? updatedUser.interests
+                      : []
+                  }
+                  changeFunction={(_, option) => {
+                    setUpdatedUser((prev) =>
+                      prev
+                        ? {
+                            ...prev,
+                            interests: prev.interests.includes(
+                              option as User["interests"][number]
+                            )
+                              ? prev.interests.filter((item) => item !== option)
+                              : [
+                                  ...prev.interests,
+                                  option as User["interests"][number],
+                                ],
+                          }
+                        : prev
+                    );
+                  }}
                 />
               </div>
             </div>
