@@ -156,24 +156,28 @@ insert into majors(name) values
 INSERT INTO users (
     id, name, email, major, education_level, grad_date, interests, profile_pic, linkedin, github, website, role, paid 
 ) VALUES 
-('user1', 'Alice Smith', 'alice.smith@example.com', 'Aerospace Engineering, BS', 'undergraduate', '2025-05-15', 
-  '{"web development", "machine learning"}', NULL, 'https://linkedin.com', 'https://github.com', NULL, 'user', NULL),
-('user2', 'Bob Johnson', 'bob.johnson@example.com', 'Chemistry, BA', 'graduate', '2022-12-10', 
-  '{"networking", "cybersecurity"}', NULL, 'https://linkedin.com', 'https://github.com', NULL, 'admin', NULL),
-('user3', 'Charlie Brown', 'charlie.brown@example.com', 'History, BA', 'undergraduate', '2026-08-30', 
-  '{"mobile development", "game development"}', NULL, 'https://www.linkedin.com', NULL, 'https://www.bing.com/', 'member', 'semester'),
-('user4', 'Diana Evans', 'diana.evans@example.com', 'Computer Science, BS', 'graduate', '2023-11-01', 
-  '{"artificial intelligence"}', NULL, 'https://linkedin.com', 'https://github.com', NULL, 'user', NULL),
-('user5', 'Evan Wright', 'evan.wright@example.com', 'Philosophy, BA', 'undergraduate', '2025-04-20', 
-  '{"data science", "cloud computing"}', NULL, NULL, 'https://github.com', 'https://www.google.com/', 'member', 'annual');
+('user1', 'Alice Smith', 'alice.smith@example.com', 'Aerospace Engineering, BS', 'Undergraduate', '2025-05-15', 
+  '{"Web Development", "Machine Learning"}', NULL, 'https://linkedin.com', 'https://github.com', NULL, 'user', NULL),
+('user2', 'Bob Johnson', 'bob.johnson@example.com', 'Chemistry, BA', 'Graduate', '2022-12-10', 
+  '{"Networking", "Cybersecurity"}', NULL, 'https://linkedin.com', 'https://github.com', NULL, 'user', NULL),
+('user3', 'Charlie Brown', 'charlie.brown@example.com', 'History, BA', 'Undergraduate', '2026-08-30', 
+  '{"Mobile Development", "Game Development"}', NULL, 'https://www.linkedin.com', NULL, 'https://www.bing.com/', 'user', NULL),
+('user4', 'Diana Evans', 'diana.evans@example.com', 'Computer Science, BS', 'Graduate', '2023-11-01', 
+  '{"Artificial Intelligence"}', NULL, 'https://linkedin.com', 'https://github.com', NULL, 'user', NULL),
+('user5', 'Evan Wright', 'evan.wright@example.com', 'Philosophy, BA', 'Undergraduate', '2025-04-20', 
+  '{"Data Science", "Cloud Computing"}', NULL, NULL, 'https://github.com', 'https://www.google.com/', 'user', NULL);
+
+insert into files(key, name) values
+('default.png', 'Default Image');
+
 
 -- Insert company 1
-INSERT INTO companies (name, location, description, industry_id) values
-('Tech Innovations', 'San Francisco, CA', 'Leading provider of AI-driven solutions', 'technology'),
-('Eco Green Solutions', 'Austin, TX', 'Sustainable and renewable energy provider', 'energy'),
-('Global Finance Corp', 'New York, NY', 'International financial services and investments', 'banking and finance'),
-('Health Plus', 'Boston, MA', 'Healthcare technology and medical devices', 'healthcare'),
-('Future Automotive', 'Detroit, MI', 'Next-generation automotive manufacturing', 'automotive');
+INSERT INTO companies (name, location, description, industry_id, logo) values
+('Tech Innovations', 'San Francisco, CA', 'Leading provider of AI-driven solutions', 'Technology', 'default.png'),
+('Eco Green Solutions', 'Austin, TX', 'Sustainable and renewable energy provider', 'Energy', 'default.png'),
+('Global Finance Corp', 'New York, NY', 'International financial services and investments', 'Banking and Finance', 'default.png'),
+('Health Plus', 'Boston, MA', 'Healthcare technology and medical devices', 'Healthcare', 'default.png'),
+('Future Automotive', 'Detroit, MI', 'Next-generation automotive manufacturing', 'Automotive', 'default.png');
 
 INSERT INTO projects (name, description) values
 ('AI Chatbot', 'An intelligent chatbot using natural language processing'),
@@ -190,19 +194,19 @@ INSERT INTO events (
 VALUES (
     'Tech Conference 2024', 'San Francisco, CA', '2024-11-01', '2024-11-03', 
     'A three-day conference on the latest in technology and innovation.', 
-    'conference', 500, '09:00', '17:00', 
-    '{"artificial intelligence", "machine learning"}', 'students', 'event1.png', false
+    'Conference', 500, '09:00', '17:00', 
+    '{"Artificial Intelligence", "Machine Learning"}', 'Students', 'default.png', false
 ),
 ('Hackathon 2024', 'New York, NY', '2024-12-10', '2024-12-12', 
     'A 48-hour hackathon focused on software development and innovation.', 
-    'hackathon', 300, '08:00', '20:00', 
-    '{"networking"}', 'students', 'event2.png', false
+    'Hackathon', 300, '08:00', '20:00', 
+    '{"Networking"}', 'Students', 'default.png', false
 ),
 (
     'Data Science Workshop', 'Boston, MA', '2024-09-15', '2024-09-15', 
     'A one-day workshop on data science fundamentals and techniques.', 
-    'workshop', 150, '10:00', '16:00', 
-    '{"data science"}', 'students', 'event3.png', true
+    'Workshop', 150, '10:00', '16:00', 
+    '{"Data Science"}', 'Students', 'default.png', true
 );
 
 INSERT INTO event_companies(event_id, company_id) VALUES
@@ -295,3 +299,15 @@ INSERT INTO sponsors VALUES
 ('Google', '/sponsors/google/logo'),
 ('Tesla', '/sponsors/tesla/logo'),
 ('FetchAI', '/sponsors/fetchai/logo');
+
+INSERT INTO club_links(instagram, discord, linkedin, member_application) VALUES
+('https://www.instagram.com/sjsuacm/', 'https://discord.gg/Rw85ngkExu', 'https://www.linkedin.com/company/sjsu-computer-science-club/about/', 'https://docs.google.com/forms/d/e/1FAIpQLSfNBu-IGm7bhUmMf2cSOmNca3SiJZyVRzPBVTVOYVBNZIyeYA/viewform?pli=1');
+
+INSERT INTO landing_spotlights(event_id, image_key) VALUES
+(1, 'default.png');
+
+INSERT INTO landing_questions(question, answer) VALUES
+($$Who's allowed to join this club?$$, $$ACM@SJSU is open to all SJSU students, regardless of their major!$$),
+($$What are the rules of the club?$$, $$Be respectful, keep the clubroom clean, and have fun!$$),
+($$Is there a membership fee for the club?$$, $$Yes. It's $20 for 1 semester or $30 for 2 semesters$$),
+($$What do I get for a paid membership?$$, $$Paid members are invited to attend exclusive networking sessions, tech talks, and company events. We collaborate with many industry leaders, including Google, Tesla, and Nvidia, so don't miss out!$$);

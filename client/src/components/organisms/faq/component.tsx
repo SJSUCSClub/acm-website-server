@@ -1,26 +1,8 @@
+import { useQuery } from "@/hooks/useFetch";
 import React, { useState } from "react";
 
 export const Faq: React.FC = () => {
-  const questions = [
-    {
-      question: "Who's allowed to join this club?",
-      answer:
-        "ACM@SJSU is open to all SJSU students, regardless of their major!",
-    },
-    {
-      question: "What are the rules of the club?",
-      answer: " Be respectful, keep the clubroom clean, and have fun!",
-    },
-    {
-      question: "Is there a membership fee for the club?",
-      answer: "Yes. It's $20 for 1 semester or $30 for 2 semesters.",
-    },
-    {
-      question: "What do I get for a paid membership?",
-      answer:
-        "Paid members are invited to attend exclusive networking sessions, tech talks, and company events. We collaborate with many industry leaders, including Google, Tesla, and Nvidia, so don't miss out!",
-    },
-  ];
+  const { data } = useQuery("get", "/v1/club/questions");
 
   const [expandedIndex, setExpandedIndex] = useState(-1);
 
@@ -31,6 +13,7 @@ export const Faq: React.FC = () => {
       setExpandedIndex(index);
     }
   };
+
   return (
     <>
       <div className="footer bg-black w-full flex flex-col">
@@ -41,7 +24,7 @@ export const Faq: React.FC = () => {
         </div>
         <div className="text-white font-bold text-xl flex justify-center mt-10 mb-10 ">
           <div className="w-1/2 ">
-            {questions.map((questionObj, index) => (
+            {data?.questions.map((questionObj, index) => (
               <div key={index}>
                 <h2
                   className="mb-5 mt-5 cursor-pointer flex items-center relative"

@@ -5,18 +5,18 @@ WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'acm_website')\gexec
 
 create extension if not exists pg_trgm;
 
-create type events_enum as enum ('workshop', 'seminar', 'hackathon', 'conference', 'meetup', 'test', 'other');
-create type cs_fields_enum as enum ('web development', 'machine learning', 'cloud computing', 'artificial intelligence', 'networking', 'cybersecurity', 'mobile development', 'game development', 'data science');
-create type target_audience_enum as enum ('students');
-create type equipment_condition_enum as enum ('ready', 'broken', 'in maintenance');
-create type membership_term_enum as enum ('semester', 'annual');
-create type education_level_enum as enum('undergraduate', 'graduate');
-create type membership_request_status_enum as enum ('pending', 'approved', 'declined');
-create type industry_enum as enum ('banking and finance', 'aerospace', 'healthcare', 'automotive', 'energy', 'technology');
-create type officer_position_enum as enum ('president', 'vice president', 'dev team officer', 'treasurer', 'social media manager');
+create type events_enum as enum ('Workshop', 'Seminar', 'Hackathon', 'Conference', 'Meetup', 'Tech Talk', 'Other');
+create type cs_fields_enum as enum ('Web Development', 'Machine Learning', 'Cloud Computing', 'Artificial Intelligence', 'Networking', 'Cybersecurity', 'Mobile Development', 'Game Development', 'Data Science');
+create type target_audience_enum as enum ('Students');
+create type equipment_condition_enum as enum ('Ready', 'Broken', 'In Maintenance');
+create type membership_term_enum as enum ('Semester', 'Annual');
+create type education_level_enum as enum('Undergraduate', 'Graduate');
+create type membership_request_status_enum as enum ('Pending', 'Approved', 'Declined');
+create type industry_enum as enum ('Banking and Finance', 'Aerospace', 'Healthcare', 'Automotive', 'Energy', 'Technology');
+create type officer_position_enum as enum ('President', 'Vice President', 'Dev Team Officer', 'Treasurer', 'Social Media Manager', 'Secretary');
 create type user_role_enum as enum ('user', 'member', 'admin');
-create type year_enum as enum ('freshman', 'sophomore', 'junior', 'senior', 'alumni');
-create type project_status_enum as enum ('not started', 'looking for members', 'in progress', 'completed');
+create type year_enum as enum ('Freshman', 'Sophomore', 'Junior', 'Senior', 'Alumni');
+create type project_status_enum as enum ('Not Started', 'Looking for Members', 'In Progress', 'Completed');
 
 create table if not exists majors(
    name text not null,
@@ -86,7 +86,7 @@ create table if not exists equipment_rentals(
    return_date date not null,
 --   price money not null,
    price numeric(10,2) not null,
-   condition equipment_condition_enum not null default 'ready',
+   condition equipment_condition_enum not null default 'Ready',
    PRIMARY KEY(user_id, item_id),
    FOREIGN KEY(item_id) REFERENCES equipment_item(id) on update cascade,
    FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete set null
@@ -101,12 +101,19 @@ create table if not exists blacklist(
 );
 
 create table if not exists urls(
-
    id serial,
    original_url text not null,
    short_url text not null,
    PRIMARY KEY(id)
 );
+
+create table if not exists files(
+   key text not null,
+   name text not null,
+   created_at timestamp not null default current_timestamp,
+   primary key(key)
+);
+
 
 create table if not exists events(
    id serial,
@@ -127,14 +134,8 @@ create table if not exists events(
    shortened_event_url integer,
    member_only boolean not null default false,
    PRIMARY KEY(id),
-   FOREIGN KEY(shortened_event_url) REFERENCES urls(id) on update cascade
-);
-
-create table if not exists files(
-   key text not null,
-   name text not null,
-   created_at timestamp not null default current_timestamp,
-   primary key(key)
+   FOREIGN KEY(shortened_event_url) REFERENCES urls(id) on update cascade,
+   foreign key(image) references files(key) on update cascade
 );
 
 create table if not exists events_files(
@@ -142,7 +143,7 @@ create table if not exists events_files(
    file_key text not null,
    primary key(event_id, file_key),
    foreign key(event_id) references events(id) on update cascade on delete cascade,
-   foreign key(file_key) references files(key) on update cascade on delete cascade
+   foreign key(file_key) references files(key) on update cascade
 );
 
 create table if not exists bookmarked_events(
@@ -158,6 +159,15 @@ create table if not exists subscribed_events(
    user_id text not null,
    event_id integer not null,
    subscribed_date timestamp not null default CURRENT_TIMESTAMP,
+   PRIMARY KEY(user_id, event_id),
+   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade,
+   FOREIGN KEY(event_id) REFERENCES events(id) on update cascade on delete cascade
+);
+
+create table if not exists attending_events(
+   user_id text not null,
+   event_id integer not null,
+   attending_date timestamp not null default CURRENT_TIMESTAMP,
    PRIMARY KEY(user_id, event_id),
    FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade,
    FOREIGN KEY(event_id) REFERENCES events(id) on update cascade on delete cascade
@@ -196,7 +206,7 @@ create table if not exists projects(
    name text not null,
    description text not null,
    github_link text,
-   status project_status_enum not null default 'not started',
+   status project_status_enum not null default 'Not Started',
    PRIMARY KEY(id)
 );
 
@@ -205,7 +215,7 @@ create table if not exists projects_files(
    file_key text not null,
    primary key(project_id, file_key),
    foreign key(project_id) references projects(id) on update cascade on delete cascade,
-   foreign key(file_key) references files(key) on update cascade on delete cascade
+   foreign key(file_key) references files(key) on update cascade
 );
 
 create table if not exists interested_in_projects(
@@ -231,6 +241,38 @@ create table if not exists sponsors(
    name varchar(100),
    logo_key text not null,
    primary key(name)
+);
+
+create table if not exists club_links(
+  id serial,
+  instagram text,
+  discord text,
+  linkedin text,
+  member_application text,
+  primary key(id)
+ );
+
+create table if not exists landing_spotlights(
+  id serial,
+  event_id integer not null,
+  image_key text not null,
+  primary key(id),
+  foreign key(event_id) references events(id) on update cascade,
+  foreign key(image_key) references files(key) on update cascade
+ );
+
+create table if not exists landing_questions(
+  id serial,
+  question text not null,
+  answer text not null,
+  primary key(id)
+);
+
+create table if not exists payment_links(
+   id serial,
+   name text not null,
+   link text not null,
+   PRIMARY KEY(id)
 );
 
 create index projects_name_trgm_idx on projects using gin (name gin_trgm_ops);
@@ -346,21 +388,21 @@ BEGIN
 
       CASE
          WHEN gradYear - currentYear = 0 THEN
-            RETURN 'senior';
+            RETURN 'Senior';
          WHEN gradYear - currentYear = 1 THEN
-            IF level = 'graduate' THEN
-               RETURN 'sophomore';
+            IF level = 'Graduate' THEN
+               RETURN 'Sophomore';
             END IF;
-            RETURN 'junior';
+            RETURN 'Junior';
          WHEN gradYear - currentYear = 2 THEN
-            IF level = 'graduate' THEN
-               RETURN 'freshman';
+            IF level = 'Graduate' THEN
+               RETURN 'Freshman';
             END IF;
-            RETURN 'sophomore';
+            RETURN 'Sophomore';
          WHEN gradYear - currentYear = 3 THEN
-            RETURN 'freshman';
+            RETURN 'Freshman';
          ELSE
-            RETURN 'alumni';
+            RETURN 'Alumni';
       END CASE;
 END;
 $$;

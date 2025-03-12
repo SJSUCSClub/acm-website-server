@@ -1,10 +1,11 @@
 import Input from "../input";
 
 export interface ISelectProps
-  extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   footer?: string;
   options: string[];
+  selected: string[];
   required: boolean;
   changeFunction: (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -16,8 +17,10 @@ export const Select: React.FC<ISelectProps> = ({
   label,
   required,
   options,
+  selected,
   footer,
   changeFunction,
+  ...props
 }) => {
   return (
     <div>
@@ -30,8 +33,10 @@ export const Select: React.FC<ISelectProps> = ({
             type="checkbox"
             label=""
             required={required}
+            checked={selected.includes(option)}
             className="hide checkmark"
             onChange={(e) => changeFunction(e, option)}
+            {...props}
           />
           <label className="mt-2 text-text text-[14px]" htmlFor="Select">
             {option}

@@ -4,8 +4,7 @@ import GoogleLogo from "/icons/google.png";
 
 export const GoogleLogInBtn: React.FC = () => {
   const handleGoogleLogin = () => {
-    // Implement Google login logic here
-    console.log("Google login initiated");
+    window.location.href = "http://localhost:80/api/v1/auth/login";
   };
 
   return (

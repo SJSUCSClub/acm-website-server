@@ -1,5 +1,5 @@
-import { createSelectSchema } from 'drizzle-zod';
-import { educationLevelEnum, bookmarkedEvents, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers, csFieldsEnum } from '@/db/schema';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { educationLevelEnum, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers, blacklist, csFieldsEnum, clubLinks, landingQuestions, landingSpotlights, membershipTermEnum, bookmarkedEvents, subscribedEvents, attendingEvents, urls, paymentLinks } from '@/db/schema';
 
 import { z } from 'zod';
 
@@ -29,16 +29,32 @@ export const projectIDSchema = z.object({
 	projectID: z.string(),
 });
 export const projectSchema = createSelectSchema(projects);
-export const bookmarkSchema = createSelectSchema(bookmarkedEvents);	
+export const bookmarkedEvent = eventSchema.extend({
+  bookmarkedDate: z.string(),
+});
+export const bookmarkedEventSchema = createSelectSchema(bookmarkedEvents);	
+export const subscribedEvent = eventSchema.extend({
+  subscribedDate: z.string(),
+});
+export const subscribedEventSchema = createSelectSchema(subscribedEvents);
+export const attendingEventSchema = createSelectSchema(attendingEvents);
+export const urlSchema = createSelectSchema(urls);	
+export const attendingEvent = eventSchema.extend({
+  attendingDate: z.string(),
+});
+export const subscribedCompany = companySchema.extend({
+  subscribedDate: z.string(),
+});	
 export const updateUserSchema = z.object({
   major: z.string().optional(),
   gradDate: z.coerce.date().optional(),
   interests: z.array(z.enum(csFieldsEnum.enumValues)).optional(),
   education_level: z.enum(educationLevelEnum.enumValues).optional(),
-  discord: z.string().optional(),
-  linkedin: z.string().optional(),
-  github: z.string().optional(),
-  website: z.string().optional(),
+  paid: z.enum(membershipTermEnum.enumValues).nullable().optional(),
+  discord: z.string().nullable().optional(),
+  linkedin: z.string().nullable().optional(),
+  github: z.string().nullable().optional(),
+  website: z.string().nullable().optional(),
 });
 export const userIdSchema = z.object({
   userId: z.string(),
@@ -55,3 +71,23 @@ export const equipmentTypeIdSchema = z.object({
     }),
 });
 export const officerSchema = createSelectSchema(officers);
+export const newBlacklistSchema = createInsertSchema(blacklist);
+export const blacklistSchema = createSelectSchema(blacklist);
+export const clubLinkSchema = createSelectSchema(clubLinks);
+export const landingSpotlightSchema = createSelectSchema(landingSpotlights);
+export const landingQuestionSchema = createSelectSchema(landingQuestions);
+export const errorSchema = z.object({
+  error: z.string(),
+});
+export const paymentLinkSchema = createSelectSchema(paymentLinks);
+export const newPaymentLinkSchema = createInsertSchema(paymentLinks);
+export const paymentIdSchema = z.object({
+  paymentId: z
+    .string()
+    .openapi({
+      param: {
+        name: 'paymentId',
+        in: 'path',
+      },
+    }),
+});
