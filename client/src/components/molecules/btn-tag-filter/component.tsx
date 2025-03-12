@@ -13,34 +13,41 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "../../../components/ui/popover";
-import { useState } from "react";
-import { useQuery } from "@/hooks/useFetch";
+import { useEffect, useState } from "react";
 
 export type EventCardProps = {
-  selectedTags: string[] ;
-  fcn: (data: string[]) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fcn: any;
 };
 
-export const BtnTagFilter: React.FC<EventCardProps> = ({ selectedTags, fcn }) => {
-  const [open, setOpen] = useState(false);
-  const value = "Tag Filter"
-  const { data: tags } = useQuery(
-    "get",
-    "/v1/enums/{enumType}",
-    {
-      params: {
-        path: {
-          enumType: "cs_fields_enum",
-        },
+export const BtnTagFilter: React.FC<EventCardProps> = ({ fcn }) => {
+  const [open, setOpen] = React.useState(false);
+  const [value] = React.useState("Tag Filter");
+  const [selected, setSelected] = React.useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
+
+  useEffect(() => {
+    // Fetch enums only once on mount
+    fetch("http://localhost/api/v1/enums/cs_fields_enum", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
       },
-    }
-  )  
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setTags(data.types);
+      });
+  }, []);
 
   const handleCheckboxChange = (tag: string, checked: boolean) => {
     if (checked) {
-      fcn([...selectedTags, tag]);
+      setSelected([...selected, tag]);
+      fcn([...selected, tag]);
     } else {
-      fcn(selectedTags.filter((item) => item !== tag));
+      setSelected(selected.filter((item) => item !== tag));
+      fcn(selected.filter((item) => item !== tag));
+      console.log(selected);
     }
   };
 
@@ -61,13 +68,13 @@ export const BtnTagFilter: React.FC<EventCardProps> = ({ selectedTags, fcn }) =>
         <Command>
           <CommandList>
             <CommandGroup>
-              {tags?.types.map((option:  string) => (
+              {tags.map((option) => (
                 <CommandItem key={option}>
                   {" "}
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id={option}
-                      checked={selectedTags.includes(option)}
+                      checked={selected.includes(option)}
                       onCheckedChange={(checked) =>
                         handleCheckboxChange(option, checked as boolean)
                       }
