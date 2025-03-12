@@ -1,4 +1,6 @@
 import EventCard from "../../components/molecules/event-card";
+import BtnDateFilter from "../../components/molecules/btn-date-filter";
+import BtnTagFilter from "../../components/molecules/btn-tag-filter";
 
 interface Event {
   id: number;
@@ -10,63 +12,48 @@ interface Event {
   keywords: string[];
 }
 
-const mockEvents: Event[] = [
-  {
-    id: 1,
-    title: "Intro to Web Development",
-    date: "2024-04-01",
-    description: "Learn the basics of HTML, CSS, and JavaScript",
-    location: "CS Building Room 101",
-    deadline: "2024-03-30",
-    keywords: ["web", "html", "css", "javascript", "beginner"],
-  },
-  {
-    id: 2,
-    title: "Hackathon Workshop",
-    date: "2024-04-15",
-    description: "Prepare for upcoming hackathons",
-    location: "Engineering Hall",
-    deadline: "2024-04-14",
-    keywords: ["hackathon", "coding", "teamwork"],
-  },
-  {
-    id: 3,
-    title: "Resume Review Session",
-    date: "2024-04-30",
-    description: "Get your tech resume reviewed by industry professionals",
-    location: "Virtual",
-    deadline: "2024-04-28",
-    keywords: ["career", "professional", "resume"],
-  },
-];
-
-const EventsPage = () => {
-  const [events, setEvents] = useState<Events>([]);
-  const [dateFilter, setDateFilter] = useState<dateOptions>("all");
+const CalendarPage = () => {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [dateFilter, setDateFilter] = useState("all");
   const [tagFilter, setTagFilter] = useState<string[]>([]);
 
-
-
-  const { data: eventData } = useQuery(
-      "get",
-      "/v1/events",
-      {
-        params: {
-          query: {
-            "tags": tagFilter.join(",") || "",
-            "timeframe": dateFilter || "all"
-          },
-        },
-      },
-    )  
-
-
+  function formatDate(date: string) {
+    const dateObj = new Date(date);
+    const month = dateObj.toLocaleString("default", { month: "short" });
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+    return `${month} ${day}, ${year}`;
+  }
+  function formatTime(time: string) {
+    const [hours, minutes] = time.substring(0, 5).split(":");
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12;
+    return `${formattedHour}:${minutes} ${ampm}`;
+  }
 
   useEffect(() => {
-    if (eventData) {
-      setEvents(eventData.foundEvents);
-    }
-  }, [dateFilter, tagFilter, eventData]);
+    const concatenatedTags = tagFilter
+      .map((tag) => encodeURIComponent(tag))
+      .join(",");
+    console.log(
+      `http://localhost/api/v1/events?timeframe=${dateFilter}&tags=${concatenatedTags}`,
+    );
+
+    fetch(
+      `http://localhost/api/v1/events?timeframe=${dateFilter}&tags=${concatenatedTags}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setEvents(data.foundEvents);
+      });
+  }, [dateFilter, tagFilter]);
   return (
     <>
       <div className="about text-text my-10 px-[15%]">
@@ -81,9 +68,18 @@ const EventsPage = () => {
             These events are accessible to all those who are interested,
             irrespective of their major or prior experience.
           </p>
-          <BtnDateFilter tab1="All" tab2="Upcoming" tab3="Today" tab4="Past" fcn={setDateFilter} />
+          <BtnDateFilter
+            tab1="All"
+            tab2="Upcoming"
+            tab3="Today"
+            tab4="Past"
+            fcn={setDateFilter}
+          />
+          <BtnTagFilter fcn={setTagFilter} />
         </div>
-        {events.length === 0 && <div className="text-text text-center my-10">No events found</div>}
+        {events.length === 0 && (
+          <div className="text-text text-center my-10">No events found</div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
           {events.map((event) => (
