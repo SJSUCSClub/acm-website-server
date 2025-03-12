@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useEffect, useState } from "react";
 import EventCard from "../../components/molecules/event-card";
 import BtnDateFilter from "../../components/molecules/btn-date-filter";
+import BtnTagFilter from "../../components/molecules/btn-tag-filter";
 
 interface Event {
   description: string;
@@ -20,6 +21,7 @@ interface Event {
 const CalendarPage = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [dateFilter, setDateFilter] = useState("all");
+  const [tagFilter, setTagFilter] = useState<string[]>([]);
 
   function formatDate(date: string) {
     const dateObj = new Date(date);
@@ -35,19 +37,29 @@ const CalendarPage = () => {
     const formattedHour = hour % 12 || 12;
     return `${formattedHour}:${minutes} ${ampm}`;
   }
+
   useEffect(() => {
-    fetch(`http://localhost/api/v1/events?timeframe=${dateFilter}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
+    const concatenatedTags = tagFilter
+      .map((tag) => encodeURIComponent(tag))
+      .join(",");
+    console.log(
+      `http://localhost/api/v1/events?timeframe=${dateFilter}&tags=${concatenatedTags}`,
+    );
+
+    fetch(
+      `http://localhost/api/v1/events?timeframe=${dateFilter}&tags=${concatenatedTags}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    })
+    )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setEvents(data.foundEvents);
       });
-  }, [dateFilter]);
+  }, [dateFilter, tagFilter]);
   return (
     <>
       <div className="about text-text my-10 px-[15%]">
@@ -62,9 +74,18 @@ const CalendarPage = () => {
             These events are accessible to all those who are interested,
             irrespective of their major or prior experience.
           </p>
-          <BtnDateFilter tab1="All" tab2="Upcoming" tab3="Today" tab4="Past" fcn={setDateFilter} />
+          <BtnDateFilter
+            tab1="All"
+            tab2="Upcoming"
+            tab3="Today"
+            tab4="Past"
+            fcn={setDateFilter}
+          />
+          <BtnTagFilter fcn={setTagFilter} />
         </div>
-        {events.length === 0 && <div className="text-text text-center my-10">No events found</div>}
+        {events.length === 0 && (
+          <div className="text-text text-center my-10">No events found</div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
           {events.map((event) => (
