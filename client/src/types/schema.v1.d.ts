@@ -4,3301 +4,3560 @@
  */
 
 export interface paths {
-    "/api/v1/auth/login": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Initiate Google OAuth login */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Redirect to Google OAuth */
-                301: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Google OAuth not configured */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+  "/api/v1/auth/login": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/auth/callback": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    /** Initiate Google OAuth login */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Redirect to Google OAuth */
+        301: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
         };
-        /** Handle Google OAuth callback */
-        get: {
-            parameters: {
-                query: {
-                    code: string;
-                    state: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Redirect after successful login */
-                301: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Missing code or state */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Failed to validate authorization code */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+        /** @description Google OAuth not configured */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
-    "/api/v1/auth/logout": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Logout user */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Redirect after logout */
-                301: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/auth/callback": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    /** Handle Google OAuth callback */
+    get: {
+      parameters: {
+        query: {
+          code: string;
+          state: string;
         };
-        /** Admin List all users */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            users: {
-                                id: string;
-                                createdAt: string;
-                                name: string;
-                                email: string;
-                                major: string;
-                                gradDate: string;
-                                interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
-                                profilePic: string | null;
-                                /** @enum {string} */
-                                role: "user" | "member" | "admin";
-                                /** @enum {string|null} */
-                                paid: "semester" | "annual" | null;
-                                /** @enum {string} */
-                                education_level: "undergraduate" | "graduate";
-                                discord: string | null;
-                                linkedin: string | null;
-                                github: string | null;
-                                website: string | null;
-                            }[];
-                        };
-                    };
-                };
-            };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Redirect after successful login */
+        301: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description Missing code or state */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Failed to validate authorization code */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
-    "/api/v1/users/my": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get current user */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: string;
-                            createdAt: string;
-                            name: string;
-                            email: string;
-                            major: string;
-                            gradDate: string;
-                            interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
-                            profilePic: string | null;
-                            /** @enum {string} */
-                            role: "user" | "member" | "admin";
-                            /** @enum {string|null} */
-                            paid: "semester" | "annual" | null;
-                            /** @enum {string} */
-                            education_level: "undergraduate" | "graduate";
-                            discord: string | null;
-                            linkedin: string | null;
-                            github: string | null;
-                            website: string | null;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        /** Update current user */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        major?: string;
-                        gradDate?: string | null;
-                        interests?: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
-                        /** @enum {string} */
-                        education_level?: "undergraduate" | "graduate";
-                        discord?: string;
-                        linkedin?: string;
-                        github?: string;
-                        website?: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description Successfully updated user */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: string;
-                            createdAt: string;
-                            name: string;
-                            email: string;
-                            major: string;
-                            gradDate: string;
-                            interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
-                            profilePic: string | null;
-                            /** @enum {string} */
-                            role: "user" | "member" | "admin";
-                            /** @enum {string|null} */
-                            paid: "semester" | "annual" | null;
-                            /** @enum {string} */
-                            education_level: "undergraduate" | "graduate";
-                            discord: string | null;
-                            linkedin: string | null;
-                            github: string | null;
-                            website: string | null;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/auth/logout": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/users/my/rental-history": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    /** Logout user */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Redirect after logout */
+        301: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
         };
-        /** Get current user's equipment rental history */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            rentals: {
-                                itemId: number;
-                                dateBorrowed: string;
-                                returnDate: string;
-                                price: number;
-                                /** @enum {string} */
-                                condition: "ready" | "broken" | "in maintenance";
-                                equipmentType: {
-                                    name: string;
-                                    description: string | null;
-                                };
-                            }[];
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
-    "/api/v1/users/my/bookmarks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get current user's bookmarks */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            bookmarks: {
-                                userId: string;
-                                eventId: number;
-                                bookmarkedDate: string;
-                            }[];
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/users": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/users/my/bookmarked/{eventID}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Check if current user has bookmarked an event */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    eventID: string;
-                };
-                cookie?: never;
+    /** Admin List all users */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              users: {
+                id: string;
+                createdAt: string;
+                name: string;
+                email: string;
+                major: string;
+                gradDate: string;
+                interests: (
+                  | "web development"
+                  | "machine learning"
+                  | "cloud computing"
+                  | "artificial intelligence"
+                  | "networking"
+                  | "cybersecurity"
+                  | "mobile development"
+                  | "game development"
+                  | "data science"
+                )[];
+                profilePic: string | null;
+                /** @enum {string} */
+                role: "user" | "member" | "admin";
+                /** @enum {string|null} */
+                paid: "semester" | "annual" | null;
+                /** @enum {string} */
+                education_level: "undergraduate" | "graduate";
+                discord: string | null;
+                linkedin: string | null;
+                github: string | null;
+                website: string | null;
+              }[];
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            bookmarked: boolean;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
-    "/api/v1/users/my/subscribed-events": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get authenticated user's subscribed events */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            events: {
-                                id: number;
-                                createdAt: string;
-                                name: string;
-                                location: string;
-                                startDate: string;
-                                endDate: string;
-                                description: string;
-                                urls: string[];
-                                /** @enum {string} */
-                                eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
-                                eventCapacity: number | null;
-                                image: string;
-                                startTime: string;
-                                endTime: string;
-                                tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
-                                /** @enum {string|null} */
-                                targetAudience: "students" | null;
-                                shortenedEventUrl: number | null;
-                                memberOnly: boolean;
-                            }[];
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/users/my": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/users/my/subscribed-events/{eventID}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Check if current user has subscribed to an event */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    eventID: string;
-                };
-                cookie?: never;
+    /** Get current user */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              createdAt: string;
+              name: string;
+              email: string;
+              major: string;
+              gradDate: string;
+              interests: (
+                | "web development"
+                | "machine learning"
+                | "cloud computing"
+                | "artificial intelligence"
+                | "networking"
+                | "cybersecurity"
+                | "mobile development"
+                | "game development"
+                | "data science"
+              )[];
+              profilePic: string | null;
+              /** @enum {string} */
+              role: "user" | "member" | "admin";
+              /** @enum {string|null} */
+              paid: "semester" | "annual" | null;
+              /** @enum {string} */
+              education_level: "undergraduate" | "graduate";
+              discord: string | null;
+              linkedin: string | null;
+              github: string | null;
+              website: string | null;
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            subscribed: boolean;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
-    "/api/v1/users/my/subscribed-companies": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    /** Update current user */
+    put: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            major?: string;
+            gradDate?: string | null;
+            interests?: (
+              | "web development"
+              | "machine learning"
+              | "cloud computing"
+              | "artificial intelligence"
+              | "networking"
+              | "cybersecurity"
+              | "mobile development"
+              | "game development"
+              | "data science"
+            )[];
+            /** @enum {string} */
+            education_level?: "undergraduate" | "graduate";
+            discord?: string;
+            linkedin?: string;
+            github?: string;
+            website?: string;
+          };
         };
-        /** Get authenticated user's subscribed companies */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
+      };
+      responses: {
+        /** @description Successfully updated user */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              createdAt: string;
+              name: string;
+              email: string;
+              major: string;
+              gradDate: string;
+              interests: (
+                | "web development"
+                | "machine learning"
+                | "cloud computing"
+                | "artificial intelligence"
+                | "networking"
+                | "cybersecurity"
+                | "mobile development"
+                | "game development"
+                | "data science"
+              )[];
+              profilePic: string | null;
+              /** @enum {string} */
+              role: "user" | "member" | "admin";
+              /** @enum {string|null} */
+              paid: "semester" | "annual" | null;
+              /** @enum {string} */
+              education_level: "undergraduate" | "graduate";
+              discord: string | null;
+              linkedin: string | null;
+              github: string | null;
+              website: string | null;
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            companies: {
-                                id: number;
-                                name: string;
-                                location: string | null;
-                                description: string;
-                                /** @enum {string} */
-                                industryId: "banking and finance" | "aerospace" | "healthcare" | "automotive" | "energy" | "technology";
-                                logo: string | null;
-                            }[];
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
-    "/api/v1/users/my/subscribed-companies/{companyID}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Check if current user has subscribed to a company */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    companyID: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            subscribed: boolean;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/users/my/rental-history": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/users/{userId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    /** Get current user's equipment rental history */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              rentals: {
+                itemId: number;
+                dateBorrowed: string;
+                returnDate: string;
+                price: number;
+                /** @enum {string} */
+                condition: "ready" | "broken" | "in maintenance";
+                equipmentType: {
+                  name: string;
+                  description: string | null;
+                };
+              }[];
+            };
+          };
         };
-        /** Admin Get a user by ID */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    userId: string;
-                };
-                cookie?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: string;
-                            createdAt: string;
-                            name: string;
-                            email: string;
-                            major: string;
-                            gradDate: string;
-                            interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
-                            profilePic: string | null;
-                            /** @enum {string} */
-                            role: "user" | "member" | "admin";
-                            /** @enum {string|null} */
-                            paid: "semester" | "annual" | null;
-                            /** @enum {string} */
-                            education_level: "undergraduate" | "graduate";
-                            discord: string | null;
-                            linkedin: string | null;
-                            github: string | null;
-                            website: string | null;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description User not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+          };
         };
-        /** Admin Update a user */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    userId: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        major?: string;
-                        gradDate?: string | null;
-                        interests?: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
-                        /** @enum {string} */
-                        education_level?: "undergraduate" | "graduate";
-                        discord?: string;
-                        linkedin?: string;
-                        github?: string;
-                        website?: string;
-                        /** @enum {string} */
-                        role?: "user" | "member" | "admin";
-                    };
-                };
-            };
-            responses: {
-                /** @description Successfully updated user */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: string;
-                            createdAt: string;
-                            name: string;
-                            email: string;
-                            major: string;
-                            gradDate: string;
-                            interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
-                            profilePic: string | null;
-                            /** @enum {string} */
-                            role: "user" | "member" | "admin";
-                            /** @enum {string|null} */
-                            paid: "semester" | "annual" | null;
-                            /** @enum {string} */
-                            education_level: "undergraduate" | "graduate";
-                            discord: string | null;
-                            linkedin: string | null;
-                            github: string | null;
-                            website: string | null;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description User not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        post?: never;
-        /** Admin Delete a user */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    userId: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successfully deleted user */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            success: boolean;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description User not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
-    "/api/v1/projects": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List all projects */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            projects: {
-                                id: number;
-                                name: string;
-                                description: string;
-                                /** @enum {string} */
-                                status: "not started" | "looking for members" | "in progress" | "completed";
-                                githubLink: string | null;
-                            }[];
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        /** Creates a new project */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        id: number;
-                        name: string;
-                        description: string;
-                        /** @enum {string} */
-                        status: "not started" | "looking for members" | "in progress" | "completed";
-                        githubLink: string | null;
-                    };
-                };
-            };
-            responses: {
-                /** @description Successful response */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            project: {
-                                id: number;
-                                name: string;
-                                description: string;
-                                /** @enum {string} */
-                                status: "not started" | "looking for members" | "in progress" | "completed";
-                                githubLink: string | null;
-                            };
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/users/my/bookmarks": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/projects/{projectID}/interested": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List all interested users for a project */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    projectID: string;
-                };
-                cookie?: never;
+    /** Get current user's bookmarks */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              bookmarks: {
+                userId: string;
+                eventId: number;
+                bookmarkedDate: string;
+              }[];
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            interestedUsers: {
-                                id: string;
-                                createdAt: string;
-                                name: string;
-                                email: string;
-                                major: string;
-                                gradDate: string;
-                                interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
-                                profilePic: string | null;
-                                /** @enum {string} */
-                                role: "user" | "member" | "admin";
-                                /** @enum {string|null} */
-                                paid: "semester" | "annual" | null;
-                                /** @enum {string} */
-                                education_level: "undergraduate" | "graduate";
-                                discord: string | null;
-                                linkedin: string | null;
-                                github: string | null;
-                                website: string | null;
-                            }[];
-                        };
-                    };
-                };
-            };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
-    "/api/v1/projects/{projectID}/files": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List all files for a project */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    projectID: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            projectFiles: {
-                                key: string;
-                                name: string;
-                                createdAt: string;
-                            }[];
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/users/my/bookmarked/{eventID}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/events/{eventID}/companies": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    /** Check if current user has bookmarked an event */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          eventID: string;
         };
-        /** List all companies for an event */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    eventID: string;
-                };
-                cookie?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              bookmarked: boolean;
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            foundEventCompanies: {
-                                id: number;
-                                name: string;
-                                location: string | null;
-                                description: string;
-                                /** @enum {string} */
-                                industryId: "banking and finance" | "aerospace" | "healthcare" | "automotive" | "energy" | "technology";
-                                logo: string | null;
-                            }[];
-                        };
-                    };
-                };
-            };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
-    "/api/v1/events/{eventID}/subscribers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List all subscribers for an event */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    eventID: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            eventSubscribers: {
-                                id: string;
-                                createdAt: string;
-                                name: string;
-                                email: string;
-                                major: string;
-                                gradDate: string;
-                                interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
-                                profilePic: string | null;
-                                /** @enum {string} */
-                                role: "user" | "member" | "admin";
-                                /** @enum {string|null} */
-                                paid: "semester" | "annual" | null;
-                                /** @enum {string} */
-                                education_level: "undergraduate" | "graduate";
-                                discord: string | null;
-                                linkedin: string | null;
-                                github: string | null;
-                                website: string | null;
-                            }[];
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/users/my/subscribed-events": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/events/{eventID}/subscribers/count": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get the number of subscribers for an event */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    eventID: string;
-                };
-                cookie?: never;
+    /** Get authenticated user's subscribed events */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              events: {
+                id: number;
+                createdAt: string;
+                name: string;
+                location: string;
+                startDate: string;
+                endDate: string;
+                description: string;
+                urls: string[];
+                /** @enum {string} */
+                eventType:
+                  | "workshop"
+                  | "seminar"
+                  | "hackathon"
+                  | "conference"
+                  | "meetup"
+                  | "test"
+                  | "other";
+                eventCapacity: number | null;
+                image: string;
+                startTime: string;
+                endTime: string;
+                tags: (
+                  | "web development"
+                  | "machine learning"
+                  | "cloud computing"
+                  | "artificial intelligence"
+                  | "networking"
+                  | "cybersecurity"
+                  | "mobile development"
+                  | "game development"
+                  | "data science"
+                )[];
+                /** @enum {string|null} */
+                targetAudience: "students" | null;
+                shortenedEventUrl: number | null;
+                memberOnly: boolean;
+              }[];
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            subscribersCount: number;
-                        };
-                    };
-                };
-            };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
-    "/api/v1/events/{eventID}/files": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List all files for an event */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    eventID: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            eventFiles: {
-                                key: string;
-                                name: string;
-                                createdAt: string;
-                            }[];
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/users/my/subscribed-events/{eventID}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/events": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    /** Check if current user has subscribed to an event */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          eventID: string;
         };
-        /** List all events */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              subscribed: boolean;
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            foundEvents: {
-                                id: number;
-                                createdAt: string;
-                                name: string;
-                                location: string;
-                                startDate: string;
-                                endDate: string;
-                                description: string;
-                                urls: string[];
-                                /** @enum {string} */
-                                eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
-                                eventCapacity: number | null;
-                                image: string;
-                                startTime: string;
-                                endTime: string;
-                                tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
-                                /** @enum {string|null} */
-                                targetAudience: "students" | null;
-                                shortenedEventUrl: number | null;
-                                memberOnly: boolean;
-                            }[];
-                        };
-                    };
-                };
-            };
+          };
         };
-        put?: never;
-        /** Create an event */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
             };
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        name: string;
-                        location: string;
-                        startDate: string;
-                        endDate: string;
-                        description: string;
-                        urls: string[];
-                        /** @enum {string} */
-                        eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
-                        eventCapacity: number | null;
-                        image: string;
-                        startTime: string;
-                        endTime: string;
-                        tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
-                        /** @enum {string|null} */
-                        targetAudience: "students" | null;
-                        shortenedEventUrl: number | null;
-                        memberOnly: boolean;
-                    };
-                };
-            };
-            responses: {
-                /** @description Successful response */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            event: {
-                                id: number;
-                                createdAt: string;
-                                name: string;
-                                location: string;
-                                startDate: string;
-                                endDate: string;
-                                description: string;
-                                urls: string[];
-                                /** @enum {string} */
-                                eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
-                                eventCapacity: number | null;
-                                image: string;
-                                startTime: string;
-                                endTime: string;
-                                tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
-                                /** @enum {string|null} */
-                                targetAudience: "students" | null;
-                                shortenedEventUrl: number | null;
-                                memberOnly: boolean;
-                            };
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+          };
         };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
-    "/api/v1/events/{eventID}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List event information */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    eventID: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            foundEvent: {
-                                id: number;
-                                createdAt: string;
-                                name: string;
-                                location: string;
-                                startDate: string;
-                                endDate: string;
-                                description: string;
-                                urls: string[];
-                                /** @enum {string} */
-                                eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
-                                eventCapacity: number | null;
-                                image: string;
-                                startTime: string;
-                                endTime: string;
-                                tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
-                                /** @enum {string|null} */
-                                targetAudience: "students" | null;
-                                shortenedEventUrl: number | null;
-                                memberOnly: boolean;
-                            };
-                        };
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/users/my/subscribed-companies": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/events/{eventID}/subscribe": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    /** Get authenticated user's subscribed companies */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              companies: {
+                id: number;
+                name: string;
+                location: string | null;
+                description: string;
+                /** @enum {string} */
+                industryId:
+                  | "banking and finance"
+                  | "aerospace"
+                  | "healthcare"
+                  | "automotive"
+                  | "energy"
+                  | "technology";
+                logo: string | null;
+              }[];
+            };
+          };
         };
-        get?: never;
-        put?: never;
-        /** User subscribes to an event */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    eventID: string;
-                };
-                cookie?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            newSubscription: {
-                                userId: string;
-                                eventId: number;
-                                subscribedDate: string;
-                            };
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Conflict */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+          };
         };
-        /** User unsubscribes to an event */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    eventID: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            deletedSubscription: {
-                                userId: string;
-                                eventId: number;
-                                subscribedDate: string;
-                            };
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
-    "/api/v1/events/{eventID}/url": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Fetch event URL */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    eventID: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            url: {
-                                id: number;
-                                originalUrl: string;
-                                shortUrl: string;
-                            };
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/users/my/subscribed-companies/{companyID}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/events/{eventID}/bookmark": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    /** Check if current user has subscribed to a company */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          companyID: string;
         };
-        get?: never;
-        put?: never;
-        /** User bookmarks an event */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    eventID: string;
-                };
-                cookie?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              subscribed: boolean;
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            newBookmark: {
-                                userId: string;
-                                eventId: number;
-                                bookmarkedDate: string;
-                            };
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Conflict */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+          };
         };
-        /** User unbookmarks an event */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    eventID: string;
-                };
-                cookie?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            deletedBookmark: {
-                                userId: string;
-                                eventId: number;
-                                bookmarkedDate: string;
-                            };
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+          };
         };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
-    "/api/v1/companies": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List all companies */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            companies: {
-                                id: number;
-                                name: string;
-                                location: string | null;
-                                description: string;
-                                /** @enum {string} */
-                                industryId: "banking and finance" | "aerospace" | "healthcare" | "automotive" | "energy" | "technology";
-                                logo: string | null;
-                            }[];
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        /** Creates a new company */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        id: number;
-                        name: string;
-                        location: string | null;
-                        description: string;
-                        /** @enum {string} */
-                        industryId: "banking and finance" | "aerospace" | "healthcare" | "automotive" | "energy" | "technology";
-                        logo: string | null;
-                    };
-                };
-            };
-            responses: {
-                /** @description Successful response */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            company: {
-                                id: number;
-                                name: string;
-                                location: string | null;
-                                description: string;
-                                /** @enum {string} */
-                                industryId: "banking and finance" | "aerospace" | "healthcare" | "automotive" | "energy" | "technology";
-                                logo: string | null;
-                            };
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Conflict */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/users/{userId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/companies/subscribe": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    /** Admin Get a user by ID */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          userId: string;
         };
-        get?: never;
-        put?: never;
-        /** Subscribe to a company */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              createdAt: string;
+              name: string;
+              email: string;
+              major: string;
+              gradDate: string;
+              interests: (
+                | "web development"
+                | "machine learning"
+                | "cloud computing"
+                | "artificial intelligence"
+                | "networking"
+                | "cybersecurity"
+                | "mobile development"
+                | "game development"
+                | "data science"
+              )[];
+              profilePic: string | null;
+              /** @enum {string} */
+              role: "user" | "member" | "admin";
+              /** @enum {string|null} */
+              paid: "semester" | "annual" | null;
+              /** @enum {string} */
+              education_level: "undergraduate" | "graduate";
+              discord: string | null;
+              linkedin: string | null;
+              github: string | null;
+              website: string | null;
             };
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        companyId: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description Successfully subscribed */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            subscription: {
-                                userId: string;
-                                companyId: number;
-                                subscribedDate: string;
-                            };
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Already subscribed */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+          };
         };
-        /** Unsubscribe from a company */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
             };
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        companyId: number;
-                    };
-                };
-            };
-            responses: {
-                /** @description Successfully unsubscribed */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            message: string;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+          };
         };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description User not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
-    "/api/v1/companies/{companyID}/events": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    /** Admin Update a user */
+    put: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          userId: string;
         };
-        /** List all events for a company */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    companyID: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            companyEvents: {
-                                id: number;
-                                createdAt: string;
-                                name: string;
-                                location: string;
-                                startDate: string;
-                                endDate: string;
-                                description: string;
-                                urls: string[];
-                                /** @enum {string} */
-                                eventType: "workshop" | "seminar" | "hackathon" | "conference" | "meetup" | "test" | "other";
-                                eventCapacity: number | null;
-                                image: string;
-                                startTime: string;
-                                endTime: string;
-                                tags: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
-                                /** @enum {string|null} */
-                                targetAudience: "students" | null;
-                                shortenedEventUrl: number | null;
-                                memberOnly: boolean;
-                            }[];
-                        };
-                    };
-                };
-            };
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            major?: string;
+            gradDate?: string | null;
+            interests?: (
+              | "web development"
+              | "machine learning"
+              | "cloud computing"
+              | "artificial intelligence"
+              | "networking"
+              | "cybersecurity"
+              | "mobile development"
+              | "game development"
+              | "data science"
+            )[];
+            /** @enum {string} */
+            education_level?: "undergraduate" | "graduate";
+            discord?: string;
+            linkedin?: string;
+            github?: string;
+            website?: string;
+            /** @enum {string} */
+            role?: "user" | "member" | "admin";
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
+      responses: {
+        /** @description Successfully updated user */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              createdAt: string;
+              name: string;
+              email: string;
+              major: string;
+              gradDate: string;
+              interests: (
+                | "web development"
+                | "machine learning"
+                | "cloud computing"
+                | "artificial intelligence"
+                | "networking"
+                | "cybersecurity"
+                | "mobile development"
+                | "game development"
+                | "data science"
+              )[];
+              profilePic: string | null;
+              /** @enum {string} */
+              role: "user" | "member" | "admin";
+              /** @enum {string|null} */
+              paid: "semester" | "annual" | null;
+              /** @enum {string} */
+              education_level: "undergraduate" | "graduate";
+              discord: string | null;
+              linkedin: string | null;
+              github: string | null;
+              website: string | null;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description User not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
-    "/api/v1/companies/{companyID}/subscribers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    post?: never;
+    /** Admin Delete a user */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          userId: string;
         };
-        /** List all subscribers for a company */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    companyID: string;
-                };
-                cookie?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successfully deleted user */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              success: boolean;
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            companySubscribers: {
-                                id: string;
-                                createdAt: string;
-                                name: string;
-                                email: string;
-                                major: string;
-                                gradDate: string;
-                                interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
-                                profilePic: string | null;
-                                /** @enum {string} */
-                                role: "user" | "member" | "admin";
-                                /** @enum {string|null} */
-                                paid: "semester" | "annual" | null;
-                                /** @enum {string} */
-                                education_level: "undergraduate" | "graduate";
-                                discord: string | null;
-                                linkedin: string | null;
-                                github: string | null;
-                                website: string | null;
-                            }[];
-                        };
-                    };
-                };
-            };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description User not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
-    "/api/v1/companies/{companyID}/subscribers/count": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get the number of subscribers for a company */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    companyID: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            subscribersCount: number;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/projects": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/equipments/types": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List of all equipment types */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
+    /** List all projects */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              projects: {
+                id: number;
+                name: string;
+                description: string;
+                /** @enum {string} */
+                status:
+                  | "not started"
+                  | "looking for members"
+                  | "in progress"
+                  | "completed";
+                githubLink: string | null;
+              }[];
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            equipmentTypes: {
-                                id: number;
-                                createdAt: string;
-                                name: string;
-                                price: string;
-                                image: string | null;
-                                description: string | null;
-                            }[];
-                        };
-                    };
-                };
-            };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
-    "/api/v1/equipments/rentals": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    put?: never;
+    /** Creates a new project */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            id: number;
+            name: string;
+            description: string;
+            /** @enum {string} */
+            status:
+              | "not started"
+              | "looking for members"
+              | "in progress"
+              | "completed";
+            githubLink: string | null;
+          };
         };
-        get?: never;
-        put?: never;
-        /** Rent an equipment item */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
+      };
+      responses: {
+        /** @description Successful response */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              project: {
+                id: number;
+                name: string;
+                description: string;
+                /** @enum {string} */
+                status:
+                  | "not started"
+                  | "looking for members"
+                  | "in progress"
+                  | "completed";
+                githubLink: string | null;
+              };
             };
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        itemId: number;
-                        userId: string | null;
-                        dateBorrowed: string;
-                        returnDate: string;
-                        price: string;
-                        /** @enum {string} */
-                        condition: "ready" | "broken" | "in maintenance";
-                    };
-                };
-            };
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            itemId: number;
-                            userId: string | null;
-                            dateBorrowed: string;
-                            returnDate: string;
-                            price: string;
-                            /** @enum {string} */
-                            condition: "ready" | "broken" | "in maintenance";
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+          };
         };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
-    "/api/v1/equipments/type": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Create a new equipment type */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        id: number;
-                        createdAt: string;
-                        name: string;
-                        price: string;
-                        image: string | null;
-                        description: string | null;
-                    };
-                };
-            };
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: number;
-                            createdAt: string;
-                            name: string;
-                            price: string;
-                            image: string | null;
-                            description: string | null;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/projects/{projectID}/interested": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/equipments/type/{equipmentTypeID}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    /** List all interested users for a project */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          projectID: string;
         };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Delete an equipment type */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    equipmentTypeID: string;
-                };
-                cookie?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              interestedUsers: {
+                id: string;
+                createdAt: string;
+                name: string;
+                email: string;
+                major: string;
+                gradDate: string;
+                interests: (
+                  | "web development"
+                  | "machine learning"
+                  | "cloud computing"
+                  | "artificial intelligence"
+                  | "networking"
+                  | "cybersecurity"
+                  | "mobile development"
+                  | "game development"
+                  | "data science"
+                )[];
+                profilePic: string | null;
+                /** @enum {string} */
+                role: "user" | "member" | "admin";
+                /** @enum {string|null} */
+                paid: "semester" | "annual" | null;
+                /** @enum {string} */
+                education_level: "undergraduate" | "graduate";
+                discord: string | null;
+                linkedin: string | null;
+                github: string | null;
+                website: string | null;
+              }[];
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successfully deleted user */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            success: boolean;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+          };
         };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
-    "/api/v1/equipments/type/{equipmentTypeId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /** Update an equipment type */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    equipmentTypeId: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        id: number;
-                        createdAt: string;
-                        name: string;
-                        price: string;
-                        image: string | null;
-                        description: string | null;
-                    };
-                };
-            };
-            responses: {
-                /** @description Successfully updated equipment type */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: number;
-                            createdAt: string;
-                            name: string;
-                            price: string;
-                            image: string | null;
-                            description: string | null;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/projects/{projectID}/files": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/equipments/type/{equipmentTypeId}/item": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    /** List all files for a project */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          projectID: string;
         };
-        /** List of all equipment items for a type */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    equipmentTypeId: string;
-                };
-                cookie?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              projectFiles: {
+                key: string;
+                name: string;
+                createdAt: string;
+              }[];
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            equipmentItems: {
-                                id: number;
-                                createdAt: string;
-                                equipmentType: number;
-                            }[];
-                        };
-                    };
-                };
-            };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
-    "/api/v1/equipments/item/{equipmentItemID}/rental-history": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Lists rental history for an equipment item */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    equipmentItemID: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            rentalHistory: {
-                                itemId: number;
-                                userId: string | null;
-                                dateBorrowed: string;
-                                returnDate: string;
-                                price: string;
-                                /** @enum {string} */
-                                condition: "ready" | "broken" | "in maintenance";
-                            }[];
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/events/{eventID}/companies": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/equipments/item": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    /** List all companies for an event */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          eventID: string;
         };
-        get?: never;
-        put?: never;
-        /** Create a new equipment item */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              foundEventCompanies: {
+                id: number;
+                name: string;
+                location: string | null;
+                description: string;
+                /** @enum {string} */
+                industryId:
+                  | "banking and finance"
+                  | "aerospace"
+                  | "healthcare"
+                  | "automotive"
+                  | "energy"
+                  | "technology";
+                logo: string | null;
+              }[];
             };
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        id: number;
-                        createdAt: string;
-                        equipmentType: number;
-                    };
-                };
-            };
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: number;
-                            createdAt: string;
-                            equipmentType: number;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+          };
         };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
-    "/api/v1/equipments/item/{equipmentItemID}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /** Update an equipment item */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    equipmentItemID: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        id: number;
-                        createdAt: string;
-                        equipmentType: number;
-                    };
-                };
-            };
-            responses: {
-                /** @description Successfully updated equipment item */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: number;
-                            createdAt: string;
-                            equipmentType: number;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        post?: never;
-        /** Delete an equipment item */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    equipmentItemID: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successfully deleted equipment item */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            success: boolean;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/events/{eventID}/subscribers": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/majors": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    /** List all subscribers for an event */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          eventID: string;
         };
-        /** List all majors */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              eventSubscribers: {
+                id: string;
+                createdAt: string;
+                name: string;
+                email: string;
+                major: string;
+                gradDate: string;
+                interests: (
+                  | "web development"
+                  | "machine learning"
+                  | "cloud computing"
+                  | "artificial intelligence"
+                  | "networking"
+                  | "cybersecurity"
+                  | "mobile development"
+                  | "game development"
+                  | "data science"
+                )[];
+                profilePic: string | null;
+                /** @enum {string} */
+                role: "user" | "member" | "admin";
+                /** @enum {string|null} */
+                paid: "semester" | "annual" | null;
+                /** @enum {string} */
+                education_level: "undergraduate" | "graduate";
+                discord: string | null;
+                linkedin: string | null;
+                github: string | null;
+                website: string | null;
+              }[];
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            majors: {
-                                name: string;
-                            }[];
-                        };
-                    };
-                };
-            };
+          };
         };
-        put?: never;
-        /** create major */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        name: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description Successful response */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            name: string;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Conflict */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
-    "/api/v1/majors/{major}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /** update major */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    major: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        name: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description Successful response */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Conflict */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        post?: never;
-        /** delete major */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    major: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Conflict */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/events/{eventID}/subscribers/count": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/majors/{majorName}/users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    /** Get the number of subscribers for an event */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          eventID: string;
         };
-        /** List of all users in a major */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    majorName: string;
-                };
-                cookie?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              subscribersCount: number;
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            majorUsers: {
-                                id: string;
-                                createdAt: string;
-                                name: string;
-                                email: string;
-                                major: string;
-                                gradDate: string;
-                                interests: ("web development" | "machine learning" | "cloud computing" | "artificial intelligence" | "networking" | "cybersecurity" | "mobile development" | "game development" | "data science")[];
-                                profilePic: string | null;
-                                /** @enum {string} */
-                                role: "user" | "member" | "admin";
-                                /** @enum {string|null} */
-                                paid: "semester" | "annual" | null;
-                                /** @enum {string} */
-                                education_level: "undergraduate" | "graduate";
-                                discord: string | null;
-                                linkedin: string | null;
-                                github: string | null;
-                                website: string | null;
-                            }[];
-                        };
-                    };
-                };
-            };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
-    "/api/v1/enums/{enumType}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get enum types */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    enumType: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Get array of values for enum type */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            types: string[];
-                        };
-                    };
-                };
-                /** @description Enum type does not exist */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/events/{eventID}/files": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/sponsors": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    /** List all files for an event */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          eventID: string;
         };
-        /** List all sponsors */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              eventFiles: {
+                key: string;
+                name: string;
+                createdAt: string;
+              }[];
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            sponsors: {
-                                name: string;
-                                logoKey: string;
-                            }[];
-                        };
-                    };
-                };
-            };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
-    "/api/v1/officers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List all officers */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            officers: {
-                                id: number;
-                                userId: string;
-                                /** @enum {string} */
-                                position: "president" | "vice president" | "dev team officer" | "treasurer" | "social media manager";
-                                linkedin: string | null;
-                                photo: string | null;
-                            }[];
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/events": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
+    /** List all events */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              foundEvents: {
+                id: number;
+                createdAt: string;
+                name: string;
+                location: string;
+                startDate: string;
+                endDate: string;
+                description: string;
+                urls: string[];
+                /** @enum {string} */
+                eventType:
+                  | "workshop"
+                  | "seminar"
+                  | "hackathon"
+                  | "conference"
+                  | "meetup"
+                  | "test"
+                  | "other";
+                eventCapacity: number | null;
+                image: string;
+                startTime: string;
+                endTime: string;
+                tags: (
+                  | "web development"
+                  | "machine learning"
+                  | "cloud computing"
+                  | "artificial intelligence"
+                  | "networking"
+                  | "cybersecurity"
+                  | "mobile development"
+                  | "game development"
+                  | "data science"
+                )[];
+                /** @enum {string|null} */
+                targetAudience: "students" | null;
+                shortenedEventUrl: number | null;
+                memberOnly: boolean;
+              }[];
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    /** Create an event */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            name: string;
+            location: string;
+            startDate: string;
+            endDate: string;
+            description: string;
+            urls: string[];
+            /** @enum {string} */
+            eventType:
+              | "workshop"
+              | "seminar"
+              | "hackathon"
+              | "conference"
+              | "meetup"
+              | "test"
+              | "other";
+            eventCapacity: number | null;
+            image: string;
+            startTime: string;
+            endTime: string;
+            tags: (
+              | "web development"
+              | "machine learning"
+              | "cloud computing"
+              | "artificial intelligence"
+              | "networking"
+              | "cybersecurity"
+              | "mobile development"
+              | "game development"
+              | "data science"
+            )[];
+            /** @enum {string|null} */
+            targetAudience: "students" | null;
+            shortenedEventUrl: number | null;
+            memberOnly: boolean;
+          };
+        };
+      };
+      responses: {
+        /** @description Successful response */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              event: {
+                id: number;
+                createdAt: string;
+                name: string;
+                location: string;
+                startDate: string;
+                endDate: string;
+                description: string;
+                urls: string[];
+                /** @enum {string} */
+                eventType:
+                  | "workshop"
+                  | "seminar"
+                  | "hackathon"
+                  | "conference"
+                  | "meetup"
+                  | "test"
+                  | "other";
+                eventCapacity: number | null;
+                image: string;
+                startTime: string;
+                endTime: string;
+                tags: (
+                  | "web development"
+                  | "machine learning"
+                  | "cloud computing"
+                  | "artificial intelligence"
+                  | "networking"
+                  | "cybersecurity"
+                  | "mobile development"
+                  | "game development"
+                  | "data science"
+                )[];
+                /** @enum {string|null} */
+                targetAudience: "students" | null;
+                shortenedEventUrl: number | null;
+                memberOnly: boolean;
+              };
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/events/{eventID}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List event information */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          eventID: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              foundEvent: {
+                id: number;
+                createdAt: string;
+                name: string;
+                location: string;
+                startDate: string;
+                endDate: string;
+                description: string;
+                urls: string[];
+                /** @enum {string} */
+                eventType:
+                  | "workshop"
+                  | "seminar"
+                  | "hackathon"
+                  | "conference"
+                  | "meetup"
+                  | "test"
+                  | "other";
+                eventCapacity: number | null;
+                image: string;
+                startTime: string;
+                endTime: string;
+                tags: (
+                  | "web development"
+                  | "machine learning"
+                  | "cloud computing"
+                  | "artificial intelligence"
+                  | "networking"
+                  | "cybersecurity"
+                  | "mobile development"
+                  | "game development"
+                  | "data science"
+                )[];
+                /** @enum {string|null} */
+                targetAudience: "students" | null;
+                shortenedEventUrl: number | null;
+                memberOnly: boolean;
+              };
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/events/{eventID}/subscribe": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** User subscribes to an event */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          eventID: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              newSubscription: {
+                userId: string;
+                eventId: number;
+                subscribedDate: string;
+              };
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Conflict */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    /** User unsubscribes to an event */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          eventID: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              deletedSubscription: {
+                userId: string;
+                eventId: number;
+                subscribedDate: string;
+              };
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/events/{eventID}/url": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Fetch event URL */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          eventID: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              url: {
+                id: number;
+                originalUrl: string;
+                shortUrl: string;
+              };
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/events/{eventID}/bookmark": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** User bookmarks an event */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          eventID: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              newBookmark: {
+                userId: string;
+                eventId: number;
+                bookmarkedDate: string;
+              };
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Conflict */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    /** User unbookmarks an event */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          eventID: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              deletedBookmark: {
+                userId: string;
+                eventId: number;
+                bookmarkedDate: string;
+              };
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/companies": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List all companies */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              companies: {
+                id: number;
+                name: string;
+                location: string | null;
+                description: string;
+                /** @enum {string} */
+                industryId:
+                  | "banking and finance"
+                  | "aerospace"
+                  | "healthcare"
+                  | "automotive"
+                  | "energy"
+                  | "technology";
+                logo: string | null;
+              }[];
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    /** Creates a new company */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            id: number;
+            name: string;
+            location: string | null;
+            description: string;
+            /** @enum {string} */
+            industryId:
+              | "banking and finance"
+              | "aerospace"
+              | "healthcare"
+              | "automotive"
+              | "energy"
+              | "technology";
+            logo: string | null;
+          };
+        };
+      };
+      responses: {
+        /** @description Successful response */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              company: {
+                id: number;
+                name: string;
+                location: string | null;
+                description: string;
+                /** @enum {string} */
+                industryId:
+                  | "banking and finance"
+                  | "aerospace"
+                  | "healthcare"
+                  | "automotive"
+                  | "energy"
+                  | "technology";
+                logo: string | null;
+              };
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Conflict */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/companies/subscribe": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Subscribe to a company */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            companyId: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Successfully subscribed */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              subscription: {
+                userId: string;
+                companyId: number;
+                subscribedDate: string;
+              };
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Already subscribed */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    /** Unsubscribe from a company */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            companyId: number;
+          };
+        };
+      };
+      responses: {
+        /** @description Successfully unsubscribed */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              message: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/companies/{companyID}/events": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List all events for a company */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          companyID: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              companyEvents: {
+                id: number;
+                createdAt: string;
+                name: string;
+                location: string;
+                startDate: string;
+                endDate: string;
+                description: string;
+                urls: string[];
+                /** @enum {string} */
+                eventType:
+                  | "workshop"
+                  | "seminar"
+                  | "hackathon"
+                  | "conference"
+                  | "meetup"
+                  | "test"
+                  | "other";
+                eventCapacity: number | null;
+                image: string;
+                startTime: string;
+                endTime: string;
+                tags: (
+                  | "web development"
+                  | "machine learning"
+                  | "cloud computing"
+                  | "artificial intelligence"
+                  | "networking"
+                  | "cybersecurity"
+                  | "mobile development"
+                  | "game development"
+                  | "data science"
+                )[];
+                /** @enum {string|null} */
+                targetAudience: "students" | null;
+                shortenedEventUrl: number | null;
+                memberOnly: boolean;
+              }[];
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/companies/{companyID}/subscribers": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List all subscribers for a company */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          companyID: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              companySubscribers: {
+                id: string;
+                createdAt: string;
+                name: string;
+                email: string;
+                major: string;
+                gradDate: string;
+                interests: (
+                  | "web development"
+                  | "machine learning"
+                  | "cloud computing"
+                  | "artificial intelligence"
+                  | "networking"
+                  | "cybersecurity"
+                  | "mobile development"
+                  | "game development"
+                  | "data science"
+                )[];
+                profilePic: string | null;
+                /** @enum {string} */
+                role: "user" | "member" | "admin";
+                /** @enum {string|null} */
+                paid: "semester" | "annual" | null;
+                /** @enum {string} */
+                education_level: "undergraduate" | "graduate";
+                discord: string | null;
+                linkedin: string | null;
+                github: string | null;
+                website: string | null;
+              }[];
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/companies/{companyID}/subscribers/count": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get the number of subscribers for a company */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          companyID: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              subscribersCount: number;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/equipments/types": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List of all equipment types */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              equipmentTypes: {
+                id: number;
+                createdAt: string;
+                name: string;
+                price: string;
+                image: string | null;
+                description: string | null;
+              }[];
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/equipments/rentals": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Rent an equipment item */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            itemId: number;
+            userId: string | null;
+            dateBorrowed: string;
+            returnDate: string;
+            price: string;
+            /** @enum {string} */
+            condition: "ready" | "broken" | "in maintenance";
+          };
+        };
+      };
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              itemId: number;
+              userId: string | null;
+              dateBorrowed: string;
+              returnDate: string;
+              price: string;
+              /** @enum {string} */
+              condition: "ready" | "broken" | "in maintenance";
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/equipments/type": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Create a new equipment type */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            id: number;
+            createdAt: string;
+            name: string;
+            price: string;
+            image: string | null;
+            description: string | null;
+          };
+        };
+      };
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: number;
+              createdAt: string;
+              name: string;
+              price: string;
+              image: string | null;
+              description: string | null;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/equipments/type/{equipmentTypeID}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Delete an equipment type */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          equipmentTypeID: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successfully deleted user */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/equipments/type/{equipmentTypeId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** Update an equipment type */
+    put: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          equipmentTypeId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            id: number;
+            createdAt: string;
+            name: string;
+            price: string;
+            image: string | null;
+            description: string | null;
+          };
+        };
+      };
+      responses: {
+        /** @description Successfully updated equipment type */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: number;
+              createdAt: string;
+              name: string;
+              price: string;
+              image: string | null;
+              description: string | null;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/equipments/type/{equipmentTypeId}/item": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List of all equipment items for a type */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          equipmentTypeId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              equipmentItems: {
+                id: number;
+                createdAt: string;
+                equipmentType: number;
+              }[];
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/equipments/item/{equipmentItemID}/rental-history": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Lists rental history for an equipment item */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          equipmentItemID: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              rentalHistory: {
+                itemId: number;
+                userId: string | null;
+                dateBorrowed: string;
+                returnDate: string;
+                price: string;
+                /** @enum {string} */
+                condition: "ready" | "broken" | "in maintenance";
+              }[];
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/equipments/item": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Create a new equipment item */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            id: number;
+            createdAt: string;
+            equipmentType: number;
+          };
+        };
+      };
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: number;
+              createdAt: string;
+              equipmentType: number;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/equipments/item/{equipmentItemID}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** Update an equipment item */
+    put: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          equipmentItemID: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            id: number;
+            createdAt: string;
+            equipmentType: number;
+          };
+        };
+      };
+      responses: {
+        /** @description Successfully updated equipment item */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: number;
+              createdAt: string;
+              equipmentType: number;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    post?: never;
+    /** Delete an equipment item */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          equipmentItemID: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successfully deleted equipment item */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              success: boolean;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/majors": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List all majors */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              majors: {
+                name: string;
+              }[];
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    /** create major */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            name: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Successful response */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              name: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Conflict */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/majors/{major}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** update major */
+    put: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          major: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            name: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Successful response */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Conflict */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    post?: never;
+    /** delete major */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          major: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Conflict */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/majors/{majorName}/users": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List of all users in a major */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          majorName: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              majorUsers: {
+                id: string;
+                createdAt: string;
+                name: string;
+                email: string;
+                major: string;
+                gradDate: string;
+                interests: (
+                  | "web development"
+                  | "machine learning"
+                  | "cloud computing"
+                  | "artificial intelligence"
+                  | "networking"
+                  | "cybersecurity"
+                  | "mobile development"
+                  | "game development"
+                  | "data science"
+                )[];
+                profilePic: string | null;
+                /** @enum {string} */
+                role: "user" | "member" | "admin";
+                /** @enum {string|null} */
+                paid: "semester" | "annual" | null;
+                /** @enum {string} */
+                education_level: "undergraduate" | "graduate";
+                discord: string | null;
+                linkedin: string | null;
+                github: string | null;
+                website: string | null;
+              }[];
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/enums/{enumType}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get enum types */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          enumType: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Get array of values for enum type */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              types: string[];
+            };
+          };
+        };
+        /** @description Enum type does not exist */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/sponsors": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List all sponsors */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              sponsors: {
+                name: string;
+                logoKey: string;
+              }[];
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/officers": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List all officers */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              officers: {
+                id: number;
+                userId: string;
+                /** @enum {string} */
+                position:
+                  | "president"
+                  | "vice president"
+                  | "dev team officer"
+                  | "treasurer"
+                  | "social media manager";
+                linkedin: string | null;
+                photo: string | null;
+              }[];
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: never;
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+  schemas: never;
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 export type $defs = Record<string, never>;
 export type operations = Record<string, never>;
