@@ -52,57 +52,14 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Handle Google OAuth callback */
-        get: {
-            parameters: {
-                query: {
-                    code: string;
-                    state: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Redirect after successful login */
-                301: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Missing code or state */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Failed to validate authorization code */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+        /** @description Google OAuth not configured */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
     "/v1/auth/logout": {
         parameters: {
@@ -187,13 +144,29 @@ export interface paths {
                 };
             };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description Missing code or state */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Failed to validate authorization code */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
     "/v1/users/my": {
         parameters: {
@@ -499,6 +472,7 @@ export interface paths {
                     };
                 };
             };
+          };
         };
         put?: never;
         /** User bookmarks an event */
@@ -734,6 +708,7 @@ export interface paths {
                     };
                 };
             };
+          };
         };
         put?: never;
         /** User subscribes to an event */
@@ -906,14 +881,20 @@ export interface paths {
                     };
                 };
             };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
     "/v1/users/my/subscribed-companies/{companyID}": {
         parameters: {
@@ -1139,6 +1120,7 @@ export interface paths {
                     };
                 };
             };
+          };
         };
         /** Admin Update a user */
         put: {
@@ -1503,14 +1485,20 @@ export interface paths {
                     };
                 };
             };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
     "/v1/users/my/attending-events/{eventID}": {
         parameters: {
@@ -2075,14 +2063,20 @@ export interface paths {
                     };
                 };
             };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
     "/v1/events/{eventID}/subscribers": {
         parameters: {
@@ -2174,14 +2168,20 @@ export interface paths {
                     };
                 };
             };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
     "/v1/events/{eventID}/files": {
         parameters: {
@@ -2279,6 +2279,7 @@ export interface paths {
                     };
                 };
             };
+          };
         };
         put?: never;
         /** Create an event */
@@ -2367,12 +2368,9 @@ export interface paths {
                     };
                 };
             };
+          };
         };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
     "/v1/events/{eventID}": {
         parameters: {
@@ -2445,6 +2443,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/events/{eventID}/subscribe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
+    };
     "/v1/events/{eventID}/url": {
         parameters: {
             query?: never;
@@ -2488,6 +2506,41 @@ export interface paths {
         head?: never;
         patch?: never;
         trace?: never;
+    };
+    "/v1/events/{eventID}/bookmark": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              subscribed: boolean;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
     "/v1/events/{eventID}/attendance": {
         parameters: {
@@ -2782,68 +2835,71 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get a company by ID */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    companyID: string;
-                };
-                cookie?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              createdAt: string;
+              name: string;
+              email: string;
+              major: string;
+              gradDate: string;
+              interests: (
+                | "web development"
+                | "machine learning"
+                | "cloud computing"
+                | "artificial intelligence"
+                | "networking"
+                | "cybersecurity"
+                | "mobile development"
+                | "game development"
+                | "data science"
+              )[];
+              profilePic: string | null;
+              /** @enum {string} */
+              role: "user" | "member" | "admin";
+              /** @enum {string|null} */
+              paid: "semester" | "annual" | null;
+              /** @enum {string} */
+              education_level: "undergraduate" | "graduate";
+              discord: string | null;
+              linkedin: string | null;
+              github: string | null;
+              website: string | null;
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            companies: {
-                                id: number;
-                                name: string;
-                                location: string | null;
-                                description: string;
-                                /** @enum {string} */
-                                industryId: "Banking and Finance" | "Aerospace" | "Healthcare" | "Automotive" | "Energy" | "Technology";
-                                logo: string | null;
-                            };
-                        };
-                    };
-                };
-                /** @description Company not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description User not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
     "/v1/companies/{companyID}/events": {
         parameters: {
@@ -2897,13 +2953,69 @@ export interface paths {
                 };
             };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
+      responses: {
+        /** @description Successfully updated user */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              createdAt: string;
+              name: string;
+              email: string;
+              major: string;
+              gradDate: string;
+              interests: (
+                | "web development"
+                | "machine learning"
+                | "cloud computing"
+                | "artificial intelligence"
+                | "networking"
+                | "cybersecurity"
+                | "mobile development"
+                | "game development"
+                | "data science"
+              )[];
+              profilePic: string | null;
+              /** @enum {string} */
+              role: "user" | "member" | "admin";
+              /** @enum {string|null} */
+              paid: "semester" | "annual" | null;
+              /** @enum {string} */
+              education_level: "undergraduate" | "graduate";
+              discord: string | null;
+              linkedin: string | null;
+              github: string | null;
+              website: string | null;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description User not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
     "/v1/companies/{companyID}/subscribers": {
         parameters: {
@@ -2955,14 +3067,31 @@ export interface paths {
                     };
                 };
             };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description User not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
     "/v1/companies/{companyID}/subscribers/count": {
         parameters: {
@@ -3040,14 +3169,9 @@ export interface paths {
                     };
                 };
             };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
     "/v1/equipments/rentals": {
         parameters: {
@@ -3120,12 +3244,31 @@ export interface paths {
                     };
                 };
             };
+          };
         };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              error: string;
+            };
+          };
+        };
+      };
     };
     "/v1/equipments/type": {
         parameters: {
@@ -3210,49 +3353,51 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Delete an equipment type */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    equipmentTypeID: string;
-                };
-                cookie?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              interestedUsers: {
+                id: string;
+                createdAt: string;
+                name: string;
+                email: string;
+                major: string;
+                gradDate: string;
+                interests: (
+                  | "web development"
+                  | "machine learning"
+                  | "cloud computing"
+                  | "artificial intelligence"
+                  | "networking"
+                  | "cybersecurity"
+                  | "mobile development"
+                  | "game development"
+                  | "data science"
+                )[];
+                profilePic: string | null;
+                /** @enum {string} */
+                role: "user" | "member" | "admin";
+                /** @enum {string|null} */
+                paid: "semester" | "annual" | null;
+                /** @enum {string} */
+                education_level: "undergraduate" | "graduate";
+                discord: string | null;
+                linkedin: string | null;
+                github: string | null;
+                website: string | null;
+              }[];
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successfully deleted user */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            success: boolean;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+          };
         };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
     "/v1/equipments/type/{equipmentTypeId}": {
         parameters: {
@@ -3328,42 +3473,26 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List of all equipment items for a type */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    equipmentTypeId: string;
-                };
-                cookie?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              projectFiles: {
+                key: string;
+                name: string;
+                createdAt: string;
+              }[];
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            equipmentItems: {
-                                id: number;
-                                createdAt: string;
-                                equipmentType: number;
-                            }[];
-                        };
-                    };
-                };
-            };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
     "/v1/equipments/item/{equipmentItemID}/rental-history": {
         parameters: {
@@ -3420,68 +3549,36 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
-        /** Create a new equipment item */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              foundEventCompanies: {
+                id: number;
+                name: string;
+                location: string | null;
+                description: string;
+                /** @enum {string} */
+                industryId:
+                  | "banking and finance"
+                  | "aerospace"
+                  | "healthcare"
+                  | "automotive"
+                  | "energy"
+                  | "technology";
+                logo: string | null;
+              }[];
             };
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        id: number;
-                        createdAt: string;
-                        equipmentType: number;
-                    };
-                };
-            };
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: number;
-                            createdAt: string;
-                            equipmentType: number;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
+          };
         };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
     "/v1/equipments/item/{equipmentItemID}": {
         parameters: {
@@ -3608,99 +3705,51 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List all majors */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              eventSubscribers: {
+                id: string;
+                createdAt: string;
+                name: string;
+                email: string;
+                major: string;
+                gradDate: string;
+                interests: (
+                  | "web development"
+                  | "machine learning"
+                  | "cloud computing"
+                  | "artificial intelligence"
+                  | "networking"
+                  | "cybersecurity"
+                  | "mobile development"
+                  | "game development"
+                  | "data science"
+                )[];
+                profilePic: string | null;
+                /** @enum {string} */
+                role: "user" | "member" | "admin";
+                /** @enum {string|null} */
+                paid: "semester" | "annual" | null;
+                /** @enum {string} */
+                education_level: "undergraduate" | "graduate";
+                discord: string | null;
+                linkedin: string | null;
+                github: string | null;
+                website: string | null;
+              }[];
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            majors: {
-                                name: string;
-                            }[];
-                        };
-                    };
-                };
-            };
+          };
         };
-        put?: never;
-        /** create major */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        name: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description Successful response */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            name: string;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-                /** @description Conflict */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
     "/v1/majors/{major}": {
         parameters: {
@@ -3880,14 +3929,9 @@ export interface paths {
                     };
                 };
             };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
     "/v1/enums/{enumType}": {
         parameters: {
@@ -3947,39 +3991,26 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List all sponsors */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successful response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              eventFiles: {
+                key: string;
+                name: string;
+                createdAt: string;
+              }[];
             };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            sponsors: {
-                                name: string;
-                                logoKey: string;
-                            }[];
-                        };
-                    };
-                };
-            };
+          };
         };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+      };
     };
     "/v1/officers": {
         parameters: {
@@ -4826,12 +4857,12 @@ export interface paths {
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: never;
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+  schemas: never;
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 export type $defs = Record<string, never>;
 export type operations = Record<string, never>;
