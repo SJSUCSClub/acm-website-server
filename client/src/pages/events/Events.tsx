@@ -3,63 +3,52 @@ import { useEffect, useState } from "react";
 import EventCard from "../../components/molecules/event-card";
 import BtnDateFilter from "../../components/molecules/btn-date-filter";
 import BtnTagFilter from "../../components/molecules/btn-tag-filter";
+import { useQuery } from "@/hooks/useFetch";
+import { paths } from "@/types/schema.v1";
 
-interface Event {
-  description: string;
-  endDate: string;
-  endTime: string;
-  id: number;
-  location: string;
-  name: string;
-  startDate: string;
-  startTime: string;
-  deadline: string;
-  eventType: string;
-  tags: string[];
-}
+// interface Event {
+//   description: string;
+//   endDate: string;
+//   endTime: string;
+//   id: number;
+//   location: string;
+//   name: string;
+//   startDate: string;
+//   startTime: string;
+//   deadline: string;
+//   eventType: string;
+//   tags: string[];
+// }
 
-const CalendarPage = () => {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [dateFilter, setDateFilter] = useState("all");
+type Events = paths["/v1/events"]["get"]["responses"]["200"]["content"]["application/json"]["foundEvents"];
+
+const EventsPage = () => {
+  const [events, setEvents] = useState<Events>([]);
+  const [dateFilter, setDateFilter] = useState<"upcoming" | "today" | "past" | "all">("all");
   const [tagFilter, setTagFilter] = useState<string[]>([]);
 
-  function formatDate(date: string) {
-    const dateObj = new Date(date);
-    const month = dateObj.toLocaleString("default", { month: "short" });
-    const day = dateObj.getDate();
-    const year = dateObj.getFullYear();
-    return `${month} ${day}, ${year}`;
-  }
-  function formatTime(time: string) {
-    const [hours, minutes] = time.substring(0, 5).split(":");
-    const hour = parseInt(hours);
-    const ampm = hour >= 12 ? "PM" : "AM";
-    const formattedHour = hour % 12 || 12;
-    return `${formattedHour}:${minutes} ${ampm}`;
-  }
 
-  useEffect(() => {
-    const concatenatedTags = tagFilter
-      .map((tag) => encodeURIComponent(tag))
-      .join(",");
-    console.log(
-      `http://localhost/api/v1/events?timeframe=${dateFilter}&tags=${concatenatedTags}`,
-    );
 
-    fetch(
-      `http://localhost/api/v1/events?timeframe=${dateFilter}&tags=${concatenatedTags}`,
+  const { data: eventData } = useQuery(
+      "get",
+      "/v1/events",
       {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
+        params: {
+          query: {
+            "tags": tagFilter.join(",") || "",
+            "timeframe": dateFilter || "all"
+          },
         },
       },
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setEvents(data.foundEvents);
-      });
-  }, [dateFilter, tagFilter]);
+    )  
+
+
+
+  useEffect(() => {
+    if (eventData) {
+      setEvents(eventData.foundEvents);
+    }
+  }, [dateFilter, tagFilter, eventData]);
   return (
     <>
       <div className="about text-text my-10 px-[15%]">
@@ -75,13 +64,9 @@ const CalendarPage = () => {
             irrespective of their major or prior experience.
           </p>
           <BtnDateFilter
-            tab1="All"
-            tab2="Upcoming"
-            tab3="Today"
-            tab4="Past"
             fcn={setDateFilter}
           />
-          <BtnTagFilter fcn={setTagFilter} />
+          <BtnTagFilter selectedTags={tagFilter} fcn={setTagFilter} />
         </div>
         {events.length === 0 && (
           <div className="text-text text-center my-10">No events found</div>
@@ -92,11 +77,14 @@ const CalendarPage = () => {
             <EventCard
               key={event.id}
               eventType={event.eventType}
-              title={event.name}
-              date={`${formatDate(event.startDate)} ${formatTime(event.startTime)} - ${formatDate(event.endDate)} ${formatTime(event.endTime)}`}
+              name={event.name}
+              startDate={event.startDate}
+              endDate={event.endDate}
+              startTime={event.startTime}
+              endTime={event.endTime}
               location={event.location}
               description={event.description}
-              keywords={event.tags}
+              tags={event.tags}
             />
           ))}
         </div>
