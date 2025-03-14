@@ -1,7 +1,5 @@
 import ACMCSHero from "acm-cs-sjsu-hero-component";
-import GetInvolvedCard from "../components/molecules/get-involved-card";
 import SpotLightCard from "../components/molecules/spotlight-card";
-import TestimonialCard from "../components/molecules/testimonial-card";
 
 import { useState } from "react";
 import MemberBtn from "../components/molecules/member-btn";
