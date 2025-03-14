@@ -15,10 +15,10 @@ const EnvSchema = z.object({
 	GOOGLE_REDIRECT_URI: z.string().default(''),
 	ACCESS_KEY_ID: z.string().default(''),
 	SECRET_ACCESS_KEY: z.string().default(''),
-	S3_BUCKET_NAME: z.string(),
-	S3_BUCKET_URL: z.string(),
+	S3_BUCKET_NAME: z.string().default(''),
+	S3_BUCKET_URL: z.string().default(''),
 	REGION: z.string().default('us-west-2'),
-	ROLE_ARN: z.string(),
+	ROLE_ARN: z.string().default(''),
 });
 
 export type Env = z.infer<typeof EnvSchema>;
