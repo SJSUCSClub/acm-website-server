@@ -14,18 +14,15 @@ import {
 } from "../../../components/ui/popover"
 
 export type EventCardProps = {
-  tab1: string;
-  tab2: string;
-  tab3: string;
-  tab4: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fcn: any;
+  fcn: React.Dispatch<React.SetStateAction<"upcoming" | "today" | "past" | "all">>;
 };
 
-export const BtnDateFilter: React.FC<EventCardProps> = ({ tab1, tab2, tab3, tab4, fcn }) => {
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("All")
-  const options = [tab1, tab2, tab3, tab4]
+export const BtnDateFilter: React.FC<EventCardProps> = ({
+  fcn,
+}) => {
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState("All");
+  const options = ["All", "Upcoming", "Today", "Past"];
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -48,9 +45,9 @@ export const BtnDateFilter: React.FC<EventCardProps> = ({ tab1, tab2, tab3, tab4
                   key={option}
                   value={option}
                   onSelect={(currentValue) => {
-                    setValue(currentValue)
-                    setOpen(false)
-                    fcn(currentValue.toLowerCase())
+                    setValue(currentValue);
+                    setOpen(false);
+                    fcn(currentValue.toLowerCase() as "upcoming" | "today" | "past" | "all");
                   }}
                 >
                   {option}
