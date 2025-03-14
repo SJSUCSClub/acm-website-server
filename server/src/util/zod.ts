@@ -91,3 +91,10 @@ export const paymentIdSchema = z.object({
       },
     }),
 });
+export const spotlightSchema = z.object({
+	id: z.number(),
+	type: z.enum(['Hackathon', 'seminar', 'Conference', 'Meetup', 'Tech Talk', 'Other', 'Workshop']),
+	image: z.string(),
+	name: z.string(),
+	description: z.string(),
+});

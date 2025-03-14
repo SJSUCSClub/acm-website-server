@@ -10,6 +10,7 @@ import {
   clubLinkSchema,
   landingQuestionSchema,
   landingSpotlightSchema,
+  spotlightSchema,
 } from '@/util/zod';
 import { eq } from 'drizzle-orm';
 import {
@@ -17,6 +18,7 @@ import {
   forbiddenRequest,
   unauthorizedRequest,
 } from '@/middlewares/auth-middleware';
+import { env } from '@/env';
 
 const clubRouter = new OpenAPIHono<Context>();
 
@@ -108,7 +110,7 @@ clubRouter.openapi(
         content: {
           'application/json': {
             schema: z.object({
-              spotlights: z.array(z.any()),
+              spotlights: z.array(spotlightSchema),
             }),
           },
         },
@@ -118,10 +120,11 @@ clubRouter.openapi(
   }),
   async (c) => {
     const spotlights = await db
-      .select()
+      .select({id: landingSpotlights.id, type: events.eventType, image: landingSpotlights.imageKey, name: events.name, description: events.description})
       .from(landingSpotlights)
       .innerJoin(events, eq(landingSpotlights.eventId, events.id));
-    return c.json({ spotlights }, HttpStatusCodes.OK);
+    const nspotlights = spotlights.map((spotlight) => ({...spotlight, image: env.S3_BUCKET_URL + spotlight.image}));
+    return c.json({spotlights: nspotlights}, HttpStatusCodes.OK);
   },
 );
 
