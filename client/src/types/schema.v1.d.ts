@@ -4437,8 +4437,11 @@ export interface paths {
                         "application/json": {
                             spotlights: {
                                 id: number;
-                                eventId: number;
-                                imageKey: string;
+                                /** @enum {string} */
+                                type: "Hackathon" | "seminar" | "Conference" | "Meetup" | "Tech Talk" | "Other" | "Workshop";
+                                image: string;
+                                name: string;
+                                description: string;
                             }[];
                         };
                     };
