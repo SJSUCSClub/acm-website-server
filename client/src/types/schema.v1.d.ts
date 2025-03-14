@@ -78,14 +78,57 @@ export interface paths {
           content?: never;
 >>>>>>> 9ce3e2d (finish events page)
         };
-        /** @description Google OAuth not configured */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
+        /** Handle Google OAuth callback */
+        get: {
+            parameters: {
+                query: {
+                    code: string;
+                    state: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Redirect after successful login */
+                301: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Missing code or state */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Failed to validate authorization code */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
         };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
 <<<<<<< HEAD
     "/v1/auth/logout": {
@@ -207,29 +250,13 @@ export interface paths {
           content?: never;
 >>>>>>> 9ce3e2d (finish events page)
         };
-        /** @description Missing code or state */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
-            };
-          };
-        };
-        /** @description Failed to validate authorization code */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
-            };
-          };
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
 <<<<<<< HEAD
     "/v1/users/my": {
@@ -536,7 +563,6 @@ export interface paths {
                     };
                 };
             };
-          };
         };
         put?: never;
         /** User bookmarks an event */
@@ -793,7 +819,10 @@ export interface paths {
                 };
             };
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
+=======
+>>>>>>> f9b1c23 (generate types)
         };
         put?: never;
         /** User subscribes to an event */
@@ -982,20 +1011,18 @@ export interface paths {
                 };
             };
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
+=======
+>>>>>>> f9b1c23 (generate types)
         };
-        /** @description Unauthorized */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
-            };
-          };
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     "/v1/users/my/subscribed-companies/{companyID}": {
 =======
@@ -1509,9 +1536,12 @@ export interface paths {
                 };
             };
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
 =======
 >>>>>>> e644e06 (feat: auto-generate types (#86))
+=======
+>>>>>>> f9b1c23 (generate types)
         };
         /** Admin Update a user */
         put: {
@@ -1937,20 +1967,14 @@ export interface paths {
                     };
                 };
             };
-          };
         };
-        /** @description Unauthorized */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
-            };
-          };
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     "/v1/users/my/attending-events/{eventID}": {
         parameters: {
@@ -2701,20 +2725,18 @@ export interface paths {
                 };
             };
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
+=======
+>>>>>>> f9b1c23 (generate types)
         };
-        /** @description Unauthorized */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
-            };
-          };
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     "/v1/events/{eventID}/subscribers": {
 =======
@@ -2891,20 +2913,18 @@ export interface paths {
                 };
             };
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
+=======
+>>>>>>> f9b1c23 (generate types)
         };
-        /** @description Unauthorized */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
-            };
-          };
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     "/v1/events/{eventID}/files": {
 =======
@@ -3113,9 +3133,12 @@ export interface paths {
                 };
             };
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
 =======
 >>>>>>> e644e06 (feat: auto-generate types (#86))
+=======
+>>>>>>> f9b1c23 (generate types)
         };
         put?: never;
         /** Create an event */
@@ -3225,9 +3248,16 @@ export interface paths {
                 };
             };
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
+=======
+>>>>>>> f9b1c23 (generate types)
         };
-      };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     "/v1/events/{eventID}": {
 =======
@@ -3383,6 +3413,7 @@ export interface paths {
             cookie?: never;
         };
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     put?: never;
     post?: never;
@@ -3444,10 +3475,149 @@ export interface paths {
             "application/json": {
               error: string;
 <<<<<<< HEAD
+=======
+        get?: never;
+        put?: never;
+        /** User subscribes to an event */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    eventID: string;
+                };
+                cookie?: never;
             };
-          };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            newSubscription: {
+                                userId: string;
+                                eventId: number;
+                                subscribedDate: string;
+                            };
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+>>>>>>> f9b1c23 (generate types)
+            };
         };
-      };
+        /** User unsubscribes to an event */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    eventID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            deletedSubscription: {
+                                userId: string;
+                                eventId: number;
+                                subscribedDate: string;
+                            };
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     "/v1/events/{eventID}/url": {
 =======
@@ -3589,6 +3759,7 @@ export interface paths {
             cookie?: never;
         };
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     put?: never;
     post?: never;
@@ -3627,21 +3798,138 @@ export interface paths {
             "application/json": {
               subscribed: boolean;
 <<<<<<< HEAD
+=======
+        get?: never;
+        put?: never;
+        /** User bookmarks an event */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    eventID: string;
+                };
+                cookie?: never;
+>>>>>>> f9b1c23 (generate types)
             };
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            newBookmark: {
+                                userId: string;
+                                eventId: number;
+                                bookmarkedDate: string;
+                            };
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
             };
-          };
         };
-      };
+        /** User unbookmarks an event */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    eventID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            deletedBookmark: {
+                                userId: string;
+                                eventId: number;
+                                bookmarkedDate: string;
+                            };
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     "/v1/events/{eventID}/attendance": {
         parameters: {
@@ -4013,6 +4301,7 @@ export interface paths {
             cookie?: never;
         };
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       };
     };
@@ -4080,32 +4369,120 @@ export interface paths {
               github: string | null;
               website: string | null;
 <<<<<<< HEAD
+=======
+        get?: never;
+        put?: never;
+        /** Subscribe to a company */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+>>>>>>> f9b1c23 (generate types)
             };
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        companyId: string;
+                    };
+                };
             };
-          };
-        };
-        /** @description User not found */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
+            responses: {
+                /** @description Successfully subscribed */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            subscription: {
+                                userId: string;
+                                companyId: number;
+                                subscribedDate: string;
+                            };
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Already subscribed */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
             };
-          };
         };
-      };
+        /** Unsubscribe from a company */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        companyId: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Successfully unsubscribed */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     "/v1/companies/{companyID}/events": {
 =======
@@ -4258,6 +4635,7 @@ export interface paths {
             };
         };
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     /** Admin Update a user */
     put: {
@@ -4360,6 +4738,15 @@ export interface paths {
         };
       };
 <<<<<<< HEAD
+=======
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+>>>>>>> f9b1c23 (generate types)
     };
     "/v1/companies/{companyID}/subscribers": {
 =======
@@ -4433,31 +4820,18 @@ export interface paths {
                 };
             };
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
+=======
+>>>>>>> f9b1c23 (generate types)
         };
-        /** @description Unauthorized */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
-            };
-          };
-        };
-        /** @description User not found */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
-            };
-          };
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     "/v1/companies/{companyID}/subscribers/count": {
 =======
@@ -4595,9 +4969,18 @@ export interface paths {
                 };
             };
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
+=======
+>>>>>>> f9b1c23 (generate types)
         };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     "/v1/equipments/rentals": {
 =======
@@ -4731,31 +5114,16 @@ export interface paths {
                 };
             };
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
+=======
+>>>>>>> f9b1c23 (generate types)
         };
-        /** @description Unauthorized */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
-            };
-          };
-        };
-        /** @description Forbidden */
-        403: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
-            };
-          };
-        };
-      };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     "/v1/equipments/type": {
 =======
@@ -4923,6 +5291,7 @@ export interface paths {
             cookie?: never;
         };
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     delete?: never;
     options?: never;
@@ -4988,10 +5357,51 @@ export interface paths {
                 website: string | null;
               }[];
 <<<<<<< HEAD
+=======
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete an equipment type */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    equipmentTypeID: string;
+                };
+                cookie?: never;
             };
-          };
+            requestBody?: never;
+            responses: {
+                /** @description Successfully deleted user */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            success: boolean;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+>>>>>>> f9b1c23 (generate types)
+            };
         };
-      };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     "/v1/equipments/type/{equipmentTypeId}": {
 =======
@@ -5120,6 +5530,7 @@ export interface paths {
             cookie?: never;
         };
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     put?: never;
     post?: never;
@@ -5162,10 +5573,44 @@ export interface paths {
                 createdAt: string;
               }[];
 <<<<<<< HEAD
+=======
+        /** List of all equipment items for a type */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    equipmentTypeId: string;
+                };
+                cookie?: never;
             };
-          };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            equipmentItems: {
+                                id: number;
+                                createdAt: string;
+                                equipmentType: number;
+                            }[];
+                        };
+                    };
+                };
+>>>>>>> f9b1c23 (generate types)
+            };
         };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     "/v1/equipments/item/{equipmentItemID}/rental-history": {
 =======
@@ -5269,6 +5714,7 @@ export interface paths {
             cookie?: never;
         };
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     put?: never;
     post?: never;
@@ -5321,10 +5767,70 @@ export interface paths {
                 logo: string | null;
               }[];
 <<<<<<< HEAD
+=======
+        get?: never;
+        put?: never;
+        /** Create a new equipment item */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
             };
-          };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        id: number;
+                        createdAt: string;
+                        equipmentType: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            createdAt: string;
+                            equipmentType: number;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+>>>>>>> f9b1c23 (generate types)
+            };
         };
-      };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     "/v1/equipments/item/{equipmentItemID}": {
 =======
@@ -5522,6 +6028,7 @@ export interface paths {
             cookie?: never;
         };
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     put?: never;
     post?: never;
@@ -5589,10 +6096,101 @@ export interface paths {
                 website: string | null;
               }[];
 <<<<<<< HEAD
+=======
+        /** List all majors */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
             };
-          };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            majors: {
+                                name: string;
+                            }[];
+                        };
+                    };
+                };
+>>>>>>> f9b1c23 (generate types)
+            };
         };
-      };
+        put?: never;
+        /** create major */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        name: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Successful response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            name: string;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     "/v1/majors/{major}": {
 =======
@@ -5821,9 +6419,18 @@ export interface paths {
                 };
             };
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
+=======
+>>>>>>> f9b1c23 (generate types)
         };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     "/v1/enums/{enumType}": {
 =======
@@ -5934,6 +6541,7 @@ export interface paths {
             cookie?: never;
         };
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     put?: never;
     post?: never;
@@ -5976,10 +6584,41 @@ export interface paths {
                 createdAt: string;
               }[];
 <<<<<<< HEAD
+=======
+        /** List all sponsors */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
             };
-          };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            sponsors: {
+                                name: string;
+                                logoKey: string;
+                            }[];
+                        };
+                    };
+                };
+>>>>>>> f9b1c23 (generate types)
+            };
         };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     "/v1/officers": {
 =======
@@ -6866,6 +7505,7 @@ export interface paths {
 }
 export type webhooks = Record<string, never>;
 export interface components {
+<<<<<<< HEAD
   schemas: never;
   responses: never;
   parameters: never;
@@ -6876,12 +7516,15 @@ export interface components {
 }
 export type webhooks = Record<string, never>;
 export interface components {
+=======
+>>>>>>> f9b1c23 (generate types)
     schemas: never;
     responses: never;
     parameters: never;
     requestBodies: never;
     headers: never;
     pathItems: never;
+<<<<<<< HEAD
 >>>>>>> e644e06 (feat: auto-generate types (#86))
 =======
     put?: never;
@@ -8998,6 +9641,8 @@ export interface components {
   headers: never;
   pathItems: never;
 >>>>>>> 9ce3e2d (finish events page)
+=======
+>>>>>>> f9b1c23 (generate types)
 }
 export type $defs = Record<string, never>;
 export type operations = Record<string, never>;
