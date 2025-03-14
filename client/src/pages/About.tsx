@@ -116,37 +116,37 @@ const officers = [
 const page = () => {
   return (
     <Page>
-    <div className="about text-text my-10 px-[15%]">
-      <div className="intro space-y-4">
-        <h1 className="text-4xl font-bold">
-          What is <span className="text-primary">ACM</span>
-        </h1>
-        <h2 className="font-bold text-xl">Who we are.</h2>
-        <p>
-          The ACM Club at San Jose State University (SJSU) is the premier
-          student chapter of the Association for Computing Machinery (ACM) in
-          the heart of Silicon Valley. At ACM SJSU, we are dedicated to
-          fostering a vibrant community of technology enthusiasts and
-          innovators.
-        </p>
-        <p>
-          Our inclusive club welcomes students from all backgrounds and skill
-          levels, whether you&apos;re a seasoned coder or just starting your
-          journey in the world of computing. We believe in the power of
-          collaboration and the endless possibilities offered by computer
-          science.
-        </p>
-        <h2 className="font-bold text-xl">What we do.</h2>
-        <p>
-          We provide opportunities for San José students from all majors. As a
-          member, youll have access to excluesive events, workshops, hackathons,
-          projects, and many more.
-        </p>
-        <p>
-          Believe it or not, this very website was created by students, just
-          like you! Our projects cover a wide range of topics, from web
-          development to hardware engineering, bot development and much more!
-        </p>
+      <div className="about text-text">
+        <div className="intro space-y-4">
+          <h1 className="text-4xl font-bold">
+            What is <span className="text-primary">ACM</span> at SJSU?
+          </h1>
+          <h2 className="font-bold text-xl">Who we are.</h2>
+          <p>
+            The ACM Club at San Jose State University (SJSU) is the premier
+            student chapter of the Association for Computing Machinery (ACM) in
+            the heart of Silicon Valley. At ACM SJSU, we are dedicated to
+            fostering a vibrant community of technology enthusiasts and
+            innovators.
+          </p>
+          <p>
+            Our inclusive club welcomes students from all backgrounds and skill
+            levels, whether you&apos;re a seasoned coder or just starting your
+            journey in the world of computing. We believe in the power of
+            collaboration and the endless possibilities offered by computer
+            science.
+          </p>
+          <h2 className="font-bold text-xl">What we do.</h2>
+          <p>
+            We provide opportunities for San José students from all majors. As a
+            member, youll have access to excluesive events, workshops,
+            hackathons, projects, and many more.
+          </p>
+          <p>
+            Believe it or not, this very website was created by students, just
+            like you! Our projects cover a wide range of topics, from web
+            development to hardware engineering, bot development and much more!
+          </p>
 
           <h1 className="!mt-10 text-4xl font-bold">How do I get involved?</h1>
           <TextWithImage
