@@ -52,6 +52,7 @@ export interface paths {
             header?: never;
             path?: never;
             cookie?: never;
+<<<<<<< HEAD
 =======
   "/api/v1/auth/login": {
     parameters: {
@@ -122,6 +123,53 @@ export interface paths {
                 };
             };
         };
+=======
+        };
+        /** Handle Google OAuth callback */
+        get: {
+            parameters: {
+                query: {
+                    code: string;
+                    state: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Redirect after successful login */
+                301: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Missing code or state */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Failed to validate authorization code */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         put?: never;
         post?: never;
         delete?: never;
@@ -213,6 +261,7 @@ export interface paths {
                     };
                 };
             };
+<<<<<<< HEAD
 =======
     put?: never;
     post?: never;
@@ -228,6 +277,16 @@ export interface paths {
       header?: never;
       path?: never;
       cookie?: never;
+=======
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+>>>>>>> 3c6493a (generate openapi types [skip ci])
     };
     /** Handle Google OAuth callback */
     get: {
@@ -820,9 +879,12 @@ export interface paths {
             };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
 =======
 >>>>>>> f9b1c23 (generate types)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         };
         put?: never;
         /** User subscribes to an event */
@@ -1012,6 +1074,7 @@ export interface paths {
             };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
 =======
 >>>>>>> f9b1c23 (generate types)
@@ -1190,19 +1253,16 @@ export interface paths {
               website: string | null;
             };
           };
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         };
-        /** @description Unauthorized */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
-            };
-          };
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
     /** Update current user */
     put: {
@@ -1537,11 +1597,14 @@ export interface paths {
             };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
 =======
 >>>>>>> e644e06 (feat: auto-generate types (#86))
 =======
 >>>>>>> f9b1c23 (generate types)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         };
         /** Admin Update a user */
         put: {
@@ -2726,6 +2789,7 @@ export interface paths {
             };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
 =======
 >>>>>>> f9b1c23 (generate types)
@@ -2792,19 +2856,16 @@ export interface paths {
             };
           };
 >>>>>>> 9ce3e2d (finish events page)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         };
-        /** @description Unauthorized */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
-            };
-          };
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
 <<<<<<< HEAD
     "/api/v1/events/{eventID}/subscribers": {
@@ -2914,6 +2975,7 @@ export interface paths {
             };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
 =======
 >>>>>>> f9b1c23 (generate types)
@@ -3002,19 +3064,16 @@ export interface paths {
             };
           };
 >>>>>>> 9ce3e2d (finish events page)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         };
-        /** @description Unauthorized */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
-            };
-          };
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
 <<<<<<< HEAD
     "/api/v1/events/{eventID}/files": {
@@ -3134,11 +3193,14 @@ export interface paths {
             };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
 =======
 >>>>>>> e644e06 (feat: auto-generate types (#86))
 =======
 >>>>>>> f9b1c23 (generate types)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         };
         put?: never;
         /** Create an event */
@@ -3249,6 +3311,7 @@ export interface paths {
             };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
 =======
 >>>>>>> f9b1c23 (generate types)
@@ -3311,8 +3374,14 @@ export interface paths {
             };
           };
 >>>>>>> 9ce3e2d (finish events page)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         };
-      };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
 <<<<<<< HEAD
     "/api/v1/events/{eventID}": {
@@ -3414,6 +3483,7 @@ export interface paths {
         };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     put?: never;
     post?: never;
@@ -3476,6 +3546,8 @@ export interface paths {
               error: string;
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         get?: never;
         put?: never;
         /** User subscribes to an event */
@@ -3549,6 +3621,7 @@ export interface paths {
                         };
                     };
                 };
+<<<<<<< HEAD
 >>>>>>> f9b1c23 (generate types)
             };
         };
@@ -3696,10 +3769,76 @@ export interface paths {
                 };
 =======
 >>>>>>> 9ce3e2d (finish events page)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
             };
-          };
         };
-      };
+        /** User unsubscribes to an event */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    eventID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            deletedSubscription: {
+                                userId: string;
+                                eventId: number;
+                                subscribedDate: string;
+                            };
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
 <<<<<<< HEAD
     "/api/v1/events/{eventID}/url": {
@@ -3760,6 +3899,7 @@ export interface paths {
         };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     put?: never;
     post?: never;
@@ -3799,10 +3939,151 @@ export interface paths {
               subscribed: boolean;
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         get?: never;
         put?: never;
         /** User bookmarks an event */
         post: {
+<<<<<<< HEAD
+=======
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    eventID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            newBookmark: {
+                                userId: string;
+                                eventId: number;
+                                bookmarkedDate: string;
+                            };
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        /** User unbookmarks an event */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    eventID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            deletedBookmark: {
+                                userId: string;
+                                eventId: number;
+                                bookmarkedDate: string;
+                            };
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/events/{eventID}/attendance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all attendees for an event */
+        get: {
+>>>>>>> 3c6493a (generate openapi types [skip ci])
             parameters: {
                 query?: never;
                 header?: never;
@@ -4302,6 +4583,7 @@ export interface paths {
         };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       };
     };
@@ -4370,6 +4652,8 @@ export interface paths {
               website: string | null;
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         get?: never;
         put?: never;
         /** Subscribe to a company */
@@ -4379,6 +4663,7 @@ export interface paths {
                 header?: never;
                 path?: never;
                 cookie?: never;
+<<<<<<< HEAD
 >>>>>>> f9b1c23 (generate types)
             };
             requestBody?: {
@@ -4543,32 +4828,111 @@ export interface paths {
                 };
 =======
 >>>>>>> 9ce3e2d (finish events page)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
             };
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        companyId: string;
+                    };
+                };
             };
-          };
-        };
-        /** @description User not found */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
+            responses: {
+                /** @description Successfully subscribed */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            subscription: {
+                                userId: string;
+                                companyId: number;
+                                subscribedDate: string;
+                            };
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Already subscribed */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
             };
-          };
         };
-      };
+        /** Unsubscribe from a company */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        companyId: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Successfully unsubscribed */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
 <<<<<<< HEAD
     "/api/v1/companies/{companyID}/events": {
@@ -4634,6 +4998,7 @@ export interface paths {
                 };
             };
         };
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -4739,6 +5104,8 @@ export interface paths {
       };
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         put?: never;
         post?: never;
         delete?: never;
@@ -4746,7 +5113,10 @@ export interface paths {
         head?: never;
         patch?: never;
         trace?: never;
+<<<<<<< HEAD
 >>>>>>> f9b1c23 (generate types)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
     };
     "/v1/companies/{companyID}/subscribers": {
 =======
@@ -4821,6 +5191,7 @@ export interface paths {
             };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
 =======
 >>>>>>> f9b1c23 (generate types)
@@ -4861,30 +5232,16 @@ export interface paths {
             };
           };
 >>>>>>> 9ce3e2d (finish events page)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         };
-        /** @description Unauthorized */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
-            };
-          };
-        };
-        /** @description User not found */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
-            };
-          };
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
 <<<<<<< HEAD
     "/api/v1/companies/{companyID}/subscribers/count": {
@@ -4970,6 +5327,7 @@ export interface paths {
             };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
 =======
 >>>>>>> f9b1c23 (generate types)
@@ -5029,8 +5387,16 @@ export interface paths {
             };
           };
 >>>>>>> 9ce3e2d (finish events page)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
 <<<<<<< HEAD
     "/api/v1/equipments/rentals": {
@@ -5115,6 +5481,7 @@ export interface paths {
             };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
 =======
 >>>>>>> f9b1c23 (generate types)
@@ -5176,30 +5543,14 @@ export interface paths {
             };
           };
 >>>>>>> 9ce3e2d (finish events page)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         };
-        /** @description Unauthorized */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
-            };
-          };
-        };
-        /** @description Forbidden */
-        403: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              error: string;
-            };
-          };
-        };
-      };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
 <<<<<<< HEAD
     "/api/v1/equipments/type": {
@@ -5292,6 +5643,7 @@ export interface paths {
         };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     delete?: never;
     options?: never;
@@ -5358,6 +5710,8 @@ export interface paths {
               }[];
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         get?: never;
         put?: never;
         post?: never;
@@ -5395,6 +5749,7 @@ export interface paths {
                         };
                     };
                 };
+<<<<<<< HEAD
 >>>>>>> f9b1c23 (generate types)
             };
         };
@@ -5444,10 +5799,14 @@ export interface paths {
                 };
 =======
 >>>>>>> 9ce3e2d (finish events page)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
             };
-          };
         };
-      };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
 <<<<<<< HEAD
     "/api/v1/equipments/type/{equipmentTypeId}": {
@@ -5531,6 +5890,7 @@ export interface paths {
         };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     put?: never;
     post?: never;
@@ -5574,6 +5934,8 @@ export interface paths {
               }[];
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         /** List of all equipment items for a type */
         get: {
             parameters: {
@@ -5601,6 +5963,7 @@ export interface paths {
                         };
                     };
                 };
+<<<<<<< HEAD
 >>>>>>> f9b1c23 (generate types)
             };
         };
@@ -5643,10 +6006,17 @@ export interface paths {
                 };
 =======
 >>>>>>> 9ce3e2d (finish events page)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
             };
-          };
         };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
 <<<<<<< HEAD
     "/api/v1/equipments/item/{equipmentItemID}/rental-history": {
@@ -5715,6 +6085,7 @@ export interface paths {
         };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     put?: never;
     post?: never;
@@ -5768,6 +6139,8 @@ export interface paths {
               }[];
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         get?: never;
         put?: never;
         /** Create a new equipment item */
@@ -5823,6 +6196,7 @@ export interface paths {
                         };
                     };
                 };
+<<<<<<< HEAD
 >>>>>>> f9b1c23 (generate types)
             };
         };
@@ -5891,10 +6265,15 @@ export interface paths {
                 };
 =======
 >>>>>>> 9ce3e2d (finish events page)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
             };
-          };
         };
-      };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
 <<<<<<< HEAD
     "/api/v1/equipments/item/{equipmentItemID}": {
@@ -6029,6 +6408,7 @@ export interface paths {
         };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     put?: never;
     post?: never;
@@ -6097,6 +6477,8 @@ export interface paths {
               }[];
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         /** List all majors */
         get: {
             parameters: {
@@ -6120,6 +6502,7 @@ export interface paths {
                         };
                     };
                 };
+<<<<<<< HEAD
 >>>>>>> f9b1c23 (generate types)
             };
         };
@@ -6219,10 +6602,78 @@ export interface paths {
                 };
 =======
 >>>>>>> 9ce3e2d (finish events page)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
             };
-          };
         };
-      };
+        put?: never;
+        /** create major */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        name: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Successful response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            name: string;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
 <<<<<<< HEAD
     "/api/v1/majors/{major}": {
@@ -6420,6 +6871,7 @@ export interface paths {
             };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           };
 =======
 >>>>>>> f9b1c23 (generate types)
@@ -6473,8 +6925,16 @@ export interface paths {
             };
           };
 >>>>>>> 9ce3e2d (finish events page)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
 <<<<<<< HEAD
     "/api/v1/enums/{enumType}": {
@@ -6542,6 +7002,7 @@ export interface paths {
         };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     put?: never;
     post?: never;
@@ -6585,6 +7046,8 @@ export interface paths {
               }[];
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
         /** List all sponsors */
         get: {
             parameters: {
@@ -6609,6 +7072,7 @@ export interface paths {
                         };
                     };
                 };
+<<<<<<< HEAD
 >>>>>>> f9b1c23 (generate types)
             };
         };
@@ -6648,10 +7112,17 @@ export interface paths {
                 };
 =======
 >>>>>>> 9ce3e2d (finish events page)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
             };
-          };
         };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
 <<<<<<< HEAD
     "/api/v1/officers": {
@@ -7506,6 +7977,7 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
 <<<<<<< HEAD
+<<<<<<< HEAD
   schemas: never;
   responses: never;
   parameters: never;
@@ -7518,12 +7990,15 @@ export type webhooks = Record<string, never>;
 export interface components {
 =======
 >>>>>>> f9b1c23 (generate types)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
     schemas: never;
     responses: never;
     parameters: never;
     requestBodies: never;
     headers: never;
     pathItems: never;
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> e644e06 (feat: auto-generate types (#86))
 =======
@@ -9643,6 +10118,8 @@ export interface components {
 >>>>>>> 9ce3e2d (finish events page)
 =======
 >>>>>>> f9b1c23 (generate types)
+=======
+>>>>>>> 3c6493a (generate openapi types [skip ci])
 }
 export type $defs = Record<string, never>;
 export type operations = Record<string, never>;
