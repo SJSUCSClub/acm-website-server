@@ -26,7 +26,7 @@ const uploadFile = async (file: File, key: string): Promise<boolean> => {
         return false;
     } else {
         try {
-            const {BUCKET_NAME: bucket_name} = env;
+            const {S3_BUCKET_NAME: bucket_name} = env;
             // ReadableStream
             const uploadObjectCommand = new PutObjectCommand(
                 {
@@ -48,7 +48,7 @@ const deleteFile = async (key: string): Promise<boolean> => {
         return false;
     } else {
         try {
-            const {BUCKET_NAME: bucket_name} = env;
+            const {S3_BUCKET_NAME: bucket_name} = env;
             const deleteObjectCommand = new DeleteObjectCommand({Bucket: bucket_name, Key: key});
             await (<S3Client>s3client).send(deleteObjectCommand);
             return true;
@@ -64,7 +64,7 @@ const getPresignedUrlPutObj = async (key: string): Promise<string | null> => {
         return null;
     } else {
         try {
-            const {BUCKET_NAME: bucket_name} = env;
+            const {S3_BUCKET_NAME: bucket_name} = env;
             const putObjectCommand = new PutObjectCommand(
                 {
                     Bucket: bucket_name,

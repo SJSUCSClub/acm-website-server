@@ -4,12 +4,13 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
-import { clubLinks, landingQuestions, landingSpotlights } from '@/db/schema';
-import type { ClubLink, LandingQuestion, LandingSpotlight } from '@/db/schema';
+import { clubLinks, events, landingQuestions, landingSpotlights } from '@/db/schema';
+import type { ClubLink, LandingQuestion } from '@/db/schema';
 import {
   clubLinkSchema,
   landingQuestionSchema,
   landingSpotlightSchema,
+  spotlightSchema,
 } from '@/util/zod';
 import { eq } from 'drizzle-orm';
 import {
@@ -17,6 +18,7 @@ import {
   forbiddenRequest,
   unauthorizedRequest,
 } from '@/middlewares/auth-middleware';
+import { env } from '@/env';
 
 const clubRouter = new OpenAPIHono<Context>();
 
@@ -108,7 +110,7 @@ clubRouter.openapi(
         content: {
           'application/json': {
             schema: z.object({
-              spotlights: z.array(landingSpotlightSchema),
+              spotlights: z.array(spotlightSchema),
             }),
           },
         },
@@ -117,10 +119,12 @@ clubRouter.openapi(
     },
   }),
   async (c) => {
-    const spotlights: LandingSpotlight[] = await db
-      .select()
-      .from(landingSpotlights);
-    return c.json({ spotlights }, HttpStatusCodes.OK);
+    const spotlights = await db
+      .select({id: landingSpotlights.id, type: events.eventType, image: landingSpotlights.imageKey, name: events.name, description: events.description})
+      .from(landingSpotlights)
+      .innerJoin(events, eq(landingSpotlights.eventId, events.id));
+    const nspotlights = spotlights.map((spotlight) => ({...spotlight, image: env.S3_BUCKET_URL + spotlight.image}));
+    return c.json({spotlights: nspotlights}, HttpStatusCodes.OK);
   },
 );
 

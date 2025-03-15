@@ -15,9 +15,10 @@ const EnvSchema = z.object({
 	GOOGLE_REDIRECT_URI: z.string().default(''),
 	ACCESS_KEY_ID: z.string().default(''),
 	SECRET_ACCESS_KEY: z.string().default(''),
-	BUCKET_NAME: z.string().default('acmwebsite-dev-588738592350-us-west-2'),
+	S3_BUCKET_NAME: z.string().default(''),
+	S3_BUCKET_URL: z.string().default(''),
 	REGION: z.string().default('us-west-2'),
-	ROLE_ARN: z.string().default('arn:aws:iam::588738592350:role/AcmApplicationServerRoleForLocal'),
+	ROLE_ARN: z.string().default(''),
 });
 
 export type Env = z.infer<typeof EnvSchema>;
