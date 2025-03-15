@@ -48,172 +48,176 @@ interface ISpotlight {
 
 const Hero = () => {
   const { data: links } = useQuery("get", "/v1/club/links");
-  const {data: spotlightsData} = useQuery("get", "/v1/club/spotlights");
+  const { data: spotlightsData } = useQuery("get", "/v1/club/spotlights");
 
   return (
     <Page>
-    <div className="text-center flex-col items-center justify-between">
-      <div className="min-h-screen">
-        <div className="flex place-content-center md:scale-100">
-          <ACMCSHero />
-        </div>
+      <div className="text-center flex-col items-center justify-between">
+        <div className="min-h-screen">
+          <div className="flex place-content-center md:scale-100">
+            <ACMCSHero />
+          </div>
 
-        <div className="md:text-lg text-[3vw] text-center transform md:-translate-y-24 pb-3 flex-cols md:flex items-center place-content-center gap-5">
-          <SocialBtn
-            className="w-full md:w-auto"
-            href={links?.links.discord || ""}
-          >
-            <img
-              className="dark:invert pr-[2%] md:pr-[5%] w-[5vw] md:w-[30%] h-auto"
-              src="./icons/discord.svg"
-              width={0}
-              height={0}
-              alt={""}
+          <div className="md:text-lg text-[3vw] text-center transform md:-translate-y-24 pb-3 flex-cols md:flex items-center place-content-center gap-5">
+            <SocialBtn
+              className="w-full md:w-auto"
+              href={links?.links.discord || ""}
+            >
+              <img
+                className="dark:invert pr-[2%] md:pr-[5%] w-[5vw] md:w-[30%] h-auto"
+                src="./icons/discord.svg"
+                width={0}
+                height={0}
+                alt={""}
+              />
+              Discord
+            </SocialBtn>
+
+            <SocialBtn
+              className="w-full md:w-auto"
+              href={links?.links.instagram || ""}
+            >
+              <img
+                className="dark:invert pr-[2%] md:pr-[5%] w-[5vw] md:w-[25%] h-auto"
+                src="./icons/Instagram.svg"
+                width={0}
+                height={0}
+                alt={""}
+              />
+              Instagram
+            </SocialBtn>
+
+            <SocialBtn
+              className="w-full md:w-auto"
+              href={links?.links.linkedin || ""}
+            >
+              <img
+                className="dark:invert pr-[2%] md:pr-[5%] w-[5vw] md:w-[25%] h-auto"
+                src="./icons/logo2.svg"
+                width={0}
+                height={0}
+                alt={""}
+              />
+              Linkedin
+            </SocialBtn>
+
+            <MemberBtn
+              variant="primary"
+              className="shadow-md animate-[fadeIn_2s_ease-in-out] hover:scale-110 duration-300"
             />
-            Discord
-          </SocialBtn>
+          </div>
 
-          <SocialBtn
-            className="w-full md:w-auto"
-            href={links?.links.instagram || ""}
-          >
-            <img
-              className="dark:invert pr-[2%] md:pr-[5%] w-[5vw] md:w-[25%] h-auto"
-              src="./icons/Instagram.svg"
-              width={0}
-              height={0}
-              alt={""}
-            />
-            Instagram
-          </SocialBtn>
+          <div className="animate-[fadeIn_2s_ease-in-out] text-left inline flex flex-col gap-4">
+            <div className="text-5xl font-[600]">
+              We are the largest{" "}
+              <span className="inline text-yellow-500"> Computer Science</span>{" "}
+              organization at{" "}
+              <span className="inline text-[#1a6096]">
+                San José State University.
+              </span>
+            </div>
 
-          <SocialBtn
-            className="w-full md:w-auto"
-            href={links?.links.linkedin || ""}
-          >
-            <img
-              className="dark:invert pr-[2%] md:pr-[5%] w-[5vw] md:w-[25%] h-auto"
-              src="./icons/logo2.svg"
-              width={0}
-              height={0}
-              alt={""}
-            />
-            Linkedin
-          </SocialBtn>
-
+            <div className="mt-7 text-xl font-[600]">
+              Thinking about getting{" "}
+              <span className="inline text-yellow-500"> involved? </span>
+            </div>
+            <div className="py-4 text-base font-normal">
+              {" "}
+              Engage with other ACM at SJSU members and elevate your tech
+              journey. Access valuable resources like mock interviews for
+              interview prep, thrilling hackathons, and coding competitions.
+              Connect with industry leaders like Apple, Tesla, and <b>
+                Google
+              </b>{" "}
+              for exclusive networking opportunities.
+            </div>
+          </div>
           <MemberBtn
-            variant="primary"
-            className="shadow-md animate-[fadeIn_2s_ease-in-out] hover:scale-110 duration-300"
+            variant="tertiary"
+            className="animate-[fadeIn_2s_ease-in-out] hover:scale-110 duration-300"
           />
         </div>
 
-        <div className="animate-[fadeIn_2s_ease-in-out] text-left inline flex flex-col gap-4">
-          <div className="text-5xl font-[600]">
-            We are the largest{" "}
-            <span className="inline text-yellow-500"> Computer Science</span>{" "}
-            organization at{" "}
-            <span className="inline text-[#1a6096]">
-              San José State University.
-            </span>
-          </div>
-
-          <div className="mt-7 text-xl font-[600]">
-            Thinking about getting{" "}
-            <span className="inline text-yellow-500"> involved? </span>
-          </div>
-          <div className="py-4 text-base font-normal">
-            {" "}
-            Engage with other ACM at SJSU members and elevate your tech journey.
-            Access valuable resources like mock interviews for interview prep,
-            thrilling hackathons, and coding competitions. Connect with industry
-            leaders like Apple, Tesla, and <b>Google</b> for exclusive
-            networking opportunities.
-          </div>
+        <div className="border-y-2 place-items-center grid grid-cols-4 grid-rows-1 py-12">
+          <img
+            src="./icons/kohlslogo.svg"
+            width={200}
+            height={200}
+            alt={""}
+            className=""
+          />
+          <img src="./icons/teslalogo.svg" width={95} height={95} alt={""} />
+          <img src="./icons/google.png" width={95} height={95} alt={""} />
+          <img src="./icons/fetch-ai.png" width={200} height={200} alt={""} />
         </div>
-        <MemberBtn
-          variant="tertiary"
-          className="animate-[fadeIn_2s_ease-in-out] hover:scale-110 duration-300"
-        />
-      </div>
 
-      <div className="border-y-2 place-items-center grid grid-cols-4 grid-rows-1 py-12">
-        <img
-          src="./icons/kohlslogo.svg"
-          width={200}
-          height={200}
-          alt={""}
-          className=""
-        />
-        <img src="./icons/teslalogo.svg" width={95} height={95} alt={""} />
-        <img src="./icons/google.png" width={95} height={95} alt={""} />
-        <img src="./icons/fetch-ai.png" width={200} height={200} alt={""} />
-      </div>
-
-      <div className="border-y-2 place-items-center py-5">
-        <h1 className="!mt-10 text-4xl font-bold">Teams</h1>
-        <h2 className="text-1xl font-bold mb-2 pt-3 text-gray-400">
-          We have a place for everyone.
-        </h2>
-        <div className="place-items-center grid grid-cols-3 grid-rows-1 py-10 gap-64">
-          <div className="text-[#8F69C2] font-semibold stroke-slate-500">
-            <img
-              className="py-3"
-              src="./icons/softwareicon.svg"
-              width={105}
-              height={105}
-              alt={""}
-            />
-            Software
-          </div>
-
-          <div className="text-[#C28F69] font-bold">
-            <img
-              className="py-3"
-              src="./icons/hardwareicon.svg"
-              width={105}
-              height={105}
-              alt={""}
-            />
-            Hardware
-          </div>
-
-          <div className="text-[#69C28F] font-bold">
-            <img
-              className="py-3"
-              src="./icons/designicon.svg"
-              width={105}
-              height={105}
-              alt={""}
-            />
-            Design
-          </div>
-        </div>
-      </div>
-
-      <div className="p-50 pt-16 border-y-2 pb-5">
-        <h1 className="text-4xl font-bold">Spotlights</h1>
-        <h2 className="text-1xl font-bold pb-10 pt-3 text-gray-400">
-          Our past events.
-        </h2>
-        <div className="flex-cols gap-3 md:flex items-center md:gap-5 overflow-auto p-10 mb-5">
-          {spotlightsData?.spotlights.map((event) => {
-            return (
-              <SpotLightCard
-                type={event.type}
-                image={event.image}
-                title={event.name}
-                description={event.description}
-                key={event.id}
+        <div className="border-y-2 place-items-center py-5">
+          <h1 className="!mt-10 text-4xl font-bold">Teams</h1>
+          <h2 className="text-1xl font-bold mb-2 pt-3 text-gray-400">
+            We have a place for everyone.
+          </h2>
+          <div className="place-items-center grid grid-cols-3 grid-rows-1 py-10 gap-64">
+            <div className="text-[#8F69C2] font-semibold stroke-slate-500">
+              <img
+                className="py-3"
+                src="./icons/softwareicon.svg"
+                width={105}
+                height={105}
+                alt={""}
               />
-            );
-          })}
+              Software
+            </div>
+
+            <div className="text-[#C28F69] font-bold">
+              <img
+                className="py-3"
+                src="./icons/hardwareicon.svg"
+                width={105}
+                height={105}
+                alt={""}
+              />
+              Hardware
+            </div>
+
+            <div className="text-[#69C28F] font-bold">
+              <img
+                className="py-3"
+                src="./icons/designicon.svg"
+                width={105}
+                height={105}
+                alt={""}
+              />
+              Design
+            </div>
+          </div>
+        </div>
+
+        {spotlightsData && spotlightsData?.spotlights.length > 0 && (
+          <div className="p-50 pt-16 border-y-2 pb-5">
+            <h1 className="text-4xl font-bold">Spotlights</h1>
+            <h2 className="text-1xl font-bold pb-10 pt-3 text-gray-400">
+              Our past events.
+            </h2>
+            <div className="flex-cols gap-3 md:flex items-center md:gap-5 overflow-auto p-10 mb-5">
+              {spotlightsData?.spotlights.map((event) => {
+                return (
+                  <SpotLightCard
+                    type={event.type}
+                    image={event.image}
+                    title={event.name}
+                    description={event.description}
+                    key={event.id}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        )}
+        <div className="flex justify-center items-center pt-12">
+          <GetInvolvedBtn />
         </div>
       </div>
-      <div className="flex justify-center items-center pt-12">
-        <GetInvolvedBtn />
-      </div>
-    </div>
-    </Page >
+    </Page>
   );
 };
 

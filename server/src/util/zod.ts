@@ -1,5 +1,5 @@
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { educationLevelEnum, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers, blacklist, csFieldsEnum, clubLinks, landingQuestions, landingSpotlights, membershipTermEnum, bookmarkedEvents, subscribedEvents, attendingEvents, urls, paymentLinks } from '@/db/schema';
+import { educationLevelEnum, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers, blacklist, csFieldsEnum, clubLinks, landingQuestions, landingSpotlights, membershipTermEnum, bookmarkedEvents, subscribedEvents, attendingEvents, urls, paymentLinks, eventsEnum } from '@/db/schema';
 
 import { z } from 'zod';
 
@@ -93,7 +93,7 @@ export const paymentIdSchema = z.object({
 });
 export const spotlightSchema = z.object({
 	id: z.number(),
-	type: z.enum(['Hackathon', 'seminar', 'Conference', 'Meetup', 'Tech Talk', 'Other', 'Workshop']),
+	type: z.enum(eventsEnum.enumValues),
 	image: z.string(),
 	name: z.string(),
 	description: z.string(),
