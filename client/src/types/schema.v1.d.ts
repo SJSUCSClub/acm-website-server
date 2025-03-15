@@ -4438,7 +4438,7 @@ export interface paths {
                             spotlights: {
                                 id: number;
                                 /** @enum {string} */
-                                type: "Hackathon" | "seminar" | "Conference" | "Meetup" | "Tech Talk" | "Other" | "Workshop";
+                                type: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
                                 image: string;
                                 name: string;
                                 description: string;
