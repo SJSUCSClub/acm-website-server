@@ -172,12 +172,12 @@ insert into files(key, name) values
 
 
 -- Insert company 1
-INSERT INTO companies (name, location, description, industry_id, logo) values
-('Tech Innovations', 'San Francisco, CA', 'Leading provider of AI-driven solutions', 'Technology', 'default.png'),
-('Eco Green Solutions', 'Austin, TX', 'Sustainable and renewable energy provider', 'Energy', 'default.png'),
-('Global Finance Corp', 'New York, NY', 'International financial services and investments', 'Banking and Finance', 'default.png'),
-('Health Plus', 'Boston, MA', 'Healthcare technology and medical devices', 'Healthcare', 'default.png'),
-('Future Automotive', 'Detroit, MI', 'Next-generation automotive manufacturing', 'Automotive', 'default.png');
+INSERT INTO companies (name, location, description, industry_id) values
+('Tech Innovations', 'San Francisco, CA', 'Leading provider of AI-driven solutions', 'Technology'),
+('Eco Green Solutions', 'Austin, TX', 'Sustainable and renewable energy provider', 'Energy'),
+('Global Finance Corp', 'New York, NY', 'International financial services and investments', 'Banking and Finance'),
+('Health Plus', 'Boston, MA', 'Healthcare technology and medical devices', 'Healthcare'),
+('Future Automotive', 'Detroit, MI', 'Next-generation automotive manufacturing', 'Automotive');
 
 INSERT INTO projects (name, description) values
 ('AI Chatbot', 'An intelligent chatbot using natural language processing'),
@@ -189,24 +189,24 @@ INSERT INTO projects (name, description) values
 -- Insert event 1
 INSERT INTO events (
     name, location, start_date, end_date, description, event_type, 
-    event_capacity, start_time, end_time, tags, target_audience, image, member_only
+    event_capacity, start_time, end_time, tags, target_audience, member_only
 ) 
 VALUES (
     'Tech Conference 2024', 'San Francisco, CA', '2024-11-01', '2024-11-03', 
     'A three-day conference on the latest in technology and innovation.', 
     'Conference', 500, '09:00', '17:00', 
-    '{"Artificial Intelligence", "Machine Learning"}', 'Students', 'default.png', false
+    '{"Artificial Intelligence", "Machine Learning"}', 'Students', false
 ),
 ('Hackathon 2024', 'New York, NY', '2024-12-10', '2024-12-12', 
     'A 48-hour hackathon focused on software development and innovation.', 
     'Hackathon', 300, '08:00', '20:00', 
-    '{"Networking"}', 'Students', 'default.png', false
+    '{"Networking"}', 'Students', false
 ),
 (
     'Data Science Workshop', 'Boston, MA', '2024-09-15', '2024-09-15', 
     'A one-day workshop on data science fundamentals and techniques.', 
     'Workshop', 150, '10:00', '16:00', 
-    '{"Data Science"}', 'Students', 'default.png', true
+    '{"Data Science"}', 'Students', true
 );
 
 INSERT INTO event_companies(event_id, company_id) VALUES
