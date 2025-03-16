@@ -1,10 +1,14 @@
-import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
-import { z } from 'zod';
-import * as HttpStatusCodes from 'stoker/http-status-codes';
-import { urlSchema, attendingEventSchema, subscribedEventSchema, bookmarkedEventSchema } from '@/util/zod';
+import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
+import { z } from "zod";
+import * as HttpStatusCodes from "stoker/http-status-codes";
+import {
+  urlSchema,
+  attendingEventSchema,
+  bookmarkedEventSchema,
+} from "@/util/zod";
 
-import type { Context } from '@/lib/context';
-import { db } from '@/db/db';
+import type { Context } from "@/lib/context";
+import { db } from "@/db/db";
 import {
   users,
   eventCompanies,
@@ -16,14 +20,29 @@ import {
   urls,
   bookmarkedEvents,
   attendingEvents,
-} from '@/db/schema';
-import { eq, count, getTableColumns, and, lt, gt, arrayContains } from 'drizzle-orm';
-import type { User, Company, File, Event, Url, NewAttendingEvent } from '@/db/schema';
+} from "@/db/schema";
+import {
+  eq,
+  count,
+  getTableColumns,
+  and,
+  lt,
+  gt,
+  arrayContains,
+} from "drizzle-orm";
+import type {
+  User,
+  Company,
+  File,
+  Event,
+  Url,
+  NewAttendingEvent,
+} from "@/db/schema";
 import {
   authMiddleWare,
   forbiddenRequest,
   unauthorizedRequest,
-} from '@/middlewares/auth-middleware';
+} from "@/middlewares/auth-middleware";
 import {
   companySchema,
   eventIDSchema,
@@ -32,68 +51,75 @@ import {
   eventSchema,
   csFieldsEnumSchema,
   timestampEnumSchema,
-} from '@/util/zod';
+} from "@/util/zod";
+import { generateObjectUrl } from "@/lib/aws/s3";
 
 const eventRouter = new OpenAPIHono<Context>();
 
 eventRouter.openapi(
   createRoute({
-    method: 'get',
-    path: '/{eventID}/companies',
-    tags: ['events'],
-    summary: 'List all companies for an event',
+    method: "get",
+    path: "/{eventID}/companies",
+    tags: ["events"],
+    summary: "List all companies for an event",
     request: {
       params: eventIDSchema,
     },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          'application/json': {
+          "application/json": {
             schema: z.object({
-              foundEventCompanies: z.array(companySchema),
+              eventCompanies: z.array(companySchema),
             }),
           },
         },
-        description: 'Successful response',
+        description: "Successful response",
       },
     },
   }),
   async (c) => {
-    const { eventID } = c.req.valid('param');
+    const { eventID } = c.req.valid("param");
     const foundEventCompanies: Company[] = await db
       .select(getTableColumns(companies))
       .from(eventCompanies)
       .innerJoin(companies, eq(companies.id, eventCompanies.companyId))
       .where(eq(eventCompanies.eventId, parseInt(eventID)));
-    return c.json({ foundEventCompanies }, HttpStatusCodes.OK);
+
+    const mappedCompanies = foundEventCompanies.map((company) => ({
+      ...company,
+      logo: generateObjectUrl(company.logo),
+    }));
+
+    return c.json({ eventCompanies: mappedCompanies }, HttpStatusCodes.OK);
   },
 );
 
 eventRouter.openapi(
   createRoute({
-    method: 'get',
-    path: '/{eventID}/subscribers',
-    tags: ['events'],
-    summary: 'List all subscribers for an event',
-    middleware: [authMiddleWare('admin')],
+    method: "get",
+    path: "/{eventID}/subscribers",
+    tags: ["events"],
+    summary: "List all subscribers for an event",
+    middleware: [authMiddleWare("admin")],
     request: {
       params: eventIDSchema,
     },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          'application/json': {
+          "application/json": {
             schema: z.object({
               eventSubscribers: z.array(userSchema),
             }),
           },
         },
-        description: 'Successful response',
+        description: "Successful response",
       },
     },
   }),
   async (c) => {
-    const { eventID } = c.req.valid('param');
+    const { eventID } = c.req.valid("param");
     const eventSubscribers: User[] = await db
       .select(getTableColumns(users))
       .from(subscribedEvents)
@@ -112,29 +138,29 @@ eventRouter.openapi(
 
 eventRouter.openapi(
   createRoute({
-    method: 'get',
-    path: '/{eventID}/subscribers/count',
-    tags: ['events'],
-    summary: 'Get the number of subscribers for an event',
-    middleware: [authMiddleWare('admin')],
+    method: "get",
+    path: "/{eventID}/subscribers/count",
+    tags: ["events"],
+    summary: "Get the number of subscribers for an event",
+    middleware: [authMiddleWare("admin")],
     request: {
       params: eventIDSchema,
     },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          'application/json': {
+          "application/json": {
             schema: z.object({
               subscribersCount: z.number(),
             }),
           },
         },
-        description: 'Successful response',
+        description: "Successful response",
       },
     },
   }),
   async (c) => {
-    const { eventID } = c.req.valid('param');
+    const { eventID } = c.req.valid("param");
     const subscribersCount = await db
       .select({ count: count() })
       .from(subscribedEvents)
@@ -148,43 +174,49 @@ eventRouter.openapi(
 
 eventRouter.openapi(
   createRoute({
-    method: 'get',
-    path: '/{eventID}/files',
-    tags: ['events'],
-    summary: 'List all files for an event',
+    method: "get",
+    path: "/{eventID}/files",
+    tags: ["events"],
+    summary: "List all files for an event",
     request: {
       params: eventIDSchema,
     },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          'application/json': {
+          "application/json": {
             schema: z.object({
               eventFiles: z.array(fileSchema),
             }),
           },
         },
-        description: 'Successful response',
+        description: "Successful response",
       },
     },
   }),
   async (c) => {
-    const { eventID } = c.req.valid('param');
+    const { eventID } = c.req.valid("param");
     const eventFiles: File[] = await db
       .select(getTableColumns(files))
       .from(eventsFiles)
       .innerJoin(files, eq(files.key, eventsFiles.fileKey))
       .where(eq(eventsFiles.eventId, parseInt(eventID)));
-    return c.json({ eventFiles }, HttpStatusCodes.OK);
+
+    const mappedFiles = eventFiles.map((file) => ({
+      ...file,
+      key: generateObjectUrl(file.key),
+    }));
+
+    return c.json({ eventFiles: mappedFiles }, HttpStatusCodes.OK);
   },
 );
 
 eventRouter.openapi(
   createRoute({
-    method: 'get',
-    path: '/',
-    tags: ['events'],
-    summary: 'List all events',
+    method: "get",
+    path: "/",
+    tags: ["events"],
+    summary: "List all events",
     request: {
       query: z.object({
         tags: z.string().optional(),
@@ -194,56 +226,65 @@ eventRouter.openapi(
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          'application/json': {
+          "application/json": {
             schema: z.object({
               foundEvents: z.array(eventSchema),
             }),
           },
         },
-        description: 'Successful response',
+        description: "Successful response",
       },
     },
   }),
   async (c) => {
-    const {  tags = '', timeframe = 'all' } = c.req.valid('query');
+    const { tags = "", timeframe = "all" } = c.req.valid("query");
 
     const conditions = [];
 
-    if (timeframe !== 'all') {
-      const today = new Date().toISOString().split('T')[0];
+    if (timeframe !== "all") {
+      const today = new Date().toISOString().split("T")[0];
 
       conditions.push(
-        timeframe === 'upcoming' ? gt(events.startDate, today) :
-        timeframe === 'past' ? lt(events.startDate, today) :
-        eq(events.startDate, today),
+        timeframe === "upcoming"
+          ? gt(events.startDate, today)
+          : timeframe === "past"
+            ? lt(events.startDate, today)
+            : eq(events.startDate, today),
       );
     }
 
     const validTags = tags
-      .split(',')
-      .filter(tag => csFieldsEnumSchema._def.values.includes(tag as z.infer<typeof csFieldsEnumSchema>))
-      .map(tag => tag as z.infer<typeof csFieldsEnumSchema>);
+      .split(",")
+      .filter((tag) =>
+        csFieldsEnumSchema._def.values.includes(
+          tag as z.infer<typeof csFieldsEnumSchema>,
+        ),
+      )
+      .map((tag) => tag as z.infer<typeof csFieldsEnumSchema>);
 
     if (tags?.length > 0) {
       conditions.push(arrayContains(events.tags, validTags));
     }
 
-    const foundEvents: Event[] = await db.select().from(events).where(and(...conditions));
+    const foundEvents: Event[] = await db
+      .select()
+      .from(events)
+      .where(and(...conditions));
     return c.json({ foundEvents }, HttpStatusCodes.OK);
   },
 );
 
 eventRouter.openapi(
   createRoute({
-    method: 'post',
-    path: '/',
-    tags: ['events'],
-    summary: 'Create an event',
-    middleware: [authMiddleWare('admin')],
+    method: "post",
+    path: "/",
+    tags: ["events"],
+    summary: "Create an event",
+    middleware: [authMiddleWare("admin")],
     request: {
       body: {
         content: {
-          'application/json': {
+          "application/json": {
             schema: eventSchema.omit({ id: true, createdAt: true }),
           },
         },
@@ -252,13 +293,13 @@ eventRouter.openapi(
     responses: {
       [HttpStatusCodes.CREATED]: {
         content: {
-          'application/json': {
+          "application/json": {
             schema: z.object({
               event: eventSchema,
             }),
           },
         },
-        description: 'Successful response',
+        description: "Successful response",
       },
       ...unauthorizedRequest,
       ...forbiddenRequest,
@@ -280,7 +321,7 @@ eventRouter.openapi(
       tags,
       targetAudience,
       shortenedEventUrl,
-    } = c.req.valid('json');
+    } = c.req.valid("json");
     const newEvent = await db
       .insert(events)
       .values({
@@ -306,224 +347,80 @@ eventRouter.openapi(
 
 eventRouter.openapi(
   createRoute({
-    method: 'get',
-    path: '/{eventID}',
-    tags: ['events'],
-    summary: 'List event information',
+    method: "get",
+    path: "/{eventID}",
+    tags: ["events"],
+    summary: "List event information",
     request: {
       params: eventIDSchema,
     },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          'application/json': {
+          "application/json": {
             schema: z.object({
-              foundEvent: eventSchema,
+              event: eventSchema,
             }),
           },
         },
-        description: 'Successful response',
+        description: "Successful response",
       },
       [HttpStatusCodes.NOT_FOUND]: {
         content: {
-          'application/json': {
+          "application/json": {
             schema: z.object({
               error: z.string(),
             }),
           },
         },
-        description: 'Not Found',
+        description: "Not Found",
       },
     },
   }),
   async (c) => {
-    const { eventID } = c.req.valid('param');
+    const { eventID } = c.req.valid("param");
     const foundEvents: Event[] = await db
       .select()
       .from(events)
       .where(eq(events.id, parseInt(eventID)));
 
     if (foundEvents.length === 0) {
-      return c.json({ error: 'Event not found' }, HttpStatusCodes.NOT_FOUND);
+      return c.json({ error: "Event not found" }, HttpStatusCodes.NOT_FOUND);
     }
-    return c.json({ foundEvent: foundEvents[0] }, HttpStatusCodes.OK);
+
+    const mappedEvent = {
+      ...foundEvents[0],
+      image: generateObjectUrl(foundEvents[0].image),
+    };
+
+    return c.json({ event: mappedEvent }, HttpStatusCodes.OK);
   },
 );
 
 eventRouter.openapi(
   createRoute({
-    method: 'post',
-    path: '/{eventID}/subscribe',
-    tags: ['events'],
-    summary: 'User subscribes to an event',
-    middleware: [authMiddleWare('user')],
+    method: "get",
+    path: "/{eventID}/url",
+    tags: ["events"],
+    summary: "Fetch event URL",
     request: {
       params: eventIDSchema,
     },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          'application/json': {
-            schema: z.object({
-              newSubscription: subscribedEventSchema,
-            }),
-          },
-        },
-        description: 'Successful response',
-      },
-      [HttpStatusCodes.NOT_FOUND]: {
-        content: {
-          'application/json': {
-            schema: z.object({
-              error: z.string(),
-            }),
-          },
-        },
-        description: 'Not Found',
-      },
-      [HttpStatusCodes.CONFLICT]: {
-        content: {
-          'application/json': {
-            schema: z.object({
-              error: z.string(),
-            }),
-          },
-        },
-        description: 'Conflict',
-      },
-      ...unauthorizedRequest,
-      ...forbiddenRequest,
-    },
-  }),
-  async (c) => {
-    const user = c.get('user');
-    const { eventID } = c.req.valid('param');
-
-    if (!user) {
-      return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-    }
-
-    const foundEvents: Event[] = await db
-      .select()
-      .from(events)
-      .where(eq(events.id, parseInt(eventID)));
-
-    if (foundEvents.length === 0) {
-      return c.json({ error: 'Event not found' }, HttpStatusCodes.NOT_FOUND);
-    }
-    const event = foundEvents[0];
-    if (event.memberOnly && user.role === 'user') {
-      return c.json({ error: 'Not member' }, HttpStatusCodes.FORBIDDEN);
-    }
-
-    const newSubscription = await db
-      .insert(subscribedEvents)
-      .values({ userId: user!.id, eventId: parseInt(eventID) })
-      .onConflictDoNothing()
-      .returning();
-
-    if (newSubscription.length === 0) {
-      return c.json(
-        { error: 'Subscription already exists' },
-        HttpStatusCodes.CONFLICT,
-      );
-    }
-
-    return c.json({ newSubscription: newSubscription[0] }, HttpStatusCodes.OK);
-  },
-);
-
-eventRouter.openapi(
-  createRoute({
-    method: 'delete',
-    path: '/{eventID}/subscribe',
-    tags: ['events'],
-    summary: 'User unsubscribes to an event',
-    middleware: [authMiddleWare('user')],
-    request: {
-      params: eventIDSchema,
-    },
-    responses: {
-      [HttpStatusCodes.OK]: {
-        content: {
-          'application/json': {
-            schema: z.object({
-              deletedSubscription: subscribedEventSchema,
-            }),
-          },
-        },
-        description: 'Successful response',
-      },
-      [HttpStatusCodes.NOT_FOUND]: {
-        content: {
-          'application/json': {
-            schema: z.object({
-              error: z.string(),
-            }),
-          },
-        },
-        description: 'Not Found',
-      },
-      ...unauthorizedRequest,
-      ...forbiddenRequest,
-    },
-  }),
-  async (c) => {
-    const user = c.get('user');
-    const { eventID } = c.req.valid('param');
-
-    const deletedSubscription = await db
-      .delete(subscribedEvents)
-      .where(
-        and(
-          eq(subscribedEvents.userId, user!.id),
-          eq(subscribedEvents.eventId, parseInt(eventID)),
-        ),
-      )
-      .returning();
-
-    if (deletedSubscription.length === 0) {
-      return c.json(
-        { error: 'Subscription not found' },
-        HttpStatusCodes.NOT_FOUND,
-      );
-    }
-
-    const formattedDeletedSubscription = deletedSubscription.map((sub) => ({
-      ...sub,
-      subscribedDate: sub.subscribedDate.toISOString(),
-    }));
-    return c.json(
-      { deletedSubscription: formattedDeletedSubscription[0] },
-      HttpStatusCodes.OK,
-    );
-  },
-);
-
-eventRouter.openapi(
-  createRoute({
-    method: 'get',
-    path: '/{eventID}/url',
-    tags: ['events'],
-    summary: 'Fetch event URL',
-    request: {
-      params: eventIDSchema,
-    },
-    responses: {
-      [HttpStatusCodes.OK]: {
-        content: {
-          'application/json': {
+          "application/json": {
             schema: z.object({
               url: urlSchema,
             }),
           },
         },
-        description: 'Successful response',
+        description: "Successful response",
       },
     },
   }),
   async (c) => {
-    const { eventID } = c.req.valid('param');
+    const { eventID } = c.req.valid("param");
     const url: Url[] = await db
       .select(getTableColumns(urls))
       .from(events)
@@ -535,147 +432,34 @@ eventRouter.openapi(
 
 eventRouter.openapi(
   createRoute({
-    method: 'post',
-    path: '/{eventID}/bookmark',
-    tags: ['events'],
-    summary: 'User bookmarks an event',
-    middleware: [authMiddleWare('user')],
+    method: "get",
+    path: "/{eventID}/attendance",
+    tags: ["events"],
+    summary: "List all attendees for an event",
+    middleware: [authMiddleWare("admin")],
     request: {
       params: eventIDSchema,
     },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          'application/json': {
-            schema: z.object({
-              newBookmark: bookmarkedEventSchema,
-            }),
-          },
-        },
-        description: 'Successful response',
-      },
-      [HttpStatusCodes.CONFLICT]: {
-        content: {
-          'application/json': {
-            schema: z.object({
-              error: z.string(),
-            }),
-          },
-        },
-        description: 'Conflict',
-      },
-      ...unauthorizedRequest,
-      ...forbiddenRequest,
-    },
-  }),
-  async (c) => {
-    const user = c.get('user');
-    const { eventID } = c.req.valid('param');
-
-    const newBookmark = await db
-      .insert(bookmarkedEvents)
-      .values({ userId: user!.id, eventId: parseInt(eventID) })
-      .onConflictDoNothing()
-      .returning();
-
-    if (newBookmark.length === 0) {
-      return c.json(
-        { error: 'Bookmark already exists' },
-        HttpStatusCodes.CONFLICT,
-      );
-    }
-
-    return c.json({ newBookmark: newBookmark[0] }, HttpStatusCodes.OK);
-  },
-);
-
-eventRouter.openapi(
-  createRoute({
-    method: 'delete',
-    path: '/{eventID}/bookmark',
-    tags: ['events'],
-    summary: 'User unbookmarks an event',
-    middleware: [authMiddleWare('user')],
-    request: {
-      params: eventIDSchema,
-    },
-    responses: {
-      [HttpStatusCodes.OK]: {
-        content: {
-          'application/json': {
-            schema: z.object({
-              deletedBookmark: bookmarkedEventSchema,
-            }),
-          },
-        },
-        description: 'Successful response',
-      },
-      [HttpStatusCodes.NOT_FOUND]: {
-        content: {
-          'application/json': {
-            schema: z.object({
-              error: z.string(),
-            }),
-          },
-        },
-        description: 'Not Found',
-      },
-      ...unauthorizedRequest,
-      ...forbiddenRequest,
-    },
-  }),
-  async (c) => {
-    const user = c.get('user');
-    const { eventID } = c.req.valid('param');
-
-    const deletedBookmark = await db
-      .delete(bookmarkedEvents)
-      .where(
-        and(
-          eq(bookmarkedEvents.userId, user!.id),
-          eq(bookmarkedEvents.eventId, parseInt(eventID)),
-        ),
-      )
-      .returning();
-
-    if (deletedBookmark.length === 0) {
-      return c.json({ error: 'Bookmark not found' }, HttpStatusCodes.NOT_FOUND);
-    }
-
-    return c.json({ deletedBookmark: deletedBookmark[0] }, HttpStatusCodes.OK);
-  },
-);
-
-eventRouter.openapi(
-  createRoute({
-    method: 'get',
-    path: '/{eventID}/attendance',
-    tags: ['events'],
-    summary: 'List all attendees for an event',
-    middleware: [authMiddleWare('admin')],
-    request: {
-      params: eventIDSchema,
-    },
-    responses: {
-      [HttpStatusCodes.OK]: {
-        content: {
-          'application/json': {
+          "application/json": {
             schema: z.object({
               eventAttendees: z.array(userSchema),
             }),
           },
         },
-        description: 'Successful response',
+        description: "Successful response",
       },
       [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
         content: {
-          'application/json': {
+          "application/json": {
             schema: z.object({
               error: z.string(),
             }),
           },
         },
-        description: 'Internal Server Error',
+        description: "Internal Server Error",
       },
       ...unauthorizedRequest,
       ...forbiddenRequest,
@@ -683,12 +467,12 @@ eventRouter.openapi(
   }),
   async (c) => {
     try {
-      const user = c.get('user');
+      const user = c.get("user");
       if (!user) {
-        return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+        return c.json({ error: "Unauthorized" }, HttpStatusCodes.UNAUTHORIZED);
       }
 
-      const { eventID } = c.req.valid('param');
+      const { eventID } = c.req.valid("param");
       const eventAttendees: User[] = await db
         .select(getTableColumns(users))
         .from(attendingEvents)
@@ -698,42 +482,48 @@ eventRouter.openapi(
         ...user,
         createdAt: user.createdAt.toISOString(),
       }));
-      return c.json({ eventAttendees: formattedEventAttendees }, HttpStatusCodes.OK);
+      return c.json(
+        { eventAttendees: formattedEventAttendees },
+        HttpStatusCodes.OK,
+      );
     } catch (error) {
-      return c.json({ error: `Internal server error: ${ error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json(
+        { error: `Internal server error: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
     }
   },
 );
 
 eventRouter.openapi(
   createRoute({
-    method: 'get',
-    path: '/{eventID}/attendance/count',
-    tags: ['events'],
-    summary: 'Get the number of attendees for an event',
+    method: "get",
+    path: "/{eventID}/attendance/count",
+    tags: ["events"],
+    summary: "Get the number of attendees for an event",
     request: {
       params: eventIDSchema,
     },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          'application/json': {
+          "application/json": {
             schema: z.object({
               attendeesCount: z.number(),
             }),
           },
         },
-        description: 'Successful response',
+        description: "Successful response",
       },
       [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
         content: {
-          'application/json': {
+          "application/json": {
             schema: z.object({
               error: z.string(),
             }),
           },
         },
-        description: 'Internal Server Error',
+        description: "Internal Server Error",
       },
       ...unauthorizedRequest,
       ...forbiddenRequest,
@@ -741,193 +531,23 @@ eventRouter.openapi(
   }),
   async (c) => {
     try {
-      const { eventID } = c.req.valid('param');
+      const { eventID } = c.req.valid("param");
       const attendeesCount = await db
         .select({ count: count() })
         .from(attendingEvents)
         .where(eq(attendingEvents.eventId, parseInt(eventID)));
-      return c.json({ attendeesCount: attendeesCount[0].count }, HttpStatusCodes.OK);
+      return c.json(
+        { attendeesCount: attendeesCount[0].count },
+        HttpStatusCodes.OK,
+      );
     } catch (error) {
-      return c.json({ error: `Internal server error: ${ error }` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json(
+        { error: `Internal server error: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
     }
   },
 );
 
-eventRouter.openapi(
-  createRoute({
-    method: 'post',
-    path: '/{eventID}/attendance',
-    tags: ['events'],
-    summary: 'User plans to attend event',
-    middleware: [authMiddleWare('user')],
-    request: {
-      params: eventIDSchema,
-    },
-    responses: {
-      [HttpStatusCodes.OK]: {
-        content: {
-          'application/json': {
-            schema: z.object({
-              newAttendance: attendingEventSchema,
-            }),
-          },
-        },
-        description: 'Successful response',
-      },
-      [HttpStatusCodes.NOT_FOUND]: {
-        content: {
-          'application/json': {
-            schema: z.object({
-              error: z.string(),
-            }),
-          },
-        },
-        description: 'Not Found',
-      },
-      [HttpStatusCodes.CONFLICT]: {
-        content: {
-          'application/json': {
-            schema: z.object({
-              error: z.string(),
-            }),
-          },
-        },
-        description: 'Conflict',
-      },
-      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
-        content: {
-          'application/json': {
-            schema: z.object({
-              error: z.string(),
-            }),
-          },
-        },
-        description: 'Internal Server Error',
-      },
-      ...unauthorizedRequest,
-      ...forbiddenRequest,
-    },
-  }),
-  async (c) => {
-    try {
-      const user = c.get('user');
-      const { eventID } = c.req.valid('param');
-
-      const event : Event | undefined = await db
-        .select()
-        .from(events)
-        .where(eq(events.id, parseInt(eventID)))
-        .limit(1)
-        .then(rows => rows[0]);
-
-      if (!event) {
-        return c.json({ error: 'Event not found' }, HttpStatusCodes.NOT_FOUND);
-      }
-      
-      if (event.memberOnly && user?.role === 'user') {
-        return c.json({ error: 'Member only event' }, HttpStatusCodes.FORBIDDEN);
-      }
-
-      if (event.eventCapacity !== null && event.eventCapacity > 0) {
-        const attendeesCount = await db
-          .select({ count: count() })
-          .from(attendingEvents)
-          .where(eq(attendingEvents.eventId, parseInt(eventID)));
-        
-        if (attendeesCount[0].count >= event.eventCapacity) {
-          return c.json({ error: 'Event capacity reached' }, HttpStatusCodes.FORBIDDEN);
-        }
-      }
-
-      const newAttendance : NewAttendingEvent[] = await db
-        .insert(attendingEvents)
-        .values({ 
-          userId: user!.id, 
-          eventId: parseInt(eventID),
-        })
-        .onConflictDoNothing()
-        .returning();
-
-      if (newAttendance.length === 0) {
-        return c.json(
-          { error: 'Attendance already marked' },
-          HttpStatusCodes.CONFLICT,
-        );
-      }
-
-      const formattedAttendance = {
-        ...newAttendance[0],
-        attendingDate: newAttendance[0].attendingDate?.toISOString() || new Date().toISOString(),
-      };
-
-      return c.json({ newAttendance: formattedAttendance }, HttpStatusCodes.OK);
-    } catch (error) {
-      return c.json({ error: `Internal server error: ${ error }` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
-    }
-  },
-);
-
-eventRouter.openapi(
-  createRoute({
-    method: 'delete',
-    path: '/{eventID}/attendance',
-    tags: ['events'],
-    summary: 'User removes attendance for an event',
-    middleware: [authMiddleWare('user')],
-    request: {
-      params: eventIDSchema,
-    },
-    responses: {
-			[HttpStatusCodes.NO_CONTENT]: {
-				description: 'Successful response',
-			},
-      [HttpStatusCodes.NOT_FOUND]: {
-        content: {
-          'application/json': {
-            schema: z.object({
-              error: z.string(),
-            }),
-          },
-        },
-        description: 'Not Found',
-      },
-      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
-        content: {
-          'application/json': {
-            schema: z.object({
-              error: z.string(),
-            }),
-          },
-        },
-        description: 'Internal Server Error',
-      },
-      ...unauthorizedRequest,
-      ...forbiddenRequest,
-    },
-  }),
-  async (c) => {
-    try {
-      const user = c.get('user');
-      const { eventID } = c.req.valid('param');
-
-      const deletedAttendance = await db
-        .delete(attendingEvents)
-        .where(
-          and(
-            eq(attendingEvents.userId, user!.id),
-            eq(attendingEvents.eventId, parseInt(eventID)),
-          ),
-        )
-        .returning();
-
-      if (deletedAttendance.length === 0) {
-        return c.json({ error: 'Failed to delete attendance' }, HttpStatusCodes.NOT_FOUND);
-      }
-      return c.text('', HttpStatusCodes.NO_CONTENT);
-    } catch (error) {
-      return c.json({ error: `Internal server error: ${  error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
-    }
-  },
-);
 
 export default eventRouter;

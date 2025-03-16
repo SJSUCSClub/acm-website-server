@@ -1,6 +1,6 @@
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
 import { z } from 'zod';
-import { authMiddleWare } from '@/middlewares/auth-middleware';
+import { authMiddleWare, forbiddenRequest } from '@/middlewares/auth-middleware';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import {
   users,
@@ -19,9 +19,9 @@ import {
   attendingEvents,
 } from '@/db/schema';
 import { db } from '@/db/db';
-import { eq, getTableColumns, and } from 'drizzle-orm';
+import { eq,count, getTableColumns, and } from 'drizzle-orm';
 import { unauthorizedRequest } from '@/middlewares/auth-middleware';
-import type { User } from '@/db/schema';
+import type { User, Event, NewAttendingEvent } from '@/db/schema';
 import type { Context } from '@/lib/context';
 import {
   userSchema,
@@ -35,6 +35,10 @@ import {
   subscribedCompany,
   errorSchema,
   attendingEvent,
+  subscribedEventSchema,
+  subscribedCompanySchema,
+  attendingEventSchema,
+  bookmarkedEventSchema,
 } from '@/util/zod';
 
 const userRouter = new OpenAPIHono<Context>();
@@ -325,6 +329,62 @@ userRouter.openapi(
 
 userRouter.openapi(
   createRoute({
+    method: "post",
+    path: "/my/bookmarked/{eventID}",
+    tags: ["users"],
+    summary: "User bookmarks an event",
+    middleware: [authMiddleWare("user")],
+    request: {
+      params: eventIDSchema,
+    },
+    responses: {
+      [HttpStatusCodes.OK]: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              newBookmark: bookmarkedEventSchema,
+            }),
+          },
+        },
+        description: "Successful response",
+      },
+      [HttpStatusCodes.CONFLICT]: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: "Conflict",
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const user = c.get("user");
+    const { eventID } = c.req.valid("param");
+
+    const newBookmark = await db
+      .insert(bookmarkedEvents)
+      .values({ userId: user!.id, eventId: parseInt(eventID) })
+      .onConflictDoNothing()
+      .returning();
+
+    if (newBookmark.length === 0) {
+      return c.json(
+        { error: "Bookmark already exists" },
+        HttpStatusCodes.CONFLICT,
+      );
+    }
+
+    return c.json({ newBookmark: newBookmark[0] }, HttpStatusCodes.OK);
+  },
+);
+
+userRouter.openapi(
+  createRoute({
     method: 'delete',
     path: '/my/bookmarked/{eventID}',
     tags: ['users'],
@@ -479,6 +539,89 @@ userRouter.openapi(
 
 userRouter.openapi(
   createRoute({
+    method: "post",
+    path: "/my/subscribed-events/{eventID}",
+    tags: ["users"],
+    summary: "User subscribes to an event",
+    middleware: [authMiddleWare("user")],
+    request: {
+      params: eventIDSchema,
+    },
+    responses: {
+      [HttpStatusCodes.OK]: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              newSubscription: subscribedEventSchema,
+            }),
+          },
+        },
+        description: "Successful response",
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: "Not Found",
+      },
+      [HttpStatusCodes.CONFLICT]: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: "Conflict",
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const user = c.get("user");
+    const { eventID } = c.req.valid("param");
+
+    if (!user) {
+      return c.json({ error: "Unauthorized" }, HttpStatusCodes.UNAUTHORIZED);
+    }
+
+    const foundEvents = await db
+      .select()
+      .from(events)
+      .where(eq(events.id, parseInt(eventID)));
+
+    if (foundEvents.length === 0) {
+      return c.json({ error: "Event not found" }, HttpStatusCodes.NOT_FOUND);
+    }
+    const event = foundEvents[0];
+    if (event.memberOnly && user.role === "user") {
+      return c.json({ error: "Not member" }, HttpStatusCodes.FORBIDDEN);
+    }
+
+    const newSubscription = await db
+      .insert(subscribedEvents)
+      .values({ userId: user!.id, eventId: parseInt(eventID) })
+      .onConflictDoNothing()
+      .returning();
+
+    if (newSubscription.length === 0) {
+      return c.json(
+        { error: "Subscription already exists" },
+        HttpStatusCodes.CONFLICT,
+      );
+    }
+
+    return c.json({ newSubscription: newSubscription[0] }, HttpStatusCodes.OK);
+  },
+);
+
+userRouter.openapi(
+  createRoute({
     method: 'delete',
     path: '/my/subscribed-events/{eventID}',
     tags: ['users'],
@@ -627,6 +770,65 @@ userRouter.openapi(
       );
 
     return c.json({ subscribed: sub.length > 0 }, HttpStatusCodes.OK);
+  },
+);
+
+userRouter.openapi(
+  createRoute({
+    method: "post",
+    path: "/my/subscribed-companies/{companyID}",
+    tags: ["users"],
+    summary: "Subscribe to a company",
+    middleware: [authMiddleWare("user")],
+    request: {
+      params: companyIDSchema,
+    },
+    responses: {
+      [HttpStatusCodes.CREATED]: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              subscription: subscribedCompanySchema,
+            }),
+          },
+        },
+        description: "Successfully subscribed",
+      },
+      [HttpStatusCodes.CONFLICT]: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: "Already subscribed",
+      },
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const user = c.get("user");
+    if (!user) {
+      return c.json({ error: "User not found" }, HttpStatusCodes.UNAUTHORIZED);
+    }
+    const { companyID } = c.req.valid("param");
+    const newSubscription = await db
+      .insert(subscribedCompanies)
+      .values({
+        userId: user.id,
+        companyId: parseInt(companyID),
+        subscribedDate: new Date(),
+      })
+      .onConflictDoNothing()
+      .returning();
+    if (newSubscription.length === 0) {
+      return c.json({ error: "Already subscribed" }, HttpStatusCodes.CONFLICT);
+    }
+    return c.json(
+      { subscription: newSubscription[0] },
+      HttpStatusCodes.CREATED,
+    );
   },
 );
 
@@ -1128,6 +1330,200 @@ userRouter.openapi(
       return c.json({ attending: attendance.length > 0 }, HttpStatusCodes.OK);
     } catch (error) {
       return c.json({ error: `Failed to check event attendance: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  },
+);
+
+userRouter.openapi(
+  createRoute({
+    method: "post",
+    path: "my/attending-events/{eventID}",
+    tags: ["users"],
+    summary: "User plans to attend event",
+    middleware: [authMiddleWare("user")],
+    request: {
+      params: eventIDSchema,
+    },
+    responses: {
+      [HttpStatusCodes.OK]: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              newAttendance: attendingEventSchema,
+            }),
+          },
+        },
+        description: "Successful response",
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: "Not Found",
+      },
+      [HttpStatusCodes.CONFLICT]: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: "Conflict",
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: "Internal Server Error",
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    try {
+      const user = c.get("user");
+      const { eventID } = c.req.valid("param");
+
+      const event: Event | undefined = await db
+        .select()
+        .from(events)
+        .where(eq(events.id, parseInt(eventID)))
+        .limit(1)
+        .then((rows) => rows[0]);
+
+      if (!event) {
+        return c.json({ error: "Event not found" }, HttpStatusCodes.NOT_FOUND);
+      }
+
+      if (event.memberOnly && user?.role === "user") {
+        return c.json(
+          { error: "Member only event" },
+          HttpStatusCodes.FORBIDDEN,
+        );
+      }
+
+      if (event.eventCapacity !== null && event.eventCapacity > 0) {
+        const attendeesCount = await db
+          .select({ count: count() })
+          .from(attendingEvents)
+          .where(eq(attendingEvents.eventId, parseInt(eventID)));
+
+        if (attendeesCount[0].count >= event.eventCapacity) {
+          return c.json(
+            { error: "Event capacity reached" },
+            HttpStatusCodes.FORBIDDEN,
+          );
+        }
+      }
+
+      const newAttendance: NewAttendingEvent[] = await db
+        .insert(attendingEvents)
+        .values({
+          userId: user!.id,
+          eventId: parseInt(eventID),
+        })
+        .onConflictDoNothing()
+        .returning();
+
+      if (newAttendance.length === 0) {
+        return c.json(
+          { error: "Attendance already marked" },
+          HttpStatusCodes.CONFLICT,
+        );
+      }
+
+      const formattedAttendance = {
+        ...newAttendance[0],
+        attendingDate:
+          newAttendance[0].attendingDate?.toISOString() ||
+          new Date().toISOString(),
+      };
+
+      return c.json({ newAttendance: formattedAttendance }, HttpStatusCodes.OK);
+    } catch (error) {
+      return c.json(
+        { error: `Internal server error: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
+  },
+);
+
+userRouter.openapi(
+  createRoute({
+    method: "delete",
+    path: "/my/attending-events/{eventID}",
+    tags: ["users"],
+    summary: "User removes attendance for an event",
+    middleware: [authMiddleWare("user")],
+    request: {
+      params: eventIDSchema,
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: "Successful response",
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: "Not Found",
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: "Internal Server Error",
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    try {
+      const user = c.get("user");
+      const { eventID } = c.req.valid("param");
+
+      const deletedAttendance = await db
+        .delete(attendingEvents)
+        .where(
+          and(
+            eq(attendingEvents.userId, user!.id),
+            eq(attendingEvents.eventId, parseInt(eventID)),
+          ),
+        )
+        .returning();
+
+      if (deletedAttendance.length === 0) {
+        return c.json(
+          { error: "Failed to delete attendance" },
+          HttpStatusCodes.NOT_FOUND,
+        );
+      }
+      return c.text("", HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json(
+        { error: `Internal server error: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
     }
   },
 );
