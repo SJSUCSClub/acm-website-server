@@ -169,15 +169,20 @@ INSERT INTO users (
 
 insert into files(key, name) values
 ('default.png', 'Default Image'),
-('events/2/image.png', 'image');
+('events/2/image.png', 'image'),
+('companies/1/logo.png', 'Microsoft Logo'),
+('companies/2/logo.jpg', 'JPMorgan Chase Logo'),
+('companies/3/logo.png', 'Boeing Logo'),
+('companies/4/logo.jpeg', 'Johnson & Johnson Logo'),
+('companies/5/logo.jpg', 'ExxonMobil Logo');
 
 -- Insert company 1
-INSERT INTO companies (name, location, description, industry_id) values
-('Tech Innovations', 'San Francisco, CA', 'Leading provider of AI-driven solutions', 'Technology'),
-('Eco Green Solutions', 'Austin, TX', 'Sustainable and renewable energy provider', 'Energy'),
-('Global Finance Corp', 'New York, NY', 'International financial services and investments', 'Banking and Finance'),
-('Health Plus', 'Boston, MA', 'Healthcare technology and medical devices', 'Healthcare'),
-('Future Automotive', 'Detroit, MI', 'Next-generation automotive manufacturing', 'Automotive');
+INSERT INTO companies (name, location, description, industry_id, logo) values
+('Microsoft', 'Redmond, WA', 'An American technology giant that develops software, personal computers, and consumer electronics. Known for its Windows operating system and Office software suite.', 'Technology', 'companies/1/logo.png'),
+('JPMorgan Chase', 'New York City, NY', 'A multinational bank and financial services holding company.', 'Banking and Finance', 'companies/2/logo.jpg'),
+('Boeing', 'Chicago, IL', 'A multinational corporation that designs, manufactures, and sells airplanes, rotorcraft, rockets, and satellites.', 'Aerospace', 'companies/3/logo.png'),
+('Johnson & Johnson', 'New Brunswick, NJ', 'A multinational healthcare company that develops medical devices, pharmaceuticals, and consumer packaged goods.', 'Healthcare', 'companies/4/logo.jpeg'),
+('ExxonMobil', 'Irving, TX', 'A multinational oil and gas corporation that explores, produces, and sells crude oil, natural gas, and petroleum products.', 'Energy', 'companies/5/logo.jpg');
 
 INSERT INTO projects (name, description) values
 ('AI Chatbot', 'An intelligent chatbot using natural language processing'),
