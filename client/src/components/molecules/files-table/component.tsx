@@ -8,8 +8,9 @@ import {
 } from "@/components/ui/table";
 import { ExternalLink, FileIcon } from "lucide-react";
 import { paths } from "@/types/schema.v1";
+import { formatDate } from "@/utils/formatter";
 
-type Files =
+export type Files =
   paths["/v1/events/{eventID}/files"]["get"]["responses"]["200"]["content"]["application/json"]["eventFiles"];
 
 function FilesTable({ files }: { files: Files }) {
@@ -35,7 +36,7 @@ function FilesTable({ files }: { files: Files }) {
                   </div>
                 </TableCell>
                 <TableCell>
-                  {new Date(file.createdAt).toLocaleDateString()}
+                  {formatDate(file.createdAt)}
                 </TableCell>
                 <TableCell>
                   <a href={file.key} target="_blank">

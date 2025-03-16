@@ -5,9 +5,10 @@ import { toast } from "sonner";
 
 export interface IAttendBtnProps {
   id: string;
+  full?: boolean;
 }
 
-const AttendBtn: React.FC<IAttendBtnProps> = ({ id }) => {
+const AttendBtn: React.FC<IAttendBtnProps> = ({ id, full = false }) => {
   const { data, isError, isLoading } = useQuery(
     "get",
     "/v1/users/my/attending-events/{eventID}",
@@ -60,7 +61,7 @@ const AttendBtn: React.FC<IAttendBtnProps> = ({ id }) => {
           },
         },
       );
-    } else {
+    } else if (!full) {
       subscribe(
         {
           params: {
@@ -78,6 +79,8 @@ const AttendBtn: React.FC<IAttendBtnProps> = ({ id }) => {
           },
         },
       );
+    } else {
+      toast.error("Event capacity reached");
     }
   };
 

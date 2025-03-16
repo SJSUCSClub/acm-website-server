@@ -20,7 +20,7 @@ const CompanyDialog: React.FC<CompanyDialogProps> = ({ company }) => {
         <Button variant="ghost" className="w-full justify-start p-3 h-auto">
           <div className="flex items-center gap-3 text-left">
             <div className="relative h-10 w-10 rounded-full overflow-hidden bg-muted">
-              <img src={company.logo || ""} alt={company.name} className="object-cover" />
+              <img src={company.logo || ""} alt={company.name} className="h-full w-full object-cover" />
             </div>
             <div>
               <div className="font-medium">{company.name}</div>
@@ -33,7 +33,7 @@ const CompanyDialog: React.FC<CompanyDialogProps> = ({ company }) => {
         <DialogHeader>
           <div className="flex items-center gap-4">
             <div className="relative h-16 w-16 rounded-lg overflow-hidden bg-muted">
-              <img src={company.logo || ""} alt={company.name} className="object-cover" />
+              <img src={company.logo || ""} alt={company.name} className="h-full w-full object-cover" />
             </div>
             <div>
               <DialogTitle className="text-xl">{company.name}</DialogTitle>
