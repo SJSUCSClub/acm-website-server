@@ -168,8 +168,8 @@ INSERT INTO users (
   '{"Data Science", "Cloud Computing"}', NULL, NULL, 'https://github.com', 'https://www.google.com/', 'user', NULL);
 
 insert into files(key, name) values
-('default.png', 'Default Image');
-
+('default.png', 'Default Image'),
+('events/2/image.png', 'image');
 
 -- Insert company 1
 INSERT INTO companies (name, location, description, industry_id) values
@@ -189,24 +189,24 @@ INSERT INTO projects (name, description) values
 -- Insert event 1
 INSERT INTO events (
     name, location, start_date, end_date, description, event_type, 
-    event_capacity, start_time, end_time, tags, target_audience, member_only
+    event_capacity, start_time, end_time, tags, target_audience, member_only, image
 ) 
 VALUES (
     'Tech Conference 2024', 'San Francisco, CA', '2024-11-01', '2024-11-03', 
     'A three-day conference on the latest in technology and innovation.', 
     'Conference', 500, '09:00', '17:00', 
-    '{"Artificial Intelligence", "Machine Learning"}', 'Students', false
+    '{"Artificial Intelligence", "Machine Learning"}', 'Students', false, null
 ),
 ('Hackathon 2024', 'New York, NY', '2024-12-10', '2024-12-12', 
     'A 48-hour hackathon focused on software development and innovation.', 
     'Hackathon', 300, '08:00', '20:00', 
-    '{"Networking"}', 'Students', false
+    '{"Networking"}', 'Students', false, 'events/2/image.png'
 ),
 (
     'Data Science Workshop', 'Boston, MA', '2024-09-15', '2024-09-15', 
     'A one-day workshop on data science fundamentals and techniques.', 
     'Workshop', 150, '10:00', '16:00', 
-    '{"Data Science"}', 'Students', true
+    '{"Data Science"}', 'Students', true, null
 );
 
 INSERT INTO event_companies(event_id, company_id) VALUES
