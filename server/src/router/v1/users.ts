@@ -579,7 +579,6 @@ userRouter.openapi(
         description: "Conflict",
       },
       ...unauthorizedRequest,
-      ...forbiddenRequest,
     },
   }),
   async (c) => {
@@ -599,10 +598,6 @@ userRouter.openapi(
       return c.json({ error: "Event not found" }, HttpStatusCodes.NOT_FOUND);
     }
     const event = foundEvents[0];
-    if (event.memberOnly && user.role === "user") {
-      return c.json({ error: "Not member" }, HttpStatusCodes.FORBIDDEN);
-    }
-
     const newSubscription = await db
       .insert(subscribedEvents)
       .values({ userId: user!.id, eventId: parseInt(eventID) })
