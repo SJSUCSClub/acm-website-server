@@ -210,15 +210,11 @@ const EventsDetails = () => {
                 <h2 className="text-xl font-semibold mb-3">Event Links</h2>
                 <ul className="list-disc list-inside space-y-1 text-primary">
                   {event.event.urls.map((url, index) => (
-                    <li key={index}>
-                      <Link
-                        to={url}
-                        target="_blank"
-                        className="hover:underline"
-                      >
-                        {url.replace(/^https?:\/\//, "")}
-                      </Link>
-                    </li>
+                    <p key={index} className="text-blue-400">
+                      <a href={url} target="_blank" className="hover:underline">
+                        {url}
+                      </a>
+                    </p>
                   ))}
                 </ul>
               </div>
@@ -226,10 +222,7 @@ const EventsDetails = () => {
 
             {/* Files */}
             {eventFiles && eventFiles.eventFiles.length > 0 && (
-              <div>
-                <h2 className="text-xl font-semibold mb-3">Event Files</h2>
-                <FilesTable files={eventFiles.eventFiles} />
-              </div>
+              <FilesTable files={eventFiles.eventFiles} />
             )}
           </div>
 

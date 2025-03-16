@@ -1,6 +1,7 @@
 import Btn from "@/components/atoms/btn";
 import { useMutation, useQuery } from "@/hooks/useFetch";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export interface IAttendBtnProps {
   id: string;
@@ -36,6 +37,10 @@ const AttendBtn: React.FC<IAttendBtnProps> = ({ id }) => {
     }
   }, [data]);
 
+  const toastError = () => {
+    toast.error("You don't have permissions to attend");
+  };
+
   const handleSubscribe = () => {
     if (attending) {
       unsubscribe(
@@ -49,6 +54,9 @@ const AttendBtn: React.FC<IAttendBtnProps> = ({ id }) => {
         {
           onSuccess: () => {
             setAttending(false);
+          },
+          onError() {
+            toastError();
           },
         },
       );
@@ -64,6 +72,9 @@ const AttendBtn: React.FC<IAttendBtnProps> = ({ id }) => {
         {
           onSuccess: () => {
             setAttending(true);
+          },
+          onError() {
+            toastError();
           },
         },
       );
