@@ -2820,15 +2820,7 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
-                            companies: {
-                                id: number;
-                                name: string;
-                                location: string | null;
-                                description: string;
-                                /** @enum {string} */
-                                industryId: "Banking and Finance" | "Aerospace" | "Healthcare" | "Automotive" | "Energy" | "Technology";
-                                logo: string | null;
-                            };
+                            error: string;
                         };
                     };
                 };
