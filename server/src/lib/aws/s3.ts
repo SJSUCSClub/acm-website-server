@@ -81,7 +81,7 @@ const getPresignedUrlPutObj = async (key: string): Promise<string | null> => {
     }
 };
 
-const generateObjectUrl = (key: string | null) => {
+const generateObjectUrl = (key: string | null): string => {
   if(key === null) {
     return  `${env.S3_BUCKET_URL}${env.S3_DEFAULT_IMAGE_PLACEHOLDER}`;
   }

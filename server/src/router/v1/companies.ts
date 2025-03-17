@@ -81,7 +81,7 @@ companyRouter.openapi(
         content: {
           "application/json": {
             schema: z.object({
-              companies: companySchema,
+              error: z.string(),
             }),
           },
         },
@@ -116,17 +116,14 @@ companyRouter.openapi(
       }
 
       const company = foundCompanies[0];
-      const mappedCompanies = {
+      const mappedCompany = {
         ...company,
         logo: generateObjectUrl(company.logo),
       };
 
-      return c.json({ companies: mappedCompanies }, HttpStatusCodes.OK);
+      return c.json({ companies: mappedCompany }, HttpStatusCodes.OK);
     } catch (error) {
-      return c.json(
-        { error: "Company not found" },
-        HttpStatusCodes.INTERNAL_SERVER_ERROR,
-      );
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
   },
 );
