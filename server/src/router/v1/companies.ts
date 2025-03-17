@@ -1,49 +1,49 @@
-import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
-import { z } from "zod";
-import * as HttpStatusCodes from "stoker/http-status-codes";
+import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
+import { z } from 'zod';
+import * as HttpStatusCodes from 'stoker/http-status-codes';
 
-import type { Context } from "@/lib/context";
-import { db } from "@/db/db";
+import type { Context } from '@/lib/context';
+import { db } from '@/db/db';
 import {
   users,
   events,
   eventCompanies,
   subscribedCompanies,
   companies,
-} from "@/db/schema";
-import { eq, count, getTableColumns } from "drizzle-orm";
-import type { User, Event, Company } from "@/db/schema";
+} from '@/db/schema';
+import { eq, count, getTableColumns } from 'drizzle-orm';
+import type { User, Event, Company } from '@/db/schema';
 import {
   authMiddleWare,
   unauthorizedRequest,
   forbiddenRequest,
-} from "@/middlewares/auth-middleware";
+} from '@/middlewares/auth-middleware';
 import {
   companySchema,
   companyIDSchema,
   eventSchema,
   userSchema,
-} from "@/util/zod";
-import { generateObjectUrl } from "@/lib/aws/s3";
+} from '@/util/zod';
+import { generateObjectUrl } from '@/lib/aws/s3';
 
 const companyRouter = new OpenAPIHono<Context>();
 
 companyRouter.openapi(
   createRoute({
-    method: "get",
-    path: "/",
-    tags: ["companies"],
-    summary: "List all companies",
+    method: 'get',
+    path: '/',
+    tags: ['companies'],
+    summary: 'List all companies',
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               companies: z.array(companySchema),
             }),
           },
         },
-        description: "Successful response",
+        description: 'Successful response',
       },
     },
   }),
@@ -59,49 +59,49 @@ companyRouter.openapi(
 
 companyRouter.openapi(
   createRoute({
-    method: "get",
-    path: "/{companyID}",
-    tags: ["companies"],
-    summary: "Get a company by ID",
+    method: 'get',
+    path: '/{companyID}',
+    tags: ['companies'],
+    summary: 'Get a company by ID',
     request: {
       params: companyIDSchema,
     },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               companies: companySchema,
             }),
           },
         },
-        description: "Successful response",
+        description: 'Successful response',
       },
       [HttpStatusCodes.NOT_FOUND]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               error: z.string(),
             }),
           },
         },
-        description: "Company not found",
+        description: 'Company not found',
       },
       [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               error: z.string(),
             }),
           },
         },
-        description: "Internal server error",
+        description: 'Internal server error',
       },
     },
   }),
   async (c) => {
     try {
-      const { companyID } = c.req.valid("param");
+      const { companyID } = c.req.valid('param');
 
       const foundCompanies = await db
         .select()
@@ -110,7 +110,7 @@ companyRouter.openapi(
 
       if (foundCompanies.length === 0) {
         return c.json(
-          { error: "Company not found" },
+          { error: 'Company not found' },
           HttpStatusCodes.NOT_FOUND,
         );
       }
@@ -130,15 +130,15 @@ companyRouter.openapi(
 
 companyRouter.openapi(
   createRoute({
-    method: "post",
-    path: "/",
-    tags: ["companies"],
-    summary: "Creates a new company",
-    middleware: [authMiddleWare("admin")],
+    method: 'post',
+    path: '/',
+    tags: ['companies'],
+    summary: 'Creates a new company',
+    middleware: [authMiddleWare('admin')],
     request: {
       body: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: companySchema,
           },
         },
@@ -147,31 +147,31 @@ companyRouter.openapi(
     responses: {
       [HttpStatusCodes.CREATED]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               company: companySchema,
             }),
           },
         },
-        description: "Successful response",
+        description: 'Successful response',
       },
       ...unauthorizedRequest,
       ...forbiddenRequest,
       [HttpStatusCodes.CONFLICT]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               error: z.string(),
             }),
           },
         },
-        description: "Conflict",
+        description: 'Conflict',
       },
     },
   }),
   async (c) => {
     const { id, name, location, description, industryId, logo } =
-      c.req.valid("json");
+      c.req.valid('json');
     const newCompany = await db
       .insert(companies)
       .values({ id, name, location, description, industryId, logo })
@@ -179,7 +179,7 @@ companyRouter.openapi(
       .returning();
     if (newCompany.length === 0) {
       return c.json(
-        { error: "Company already exists" },
+        { error: 'Company already exists' },
         HttpStatusCodes.CONFLICT,
       );
     }
@@ -189,28 +189,28 @@ companyRouter.openapi(
 
 companyRouter.openapi(
   createRoute({
-    method: "get",
-    path: "/{companyID}/events",
-    tags: ["companies"],
-    summary: "List all events for a company",
+    method: 'get',
+    path: '/{companyID}/events',
+    tags: ['companies'],
+    summary: 'List all events for a company',
     request: {
       params: companyIDSchema,
     },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               companyEvents: z.array(eventSchema),
             }),
           },
         },
-        description: "Successful response",
+        description: 'Successful response',
       },
     },
   }),
   async (c) => {
-    const { companyID } = c.req.valid("param");
+    const { companyID } = c.req.valid('param');
     const companyEvents: Event[] = await db
       .select(getTableColumns(events))
       .from(eventCompanies)
@@ -229,29 +229,29 @@ companyRouter.openapi(
 
 companyRouter.openapi(
   createRoute({
-    method: "get",
-    path: "/{companyID}/subscribers",
-    tags: ["companies"],
-    summary: "List all subscribers for a company",
-    middleware: [authMiddleWare("admin")],
+    method: 'get',
+    path: '/{companyID}/subscribers',
+    tags: ['companies'],
+    summary: 'List all subscribers for a company',
+    middleware: [authMiddleWare('admin')],
     request: {
       params: companyIDSchema,
     },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               companySubscribers: z.array(userSchema),
             }),
           },
         },
-        description: "Successful response",
+        description: 'Successful response',
       },
     },
   }),
   async (c) => {
-    const { companyID } = c.req.valid("param");
+    const { companyID } = c.req.valid('param');
     const companySubscribers: User[] = await db
       .select(getTableColumns(users))
       .from(subscribedCompanies)
@@ -270,29 +270,29 @@ companyRouter.openapi(
 
 companyRouter.openapi(
   createRoute({
-    method: "get",
-    path: "/{companyID}/subscribers/count",
-    tags: ["companies"],
-    summary: "Get the number of subscribers for a company",
-    middleware: [authMiddleWare("admin")],
+    method: 'get',
+    path: '/{companyID}/subscribers/count',
+    tags: ['companies'],
+    summary: 'Get the number of subscribers for a company',
+    middleware: [authMiddleWare('admin')],
     request: {
       params: companyIDSchema,
     },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               subscribersCount: z.number(),
             }),
           },
         },
-        description: "Successful response",
+        description: 'Successful response',
       },
     },
   }),
   async (c) => {
-    const { companyID } = c.req.valid("param");
+    const { companyID } = c.req.valid('param');
     const subscribersCount = await db
       .select({ count: count() })
       .from(subscribedCompanies)
