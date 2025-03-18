@@ -30,11 +30,7 @@ const BookmarkIcon: React.FC<IBookmarkIconProps> = ({ id }) => {
   const [bookmarked, setBookmarked] = useState<boolean>(false);
 
   useEffect(() => {
-    if (data?.bookmarked) {
-      setBookmarked(true);
-    } else {
-      setBookmarked(false);
-    }
+      setBookmarked(data?.bookmarked ?? false);
   }, [data]);
 
   const handleSubscribe = () => {
