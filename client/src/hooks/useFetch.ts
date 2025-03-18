@@ -8,7 +8,7 @@ const api = createFetchClient<paths>({
 
 const middleware: Middleware = {
   async onResponse({  response }) {
-    console.log("API middleware response: ", response.status);
+    console.log("API middleware response url: ", response.url, ", status: ", response.status);
     // if (!response.ok) {
     //   if (response.status === 401) {
     //     throw redirect({

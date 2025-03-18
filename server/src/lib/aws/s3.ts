@@ -81,4 +81,11 @@ const getPresignedUrlPutObj = async (key: string): Promise<string | null> => {
     }
 };
 
-export { uploadFile, deleteFile, getPresignedUrlPutObj };
+const generateObjectUrl = (key: string | null): string => {
+  if(key === null) {
+    return  `${env.S3_BUCKET_URL}${env.S3_DEFAULT_IMAGE_PLACEHOLDER}`;
+  }
+    return `${env.S3_BUCKET_URL}${key}`;
+};
+
+export { uploadFile, deleteFile, getPresignedUrlPutObj, generateObjectUrl };

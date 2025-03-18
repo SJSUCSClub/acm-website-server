@@ -126,7 +126,7 @@ create table if not exists events(
    urls text[] not null default '{}'::text[],
    event_type events_enum not null,
    event_capacity int,
-   image text not null,
+   image text,
    start_time time not null,
    end_time time not null,   
    tags cs_fields_enum[] not null default array[]::cs_fields_enum[],
