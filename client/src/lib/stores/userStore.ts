@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { paths } from '@/types/schema.v1';
+import { api } from '@/lib/api-client';
 
 type User = paths['/v1/users/my']['get']['responses']['200']['content']['application/json'];
 
@@ -22,27 +23,19 @@ export const useUserStore = create<UserState>((set) => ({
   fetchUser: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await fetch('/api/v1/auth/me', {
-        method: 'GET',
-        credentials: 'include', // Important for cookies
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const { data, response } = await api.GET('/v1/auth/me');
 
       if (!response.ok) {
-        const errorData = await response.json();
         set({
           isLoading: false,
-          error: errorData.error || 'Failed to fetch user',
+          error: 'Failed to fetch user',
           isAuthenticated: false,
         });
         return;
       }
 
-      const userData = await response.json();
       set({
-        user: userData[0] || null,
+        user: data?.[0] || null,
         isLoading: false,
         error: null,
         isAuthenticated: true,
@@ -59,19 +52,7 @@ export const useUserStore = create<UserState>((set) => ({
   logout: async () => {
     set({ isLoading: true });
     try {
-      const response = await fetch('/api/v1/auth/logout', {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        set({
-          isLoading: false,
-          error: errorData.error || 'Failed to logout',
-        });
-        return;
-      }
+      const { response } = await api.GET('/v1/auth/logout');
 
       set({
         user: null,
@@ -80,12 +61,21 @@ export const useUserStore = create<UserState>((set) => ({
         isAuthenticated: false,
       });
 
-      window.location.href = '/';
+      if (!response.ok) {
+        console.error('Failed to logout on server, but local state has been cleared');
+        return;
+      }
     } catch (error) {
       set({
+        user: null,
         isLoading: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: null,
+        isAuthenticated: false,
       });
+      console.error(
+        'Error during logout:',
+        error instanceof Error ? error.message : 'Unknown error'
+      );
     }
   },
 
