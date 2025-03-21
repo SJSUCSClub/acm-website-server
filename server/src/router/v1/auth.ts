@@ -18,6 +18,7 @@ import type { User } from '@/db/schema';
 import { env } from '@/env';
 import { authMiddleWare } from '@/middlewares/auth-middleware';
 import { sendEmailNotification } from '@/lib/aws/sqs';
+import { sendEmailNotification } from '@/lib/aws/sqs';
 
 const authRouter = new OpenAPIHono<Context>();
 
@@ -184,6 +185,13 @@ authRouter.openapi(
 					.returning();
 
 				user = newUser[0];
+				// Placeholder for new user onboard email
+				await sendEmailNotification({
+					recipient: user.email,
+					sender: 'no-reply@acmsjsu.org',
+					subject: 'Welcome to ACM SJSU',
+					body: `Welcome to ACM SJSU! ${user.name}`,
+				});
 				// Placeholder for new user onboard email
 				try {
 					await sendEmailNotification({
