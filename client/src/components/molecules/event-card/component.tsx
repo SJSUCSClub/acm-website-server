@@ -36,11 +36,11 @@ export const EventCard: React.FC<Event> = ({
     }
   return (
     <Card className="pt-4 shadow-md">
-      <CardTitle className="pl-6">
-        <p className="text-xs text-neutral">{eventType.toUpperCase()}</p>
-        <p className="text-lg">{name}</p>
-      </CardTitle>
       <CardHeader>
+        <CardTitle>
+          <p className="text-xs text-neutral">{eventType.toUpperCase()}</p>
+          <p className="text-lg">{name}</p>
+        </CardTitle>
         <p>{`${formatDate(startDate)} ${formatTime(startTime)} - ${formatDate(endDate)} ${formatTime(endTime)}`}</p>
         <p>{location}</p>
 
