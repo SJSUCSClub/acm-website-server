@@ -1,7 +1,7 @@
 import { env } from '@/env';
 import { AssumeRoleCommand, Credentials, STSClient } from '@aws-sdk/client-sts';
 
-const region = 'us-west-2';
+const {REGION: region} = env;
 let credentials: Credentials | null = null;
 const stsClient: STSClient = new STSClient({
     region, 
@@ -21,7 +21,7 @@ const getCredentials = async (): Promise<Credentials | null> => {
         const {ROLE_ARN: role_arn} = env;
         const input = new AssumeRoleCommand({
             RoleArn: role_arn,
-            RoleSessionName: 'user_file_upload_session',
+            RoleSessionName: 'assume_role',
         });
         const response = await stsClient.send(input);
         if(response.Credentials === undefined) {
