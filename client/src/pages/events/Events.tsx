@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useEffect, useState } from "react";
 import EventCard from "../../components/molecules/event-card";
 import BtnDateFilter from "../../components/molecules/btn-date-filter";
 import BtnTagFilter from "../../components/molecules/btn-tag-filter";
