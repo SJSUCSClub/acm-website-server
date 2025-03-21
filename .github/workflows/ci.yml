@@ -17,6 +17,13 @@ jobs:
       - name: Install dependencies
         working-directory: ./client
         run: bun install
+      - name: Format auto-generated types (if needed)
+        working-directory: ./client
+        run: |
+          if [ -f "src/types/schema.v1.d.ts" ]; then
+            echo "Formatting auto-generated types file"
+            bun prettier --write "src/types/schema.v1.d.ts" || true
+          fi
       - name: Check formatting
         working-directory: ./client
         run: bun run format:check
@@ -188,6 +195,8 @@ jobs:
         run: |
           bun install 
           bun x openapi-typescript http://localhost:5001/docs -o ./src/types/schema.v1.d.ts
+          # Format the generated types file before committing
+          bun prettier --write ./src/types/schema.v1.d.ts
 
       - name: Configure git
         run: |
