@@ -13,8 +13,10 @@ import {
   PopoverTrigger,
 } from "../../../components/ui/popover";
 
+export type dateOptions = "upcoming" | "today" | "past" | "all";
+
 export type EventCardProps = {
-  fcn: React.Dispatch<React.SetStateAction<"upcoming" | "today" | "past" | "all">>;
+  fcn: React.Dispatch<React.SetStateAction<dateOptions>>;
 };
 
 export const BtnDateFilter: React.FC<EventCardProps> = ({
@@ -47,7 +49,7 @@ export const BtnDateFilter: React.FC<EventCardProps> = ({
                   onSelect={(currentValue) => {
                     setValue(currentValue);
                     setOpen(false);
-                    fcn(currentValue.toLowerCase() as "upcoming" | "today" | "past" | "all");
+                    fcn(currentValue.toLowerCase() as dateOptions);
                   }}
                 >
                   {option}

@@ -23,7 +23,6 @@ export type EventCardProps = {
 
 export const BtnTagFilter: React.FC<EventCardProps> = ({ selectedTags, fcn }) => {
   const [open, setOpen] = useState(false);
-  const value = "Tag Filter"
   const { data: tags } = useQuery(
     "get",
     "/v1/enums/{enumType}",
@@ -53,7 +52,7 @@ export const BtnTagFilter: React.FC<EventCardProps> = ({ selectedTags, fcn }) =>
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {value}
+          Tag Filter
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>

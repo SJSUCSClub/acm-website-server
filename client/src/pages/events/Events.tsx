@@ -4,26 +4,12 @@ import BtnDateFilter from "../../components/molecules/btn-date-filter";
 import BtnTagFilter from "../../components/molecules/btn-tag-filter";
 import { useQuery } from "@/hooks/useFetch";
 import { paths } from "@/types/schema.v1";
-
-// interface Event {
-//   description: string;
-//   endDate: string;
-//   endTime: string;
-//   id: number;
-//   location: string;
-//   name: string;
-//   startDate: string;
-//   startTime: string;
-//   deadline: string;
-//   eventType: string;
-//   tags: string[];
-// }
-
+import { type dateOptions } from "../../components/molecules/btn-date-filter";
 type Events = paths["/v1/events"]["get"]["responses"]["200"]["content"]["application/json"]["foundEvents"];
 
 const EventsPage = () => {
   const [events, setEvents] = useState<Events>([]);
-  const [dateFilter, setDateFilter] = useState<"upcoming" | "today" | "past" | "all">("all");
+  const [dateFilter, setDateFilter] = useState<dateOptions>("all");
   const [tagFilter, setTagFilter] = useState<string[]>([]);
 
 
