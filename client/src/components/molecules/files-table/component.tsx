@@ -5,13 +5,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { ExternalLink, FileIcon } from "lucide-react";
-import { paths } from "@/types/schema.v1";
-import { formatDate } from "@/utils/formatter";
+} from '@/components/ui/table';
+import { ExternalLink, FileIcon } from 'lucide-react';
+import { paths } from '@/types/schema.v1';
+import { formatDate } from '@/utils/formatter';
 
 export type Files =
-  paths["/v1/events/{eventID}/files"]["get"]["responses"]["200"]["content"]["application/json"]["eventFiles"];
+  paths['/v1/events/{eventID}/files']['get']['responses']['200']['content']['application/json']['eventFiles'];
 
 function FilesTable({ files }: { files: Files }) {
   return (
@@ -35,9 +35,7 @@ function FilesTable({ files }: { files: Files }) {
                     <span>{file.name}</span>
                   </div>
                 </TableCell>
-                <TableCell>
-                  {formatDate(file.createdAt)}
-                </TableCell>
+                <TableCell>{formatDate(file.createdAt)}</TableCell>
                 <TableCell>
                   <a href={file.key} target="_blank">
                     <ExternalLink className="h-4 w-4" />

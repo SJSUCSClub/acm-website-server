@@ -1,5 +1,5 @@
-import Btn from "../../../components/atoms/btn";
-import React, { useState } from "react";
+import Btn from '../../../components/atoms/btn';
+import React, { useState } from 'react';
 
 export const MobileMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,23 +17,17 @@ export const MobileMenu: React.FC = () => {
         <span
           className={`bg-black block transition-all duration-300 ease-out 
                             h-1 w-9 rounded-sm ${
-                              isOpen
-                                ? "rotate-45 translate-y-2"
-                                : "-translate-y-0.5"
+                              isOpen ? 'rotate-45 translate-y-2' : '-translate-y-0.5'
                             }`}
         ></span>
         <span
           className={`bg-black block transition-all duration-300 ease-out 
-                            h-1 w-9 rounded-sm my-1 ${
-                              isOpen ? "opacity-0" : "opacity-100"
-                            }`}
+                            h-1 w-9 rounded-sm my-1 ${isOpen ? 'opacity-0' : 'opacity-100'}`}
         ></span>
         <span
           className={`bg-black block transition-all duration-300 ease-out 
                             h-1 w-9 rounded-sm ${
-                              isOpen
-                                ? "-rotate-45 -translate-y-2"
-                                : "translate-y-0.5"
+                              isOpen ? '-rotate-45 -translate-y-2' : 'translate-y-0.5'
                             }`}
         ></span>
       </Btn>

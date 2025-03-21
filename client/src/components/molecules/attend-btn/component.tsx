@@ -1,7 +1,7 @@
-import Btn from "@/components/atoms/btn";
-import { useMutation, useQuery } from "@/hooks/useFetch";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import Btn from '@/components/atoms/btn';
+import { useMutation, useQuery } from '@/hooks/useFetch';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 export interface IAttendBtnProps {
   id: string;
@@ -9,25 +9,15 @@ export interface IAttendBtnProps {
 }
 
 const AttendBtn: React.FC<IAttendBtnProps> = ({ id, full = false }) => {
-  const { data, isError, isLoading } = useQuery(
-    "get",
-    "/v1/users/my/attending-events/{eventID}",
-    {
-      params: {
-        path: {
-          eventID: id,
-        },
+  const { data, isError, isLoading } = useQuery('get', '/v1/users/my/attending-events/{eventID}', {
+    params: {
+      path: {
+        eventID: id,
       },
     },
-  );
-  const { mutate: subscribe } = useMutation(
-    "post",
-    "/v1/users/my/attending-events/{eventID}",
-  );
-  const { mutate: unsubscribe } = useMutation(
-    "delete",
-    "/v1/users/my/attending-events/{eventID}",
-  );
+  });
+  const { mutate: subscribe } = useMutation('post', '/v1/users/my/attending-events/{eventID}');
+  const { mutate: unsubscribe } = useMutation('delete', '/v1/users/my/attending-events/{eventID}');
   const [attending, setAttending] = useState<boolean>(false);
 
   useEffect(() => {
@@ -59,7 +49,7 @@ const AttendBtn: React.FC<IAttendBtnProps> = ({ id, full = false }) => {
           onError() {
             toastError();
           },
-        },
+        }
       );
     } else if (!full) {
       subscribe(
@@ -77,10 +67,10 @@ const AttendBtn: React.FC<IAttendBtnProps> = ({ id, full = false }) => {
           onError() {
             toastError();
           },
-        },
+        }
       );
     } else {
-      toast.error("Event capacity reached");
+      toast.error('Event capacity reached');
     }
   };
 
@@ -89,13 +79,9 @@ const AttendBtn: React.FC<IAttendBtnProps> = ({ id, full = false }) => {
       className="w-full"
       disabled={isLoading || isError}
       onClick={handleSubscribe}
-      variant={"outline"}
+      variant={'outline'}
     >
-      {isLoading || isError
-        ? "Login to Subscribe"
-        : attending
-          ? "Attending"
-          : "Attend"}
+      {isLoading || isError ? 'Login to Subscribe' : attending ? 'Attending' : 'Attend'}
     </Btn>
   );
 };

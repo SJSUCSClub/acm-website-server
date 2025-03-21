@@ -1,7 +1,6 @@
-import { cn } from "../../../utils/cn";
+import { cn } from '../../../utils/cn';
 
-export interface IInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   footer?: string;
   required: boolean;
@@ -10,10 +9,10 @@ export interface IInputProps
 
 export const Input: React.FC<IInputProps> = ({
   label,
-  footer = "",
+  footer = '',
   placeholder,
   required,
-  icon = "",
+  icon = '',
   className,
   ...props
 }) => (
@@ -24,17 +23,17 @@ export const Input: React.FC<IInputProps> = ({
     </div>
     <input
       className={cn(
-        "rounded-xl bg-border text-text px-[16px] py-[10px] focus:outline-none w-full placeholder-neutral mb-2 border-border-hovered border-2 text-[14px]",
+        'rounded-xl bg-border text-text px-[16px] py-[10px] focus:outline-none w-full placeholder-neutral mb-2 border-border-hovered border-2 text-[14px]',
         className
       )}
       placeholder={placeholder}
       {...props}
     />
-    {icon !== "" && (
+    {icon !== '' && (
       <div className="pointer-events-none absolute inset-y-0 right-0 top-5 flex items-center pr-3">
         <img src={icon} alt="icon" className="h-4 w-4" />
       </div>
     )}
-    {footer !== "" && <p className="text-neutral mb-2 text-[14px]">{footer}</p>}
+    {footer !== '' && <p className="text-neutral mb-2 text-[14px]">{footer}</p>}
   </div>
 );

@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
-import Footer from "../components/atoms/footer";
-import GoogleLogInBtn from "../components/molecules/google-log-in-btn";
+import { motion } from 'framer-motion';
+import Footer from '../components/atoms/footer';
+import GoogleLogInBtn from '../components/molecules/google-log-in-btn';
 
 export default function SignIn() {
   return (
@@ -16,7 +16,7 @@ export default function SignIn() {
           animate={{ scale: 1 }}
           transition={{
             delay: 0.2,
-            type: "spring",
+            type: 'spring',
             stiffness: 260,
             damping: 20,
           }}
@@ -28,19 +28,12 @@ export default function SignIn() {
           <p className="mt-2 text-sm text-gray-600">Log in to your account</p>
         </motion.div>
 
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="w-full"
-        >
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full">
           <GoogleLogInBtn />
         </motion.div>
 
         <div className="mt-4 sm:mt-6 text-center">
-          <a
-            href="/LogIn"
-            className="text-sm text-primary hover:text-primary/80 underline"
-          >
+          <a href="/LogIn" className="text-sm text-primary hover:text-primary/80 underline">
             Need help logging in?
           </a>
         </div>

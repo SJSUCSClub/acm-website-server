@@ -1,2 +1,2 @@
-export { PlanBtn as default } from "./component";
-export * from "./component";
+export { PlanBtn as default } from './component';
+export * from './component';

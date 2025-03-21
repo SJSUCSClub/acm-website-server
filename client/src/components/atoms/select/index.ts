@@ -1,2 +1,2 @@
-export { Select as default } from "./component";
-export * from "./component";
+export { Select as default } from './component';
+export * from './component';

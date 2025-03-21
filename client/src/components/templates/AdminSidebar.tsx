@@ -1,15 +1,9 @@
-import React, { useState } from "react";
-import {
-  PanelLeftClose,
-  PanelLeftOpen,
-  House,
-  Users,
-  FolderOpenDot,
-} from "lucide-react";
-import clsx from "clsx";
-import { Button } from "@/components/ui/button";
-import Page from "@/components/templates/Page";
-import { Link } from "@tanstack/react-router";
+import React, { useState } from 'react';
+import { PanelLeftClose, PanelLeftOpen, House, Users, FolderOpenDot } from 'lucide-react';
+import clsx from 'clsx';
+import { Button } from '@/components/ui/button';
+import Page from '@/components/templates/Page';
+import { Link } from '@tanstack/react-router';
 
 interface IAdminSidebarProps {
   children: React.ReactNode;
@@ -19,27 +13,27 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(true);
   const navItems = [
     {
-      title: "Home",
+      title: 'Home',
       icon: House,
-      href: "/admin",
+      href: '/admin',
     },
     {
-      title: "Users",
+      title: 'Users',
       icon: Users,
-      href: "/admin/users",
+      href: '/admin/users',
     },
     {
-      title: "Projects",
+      title: 'Projects',
       icon: FolderOpenDot,
-      href: "/admin/projects",
+      href: '/admin/projects',
     },
   ];
   return (
     <div className="flex h-[800px]">
       <div
         className={clsx(
-          "relative flex flex-col border-r bg-background transition-all duration-300",
-          collapsed ? "w-16" : "w-44",
+          'relative flex flex-col border-r bg-background transition-all duration-300',
+          collapsed ? 'w-16' : 'w-44'
         )}
       >
         <div className="flex h-14 items-center border-b px-4">
@@ -62,8 +56,8 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
                 key={item.title}
                 to={item.href}
                 className={clsx(
-                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                  collapsed ? "justify-center" : "",
+                  'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground',
+                  collapsed ? 'justify-center' : ''
                 )}
               >
                 <item.icon className="h-5 w-5" />
@@ -73,9 +67,7 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
           </nav>
         </div>
       </div>
-      <Page>
-        {children}
-      </Page>
+      <Page>{children}</Page>
     </div>
   );
 };

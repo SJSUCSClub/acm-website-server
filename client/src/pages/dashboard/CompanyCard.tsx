@@ -1,23 +1,18 @@
-import Btn from "@/components/atoms/btn";
+import Btn from '@/components/atoms/btn';
 import Card, {
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/atoms/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { paths } from "@/types/schema.v1";
-import { CiLocationOn } from "react-icons/ci";
+} from '@/components/atoms/card';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { paths } from '@/types/schema.v1';
+import { CiLocationOn } from 'react-icons/ci';
 
 type SubscribedCompany =
-  paths["/v1/users/my/subscribed-companies"]["get"]["responses"]["200"]["content"]["application/json"]["companies"][number];
+  paths['/v1/users/my/subscribed-companies']['get']['responses']['200']['content']['application/json']['companies'][number];
 
 interface ICompanyCardProps {
   company: SubscribedCompany;

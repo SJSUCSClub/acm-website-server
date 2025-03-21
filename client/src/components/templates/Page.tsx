@@ -1,5 +1,5 @@
-import React from "react";
-import { Toaster } from "@/components/ui/sonner";
+import React from 'react';
+import { Toaster } from '@/components/ui/sonner';
 
 interface IPageProps {
   children: React.ReactNode;

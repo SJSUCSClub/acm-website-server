@@ -1,8 +1,8 @@
-import Card from "../../atoms/card";
-import React from "react";
-import PlanBtn from "../plan-btn";
+import Card from '../../atoms/card';
+import React from 'react';
+import PlanBtn from '../plan-btn';
 
-type Variant = "primary" | "secondary" | "tertiary" | "ghost";
+type Variant = 'primary' | 'secondary' | 'tertiary' | 'ghost';
 
 export interface IGetInvolvedCardProps {
   plan: string;

@@ -6,36 +6,53 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
+  format-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'client/package.json'
+      - name: Install dependencies
+        working-directory: ./client
+        run: npm ci
+      - name: Check formatting
+        working-directory: ./client
+        run: npm run format:check
+
   typecheck:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v4
-        - uses: ./.github/actions/setup
-          with:
-            os: ${{ runner.os }}
-        - name: Run typecheck
-          run: |
-              docker run --network host \
-                  -e NODE_ENV -e PORT -e POSTGRES_HOST -e POSTGRES_PORT -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB \
-                  -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
-                  acm-website-server bun typecheck
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+        with:
+          os: ${{ runner.os }}
+      - name: Run typecheck
+        run: |
+          docker run --network host \
+              -e NODE_ENV -e PORT -e POSTGRES_HOST -e POSTGRES_PORT -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB \
+              -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
+              acm-website-server bun typecheck
 
   lint:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v4
-          with:
-            ref: ${{ github.event.pull_request.head.ref }}
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
 
-        - uses: ./.github/actions/setup
-          with:
-            os: ${{ runner.os }}
-        - name: Run linter
-          run: |
-            docker run --network host \
-                -e NODE_ENV -e PORT -e POSTGRES_HOST -e POSTGRES_PORT -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB \
-                -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
-                acm-website-server bun run lint
+      - uses: ./.github/actions/setup
+        with:
+          os: ${{ runner.os }}
+      - name: Run linter
+        run: |
+          docker run --network host \
+              -e NODE_ENV -e PORT -e POSTGRES_HOST -e POSTGRES_PORT -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB \
+              -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
+              acm-website-server bun run lint
 
   test:
     runs-on: ubuntu-latest
@@ -55,7 +72,7 @@ jobs:
           --health-retries 5
           --health-start-period 15s
     steps:
-      - uses: actions/checkout@v4 
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
         with:
           os: ${{ runner.os }}
@@ -108,7 +125,7 @@ jobs:
           --health-retries 5
 
     steps:
-      - uses: actions/checkout@v4 
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
       - uses: ./.github/actions/setup

@@ -10,8 +10,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit --skipLibCheck",
-    "format": "prettier --write .",
-    "generate-types": "npx openapi-typescript http://localhost/api/docs -o src/types/schema.v1.d.ts"
+    "generate-types": "npx openapi-typescript http://localhost/api/docs -o src/types/schema.v1.d.ts",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css}\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -48,7 +49,8 @@
     "sonner": "^2.0.1",
     "tailwind-merge": "^2.5.3",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

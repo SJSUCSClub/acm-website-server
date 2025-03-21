@@ -1,2 +1,2 @@
-export { MemberBtn as default } from "./component";
-export * from "./component";
+export { MemberBtn as default } from './component';
+export * from './component';

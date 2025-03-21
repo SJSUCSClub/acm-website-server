@@ -1,2 +1,2 @@
-export { Dropdown as default } from "./component";
-export * from "./component";
+export { Dropdown as default } from './component';
+export * from './component';

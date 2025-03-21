@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 import Card, {
   CardTitle,
   CardContent,
   CardHeader,
   ICardProps,
   CardDescription,
-} from "../../atoms/card";
+} from '../../atoms/card';
 
 export interface IOnboardingCardProps extends ICardProps {
   subtitle?: string;
@@ -17,15 +17,15 @@ export interface IOnboardingCardProps extends ICardProps {
 
 export const OnboardingCard: React.FC<IOnboardingCardProps> = ({
   header,
-  subtitle = "",
-  image = "",
+  subtitle = '',
+  image = '',
   children,
   className,
 }) => (
   <Card className={className}>
     <CardHeader className="text-center">
       <div className="flex justify-center pb-6">
-        {image !== "" && <img src={image} alt={subtitle} />}
+        {image !== '' && <img src={image} alt={subtitle} />}
       </div>
       <CardTitle>{header}</CardTitle>
       <CardDescription className="text-[16px]">{subtitle}</CardDescription>

@@ -1,2 +1,2 @@
-export { Card as default } from "./component";
-export * from "./component";
+export { Card as default } from './component';
+export * from './component';

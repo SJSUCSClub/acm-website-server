@@ -217,4 +217,28 @@ authRouter.openapi(
 	},
 );
 
+authRouter.openapi(
+	createRoute({
+		method: 'get',
+		path: '/me',
+		tags: ['auth'],
+		summary: 'Get current user',
+		middleware: [authMiddleWare('user')],
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Current user',
+			},
+		},
+	}),
+	async c => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+		// TODO: cache per user
+		const user = await db.select().from(users).where(eq(users.id, session.userId));
+		return c.json(user);
+	},
+);
+
 export default authRouter;

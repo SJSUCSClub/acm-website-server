@@ -1,2 +1,2 @@
-export { SocialBtn as default } from "./component";
-export * from "./component";
+export { SocialBtn as default } from './component';
+export * from './component';

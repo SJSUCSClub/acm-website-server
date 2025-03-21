@@ -1,2 +1,2 @@
-export { Alert as default } from "./component";
-export * from "./component";
+export { Alert as default } from './component';
+export * from './component';

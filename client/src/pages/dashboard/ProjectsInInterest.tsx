@@ -1,26 +1,23 @@
-import Btn from "@/components/atoms/btn";
+import Btn from '@/components/atoms/btn';
 import Card, {
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/atoms/card";
-import { Badge } from "@/components/ui/badge";
-import { useQuery, useMutation } from "@/hooks/useFetch";
-import { paths } from "@/types/schema.v1";
-import React, { useEffect, useState } from "react";
-import { RxGithubLogo } from "react-icons/rx";
+} from '@/components/atoms/card';
+import { Badge } from '@/components/ui/badge';
+import { useQuery, useMutation } from '@/hooks/useFetch';
+import { paths } from '@/types/schema.v1';
+import React, { useEffect, useState } from 'react';
+import { RxGithubLogo } from 'react-icons/rx';
 
 type Project =
-  paths["/v1/users/my/projects-interest"]["get"]["responses"]["200"]["content"]["application/json"]["projects"][number];
+  paths['/v1/users/my/projects-interest']['get']['responses']['200']['content']['application/json']['projects'][number];
 
 const ProjectsInInterest = () => {
-  const { data: pi } = useQuery("get", "/v1/users/my/projects-interest");
-  const { mutate } = useMutation(
-    "delete",
-    "/v1/users/my/projects-interest/{projectID}",
-  );
+  const { data: pi } = useQuery('get', '/v1/users/my/projects-interest');
+  const { mutate } = useMutation('delete', '/v1/users/my/projects-interest/{projectID}');
   const [projectsInInterest, setProjectsInInterest] = useState<Project[]>([]);
 
   useEffect(() => {
@@ -42,7 +39,7 @@ const ProjectsInInterest = () => {
         onSuccess: () => {
           setProjectsInInterest(newProjects);
         },
-      },
+      }
     );
   };
 
@@ -67,12 +64,8 @@ const ProjectsInInterest = () => {
                   <Btn size="sm" onClick={() => removeInterest(project)}>
                     Remove Interest
                   </Btn>
-                  <span className={project.githubLink || "hidden"}>
-                    <a
-                      href={project.githubLink || ""}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
+                  <span className={project.githubLink || 'hidden'}>
+                    <a href={project.githubLink || ''} target="_blank" rel="noreferrer">
                       <RxGithubLogo size={30} />
                     </a>
                   </span>

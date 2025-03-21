@@ -1,0 +1,35 @@
+name: Format Code
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'client/**/*.{ts,tsx,js,jsx,json,css}'
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'client/package.json'
+      - name: Install dependencies
+        working-directory: ./client
+        run: npm ci
+      - name: Format code
+        working-directory: ./client
+        run: npm run format
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'style: format code with prettier'
+          file_pattern: 'client/**/*.{ts,tsx,js,jsx,json,css}'

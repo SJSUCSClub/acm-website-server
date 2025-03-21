@@ -1,20 +1,15 @@
-import { useMutation, useQuery } from "@/hooks/useFetch";
-import React, { useEffect, useState } from "react";
-import { paths } from "@/types/schema.v1";
-import CompanyCard from "@/pages/dashboard/CompanyCard";
+import { useMutation, useQuery } from '@/hooks/useFetch';
+import React, { useEffect, useState } from 'react';
+import { paths } from '@/types/schema.v1';
+import CompanyCard from '@/pages/dashboard/CompanyCard';
 
 type SubscribedCompany =
-  paths["/v1/users/my/subscribed-companies"]["get"]["responses"]["200"]["content"]["application/json"]["companies"][number];
+  paths['/v1/users/my/subscribed-companies']['get']['responses']['200']['content']['application/json']['companies'][number];
 
 const SubscribedCompanies = () => {
-  const { data: sc } = useQuery("get", "/v1/users/my/subscribed-companies");
-  const { mutate } = useMutation(
-    "delete",
-    "/v1/users/my/subscribed-companies/{companyID}",
-  );
-  const [subscribedCompanies, setSubscribedCompanies] = useState<
-    SubscribedCompany[]
-  >([]);
+  const { data: sc } = useQuery('get', '/v1/users/my/subscribed-companies');
+  const { mutate } = useMutation('delete', '/v1/users/my/subscribed-companies/{companyID}');
+  const [subscribedCompanies, setSubscribedCompanies] = useState<SubscribedCompany[]>([]);
 
   useEffect(() => {
     if (!sc) return;
@@ -35,7 +30,7 @@ const SubscribedCompanies = () => {
         onSuccess: () => {
           setSubscribedCompanies(newCompanies);
         },
-      },
+      }
     );
   };
 
@@ -47,11 +42,7 @@ const SubscribedCompanies = () => {
       ) : (
         <div className="space-y-5">
           {subscribedCompanies.map((company) => (
-            <CompanyCard
-              key={company.id}
-              company={company}
-              onRemove={removeCompany}
-            />
+            <CompanyCard key={company.id} company={company} onRemove={removeCompany} />
           ))}
         </div>
       )}

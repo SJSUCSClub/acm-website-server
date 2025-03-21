@@ -1,2 +1,2 @@
-export { Spinner as default } from "./component";
-export * from "./component";
+export { Spinner as default } from './component';
+export * from './component';

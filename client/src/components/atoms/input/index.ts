@@ -1,2 +1,2 @@
-export { Input as default } from "./component";
-export * from "./component";
+export { Input as default } from './component';
+export * from './component';
