@@ -1749,7 +1749,6 @@ export interface paths {
                     };
                 };
             };
-          };
         };
         options?: never;
         head?: never;
