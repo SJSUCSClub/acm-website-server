@@ -18,6 +18,7 @@ const EnvSchema = z.object({
   S3_BUCKET_NAME: z.string().default(''),
   S3_DEFAULT_IMAGE_PLACEHOLDER: z.string().default(''),
   S3_BUCKET_URL: z.string().default(''),
+  SQS_QUEUE_URL: z.string().default(''),
   REGION: z.string().default('us-west-2'),
   ROLE_ARN: z.string().default(''),
 });
