@@ -4,7 +4,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from '@/components/ui/table';
 import { ExternalLink, FileIcon } from 'lucide-react';
 import { paths } from '@/types/schema.v1';

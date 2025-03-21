@@ -77,16 +77,16 @@ const PersonalInfo: React.FC<OnboardingTabProps> = ({ updatedUser, setPage, setU
   const { data: educationOptions } = useQuery('get', '/v1/enums/{enumType}', {
     params: {
       path: {
-        enumType: 'education_level_enum'
-      }
-    }
+        enumType: 'education_level_enum',
+      },
+    },
   });
   const { data: interestOptions } = useQuery('get', '/v1/enums/{enumType}', {
     params: {
       path: {
-        enumType: 'cs_fields_enum'
-      }
-    }
+        enumType: 'cs_fields_enum',
+      },
+    },
   });
   const { data: majorOptions } = useQuery('get', '/v1/majors');
   return (
@@ -105,7 +105,7 @@ const PersonalInfo: React.FC<OnboardingTabProps> = ({ updatedUser, setPage, setU
             prev
               ? {
                   ...prev,
-                  education_level: e.target.value as User['education_level']
+                  education_level: e.target.value as User['education_level'],
                 }
               : prev
           )
@@ -144,7 +144,7 @@ const PersonalInfo: React.FC<OnboardingTabProps> = ({ updatedUser, setPage, setU
                   ...prev,
                   interests: prev.interests.includes(option as User['interests'][number])
                     ? prev.interests.filter((item) => item !== option)
-                    : [...prev.interests, option as User['interests'][number]]
+                    : [...prev.interests, option as User['interests'][number]],
                 }
               : prev
           );

@@ -25,7 +25,7 @@ const BookmarkedEvents = () => {
       {
         onSuccess: () => {
           setBookmarkedEvents(newEvents);
-        }
+        },
       }
     );
   };

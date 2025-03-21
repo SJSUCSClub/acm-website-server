@@ -38,6 +38,20 @@ const EventsDetailsPage = () => {
       }
     }
   });
+  const { data: eventFiles } = useQuery('get', '/v1/events/{eventID}/files', {
+    params: {
+      path: {
+        eventID: eventId,
+      },
+    },
+  });
+  const { data: attendeeCount } = useQuery('get', '/v1/events/{eventID}/attendance/count', {
+    params: {
+      path: {
+        eventID: eventId,
+      },
+    },
+  });
 
   return (
     <Page>

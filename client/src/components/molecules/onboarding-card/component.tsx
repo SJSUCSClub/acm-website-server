@@ -4,7 +4,7 @@ import Card, {
   CardContent,
   CardHeader,
   ICardProps,
-  CardDescription
+  CardDescription,
 } from '../../atoms/card';
 
 export interface IOnboardingCardProps extends ICardProps {

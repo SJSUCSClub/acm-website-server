@@ -29,7 +29,7 @@ const SubscribedCompanies = () => {
       {
         onSuccess: () => {
           setSubscribedCompanies(newCompanies);
-        }
+        },
       }
     );
   };

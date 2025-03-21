@@ -15,7 +15,7 @@ const spotlights: ISpotlight[] = [
     title: 'ACM x Tesla Tech Talk',
     description:
       'Guest speaker Phuc Ngo, an NLP and Senior Data Engineer at Tesla, talks about his experiences and journey in the industry.',
-    id: 1
+    id: 1,
   },
   {
     type: 'EVENT',
@@ -23,7 +23,7 @@ const spotlights: ISpotlight[] = [
     title: 'Fall 2023 Google Alumni Panel',
     description:
       'ACM hosted a Q&A panel with SJSU alumni who are now working at Google. Members had the opportunity to gain insight into the technical interview process and what a typical workday at Google looks like, as well as network with panelists.',
-    id: 2
+    id: 2,
   },
 
   {
@@ -32,8 +32,8 @@ const spotlights: ISpotlight[] = [
     title: 'Google Cloud Hero 2023',
     description:
       'Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!',
-    id: 3
-  }
+    id: 3,
+  },
 ];
 
 interface ISpotlight {

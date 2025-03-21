@@ -7,7 +7,6 @@ import '../globals.css';
 import Footer from '../components/atoms/footer';
 import Navbar from '../components/organisms/navbar';
 import Faq from '../components/organisms/faq';
-import NotFoundPage from '../components/organisms/not-found-page';
 import 'acm-cs-sjsu-hero-component/dist/styles.css';
 
 const queryClient = new QueryClient();

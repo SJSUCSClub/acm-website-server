@@ -4,7 +4,7 @@ import Card, {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from '@/components/atoms/card';
 import { Badge } from '@/components/ui/badge';
 import { useQuery, useMutation } from '@/hooks/useFetch';
@@ -38,7 +38,7 @@ const ProjectsInInterest = () => {
       {
         onSuccess: () => {
           setProjectsInInterest(newProjects);
-        }
+        },
       }
     );
   };

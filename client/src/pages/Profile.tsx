@@ -60,7 +60,7 @@ export default function Profile() {
     selectedStatus: '',
     gradDate: new Date(),
     major: '',
-    selectedInterests: []
+    selectedInterests: [],
   });
 
   const [githubError, setGithubError] = useState<string | null>(null);
@@ -121,9 +121,9 @@ export default function Profile() {
         const response = await fetch('/api/v1/users/my', {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
-          credentials: 'include'
+          credentials: 'include',
         });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -182,10 +182,10 @@ export default function Profile() {
       const response = await fetch('/api/v1/users/my', {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify(updateData)
+        body: JSON.stringify(updateData),
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
