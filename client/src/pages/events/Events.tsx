@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import EventCard from "../../components/molecules/event-card";
-import BtnDateFilter from "../../components/molecules/btn-date-filter";
-import BtnTagFilter from "../../components/molecules/btn-tag-filter";
-import { useQuery } from "@/hooks/useFetch";
-import { paths } from "@/types/schema.v1";
+import { useEffect, useState } from 'react';
+import EventCard from '../../components/molecules/event-card';
+import BtnDateFilter from '../../components/molecules/btn-date-filter';
+import BtnTagFilter from '../../components/molecules/btn-tag-filter';
+import { useQuery } from '@/hooks/useFetch';
+import { paths } from '@/types/schema.v1';
 
 // interface Event {
 //   description: string;
@@ -19,30 +19,23 @@ import { paths } from "@/types/schema.v1";
 //   tags: string[];
 // }
 
-type Events = paths["/v1/events"]["get"]["responses"]["200"]["content"]["application/json"]["foundEvents"];
+type Events =
+  paths['/v1/events']['get']['responses']['200']['content']['application/json']['foundEvents'];
 import CalendarEmbed from './CalendarEmbed';
 
 const EventsPage = () => {
   const [events, setEvents] = useState<Events>([]);
-  const [dateFilter, setDateFilter] = useState<"upcoming" | "today" | "past" | "all">("all");
+  const [dateFilter, setDateFilter] = useState<'upcoming' | 'today' | 'past' | 'all'>('all');
   const [tagFilter, setTagFilter] = useState<string[]>([]);
 
-
-
-  const { data: eventData } = useQuery(
-      "get",
-      "/v1/events",
-      {
-        params: {
-          query: {
-            "tags": tagFilter.join(",") || "",
-            "timeframe": dateFilter || "all"
-          },
-        },
-      },
-    )  
-
-
+  const { data: eventData } = useQuery('get', '/v1/events', {
+    params: {
+      query: {
+        tags: tagFilter.join(',') || '',
+        timeframe: dateFilter || 'all'
+      }
+    }
+  });
 
   useEffect(() => {
     if (eventData) {

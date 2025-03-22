@@ -55,64 +55,6 @@ const developers = [
   }
 ];
 
-const officers = [
-  {
-    pfp: '/pfps/Karthik.png',
-    name: 'Karthik',
-    position: 'PRESIDENT',
-    linkedin: 'https://www.linkedin.com/in/karthikmanishankar/'
-  },
-
-  {
-    pfp: '/pfps/shirleyli.png',
-    name: 'Shirley Li',
-    position: 'VICE PRESIDENT',
-    linkedin: 'https://www.linkedin.com/in/shirley-shuhua-li'
-  },
-
-  {
-    pfp: '/pfps/angela.png',
-    name: 'Angela Huang',
-    position: 'SECRETARY',
-    linkedin: 'https://www.linkedin.com/in/angela-huang-725a25169/'
-  },
-
-  {
-    pfp: '/pfps/bineet.jpeg',
-    name: 'Bineet Anand',
-    position: 'SOCIAL MEDIA',
-    linkedin: 'https://www.linkedin.com/in/bineet-anand/'
-  },
-
-  {
-    pfp: '/pfps/annemai.jpeg',
-    name: 'Anne Mai',
-    position: 'EVENT CHAIR',
-    linkedin: 'https://www.linkedin.com/in/annepmai/'
-  },
-
-  {
-    pfp: '/pfps/tim.png',
-    name: 'Timothy Kim',
-    position: 'TREASURER',
-    linkedin: 'https://www.linkedin.com/in/timothy-kim712/'
-  },
-
-  {
-    pfp: '/pfps/trique.jpeg',
-    name: 'Trique Nguyen',
-    position: 'DEV TEAM LEAD',
-    linkedin: 'https://www.linkedin.com/in/trique-nguyen/'
-  },
-
-  {
-    pfp: '/pfps/galit.png',
-    name: 'Galit Bolotin',
-    position: 'EVENT CHAIR',
-    linkedin: 'https://www.linkedin.com/in/gbolotin/'
-  }
-];
-
 const page = () => {
   return (
     <Page>
@@ -137,7 +79,7 @@ const page = () => {
           <h2 className="font-bold text-xl">What we do.</h2>
           <p>
             We provide opportunities for San José students from all majors. As a member, youll have
-            access to excluesive events, workshops, hackathons, projects, and many more.
+            access to exclusive events, workshops, hackathons, projects, and many more.
           </p>
           <p>
             Believe it or not, this very website was created by students, just like you! Our
@@ -191,7 +133,7 @@ const page = () => {
         <div className="teams space-y-4">
           <h1 className="text-4xl text-center font-bold">Meet Our Teams</h1>
           <p>
-            We’re dedicated to making the ACM Club a place for every student. Our teams provide a
+            We're dedicated to making the ACM Club a place for every student. Our teams provide a
             gateway for students into new fields and industries. You can join any of our teams to
             explore your interests and develop new skills as a member of the club.
           </p>
@@ -231,54 +173,10 @@ const page = () => {
           <div className="flex gap-4 items-center justify-center">
             <MemberBtn variant="primary" />
           </div>
-
-          <hr className="border-neutral my-10"></hr>
-
-          <div className="teams space-y-4">
-            <h1 className="text-4xl text-center font-bold">Meet Our Teams</h1>
-            <p>
-              We're dedicated to making the ACM Club a place for every student. Our teams provide a
-              gateway for students into new fields and industries. You can join any of our teams to
-              explore your interests and develop new skills as a member of the club.
-            </p>
-            <h1 className="pt-4 font-bold md:text-2xl text-lg text-center text-[#8F69C2]">
-              Software
-            </h1>
-            <TextWithImage reverse={true} logo={true} imagePath="/icons/softwareicon.svg" imageAlt="">
-              <p>
-                This group is committed to providing students with the chance to delve into technology
-                through practical projects and interactive activities. The development branch
-                concentrates on acquainting students with software development and the diverse range
-                of technology stacks prevalent in the industry.
-              </p>
-            </TextWithImage>
-
-            <h1 className="font-bold mt-2 md:text-2xl text-lg text-center text-[#C28F69]">
-              Hardware
-            </h1>
-            <TextWithImage logo={true} imagePath="/icons/hardwareicon.svg" imageAlt="">
-              <p>
-                This team is committed to immersing students in the world of hardware by engaging them
-                in tangible projects and experiments. We concentrate on imparting knowledge about
-                electronics, circuit design, and the hardware tools and devices that are integral to
-                technological innovation in the industry.
-              </p>
-            </TextWithImage>
-            <h1 className="font-bold md:text-2xl text-lg text-center text-[#69C28F]">Design</h1>
-            <TextWithImage reverse={true} logo={true} imagePath="/icons/designicon.svg" imageAlt="">
-              <p>
-                Our design squad is focused on guiding students through the creative aspects of
-                technology by offering hands-on experience in design projects. We emphasize the
-                principles of user interface (UI) and user experience (UX) design, along with the
-                various design tools and methodologies adopted by professionals in the tech field.
-              </p>
-            </TextWithImage>
-
-            <div className="flex gap-4 items-center justify-center">
-              <MemberBtn variant="primary" />
-            </div>
-          </div>
         </div>
+
+        <hr className="border-neutral my-10"></hr>
+
         <div className="devteam">
           <h1 className="text-4xl text-center font-bold my-8">Development Team</h1>
           <div className="flex flex-col items-center justify-center gap-16 sm:gap-8 mx-[-10%]">
@@ -294,21 +192,6 @@ const page = () => {
               ))}
             </div>
           </div>
-          <div className="devteam">
-            <h1 className="text-4xl text-center font-bold my-8">Development Team</h1>
-            <div className="flex flex-col items-center justify-center gap-16 sm:gap-8 mx-[-10%]">
-              <div className="sm:flex sm:flex-wrap gap-x-10 items-center justify-center">
-                {developers.map((developer, index) => (
-                  <OfficerCard
-                    key={index}
-                    name={developer.name}
-                    position={developer?.position || ''}
-                    photo={developer.pfp}
-                    linkedin={developer.linkedin}
-                  />
-                ))}
-              </div>
-            </div>
         </div>
       </div>
     </Page>

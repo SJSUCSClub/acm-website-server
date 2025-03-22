@@ -1,40 +1,27 @@
-import { ChevronsUpDown } from "lucide-react";
-import * as React from "react";
-import { Checkbox } from "../../../components/ui/checkbox";
-import { Button } from "../../../components/ui/button";
-import {
-  Command,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from "../../../components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../../components/ui/popover";
-import { useState } from "react";
-import { useQuery } from "@/hooks/useFetch";
+import { ChevronsUpDown } from 'lucide-react';
+import * as React from 'react';
+import { Checkbox } from '../../../components/ui/checkbox';
+import { Button } from '../../../components/ui/button';
+import { Command, CommandGroup, CommandItem, CommandList } from '../../../components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '../../../components/ui/popover';
+import { useState } from 'react';
+import { useQuery } from '@/hooks/useFetch';
 
 export type EventCardProps = {
-  selectedTags: string[] ;
+  selectedTags: string[];
   fcn: (data: string[]) => void;
 };
 
 export const BtnTagFilter: React.FC<EventCardProps> = ({ selectedTags, fcn }) => {
   const [open, setOpen] = useState(false);
-  const value = "Tag Filter"
-  const { data: tags } = useQuery(
-    "get",
-    "/v1/enums/{enumType}",
-    {
-      params: {
-        path: {
-          enumType: "cs_fields_enum",
-        },
-      },
+  const value = 'Tag Filter';
+  const { data: tags } = useQuery('get', '/v1/enums/{enumType}', {
+    params: {
+      path: {
+        enumType: 'cs_fields_enum'
+      }
     }
-  )  
+  });
 
   const handleCheckboxChange = (tag: string, checked: boolean) => {
     if (checked) {
@@ -61,9 +48,9 @@ export const BtnTagFilter: React.FC<EventCardProps> = ({ selectedTags, fcn }) =>
         <Command>
           <CommandList>
             <CommandGroup>
-              {tags?.types.map((option:  string) => (
+              {tags?.types.map((option: string) => (
                 <CommandItem key={option}>
-                  {" "}
+                  {' '}
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id={option}

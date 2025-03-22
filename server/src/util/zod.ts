@@ -1,5 +1,31 @@
-import { createSelectSchema } from 'drizzle-zod';
-import { educationLevelEnum, bookmarkedEvents, projects, users, events, subscribedCompanies, majors, companies, equipmentRentalType, equipmentItem, equipmentRentals, files, sponsors, officers, csFieldsEnum } from '@/db/schema';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import {
+	educationLevelEnum,
+	projects,
+	users,
+	events,
+	subscribedCompanies,
+	majors,
+	companies,
+	equipmentRentalType,
+	equipmentItem,
+	equipmentRentals,
+	files,
+	sponsors,
+	officers,
+	blacklist,
+	csFieldsEnum,
+	clubLinks,
+	landingQuestions,
+	landingSpotlights,
+	membershipTermEnum,
+	bookmarkedEvents,
+	subscribedEvents,
+	attendingEvents,
+	urls,
+	paymentLinks,
+	eventsEnum,
+} from '@/db/schema';
 
 import { z } from 'zod';
 
@@ -17,7 +43,8 @@ export const timestampEnumSchema = z.enum(['upcoming', 'today', 'past', 'all']);
 export const userSchema = createSelectSchema(users).extend({
 	interests: z.array(z.enum(csFieldsEnum.enumValues)),
 });
-export const equipmentRentalTypeSchema = createSelectSchema(equipmentRentalType);
+export const equipmentRentalTypeSchema =
+	createSelectSchema(equipmentRentalType);
 export const equipmentItemSchema = createSelectSchema(equipmentItem);
 export const equipmentRentalSchema = createSelectSchema(equipmentRentals);
 export const eventIDSchema = z.object({
@@ -30,45 +57,43 @@ export const projectIDSchema = z.object({
 });
 export const projectSchema = createSelectSchema(projects);
 export const bookmarkedEvent = eventSchema.extend({
-  bookmarkedDate: z.string(),
+	bookmarkedDate: z.string(),
 });
-export const bookmarkedEventSchema = createSelectSchema(bookmarkedEvents);	
+export const bookmarkedEventSchema = createSelectSchema(bookmarkedEvents);
 export const subscribedEvent = eventSchema.extend({
-  subscribedDate: z.string(),
+	subscribedDate: z.string(),
 });
 export const subscribedEventSchema = createSelectSchema(subscribedEvents);
 export const attendingEventSchema = createSelectSchema(attendingEvents);
-export const urlSchema = createSelectSchema(urls);	
+export const urlSchema = createSelectSchema(urls);
 export const attendingEvent = eventSchema.extend({
-  attendingDate: z.string(),
+	attendingDate: z.string(),
 });
 export const subscribedCompany = companySchema.extend({
-  subscribedDate: z.string(),
-});	
+	subscribedDate: z.string(),
+});
 export const updateUserSchema = z.object({
-  major: z.string().optional(),
-  gradDate: z.coerce.date().optional(),
-  interests: z.array(z.enum(csFieldsEnum.enumValues)).optional(),
-  education_level: z.enum(educationLevelEnum.enumValues).optional(),
-  paid: z.enum(membershipTermEnum.enumValues).nullable().optional(),
-  discord: z.string().nullable().optional(),
-  linkedin: z.string().nullable().optional(),
-  github: z.string().nullable().optional(),
-  website: z.string().nullable().optional(),
+	major: z.string().optional(),
+	gradDate: z.coerce.date().optional(),
+	interests: z.array(z.enum(csFieldsEnum.enumValues)).optional(),
+	education_level: z.enum(educationLevelEnum.enumValues).optional(),
+	paid: z.enum(membershipTermEnum.enumValues).nullable().optional(),
+	discord: z.string().nullable().optional(),
+	linkedin: z.string().nullable().optional(),
+	github: z.string().nullable().optional(),
+	website: z.string().nullable().optional(),
 });
 export const userIdSchema = z.object({
-  userId: z.string(),
+	userId: z.string(),
 });
 export const sponsorSchema = createSelectSchema(sponsors);
 export const equipmentTypeIdSchema = z.object({
-  equipmentTypeId: z
-    .string()
-    .openapi({
-      param: {
-        name: 'equipmentTypeId',
-        in: 'path',
-      },
-    }),
+	equipmentTypeId: z.string().openapi({
+		param: {
+			name: 'equipmentTypeId',
+			in: 'path',
+		},
+	}),
 });
 export const officerSchema = createSelectSchema(officers);
 export const newBlacklistSchema = createInsertSchema(blacklist);
@@ -77,19 +102,17 @@ export const clubLinkSchema = createSelectSchema(clubLinks);
 export const landingSpotlightSchema = createSelectSchema(landingSpotlights);
 export const landingQuestionSchema = createSelectSchema(landingQuestions);
 export const errorSchema = z.object({
-  error: z.string(),
+	error: z.string(),
 });
 export const paymentLinkSchema = createSelectSchema(paymentLinks);
 export const newPaymentLinkSchema = createInsertSchema(paymentLinks);
 export const paymentIdSchema = z.object({
-  paymentId: z
-    .string()
-    .openapi({
-      param: {
-        name: 'paymentId',
-        in: 'path',
-      },
-    }),
+	paymentId: z.string().openapi({
+		param: {
+			name: 'paymentId',
+			in: 'path',
+		},
+	}),
 });
 export const spotlightSchema = z.object({
 	id: z.number(),

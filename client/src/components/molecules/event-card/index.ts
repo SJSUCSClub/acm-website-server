@@ -1,2 +1,2 @@
-export { EventCard as default } from "./component";
-export * from "./component";
+export { EventCard as default } from './component';
+export * from './component';
