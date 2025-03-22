@@ -1,40 +1,31 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link } from '@tanstack/react-router';
+import React, { useState } from 'react';
+import { Link, useNavigate } from '@tanstack/react-router';
 
 import Logo from '../../../Logo.png';
 
 import LinkCard from '../../atoms/link-card';
 import Btn from '../../atoms/btn';
 import { useAuth } from '@/hooks/useAuth';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
 
 export const NavBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const { isLoggedIn, user, isAdmin, logout } = useAuth();
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
 
-  const toggleDropdown = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setDropdownOpen(!dropdownOpen);
+  const handleNavigation = (path: string) => {
+    navigate({ to: path });
   };
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleOutsideClick);
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
-  }, []);
 
   return (
     <div className="navbar z-10 sticky w-full">
@@ -49,11 +40,8 @@ export const NavBar: React.FC = () => {
           <LinkCard path="/projects" pathName="Projects" />
 
           {isLoggedIn ? (
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={toggleDropdown}
-                className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 transition-colors"
-              >
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 transition-colors outline-none">
                 {user?.profilePic ? (
                   <img
                     src={user.profilePic}
@@ -66,7 +54,7 @@ export const NavBar: React.FC = () => {
                   </div>
                 )}
                 <svg
-                  className={`w-4 h-4 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
+                  className="w-4 h-4"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -79,40 +67,27 @@ export const NavBar: React.FC = () => {
                     d="M19 9l-7 7-7-7"
                   />
                 </svg>
-              </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem onClick={() => handleNavigation('/dashboard')}>
+                  Dashboard
+                </DropdownMenuItem>
 
-              {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 border">
-                  <Link
-                    to="/dashboard"
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    Dashboard
-                  </Link>
-
-                  {isAdmin && (
-                    <Link
-                      to="/admin"
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      onClick={() => setDropdownOpen(false)}
-                    >
+                {isAdmin && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => handleNavigation('/admin')}>
                       Admin Panel
-                    </Link>
-                  )}
+                    </DropdownMenuItem>
+                  </>
+                )}
 
-                  <button
-                    onClick={() => {
-                      logout();
-                      setDropdownOpen(false);
-                    }}
-                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={logout} className="text-red-600 focus:text-red-600">
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
             <LinkCard path="/login" pathName="Log In" />
           )}
