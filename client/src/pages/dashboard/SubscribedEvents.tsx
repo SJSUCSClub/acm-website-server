@@ -18,14 +18,14 @@ const SubscribedEvents = () => {
       {
         params: {
           path: {
-            eventID: event.id.toString(),
-          },
-        },
+            eventID: event.id.toString()
+          }
+        }
       },
       {
         onSuccess: () => {
           setSubscribedEvents(newEvents);
-        },
+        }
       }
     );
   };

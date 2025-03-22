@@ -16,7 +16,7 @@ export const MultiSelect: React.FC<ISelectProps> = ({
   options,
   footer,
   selectedOptions,
-  changeFunction,
+  changeFunction
 }) => {
   return (
     <div>

@@ -13,30 +13,30 @@ const EventsDetailsPage = () => {
   const { data: event } = useQuery('get', '/v1/events/{eventID}', {
     params: {
       path: {
-        eventID: eventId,
-      },
-    },
+        eventID: eventId
+      }
+    }
   });
   const { data: eventCompanies } = useQuery('get', '/v1/events/{eventID}/companies', {
     params: {
       path: {
-        eventID: eventId,
-      },
-    },
+        eventID: eventId
+      }
+    }
   });
   const { data: eventFiles } = useQuery('get', '/v1/events/{eventID}/files', {
     params: {
       path: {
-        eventID: eventId,
-      },
-    },
+        eventID: eventId
+      }
+    }
   });
   const { data: attendeeCount } = useQuery('get', '/v1/events/{eventID}/attendance/count', {
     params: {
       path: {
-        eventID: eventId,
-      },
-    },
+        eventID: eventId
+      }
+    }
   });
 
   return (

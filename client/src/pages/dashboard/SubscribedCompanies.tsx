@@ -22,14 +22,14 @@ const SubscribedCompanies = () => {
       {
         params: {
           path: {
-            companyID: company.id.toString(),
-          },
-        },
+            companyID: company.id.toString()
+          }
+        }
       },
       {
         onSuccess: () => {
           setSubscribedCompanies(newCompanies);
-        },
+        }
       }
     );
   };

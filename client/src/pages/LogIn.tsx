@@ -18,7 +18,7 @@ export default function SignIn() {
             delay: 0.2,
             type: 'spring',
             stiffness: 260,
-            damping: 20,
+            damping: 20
           }}
           className="text-center"
         >

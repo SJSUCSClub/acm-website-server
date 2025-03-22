@@ -12,9 +12,9 @@ const AttendBtn: React.FC<IAttendBtnProps> = ({ id, full = false }) => {
   const { data, isError, isLoading } = useQuery('get', '/v1/users/my/attending-events/{eventID}', {
     params: {
       path: {
-        eventID: id,
-      },
-    },
+        eventID: id
+      }
+    }
   });
   const { mutate: subscribe } = useMutation('post', '/v1/users/my/attending-events/{eventID}');
   const { mutate: unsubscribe } = useMutation('delete', '/v1/users/my/attending-events/{eventID}');
@@ -38,9 +38,9 @@ const AttendBtn: React.FC<IAttendBtnProps> = ({ id, full = false }) => {
         {
           params: {
             path: {
-              eventID: id,
-            },
-          },
+              eventID: id
+            }
+          }
         },
         {
           onSuccess: () => {
@@ -48,7 +48,7 @@ const AttendBtn: React.FC<IAttendBtnProps> = ({ id, full = false }) => {
           },
           onError() {
             toastError();
-          },
+          }
         }
       );
     } else if (!full) {
@@ -56,9 +56,9 @@ const AttendBtn: React.FC<IAttendBtnProps> = ({ id, full = false }) => {
         {
           params: {
             path: {
-              eventID: id,
-            },
-          },
+              eventID: id
+            }
+          }
         },
         {
           onSuccess: () => {
@@ -66,7 +66,7 @@ const AttendBtn: React.FC<IAttendBtnProps> = ({ id, full = false }) => {
           },
           onError() {
             toastError();
-          },
+          }
         }
       );
     } else {

@@ -20,7 +20,7 @@ export const GetInvolvedCard: React.FC<IGetInvolvedCardProps> = ({
   description,
   priceStyling,
   textList,
-  buttonStyling,
+  buttonStyling
 }) => (
   <Card className="bg-white rounded-xl text-center shadow-lg transition ease-in hover:shadow-2xl p-10 pt-20  pb-20">
     <h2 className=" text-base md:text-2xl ont-bold mb-2">{plan}</h2>

@@ -9,50 +9,50 @@ const developers = [
     pfp: '/pfps/anishka.png',
     name: 'Anishka Chauhan',
     position: null,
-    linkedin: 'https://www.linkedin.com/in/anishka-chauhan/',
+    linkedin: 'https://www.linkedin.com/in/anishka-chauhan/'
   },
   {
     pfp: '/pfps/dylan.jpg',
     name: 'Dylan Huang',
     position: null,
-    linkedin: 'https://www.linkedin.com/in/huang-dylan/',
+    linkedin: 'https://www.linkedin.com/in/huang-dylan/'
   },
   {
     pfp: '/pfps/justin.JPG',
     name: 'Justin Lee',
     position: null,
-    linkedin: 'https://www.linkedin.com/in/justin-lee-a670531ab',
+    linkedin: 'https://www.linkedin.com/in/justin-lee-a670531ab'
   },
   {
     pfp: '/pfps/kevin.jpg',
     name: 'Kevin Tsoi',
     position: null,
-    linkedin: 'https://www.linkedin.com/in/kevin-tsoi/',
+    linkedin: 'https://www.linkedin.com/in/kevin-tsoi/'
   },
   {
     pfp: '/pfps/kiet.jpg',
     name: 'Kiet Quan',
     position: null,
-    linkedin: 'https://www.linkedin.com/in/kiet-quan-software-engineer/',
+    linkedin: 'https://www.linkedin.com/in/kiet-quan-software-engineer/'
   },
   {
     pfp: '/pfps/marvin.jpg',
     name: 'Marvin Zhai',
     position: null,
-    linkedin: 'https://www.linkedin.com/in/marvin-zhai-739144278/',
+    linkedin: 'https://www.linkedin.com/in/marvin-zhai-739144278/'
   },
   {
     pfp: '/pfps/ronald.jpg',
     name: 'Ronald Li',
     position: null,
-    linkedin: 'https://www.linkedin.com/in/ronaldli666/',
+    linkedin: 'https://www.linkedin.com/in/ronaldli666/'
   },
   {
     pfp: '/pfps/agamjot.png',
     name: 'Agamjot Singh',
     position: null,
-    linkedin: 'www.linkedin.com/in/agamjotsingh05',
-  },
+    linkedin: 'www.linkedin.com/in/agamjotsingh05'
+  }
 ];
 
 const officers = [
@@ -60,57 +60,57 @@ const officers = [
     pfp: '/pfps/Karthik.png',
     name: 'Karthik',
     position: 'PRESIDENT',
-    linkedin: 'https://www.linkedin.com/in/karthikmanishankar/',
+    linkedin: 'https://www.linkedin.com/in/karthikmanishankar/'
   },
 
   {
     pfp: '/pfps/shirleyli.png',
     name: 'Shirley Li',
     position: 'VICE PRESIDENT',
-    linkedin: 'https://www.linkedin.com/in/shirley-shuhua-li',
+    linkedin: 'https://www.linkedin.com/in/shirley-shuhua-li'
   },
 
   {
     pfp: '/pfps/angela.png',
     name: 'Angela Huang',
     position: 'SECRETARY',
-    linkedin: 'https://www.linkedin.com/in/angela-huang-725a25169/',
+    linkedin: 'https://www.linkedin.com/in/angela-huang-725a25169/'
   },
 
   {
     pfp: '/pfps/bineet.jpeg',
     name: 'Bineet Anand',
     position: 'SOCIAL MEDIA',
-    linkedin: 'https://www.linkedin.com/in/bineet-anand/',
+    linkedin: 'https://www.linkedin.com/in/bineet-anand/'
   },
 
   {
     pfp: '/pfps/annemai.jpeg',
     name: 'Anne Mai',
     position: 'EVENT CHAIR',
-    linkedin: 'https://www.linkedin.com/in/annepmai/',
+    linkedin: 'https://www.linkedin.com/in/annepmai/'
   },
 
   {
     pfp: '/pfps/tim.png',
     name: 'Timothy Kim',
     position: 'TREASURER',
-    linkedin: 'https://www.linkedin.com/in/timothy-kim712/',
+    linkedin: 'https://www.linkedin.com/in/timothy-kim712/'
   },
 
   {
     pfp: '/pfps/trique.jpeg',
     name: 'Trique Nguyen',
     position: 'DEV TEAM LEAD',
-    linkedin: 'https://www.linkedin.com/in/trique-nguyen/',
+    linkedin: 'https://www.linkedin.com/in/trique-nguyen/'
   },
 
   {
     pfp: '/pfps/galit.png',
     name: 'Galit Bolotin',
     position: 'EVENT CHAIR',
-    linkedin: 'https://www.linkedin.com/in/gbolotin/',
-  },
+    linkedin: 'https://www.linkedin.com/in/gbolotin/'
+  }
 ];
 
 const page = () => {

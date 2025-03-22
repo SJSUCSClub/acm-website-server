@@ -4,7 +4,7 @@ import Card, {
   CardContent,
   CardHeader,
   ICardProps,
-  CardDescription,
+  CardDescription
 } from '../../atoms/card';
 
 export interface IOnboardingCardProps extends ICardProps {
@@ -20,7 +20,7 @@ export const OnboardingCard: React.FC<IOnboardingCardProps> = ({
   subtitle = '',
   image = '',
   children,
-  className,
+  className
 }) => (
   <Card className={className}>
     <CardHeader className="text-center">

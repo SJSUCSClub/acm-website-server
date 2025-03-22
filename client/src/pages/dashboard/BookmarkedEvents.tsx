@@ -18,14 +18,14 @@ const BookmarkedEvents = () => {
       {
         params: {
           path: {
-            eventID: event.id.toString(),
-          },
-        },
+            eventID: event.id.toString()
+          }
+        }
       },
       {
         onSuccess: () => {
           setBookmarkedEvents(newEvents);
-        },
+        }
       }
     );
   };

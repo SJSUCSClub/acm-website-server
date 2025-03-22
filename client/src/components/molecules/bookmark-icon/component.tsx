@@ -11,9 +11,9 @@ const BookmarkIcon: React.FC<IBookmarkIconProps> = ({ id }) => {
   const { data, isError, isLoading } = useQuery('get', '/v1/users/my/bookmarked/{eventID}', {
     params: {
       path: {
-        eventID: id,
-      },
-    },
+        eventID: id
+      }
+    }
   });
   const { mutate: subscribe } = useMutation('post', '/v1/users/my/bookmarked/{eventID}');
   const { mutate: unsubscribe } = useMutation('delete', '/v1/users/my/bookmarked/{eventID}');
@@ -29,14 +29,14 @@ const BookmarkIcon: React.FC<IBookmarkIconProps> = ({ id }) => {
         {
           params: {
             path: {
-              eventID: id,
-            },
-          },
+              eventID: id
+            }
+          }
         },
         {
           onSuccess: () => {
             setBookmarked(false);
-          },
+          }
         }
       );
     } else {
@@ -44,14 +44,14 @@ const BookmarkIcon: React.FC<IBookmarkIconProps> = ({ id }) => {
         {
           params: {
             path: {
-              eventID: id,
-            },
-          },
+              eventID: id
+            }
+          }
         },
         {
           onSuccess: () => {
             setBookmarked(true);
-          },
+          }
         }
       );
     }

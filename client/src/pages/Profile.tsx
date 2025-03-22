@@ -60,7 +60,7 @@ export default function Profile() {
     selectedStatus: '',
     gradDate: new Date(),
     major: '',
-    selectedInterests: [],
+    selectedInterests: []
   });
 
   const [githubError, setGithubError] = useState<string | null>(null);
@@ -121,9 +121,9 @@ export default function Profile() {
         const response = await fetch('/api/v1/users/my', {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
-          credentials: 'include',
+          credentials: 'include'
         });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -142,7 +142,7 @@ export default function Profile() {
           selectedStatus: data.education_level,
           gradDate: new Date(data.gradDate),
           major: data.major,
-          selectedInterests: data.interests || [],
+          selectedInterests: data.interests || []
         });
       } catch (error) {
         console.error(error);
@@ -176,16 +176,16 @@ export default function Profile() {
         linkedin: userData.linkedin,
         github: userData.github,
         website: userData.website,
-        interests: userData.selectedInterests,
+        interests: userData.selectedInterests
       };
 
       const response = await fetch('/api/v1/users/my', {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         credentials: 'include',
-        body: JSON.stringify(updateData),
+        body: JSON.stringify(updateData)
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -303,7 +303,7 @@ export default function Profile() {
                     onChange={(e) =>
                       setUserData({
                         ...userData,
-                        selectedStatus: e.target.value,
+                        selectedStatus: e.target.value
                       })
                     }
                   />

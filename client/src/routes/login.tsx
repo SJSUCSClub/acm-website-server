@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useState, useEffect } from 'react';
 
 export const Route = createFileRoute('/login')({
-  component: LoginRouteComponent,
+  component: LoginRouteComponent
 });
 
 function LoginRouteComponent() {

@@ -27,5 +27,5 @@ export const Route = createRootRoute({
       {process.env.NODE_ENV === 'development' && <TanStackRouterDevtools />}
     </QueryClientProvider>
   ),
-  notFoundComponent: () => <NotFoundPage />,
+  notFoundComponent: () => <NotFoundPage />
 });

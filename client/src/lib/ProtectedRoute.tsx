@@ -14,7 +14,7 @@ export function ProtectedRoute({
   children,
   requireAdmin = false,
   requireMember = false,
-  showNotFoundOnUnauthorized = false,
+  showNotFoundOnUnauthorized = false
 }: ProtectedRouteProps) {
   const { isLoggedIn, isLoading, isAdmin, isMember } = useAuth();
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ export function ProtectedRoute({
     requireAdmin,
     requireMember,
     navigate,
-    showNotFoundOnUnauthorized,
+    showNotFoundOnUnauthorized
   ]);
 
   if (isLoading) {

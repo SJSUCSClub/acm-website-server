@@ -17,10 +17,10 @@ const twMerge = extendTailwindMerge({
         'ok',
         'bad',
         'border',
-        'hovered-border',
+        'hovered-border'
       ],
       borderRadius: ['lg', 'md', 'sm', 'none'],
-      spacing: ['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 'content-width'],
+      spacing: ['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 'content-width']
     },
     classGroups: {
       'font-size': [
@@ -45,12 +45,12 @@ const twMerge = extendTailwindMerge({
             'small-lg',
             'small-lg-bold',
             'small-sm',
-            'small-sm-bold',
-          ],
-        },
-      ],
-    },
-  },
+            'small-sm-bold'
+          ]
+        }
+      ]
+    }
+  }
 });
 
 export function cn(...inputs: ClassValue[]) {

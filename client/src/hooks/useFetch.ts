@@ -4,7 +4,7 @@ import createClient from 'openapi-react-query';
 
 export const api = createFetchClient<paths>({
   baseUrl: '/api/',
-  credentials: 'include',
+  credentials: 'include'
 });
 
 const $api = createClient(api);

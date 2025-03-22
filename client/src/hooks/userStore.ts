@@ -29,7 +29,7 @@ export const useUserStore = create<UserState>((set) => ({
         set({
           isLoading: false,
           error: 'Failed to fetch user',
-          isAuthenticated: false,
+          isAuthenticated: false
         });
         return;
       }
@@ -38,13 +38,13 @@ export const useUserStore = create<UserState>((set) => ({
         user: data || null,
         isLoading: false,
         error: null,
-        isAuthenticated: true,
+        isAuthenticated: true
       });
     } catch (error) {
       set({
         isLoading: false,
         error: error instanceof Error ? error.message : 'Unknown error',
-        isAuthenticated: false,
+        isAuthenticated: false
       });
     }
   },
@@ -58,7 +58,7 @@ export const useUserStore = create<UserState>((set) => ({
         user: null,
         isLoading: false,
         error: null,
-        isAuthenticated: false,
+        isAuthenticated: false
       });
 
       if (!response.ok) {
@@ -70,7 +70,7 @@ export const useUserStore = create<UserState>((set) => ({
         user: null,
         isLoading: false,
         error: null,
-        isAuthenticated: false,
+        isAuthenticated: false
       });
       console.error(
         'Error during logout:',
@@ -79,5 +79,5 @@ export const useUserStore = create<UserState>((set) => ({
     }
   },
 
-  clearError: () => set({ error: null }),
+  clearError: () => set({ error: null })
 }));

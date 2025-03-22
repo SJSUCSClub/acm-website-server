@@ -11,7 +11,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuItem,
-  DropdownMenuSeparator,
+  DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
 
 export const NavBar: React.FC = () => {

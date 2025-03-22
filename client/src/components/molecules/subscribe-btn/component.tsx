@@ -28,9 +28,9 @@ const SubscribeEventBtn: React.FC<ISubscribeEventBtnProps> = ({ eventId }) => {
   const { data, isError, isLoading } = useQuery('get', '/v1/users/my/subscribed-events/{eventID}', {
     params: {
       path: {
-        eventID: eventId,
-      },
-    },
+        eventID: eventId
+      }
+    }
   });
   const { mutate: subscribe } = useMutation('post', '/v1/users/my/subscribed-events/{eventID}');
   const { mutate: unsubscribe } = useMutation('delete', '/v1/users/my/subscribed-events/{eventID}');
@@ -50,14 +50,14 @@ const SubscribeEventBtn: React.FC<ISubscribeEventBtnProps> = ({ eventId }) => {
         {
           params: {
             path: {
-              eventID: eventId,
-            },
-          },
+              eventID: eventId
+            }
+          }
         },
         {
           onSuccess: () => {
             setSubscribed(false);
-          },
+          }
         }
       );
     } else {
@@ -65,14 +65,14 @@ const SubscribeEventBtn: React.FC<ISubscribeEventBtnProps> = ({ eventId }) => {
         {
           params: {
             path: {
-              eventID: eventId,
-            },
-          },
+              eventID: eventId
+            }
+          }
         },
         {
           onSuccess: () => {
             setSubscribed(true);
-          },
+          }
         }
       );
     }
@@ -97,9 +97,9 @@ const SubscribeCompanyBtn: React.FC<ISubscribeCompanyBtnProps> = ({ companyId })
     {
       params: {
         path: {
-          companyID: companyId,
-        },
-      },
+          companyID: companyId
+        }
+      }
     }
   );
   const { mutate: subscribe } = useMutation(
@@ -126,14 +126,14 @@ const SubscribeCompanyBtn: React.FC<ISubscribeCompanyBtnProps> = ({ companyId })
         {
           params: {
             path: {
-              companyID: companyId,
-            },
-          },
+              companyID: companyId
+            }
+          }
         },
         {
           onSuccess: () => {
             setSubscribed(false);
-          },
+          }
         }
       );
     } else {
@@ -141,14 +141,14 @@ const SubscribeCompanyBtn: React.FC<ISubscribeCompanyBtnProps> = ({ companyId })
         {
           params: {
             path: {
-              companyID: companyId,
-            },
-          },
+              companyID: companyId
+            }
+          }
         },
         {
           onSuccess: () => {
             setSubscribed(true);
-          },
+          }
         }
       );
     }

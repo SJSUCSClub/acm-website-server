@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useEffect, useState } from 'react';
 
 export const Route = createFileRoute('/dashboard')({
-  component: DashboardRouteComponent,
+  component: DashboardRouteComponent
 });
 
 function DashboardRouteComponent() {
