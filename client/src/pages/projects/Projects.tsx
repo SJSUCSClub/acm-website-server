@@ -5,7 +5,7 @@ import Card, {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
+  CardFooter
 } from '@/components/atoms/card';
 import { RxGithubLogo } from 'react-icons/rx';
 import Page from '@/components/templates/Page';
@@ -33,14 +33,14 @@ const Projects = () => {
       {
         params: {
           path: {
-            projectID: projectId.toString(),
-          },
-        },
+            projectID: projectId.toString()
+          }
+        }
       },
       {
         onSuccess: () => {
           setProjectsInInterestIds([...projectsInInterestIds, projectId]);
-        },
+        }
       }
     );
   };
@@ -50,14 +50,14 @@ const Projects = () => {
       {
         params: {
           path: {
-            projectID: projectId.toString(),
-          },
-        },
+            projectID: projectId.toString()
+          }
+        }
       },
       {
         onSuccess: () => {
           setProjectsInInterestIds(projectsInInterestIds.filter((id) => id !== projectId));
-        },
+        }
       }
     );
   };

@@ -25,7 +25,7 @@ const SubscribedEvents = () => {
       {
         onSuccess: () => {
           setSubscribedEvents(newEvents);
-        },
+        }
       }
     );
   };

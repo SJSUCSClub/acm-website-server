@@ -29,7 +29,7 @@ export const TextWithImage: React.FC<ITextWithImageProps> = ({
           width: '100%',
           height: '100%',
           objectFit: logo ? 'contain' : 'cover',
-          position: 'absolute',
+          position: 'absolute'
         }}
         className={`rounded-lg object-${logo ? 'contain' : 'cover'}`}
       />

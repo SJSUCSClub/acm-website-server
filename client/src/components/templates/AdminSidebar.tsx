@@ -15,18 +15,18 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
     {
       title: 'Home',
       icon: House,
-      href: '/admin',
+      href: '/admin'
     },
     {
       title: 'Users',
       icon: Users,
-      href: '/admin/users',
+      href: '/admin/users'
     },
     {
       title: 'Projects',
       icon: FolderOpenDot,
-      href: '/admin/projects',
-    },
+      href: '/admin/projects'
+    }
   ];
   return (
     <div className="flex h-[800px]">

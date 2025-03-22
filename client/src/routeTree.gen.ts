@@ -36,84 +36,84 @@ const AdminImport = createFileRoute('/admin')();
 const AdminRoute = AdminImport.update({
   id: '/admin',
   path: '/admin',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any);
 
 const ProjectsRoute = ProjectsImport.update({
   id: '/projects',
   path: '/projects',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any);
 
 const ProfileRoute = ProfileImport.update({
   id: '/profile',
   path: '/profile',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any);
 
 const OnboardingRoute = OnboardingImport.update({
   id: '/onboarding',
   path: '/onboarding',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any);
 
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any);
 
 const DashboardRoute = DashboardImport.update({
   id: '/dashboard',
   path: '/dashboard',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any);
 
 const AboutRoute = AboutImport.update({
   id: '/about',
   path: '/about',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any);
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any);
 
 const EventsIndexRoute = EventsIndexImport.update({
   id: '/events/',
   path: '/events/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any);
 
 const EventsEventIdRoute = EventsEventIdImport.update({
   id: '/events/$eventId',
   path: '/events/$eventId',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any);
 
 const AdminLayoutRoute = AdminLayoutImport.update({
   id: '/_layout',
-  getParentRoute: () => AdminRoute,
+  getParentRoute: () => AdminRoute
 } as any);
 
 const AdminLayoutIndexRoute = AdminLayoutIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AdminLayoutRoute,
+  getParentRoute: () => AdminLayoutRoute
 } as any);
 
 const AdminLayoutUsersRoute = AdminLayoutUsersImport.update({
   id: '/users',
   path: '/users',
-  getParentRoute: () => AdminLayoutRoute,
+  getParentRoute: () => AdminLayoutRoute
 } as any);
 
 const AdminLayoutProjectsRoute = AdminLayoutProjectsImport.update({
   id: '/projects',
   path: '/projects',
-  getParentRoute: () => AdminLayoutRoute,
+  getParentRoute: () => AdminLayoutRoute
 } as any);
 
 // Populate the FileRoutesByPath interface
@@ -232,7 +232,7 @@ interface AdminLayoutRouteChildren {
 const AdminLayoutRouteChildren: AdminLayoutRouteChildren = {
   AdminLayoutProjectsRoute: AdminLayoutProjectsRoute,
   AdminLayoutUsersRoute: AdminLayoutUsersRoute,
-  AdminLayoutIndexRoute: AdminLayoutIndexRoute,
+  AdminLayoutIndexRoute: AdminLayoutIndexRoute
 };
 
 const AdminLayoutRouteWithChildren = AdminLayoutRoute._addFileChildren(AdminLayoutRouteChildren);
@@ -242,7 +242,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
-  AdminLayoutRoute: AdminLayoutRouteWithChildren,
+  AdminLayoutRoute: AdminLayoutRouteWithChildren
 };
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren);
@@ -368,7 +368,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectsRoute: ProjectsRoute,
   AdminRoute: AdminRouteWithChildren,
   EventsEventIdRoute: EventsEventIdRoute,
-  EventsIndexRoute: EventsIndexRoute,
+  EventsIndexRoute: EventsIndexRoute
 };
 
 export const routeTree = rootRoute
