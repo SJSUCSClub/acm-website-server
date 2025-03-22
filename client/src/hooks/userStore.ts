@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { paths } from '@/types/schema.v1';
-import { api } from '@/lib/api-client';
+import { api } from '@/hooks/useFetch';
 
 type User = paths['/v1/users/my']['get']['responses']['200']['content']['application/json'];
 
@@ -23,7 +23,7 @@ export const useUserStore = create<UserState>((set) => ({
   fetchUser: async () => {
     set({ isLoading: true, error: null });
     try {
-      const { data, response } = await api.GET('/v1/auth/me');
+      const { data, response } = await api.GET('/v1/users/my');
 
       if (!response.ok) {
         set({
@@ -35,7 +35,7 @@ export const useUserStore = create<UserState>((set) => ({
       }
 
       set({
-        user: data?.[0] || null,
+        user: data || null,
         isLoading: false,
         error: null,
         isAuthenticated: true,

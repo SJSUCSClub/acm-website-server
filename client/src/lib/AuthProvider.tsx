@@ -1,5 +1,5 @@
 import { ReactNode, useEffect } from 'react';
-import { useUserStore } from './stores/userStore';
+import { useUserStore } from '../hooks/userStore';
 
 interface AuthProviderProps {
   children: ReactNode;

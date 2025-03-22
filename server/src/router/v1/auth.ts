@@ -21,8 +21,6 @@ import { sendEmailNotification } from '@/lib/aws/sqs';
 
 const authRouter = new OpenAPIHono<Context>();
 
-const codeVerifier = generateCodeVerifier();
-
 interface GoogleUser {
 	email: string;
 	picture: string;
@@ -50,11 +48,19 @@ authRouter.openapi(
 		},
 	}),
 	async c => {
-		if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET || !env.GOOGLE_REDIRECT_URI) {
-			return c.json({ error: 'Google OAuth is not configured' }, HttpStatusCodes.BAD_REQUEST);
+		if (
+			!env.GOOGLE_CLIENT_ID ||
+			!env.GOOGLE_CLIENT_SECRET ||
+			!env.GOOGLE_REDIRECT_URI
+		) {
+			return c.json(
+				{ error: 'Google OAuth is not configured' },
+				HttpStatusCodes.BAD_REQUEST,
+			);
 		}
 
 		const state = generateState();
+		const codeVerifier = generateCodeVerifier();
 		const url: URL = await googleAuth.createAuthorizationURL(
 			state,
 			codeVerifier,
@@ -63,6 +69,12 @@ authRouter.openapi(
 			},
 		);
 		setCookie(c, 'google_state', state, {
+			path: '/',
+			secure: env.NODE_ENV === 'production',
+			httpOnly: true,
+			maxAge: 60 * 60 * 24 * 30, // 30 days
+		});
+		setCookie(c, 'code_verifier', codeVerifier, {
 			path: '/',
 			secure: env.NODE_ENV === 'production',
 			httpOnly: true,
@@ -121,15 +133,19 @@ authRouter.openapi(
 	async c => {
 		const { code, state } = c.req.query();
 		const storedState = getCookie(c, 'google_state');
+		const storedCodeVerifier = getCookie(c, 'code_verifier');
 
-		if (!code || !state || state !== storedState) {
-			return c.json({ error: 'Missing code or state' }, HttpStatusCodes.BAD_REQUEST);
+		if (!code || !state || !storedCodeVerifier || state !== storedState) {
+			return c.json(
+				{ error: 'Missing code, state or code verifier' },
+				HttpStatusCodes.BAD_REQUEST,
+			);
 		}
 
 		try {
 			const tokens: GoogleTokens = await googleAuth.validateAuthorizationCode(
 				code,
-				codeVerifier,
+				storedCodeVerifier,
 			);
 			const { accessToken } = tokens;
 			const response = await fetch(
@@ -150,7 +166,7 @@ authRouter.openapi(
 				await db.select().from(users).where(eq(users.email, email))
 			)?.[0];
 			let user = existingUser;
-      let redirectPath = '/';
+			let redirectPath = '/';
 			if (!existingUser) {
 				const newUser = await db
 					.insert(users)
@@ -169,13 +185,18 @@ authRouter.openapi(
 
 				user = newUser[0];
 				// Placeholder for new user onboard email
-				await sendEmailNotification({
-					recipient: user.email,
-					sender: 'no-reply@acmsjsu.org',
-					subject: 'Welcome to ACM SJSU',
-					body: `Welcome to ACM SJSU! ${user.name}`,
-				});
-        redirectPath = '/onboarding';
+				try {
+					await sendEmailNotification({
+						recipient: user.email,
+						sender: 'no-reply@acmsjsu.org',
+						subject: 'Welcome to ACM SJSU',
+						body: `Welcome to ACM SJSU! ${user.name}`,
+					});
+				} catch (emailError) {
+					// Log the error but don't fail the registration
+					console.error('Failed to send welcome email:', emailError);
+				}
+				redirectPath = '/onboarding';
 			}
 			const session = await lucia.createSession(user.id, {});
 			const sessionCookie = lucia.createSessionCookie(session.id).serialize();
@@ -183,7 +204,13 @@ authRouter.openapi(
 
 			return c.redirect(redirectPath);
 		} catch (error) {
-			console.error(error);
+			console.error('Google OAuth error:', {
+				error,
+				code,
+				state,
+				storedState,
+				hasCodeVerifier: !!storedCodeVerifier,
+			});
 			return c.json(
 				{ error: 'Failed to validate authorization code' },
 				HttpStatusCodes.INTERNAL_SERVER_ERROR,
@@ -210,7 +237,7 @@ authRouter.openapi(
 	async c => {
 		const session = c.get('session');
 		if (!session) {
-		return c.redirect('/');
+			return c.redirect('/');
 		}
 		lucia.invalidateSession(session.id);
 		return c.redirect('/');
@@ -236,7 +263,10 @@ authRouter.openapi(
 			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
 		}
 		// TODO: cache per user
-		const user = await db.select().from(users).where(eq(users.id, session.userId));
+		const user = await db
+			.select()
+			.from(users)
+			.where(eq(users.id, session.userId));
 		return c.json(user);
 	},
 );
