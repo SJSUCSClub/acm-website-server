@@ -1,4 +1,4 @@
-import { useUserStore } from '@/hooks/userStore';
+import { useUserStore } from '@/lib/store/userStore';
 
 export function useAuth() {
   const { user, isLoading, error, isAuthenticated, fetchUser, logout, clearError } = useUserStore();
