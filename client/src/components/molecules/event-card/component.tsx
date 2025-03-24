@@ -25,10 +25,6 @@ interface IEventCardProps {
 export const EventCard: React.FC<IEventCardProps> = ({ event }) => {
   return (
     <Card className="pt-4 shadow-md">
-      <CardTitle className="pl-6">
-        <p className="text-xs text-neutral">{event.eventType.toUpperCase()}</p>
-        <p className="text-lg">{event.name}</p>
-      </CardTitle>
       <CardHeader>
         <CardTitle>
           <p className="text-xs text-neutral">
