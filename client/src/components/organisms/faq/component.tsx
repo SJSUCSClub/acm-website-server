@@ -1,8 +1,8 @@
-import { useQuery } from "@/hooks/useFetch";
-import React, { useState } from "react";
+import { useQuery } from '@/hooks/useFetch';
+import React, { useState } from 'react';
 
 export const Faq: React.FC = () => {
-  const { data } = useQuery("get", "/v1/club/questions");
+  const { data } = useQuery('get', '/v1/club/questions');
 
   const [expandedIndex, setExpandedIndex] = useState(-1);
 
@@ -39,7 +39,7 @@ export const Faq: React.FC = () => {
                       strokeWidth="1.5"
                       stroke="currentColor"
                       className={`w-10 h-6 transition-transform duration-500  ${
-                        index === expandedIndex ? "transform rotate-180" : ""
+                        index === expandedIndex ? 'transform rotate-180' : ''
                       }`}
                     >
                       <path

@@ -1,12 +1,17 @@
-import AdminSidebar from '@/components/templates/AdminSidebar'
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import AdminSidebar from '@/components/templates/AdminSidebar';
+import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { ProtectedRoute } from '@/lib/ProtectedRoute';
 
 export const Route = createFileRoute('/admin/_layout')({
-  component: RouteComponent,
-})
+  component: RouteComponent
+});
 
 function RouteComponent() {
-  return  <AdminSidebar>
-    <Outlet />
-  </AdminSidebar>
+  return (
+    <ProtectedRoute requireAdmin showNotFoundOnUnauthorized>
+      <AdminSidebar>
+        <Outlet />
+      </AdminSidebar>
+    </ProtectedRoute>
+  );
 }

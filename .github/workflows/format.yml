@@ -1,0 +1,33 @@
+name: Format Code
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'client/**/*.{ts,tsx,js,jsx,json,css}'
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install dependencies
+        working-directory: ./client
+        run: bun install
+      - name: Format code
+        working-directory: ./client
+        run: bun run format
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'style: format code with prettier'
+          file_pattern: 'client/**/*.{ts,tsx,js,jsx,json,css}'

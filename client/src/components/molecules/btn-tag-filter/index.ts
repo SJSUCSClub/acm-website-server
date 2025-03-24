@@ -1,2 +1,2 @@
-export { BtnTagFilter as default } from "./component";
-export * from "./component";
+export { BtnTagFilter as default } from './component';
+export * from './component';

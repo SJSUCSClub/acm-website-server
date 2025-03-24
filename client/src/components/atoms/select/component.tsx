@@ -1,16 +1,12 @@
-import Input from "../input";
+import Input from '../input';
 
-export interface ISelectProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface ISelectProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   footer?: string;
   options: string[];
   selected: string[];
   required: boolean;
-  changeFunction: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    option: string,
-  ) => void;
+  changeFunction: (e: React.ChangeEvent<HTMLInputElement>, option: string) => void;
 }
 
 export const Select: React.FC<ISelectProps> = ({
@@ -44,9 +40,7 @@ export const Select: React.FC<ISelectProps> = ({
           <br />
         </div>
       ))}
-      {footer !== "" && (
-        <p className="text-neutral mb-2 text-[14px]">{footer}</p>
-      )}
+      {footer !== '' && <p className="text-neutral mb-2 text-[14px]">{footer}</p>}
     </div>
   );
 };

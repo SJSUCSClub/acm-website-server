@@ -1,2 +1,2 @@
-export { Popover as default } from "./component";
-export * from "./component";
+export { Popover as default } from './component';
+export * from './component';

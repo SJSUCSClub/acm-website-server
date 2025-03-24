@@ -1,26 +1,15 @@
-import Btn from "@/components/atoms/btn";
+import Btn from '@/components/atoms/btn';
 import Card, {
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
-} from "@/components/atoms/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { paths } from "@/types/schema.v1";
-import {
-  CiCalendar,
-  CiClock1,
-  CiLocationOn,
-  CiLock,
-  CiUser,
-} from "react-icons/ci";
+  CardTitle
+} from '@/components/atoms/card';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { paths } from '@/types/schema.v1';
+import { CiCalendar, CiClock1, CiLocationOn, CiLock, CiUser } from 'react-icons/ci';
 
 interface IEventCardProps {
   event: Event;
@@ -28,15 +17,13 @@ interface IEventCardProps {
 }
 
 type BookmarkedEvent =
-  paths["/v1/users/my/bookmarks"]["get"]["responses"]["200"]["content"]["application/json"]["bookmarks"][number];
+  paths['/v1/users/my/bookmarks']['get']['responses']['200']['content']['application/json']['bookmarks'][number];
 type SubscribedEvent =
-  paths["/v1/users/my/subscribed-events"]["get"]["responses"]["200"]["content"]["application/json"]["events"][number];
+  paths['/v1/users/my/subscribed-events']['get']['responses']['200']['content']['application/json']['events'][number];
 export type Event = BookmarkedEvent & SubscribedEvent;
 
 const EventCard: React.FC<IEventCardProps> = ({ event, onRemove }) => {
-  const date = new Date(event.bookmarkedDate || event.subscribedDate)
-    .toISOString()
-    .slice(0, 10);
+  const date = new Date(event.bookmarkedDate || event.subscribedDate).toISOString().slice(0, 10);
   return (
     <Card>
       <CardHeader className="space-y-3">
@@ -62,16 +49,14 @@ const EventCard: React.FC<IEventCardProps> = ({ event, onRemove }) => {
                 <span className="text-sm">{date}</span>
               </TooltipTrigger>
               <TooltipContent>
-                <p>{event.bookmarkedDate ? "Bookmarked" : "Subscribed"} at</p>
+                <p>{event.bookmarkedDate ? 'Bookmarked' : 'Subscribed'} at</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </CardTitle>
         <CardDescription className="flex space-x-5 flex-wrap">
           <Badge>{event.eventType}</Badge>
-          <Badge variant="secondary">
-            For: {event.targetAudience || "All"}
-          </Badge>
+          <Badge variant="secondary">For: {event.targetAudience || 'All'}</Badge>
           <div className="flex items-center space-x-1">
             <CiLocationOn />
             <p>{event.location}</p>

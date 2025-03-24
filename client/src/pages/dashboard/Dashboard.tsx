@@ -1,9 +1,9 @@
-import Page from "@/components/templates/Page";
-import React from "react";
-import SubscribedEvents from "@/pages/dashboard/SubscribedEvents";
-import BookmarkedEvents from "@/pages/dashboard/BookmarkedEvents";
-import SubscribedCompanies from "@/pages/dashboard/SubscribedCompanies";
-import ProjectsInInterest from "@/pages/dashboard/ProjectsInInterest";
+import Page from '@/components/templates/Page';
+import React from 'react';
+import SubscribedEvents from '@/pages/dashboard/SubscribedEvents';
+import BookmarkedEvents from '@/pages/dashboard/BookmarkedEvents';
+import SubscribedCompanies from '@/pages/dashboard/SubscribedCompanies';
+import ProjectsInInterest from '@/pages/dashboard/ProjectsInInterest';
 
 const Dashboard = () => {
   return (

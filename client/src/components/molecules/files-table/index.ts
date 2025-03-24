@@ -1,2 +1,2 @@
-export { FilesTable as default } from "./component";
-export * from "./component";
+export { FilesTable as default } from './component';
+export * from './component';

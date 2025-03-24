@@ -6,36 +6,73 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
+  format-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install dependencies
+        working-directory: ./client
+        run: bun install
+      - name: Format auto-generated types (if needed)
+        working-directory: ./client
+        run: |
+          if [ -f "src/types/schema.v1.d.ts" ]; then
+            echo "Formatting auto-generated types file"
+            bun prettier --write "src/types/schema.v1.d.ts" || true
+          fi
+      - name: Check formatting
+        working-directory: ./client
+        run: bun run format:check
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install dependencies
+        working-directory: ./client
+        run: bun install
+      - name: Build frontend
+        working-directory: ./client
+        run: bun run build
+
   typecheck:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v4
-        - uses: ./.github/actions/setup
-          with:
-            os: ${{ runner.os }}
-        - name: Run typecheck
-          run: |
-              docker run --network host \
-                  -e NODE_ENV -e PORT -e POSTGRES_HOST -e POSTGRES_PORT -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB \
-                  -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
-                  acm-website-server bun typecheck
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+        with:
+          os: ${{ runner.os }}
+      - name: Run typecheck
+        run: |
+          docker run --network host \
+              -e NODE_ENV -e PORT -e POSTGRES_HOST -e POSTGRES_PORT -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB \
+              -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
+              acm-website-server bun typecheck
 
   lint:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v4
-          with:
-            ref: ${{ github.event.pull_request.head.ref }}
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
 
-        - uses: ./.github/actions/setup
-          with:
-            os: ${{ runner.os }}
-        - name: Run linter
-          run: |
-            docker run --network host \
-                -e NODE_ENV -e PORT -e POSTGRES_HOST -e POSTGRES_PORT -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB \
-                -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
-                acm-website-server bun run lint
+      - uses: ./.github/actions/setup
+        with:
+          os: ${{ runner.os }}
+      - name: Run linter
+        run: |
+          docker run --network host \
+              -e NODE_ENV -e PORT -e POSTGRES_HOST -e POSTGRES_PORT -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB \
+              -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET -e GOOGLE_REDIRECT_URI \
+              acm-website-server bun run lint
 
   test:
     runs-on: ubuntu-latest
@@ -55,7 +92,7 @@ jobs:
           --health-retries 5
           --health-start-period 15s
     steps:
-      - uses: actions/checkout@v4 
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
         with:
           os: ${{ runner.os }}
@@ -108,7 +145,7 @@ jobs:
           --health-retries 5
 
     steps:
-      - uses: actions/checkout@v4 
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
       - uses: ./.github/actions/setup
@@ -158,6 +195,8 @@ jobs:
         run: |
           bun install 
           bun x openapi-typescript http://localhost:5001/docs -o ./src/types/schema.v1.d.ts
+          # Format the generated types file before committing
+          bun prettier --write ./src/types/schema.v1.d.ts
 
       - name: Configure git
         run: |

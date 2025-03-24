@@ -1,2 +1,2 @@
-export { LinkCard as default } from "./component";
-export * from "./component";
+export { LinkCard as default } from './component';
+export * from './component';

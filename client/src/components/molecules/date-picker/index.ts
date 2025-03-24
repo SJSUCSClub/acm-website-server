@@ -1,2 +1,2 @@
-export { DatePicker as default } from "./component";
-export * from "./component";
+export { DatePicker as default } from './component';
+export * from './component';

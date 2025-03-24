@@ -1,2 +1,2 @@
-export { MobileMenu as default } from "./component";
-export * from "./component";
+export { MobileMenu as default } from './component';
+export * from './component';

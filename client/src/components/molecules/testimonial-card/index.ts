@@ -1,2 +1,2 @@
-export { TestimonialCard as default } from "./component";
-export * from "./component";
+export { TestimonialCard as default } from './component';
+export * from './component';

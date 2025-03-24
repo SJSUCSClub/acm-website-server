@@ -1,2 +1,2 @@
-export { GetInvolvedBtn as default } from "./component";
-export * from "./component";
+export { GetInvolvedBtn as default } from './component';
+export * from './component';

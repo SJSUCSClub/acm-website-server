@@ -1,39 +1,39 @@
-import ACMCSHero from "acm-cs-sjsu-hero-component";
-import SpotLightCard from "../components/molecules/spotlight-card";
+import ACMCSHero from 'acm-cs-sjsu-hero-component';
+import SpotLightCard from '../components/molecules/spotlight-card';
 
-import { useState, useEffect } from "react";
-import MemberBtn from "../components/molecules/member-btn";
-import GetInvolvedBtn from "../components/molecules/get-involved-btn";
-import SocialBtn from "../components/molecules/social-btn";
-import Page from "../components/templates/Page";
-import { useQuery } from "@/hooks/useFetch";
+import { useState, useEffect } from 'react';
+import MemberBtn from '../components/molecules/member-btn';
+import GetInvolvedBtn from '../components/molecules/get-involved-btn';
+import SocialBtn from '../components/molecules/social-btn';
+import Page from '../components/templates/Page';
+import { useQuery } from '@/hooks/useFetch';
 
 const spotlights: ISpotlight[] = [
   {
-    type: "TECH TALK",
-    image: "/photos/events/teslatalk.png",
-    title: "ACM x Tesla Tech Talk",
+    type: 'TECH TALK',
+    image: '/photos/events/teslatalk.png',
+    title: 'ACM x Tesla Tech Talk',
     description:
-      "Guest speaker Phuc Ngo, an NLP and Senior Data Engineer at Tesla, talks about his experiences and journey in the industry.",
-    id: 1,
+      'Guest speaker Phuc Ngo, an NLP and Senior Data Engineer at Tesla, talks about his experiences and journey in the industry.',
+    id: 1
   },
   {
-    type: "EVENT",
-    image: "/photos/events/googlealumni.png",
-    title: "Fall 2023 Google Alumni Panel",
+    type: 'EVENT',
+    image: '/photos/events/googlealumni.png',
+    title: 'Fall 2023 Google Alumni Panel',
     description:
-      "ACM hosted a Q&A panel with SJSU alumni who are now working at Google. Members had the opportunity to gain insight into the technical interview process and what a typical workday at Google looks like, as well as network with panelists.",
-    id: 2,
+      'ACM hosted a Q&A panel with SJSU alumni who are now working at Google. Members had the opportunity to gain insight into the technical interview process and what a typical workday at Google looks like, as well as network with panelists.',
+    id: 2
   },
 
   {
-    type: "EVENT",
-    image: "/photos/events/googlecloudhero.png",
-    title: "Google Cloud Hero 2023",
+    type: 'EVENT',
+    image: '/photos/events/googlecloudhero.png',
+    title: 'Google Cloud Hero 2023',
     description:
-      "Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!",
-    id: 3,
-  },
+      'Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!',
+    id: 3
+  }
 ];
 
 interface ISpotlight {
@@ -45,8 +45,8 @@ interface ISpotlight {
 }
 
 const Hero = () => {
-  const { data: links } = useQuery("get", "/v1/club/links");
-  const { data: spotlightsData } = useQuery("get", "/v1/club/spotlights");
+  const { data: links } = useQuery('get', '/v1/club/links');
+  const { data: spotlightsData } = useQuery('get', '/v1/club/spotlights');
 
   return (
     <Page>
@@ -57,44 +57,35 @@ const Hero = () => {
           </div>
 
           <div className="md:text-lg text-[3vw] text-center transform md:-translate-y-24 pb-3 flex-cols md:flex items-center place-content-center gap-5">
-            <SocialBtn
-              className="w-full md:w-auto"
-              href={links?.links.discord || ""}
-            >
+            <SocialBtn className="w-full md:w-auto" href={links?.links.discord || ''}>
               <img
                 className="dark:invert pr-[2%] md:pr-[5%] w-[5vw] md:w-[30%] h-auto"
                 src="./icons/discord.svg"
                 width={0}
                 height={0}
-                alt={""}
+                alt={''}
               />
               Discord
             </SocialBtn>
 
-            <SocialBtn
-              className="w-full md:w-auto"
-              href={links?.links.instagram || ""}
-            >
+            <SocialBtn className="w-full md:w-auto" href={links?.links.instagram || ''}>
               <img
                 className="dark:invert pr-[2%] md:pr-[5%] w-[5vw] md:w-[25%] h-auto"
                 src="./icons/Instagram.svg"
                 width={0}
                 height={0}
-                alt={""}
+                alt={''}
               />
               Instagram
             </SocialBtn>
 
-            <SocialBtn
-              className="w-full md:w-auto"
-              href={links?.links.linkedin || ""}
-            >
+            <SocialBtn className="w-full md:w-auto" href={links?.links.linkedin || ''}>
               <img
                 className="dark:invert pr-[2%] md:pr-[5%] w-[5vw] md:w-[25%] h-auto"
                 src="./icons/logo2.svg"
                 width={0}
                 height={0}
-                alt={""}
+                alt={''}
               />
               Linkedin
             </SocialBtn>
@@ -107,27 +98,20 @@ const Hero = () => {
 
           <div className="animate-[fadeIn_2s_ease-in-out] text-left inline flex flex-col gap-4">
             <div className="text-5xl font-[600]">
-              We are the largest{" "}
-              <span className="inline text-yellow-500"> Computer Science</span>{" "}
-              organization at{" "}
-              <span className="inline text-[#1a6096]">
-                San José State University.
-              </span>
+              We are the largest <span className="inline text-yellow-500"> Computer Science</span>{' '}
+              organization at{' '}
+              <span className="inline text-[#1a6096]">San José State University.</span>
             </div>
 
             <div className="mt-7 text-xl font-[600]">
-              Thinking about getting{" "}
-              <span className="inline text-yellow-500"> involved? </span>
+              Thinking about getting <span className="inline text-yellow-500"> involved? </span>
             </div>
             <div className="py-4 text-base font-normal">
-              {" "}
-              Engage with other ACM at SJSU members and elevate your tech
-              journey. Access valuable resources like mock interviews for
-              interview prep, thrilling hackathons, and coding competitions.
-              Connect with industry leaders like Apple, Tesla, and <b>
-                Google
-              </b>{" "}
-              for exclusive networking opportunities.
+              {' '}
+              Engage with other ACM at SJSU members and elevate your tech journey. Access valuable
+              resources like mock interviews for interview prep, thrilling hackathons, and coding
+              competitions. Connect with industry leaders like Apple, Tesla, and <b>Google</b> for
+              exclusive networking opportunities.
             </div>
           </div>
           <MemberBtn
@@ -137,16 +121,10 @@ const Hero = () => {
         </div>
 
         <div className="border-y-2 place-items-center grid grid-cols-4 grid-rows-1 py-12">
-          <img
-            src="./icons/kohlslogo.svg"
-            width={200}
-            height={200}
-            alt={""}
-            className=""
-          />
-          <img src="./icons/teslalogo.svg" width={95} height={95} alt={""} />
-          <img src="./icons/google.png" width={95} height={95} alt={""} />
-          <img src="./icons/fetch-ai.png" width={200} height={200} alt={""} />
+          <img src="./icons/kohlslogo.svg" width={200} height={200} alt={''} className="" />
+          <img src="./icons/teslalogo.svg" width={95} height={95} alt={''} />
+          <img src="./icons/google.png" width={95} height={95} alt={''} />
+          <img src="./icons/fetch-ai.png" width={200} height={200} alt={''} />
         </div>
 
         <div className="border-y-2 place-items-center py-5">
@@ -161,7 +139,7 @@ const Hero = () => {
                 src="./icons/softwareicon.svg"
                 width={105}
                 height={105}
-                alt={""}
+                alt={''}
               />
               Software
             </div>
@@ -172,7 +150,7 @@ const Hero = () => {
                 src="./icons/hardwareicon.svg"
                 width={105}
                 height={105}
-                alt={""}
+                alt={''}
               />
               Hardware
             </div>
@@ -183,7 +161,7 @@ const Hero = () => {
                 src="./icons/designicon.svg"
                 width={105}
                 height={105}
-                alt={""}
+                alt={''}
               />
               Design
             </div>
@@ -193,9 +171,7 @@ const Hero = () => {
         {spotlightsData && spotlightsData?.spotlights.length > 0 && (
           <div className="p-50 pt-16 border-y-2 pb-5">
             <h1 className="text-4xl font-bold">Spotlights</h1>
-            <h2 className="text-1xl font-bold pb-10 pt-3 text-gray-400">
-              Our past events.
-            </h2>
+            <h2 className="text-1xl font-bold pb-10 pt-3 text-gray-400">Our past events.</h2>
             <div className="flex-cols gap-3 md:flex items-center md:gap-5 overflow-auto p-10 mb-5">
               {spotlightsData?.spotlights.map((event) => {
                 return (

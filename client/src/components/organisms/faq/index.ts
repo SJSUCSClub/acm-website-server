@@ -1,2 +1,2 @@
-export { Faq as default } from "./component";
-export * from "./component";
+export { Faq as default } from './component';
+export * from './component';
