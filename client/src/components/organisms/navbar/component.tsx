@@ -13,7 +13,6 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarImage } from '@/components/atoms/avatar';
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
 
@@ -83,8 +82,9 @@ export const NavBar: React.FC = () => {
           >
             <span
               className={`bg-black block transition-all duration-300 ease-out 
-                              h-1 w-9 rounded-sm ${isOpen ? 'rotate-45 translate-y-2' : '-translate-y-0.5'
-                }`}
+                              h-1 w-9 rounded-sm ${
+                                isOpen ? 'rotate-45 translate-y-2' : '-translate-y-0.5'
+                              }`}
             ></span>
             <span
               className={`bg-black block transition-all duration-300 ease-out 
@@ -92,17 +92,19 @@ export const NavBar: React.FC = () => {
             ></span>
             <span
               className={`bg-black block transition-all duration-300 ease-out 
-                              h-1 w-9 rounded-sm ${isOpen ? '-rotate-45 -translate-y-2' : 'translate-y-0.5'
-                }`}
+                              h-1 w-9 rounded-sm ${
+                                isOpen ? '-rotate-45 -translate-y-2' : 'translate-y-0.5'
+                              }`}
             ></span>
           </Btn>
         </div>
       </div>
       <div
-        className={`w-screen ${isOpen
+        className={`w-screen ${
+          isOpen
             ? 'absolute transition ease-in flex-row bg-white justify-center text-center items-center md:hidden border-b-4'
             : 'hidden'
-          }`}
+        }`}
         onClick={handleClick}
       >
         <LinkCard path="/about" pathName="About Us" />

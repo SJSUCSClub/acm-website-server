@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { PanelLeftClose, PanelLeftOpen, House, Users, FolderOpenDot, Calendar, ShieldUser, Building, List } from 'lucide-react';
+import {
+  PanelLeftClose,
+  PanelLeftOpen,
+  House,
+  Users,
+  FolderOpenDot,
+  Calendar,
+  ShieldUser,
+  Building,
+  List
+} from 'lucide-react';
 import clsx from 'clsx';
 import { Button } from '@/components/ui/button';
 import Page from '@/components/templates/Page';

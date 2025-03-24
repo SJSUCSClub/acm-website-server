@@ -30,7 +30,7 @@ const AdminHome = () => {
               </button>
             </Link>
           </div>
-          
+
           <div className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow h-full flex flex-col">
             <h2 className="text-lg font-semibold mb-2">User Management</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">
@@ -54,7 +54,7 @@ const AdminHome = () => {
               </button>
             </Link>
           </div>
-          
+
           <div className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow h-full flex flex-col">
             <h2 className="text-lg font-semibold mb-2">Event Companies</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">
@@ -78,19 +78,17 @@ const AdminHome = () => {
               </button>
             </Link>
           </div>
-          
+
           <div className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow h-full flex flex-col">
             <h2 className="text-lg font-semibold mb-2">Officer Management</h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">
-              Manage Club Officers
-            </p>
+            <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">Manage Club Officers</p>
             <Link to="/admin/officers">
               <button className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded w-full mt-auto">
                 Manage Officers
               </button>
             </Link>
           </div>
-          
+
           <div className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow h-full flex flex-col">
             <h2 className="text-lg font-semibold mb-2">Content Management</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">
@@ -100,7 +98,6 @@ const AdminHome = () => {
               Manage Content
             </button>
           </div>
-
         </div>
       </div>
     </div>

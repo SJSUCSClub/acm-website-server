@@ -52,12 +52,20 @@ export function ProtectedRoute({
 
   if (
     showNotFoundOnUnauthorized &&
-    (((!requireNoAuth && !isLoggedIn) || (requireAdmin && !isAdmin) || (requireMember && !isMember)) || (isLoggedIn && requireNoAuth))
+    ((!requireNoAuth && !isLoggedIn) ||
+      (requireAdmin && !isAdmin) ||
+      (requireMember && !isMember) ||
+      (isLoggedIn && requireNoAuth))
   ) {
     return <NotFoundPage />;
   }
 
-  if (((!requireNoAuth && !isLoggedIn) || (requireAdmin && !isAdmin) || (requireMember && !isMember)) || (isLoggedIn && requireNoAuth)) {
+  if (
+    (!requireNoAuth && !isLoggedIn) ||
+    (requireAdmin && !isAdmin) ||
+    (requireMember && !isMember) ||
+    (isLoggedIn && requireNoAuth)
+  ) {
     return null;
   }
 
