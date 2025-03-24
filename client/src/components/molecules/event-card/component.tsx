@@ -1,60 +1,66 @@
-import Card, { CardContent, CardFooter, CardHeader, CardTitle } from '../../atoms/card';
-import { Badge } from '@/components/ui/badge';
-import { paths } from '@/types/schema.v1';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import Card, {
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../../atoms/card";
+import { Badge } from "@/components/ui/badge";
+import { paths } from "@/types/schema.v1";
+import { formatDate, formatTime } from "@/utils/formatter";
+import { Link } from "@tanstack/react-router";
+import { Lock } from "lucide-react";
 
-type FullEvent =
-  paths['/v1/events']['get']['responses']['200']['content']['application/json']['foundEvents'][0];
-type Event = Omit<
-  FullEvent,
-  | 'id'
-  | 'deadline'
-  | 'createdAt'
-  | 'updatedAt'
-  | 'urls'
-  | 'eventCapacity'
-  | 'image'
-  | 'targetAudience'
-  | 'shortenedEventUrl'
-  | 'memberOnly'
->;
-export const EventCard: React.FC<Event> = ({
-  name,
-  location,
-  startDate,
-  endDate,
-  startTime,
-  endTime,
-  description,
-  eventType,
-  tags
-}) => {
-  function formatDate(date: string) {
-    const dateObj = new Date(date);
-    const month = dateObj.toLocaleString('default', { month: 'short' });
-    const day = dateObj.getDate();
-    const year = dateObj.getFullYear();
-    return `${month} ${day}, ${year}`;
-  }
-  function formatTime(time: string) {
-    const [hours, minutes] = time.substring(0, 5).split(':');
-    const hour = parseInt(hours);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    const formattedHour = hour % 12 || 12;
-    return `${formattedHour}:${minutes} ${ampm}`;
-  }
+type Event =
+  paths["/v1/events"]["get"]["responses"]["200"]["content"]["application/json"]["foundEvents"][number];
+interface IEventCardProps {
+  event: Event;
+}
+
+export const EventCard: React.FC<IEventCardProps> = ({ event }) => {
   return (
     <Card className="pt-4 shadow-md">
       <CardTitle className="pl-6">
-        <p className="text-xs text-neutral">{eventType.toUpperCase()}</p>
-        <p className="text-lg">{name}</p>
+        <p className="text-xs text-neutral">{event.eventType.toUpperCase()}</p>
+        <p className="text-lg">{event.name}</p>
       </CardTitle>
       <CardHeader>
-        <p>{`${formatDate(startDate)} ${formatTime(startTime)} - ${formatDate(endDate)} ${formatTime(endTime)}`}</p>
-        <p>{location}</p>
+        <CardTitle>
+          <p className="text-xs text-neutral">
+            {event.eventType.toUpperCase()}
+          </p>
+          <div className="flex space-x-3">
+            <Link
+              to="/events/$eventId"
+              params={{ eventId: event.id.toString() }}
+            >
+              <p className="text-lg">{event.name}</p>
+            </Link>
+            {event.memberOnly && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Lock size={20} />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Event is member only</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </div>
+        </CardTitle>
+        <p>{`${formatDate(event.startDate)} ${formatTime(event.startTime)} - ${formatDate(event.endDate)} ${formatTime(event.endTime)}`}</p>
+        <p>{event.location}</p>
       </CardHeader>
-      <CardContent>{description}</CardContent>
+      <CardContent>{event.description}</CardContent>
       <CardFooter className="flex flex-wrap gap-2">
-        {tags.map((tag) => (
+        {event.tags.map((tag) => (
           <Badge
             variant="secondary"
             className="bg-[#318BCF] cursor-default p-2 rounded-lg"

@@ -1,7 +1,6 @@
-import Btn from '@/components/atoms/btn';
-import { useMutation, useQuery } from '@/hooks/useFetch';
-import { Check } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import Btn from "@/components/atoms/btn";
+import { useMutation, useQuery } from "@/hooks/useFetch";
+import React, { useEffect, useState } from "react";
 
 export interface ISubscribeBtnProps {
   source: 'company' | 'event';
