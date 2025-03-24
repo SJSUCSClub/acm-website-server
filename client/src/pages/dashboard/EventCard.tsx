@@ -9,7 +9,8 @@ import Card, {
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { paths } from '@/types/schema.v1';
-import { CiCalendar, CiClock1, CiLocationOn, CiLock, CiUser } from 'react-icons/ci';
+import { Link } from '@tanstack/react-router';
+import { Lock, User, MapPin, Calendar, Clock } from 'lucide-react';
 
 interface IEventCardProps {
   event: Event;
@@ -29,12 +30,14 @@ const EventCard: React.FC<IEventCardProps> = ({ event, onRemove }) => {
       <CardHeader className="space-y-3">
         <CardTitle className="flex justify-between items-center space-x-2">
           <div className="flex justify-between items-center space-x-2">
-            <p>{event.name}</p>
+            <Link to="/events/$eventId" params={{ eventId: event.id.toString() }}>
+              <p>{event.name}</p>
+            </Link>
             {event.memberOnly && (
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
-                    <CiLock />
+                    <Lock />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Event is member only</p>
@@ -58,23 +61,23 @@ const EventCard: React.FC<IEventCardProps> = ({ event, onRemove }) => {
           <Badge>{event.eventType}</Badge>
           <Badge variant="secondary">For: {event.targetAudience || 'All'}</Badge>
           <div className="flex items-center space-x-1">
-            <CiLocationOn />
+            <MapPin />
             <p>{event.location}</p>
           </div>
           <div className="flex items-center space-x-1">
-            <CiCalendar />
+            <Calendar />
             <p>
               {event.startDate} - {event.endDate}
             </p>
           </div>
           <div className="flex items-center space-x-1">
-            <CiClock1 />
+            <Clock />
             <p>
               {event.startTime} - {event.endTime}
             </p>
           </div>
           <div className="flex items-center space-x-1">
-            <CiUser />
+            <User />
             <p>{event.eventCapacity}</p>
           </div>
         </CardDescription>

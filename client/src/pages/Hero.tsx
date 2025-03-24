@@ -1,48 +1,11 @@
 import ACMCSHero from 'acm-cs-sjsu-hero-component';
 import SpotLightCard from '../components/molecules/spotlight-card';
 
-import { useState, useEffect } from 'react';
 import MemberBtn from '../components/molecules/member-btn';
 import GetInvolvedBtn from '../components/molecules/get-involved-btn';
 import SocialBtn from '../components/molecules/social-btn';
 import Page from '../components/templates/Page';
 import { useQuery } from '@/hooks/useFetch';
-
-const spotlights: ISpotlight[] = [
-  {
-    type: 'TECH TALK',
-    image: '/photos/events/teslatalk.png',
-    title: 'ACM x Tesla Tech Talk',
-    description:
-      'Guest speaker Phuc Ngo, an NLP and Senior Data Engineer at Tesla, talks about his experiences and journey in the industry.',
-    id: 1
-  },
-  {
-    type: 'EVENT',
-    image: '/photos/events/googlealumni.png',
-    title: 'Fall 2023 Google Alumni Panel',
-    description:
-      'ACM hosted a Q&A panel with SJSU alumni who are now working at Google. Members had the opportunity to gain insight into the technical interview process and what a typical workday at Google looks like, as well as network with panelists.',
-    id: 2
-  },
-
-  {
-    type: 'EVENT',
-    image: '/photos/events/googlecloudhero.png',
-    title: 'Google Cloud Hero 2023',
-    description:
-      'Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!',
-    id: 3
-  }
-];
-
-interface ISpotlight {
-  type: string;
-  image: string;
-  title: string;
-  description: string;
-  id: number;
-}
 
 const Hero = () => {
   const { data: links } = useQuery('get', '/v1/club/links');
