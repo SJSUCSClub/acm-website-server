@@ -1,11 +1,11 @@
 import ACMCSHero from 'acm-cs-sjsu-hero-component';
 import SpotLightCard from '../components/molecules/spotlight-card';
 
-import MemberBtn from "../components/molecules/member-btn";
-import GetInvolvedBtn from "../components/molecules/get-involved-btn";
-import SocialBtn from "../components/molecules/social-btn";
-import Page from "../components/templates/Page";
-import { useQuery } from "@/hooks/useFetch";
+import MemberBtn from '../components/molecules/member-btn';
+import GetInvolvedBtn from '../components/molecules/get-involved-btn';
+import SocialBtn from '../components/molecules/social-btn';
+import Page from '../components/templates/Page';
+import { useQuery } from '@/hooks/useFetch';
 
 const Hero = () => {
   const { data: links } = useQuery('get', '/v1/club/links');

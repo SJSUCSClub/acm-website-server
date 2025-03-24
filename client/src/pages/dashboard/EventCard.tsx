@@ -4,17 +4,12 @@ import Card, {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
-} from "@/components/atoms/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { paths } from "@/types/schema.v1";
-import { Link } from "@tanstack/react-router";
+  CardTitle
+} from '@/components/atoms/card';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { paths } from '@/types/schema.v1';
+import { Link } from '@tanstack/react-router';
 import { Lock, User, MapPin, Calendar, Clock } from 'lucide-react';
 
 interface IEventCardProps {
@@ -35,10 +30,7 @@ const EventCard: React.FC<IEventCardProps> = ({ event, onRemove }) => {
       <CardHeader className="space-y-3">
         <CardTitle className="flex justify-between items-center space-x-2">
           <div className="flex justify-between items-center space-x-2">
-            <Link
-              to="/events/$eventId"
-              params={{ eventId: event.id.toString() }}
-            >
+            <Link to="/events/$eventId" params={{ eventId: event.id.toString() }}>
               <p>{event.name}</p>
             </Link>
             {event.memberOnly && (
