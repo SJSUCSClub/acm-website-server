@@ -204,7 +204,7 @@ export interface paths {
                                 major: string;
                                 gradDate: string;
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                                profilePic: string | null;
+                                profilePic: string;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
@@ -260,7 +260,7 @@ export interface paths {
                             major: string;
                             gradDate: string;
                             interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                            profilePic: string | null;
+                            profilePic: string;
                             /** @enum {string} */
                             role: "user" | "member" | "admin";
                             /** @enum {string|null} */
@@ -327,7 +327,7 @@ export interface paths {
                             major: string;
                             gradDate: string;
                             interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                            profilePic: string | null;
+                            profilePic: string;
                             /** @enum {string} */
                             role: "user" | "member" | "admin";
                             /** @enum {string|null} */
@@ -1136,7 +1136,7 @@ export interface paths {
                             major: string;
                             gradDate: string;
                             interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                            profilePic: string | null;
+                            profilePic: string;
                             /** @enum {string} */
                             role: "user" | "member" | "admin";
                             /** @enum {string|null} */
@@ -1218,7 +1218,7 @@ export interface paths {
                             major: string;
                             gradDate: string;
                             interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                            profilePic: string | null;
+                            profilePic: string;
                             /** @enum {string} */
                             role: "user" | "member" | "admin";
                             /** @enum {string|null} */
@@ -2045,7 +2045,7 @@ export interface paths {
                                 major: string;
                                 gradDate: string;
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                                profilePic: string | null;
+                                profilePic: string;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
@@ -2152,7 +2152,7 @@ export interface paths {
                                 major: string;
                                 gradDate: string;
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                                profilePic: string | null;
+                                profilePic: string;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
@@ -2557,7 +2557,7 @@ export interface paths {
                                 major: string;
                                 gradDate: string;
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                                profilePic: string | null;
+                                profilePic: string;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
@@ -2973,7 +2973,7 @@ export interface paths {
                                 major: string;
                                 gradDate: string;
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                                profilePic: string | null;
+                                profilePic: string;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
@@ -3898,7 +3898,7 @@ export interface paths {
                                 major: string;
                                 gradDate: string;
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                                profilePic: string | null;
+                                profilePic: string;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
