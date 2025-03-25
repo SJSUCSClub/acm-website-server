@@ -34,7 +34,7 @@ create table if not exists users(
    grad_date Date not null,
    interests cs_fields_enum[] not null default '{}'::cs_fields_enum[],
    paid membership_term_enum,
-   profile_pic text,
+   profile_pic text not null,
    discord text,
    linkedin text,
    github text,

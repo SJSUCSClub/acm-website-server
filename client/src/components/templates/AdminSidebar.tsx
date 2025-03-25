@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { PanelLeftClose, PanelLeftOpen, House, Users, FolderOpenDot } from 'lucide-react';
+import {
+  PanelLeftClose,
+  PanelLeftOpen,
+  House,
+  Users,
+  FolderOpenDot,
+  Calendar,
+  ShieldUser,
+  Building,
+  List
+} from 'lucide-react';
 import clsx from 'clsx';
 import { Button } from '@/components/ui/button';
 import Page from '@/components/templates/Page';
@@ -18,6 +28,11 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
       href: '/admin'
     },
     {
+      title: 'Club',
+      icon: List,
+      href: '/admin/club'
+    },
+    {
       title: 'Users',
       icon: Users,
       href: '/admin/users'
@@ -26,6 +41,21 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
       title: 'Projects',
       icon: FolderOpenDot,
       href: '/admin/projects'
+    },
+    {
+      title: 'Events',
+      icon: Calendar,
+      href: '/admin/events'
+    },
+    {
+      title: 'Companies',
+      icon: Building,
+      href: '/admin/companies'
+    },
+    {
+      title: 'Officers',
+      icon: ShieldUser,
+      href: '/admin/officers'
     }
   ];
   return (

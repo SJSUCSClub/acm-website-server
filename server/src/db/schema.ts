@@ -27,7 +27,7 @@ export const users = pgTable('users', {
   major: text('major').notNull().references(() => majors.name),
   gradDate: date('grad_date').notNull(),
   interests: csFieldsEnum('interests').array().notNull().default([]),
-  profilePic: text('profile_pic'),
+  profilePic: text('profile_pic').notNull(),
   role: userRoleEnum('role').notNull().default('user'),
   paid: membershipTermEnum('paid'),
   education_level: educationLevelEnum('education_level').notNull(),

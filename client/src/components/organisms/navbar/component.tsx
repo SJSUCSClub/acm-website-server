@@ -13,6 +13,8 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { ChevronDown } from 'lucide-react';
 
 export const NavBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,34 +41,13 @@ export const NavBar: React.FC = () => {
           <LinkCard path="/events" pathName="Events" />
           <LinkCard path="/projects" pathName="Projects" />
 
-          {isLoggedIn ? (
+          {isLoggedIn && user ? (
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 transition-colors outline-none">
-                {user?.profilePic ? (
-                  <img
-                    src={user.profilePic}
-                    alt="User"
-                    className="h-8 w-8 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
-                    {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
-                  </div>
-                )}
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
+              <DropdownMenuTrigger>
+                <Button variant="outline" className="flex items-center space-x-2">
+                  <p>{user.name}</p>
+                  <ChevronDown />
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem onClick={() => handleNavigation('/dashboard')}>

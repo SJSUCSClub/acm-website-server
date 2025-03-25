@@ -166,7 +166,7 @@ authRouter.openapi(
 				await db.select().from(users).where(eq(users.email, email))
 			)?.[0];
 			let user = existingUser;
-			let redirectPath = '/';
+			let redirectPath = '/dashboard';
 			if (!existingUser) {
 				const newUser = await db
 					.insert(users)
