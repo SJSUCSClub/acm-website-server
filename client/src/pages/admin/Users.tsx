@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { useQuery } from '@/hooks/useFetch';
 import { paths } from '@/types/schema.v1';
+import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ChevronsUpDown, X } from 'lucide-react';
 
 type MajorsResponse = paths['/v1/majors']['get']['responses']['200']['content']['application/json'];
 type EnumResponse = paths['/v1/enums/{enumType}']['get']['responses']['200']['content']['application/json'];
@@ -83,12 +88,92 @@ const Users = () => {
     }
   };
 
+  const clearFilters = () => {
+    setFilters({
+      name: '',
+      education_level: [],
+      major: [],
+      role: [],
+      paid: []
+    });
+  };
+
+  const FilterDropdown = ({ 
+    label, 
+    options, 
+    value, 
+    onChange
+  }: { 
+    label: string;
+    options: string[];
+    value: string[];
+    onChange: (values: string[]) => void;
+  }) => {
+    const [open, setOpen] = useState(false);
+
+    return (
+      <div className="w-full">
+        <label className="block text-sm mb-1">{label}</label>
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="w-full justify-between"
+            >
+              {value.length === 0 ? `Select ${label}` : `${value.length} selected`}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-full p-0">
+            <Command>
+              <CommandList>
+                <CommandGroup>
+                  {options.map((option) => (
+                    <CommandItem
+                      key={option}
+                      onSelect={() => {
+                        const newValue = value.includes(option)
+                          ? value.filter((v) => v !== option)
+                          : [...value, option];
+                        onChange(newValue);
+                      }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Checkbox checked={value.includes(option)} />
+                        <span>{option}</span>
+                      </div>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
+    );
+  };
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-semibold mb-4">Users Management</h1>
 
       <div className="mb-6 p-4 border rounded shadow-sm">
-        <h2 className="text-lg font-medium mb-3">Filters</h2>
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-lg font-medium">Filters</h2>
+          <Button
+            variant="outline"
+            onClick={clearFilters}
+            className="flex items-center gap-2 text-black border-black hover:bg-black/5"
+            disabled={!filters.name && !filters.education_level.length && !filters.major.length && 
+              !filters.role.length && !filters.paid.length}
+          >
+            <X className="h-4 w-4" />
+            Clear All Filters
+          </Button>
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <div>
             <label className="block text-sm mb-1">Name</label>
@@ -96,88 +181,38 @@ const Users = () => {
               type="text"
               className="w-full p-2 border rounded"
               value={filters.name}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                handleFilterChange('name', e.target.value)
-              }
+              onChange={(e) => handleFilterChange('name', e.target.value)}
               placeholder="Search by name"
             />
           </div>
 
-          <div>
-            <label className="block text-sm mb-1">Education Level</label>
-            <select
-              multiple
-              className="w-full rounded-md border border-gray-300 p-2"
-              value={filters.education_level}
-              onChange={(e) => {
-                const selectedOptions = Array.from(e.target.selectedOptions, option => option.value) as ("Undergraduate" | "Graduate")[];
-                handleFilterChange('education_level', selectedOptions);
-              }}
-            >
-              {educationLevelOptions.map((level) => (
-                <option key={level} value={level}>
-                  {level}
-                </option>
-              ))}
-            </select>
-          </div>
+          <FilterDropdown
+            label="Education Level"
+            options={educationLevelOptions}
+            value={filters.education_level}
+            onChange={(values) => handleFilterChange('education_level', values)}
+          />
 
-          <div>
-            <label className="block text-sm mb-1">Major</label>
-            <select
-              multiple
-              className="w-full rounded-md border border-gray-300 p-2"
-              value={filters.major}
-              onChange={(e) => {
-                const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
-                handleFilterChange('major', selectedOptions);
-              }}
-            >
-              {majorOptions.map((major) => (
-                <option key={major} value={major}>
-                  {major}
-                </option>
-              ))}
-            </select>
-          </div>
+          <FilterDropdown
+            label="Major"
+            options={majorOptions}
+            value={filters.major}
+            onChange={(values) => handleFilterChange('major', values)}
+          />
 
-          <div>
-            <label className="block text-sm mb-1">Role</label>
-            <select
-              multiple
-              className="w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              value={filters.role}
-              onChange={(e) => {
-                const selectedOptions = Array.from(e.target.selectedOptions, option => option.value) as ("user" | "member" | "admin")[];
-                handleFilterChange('role', selectedOptions);
-              }}
-            >
-              {roleOptions.map((role) => (
-                <option key={role} value={role}>
-                  {role}
-                </option>
-              ))}
-            </select>
-          </div>
+          <FilterDropdown
+            label="Role"
+            options={roleOptions}
+            value={filters.role}
+            onChange={(values) => handleFilterChange('role', values)}
+          />
 
-          <div>
-            <label className="block text-sm mb-1">Membership Term</label>
-            <select
-              multiple
-              className="w-full rounded-md border border-gray-300 p-2"
-              value={filters.paid}
-              onChange={(e) => {
-                const selectedOptions = Array.from(e.target.selectedOptions, option => option.value) as ("Semester" | "Annual")[];
-                handleFilterChange('paid', selectedOptions);
-              }}
-            >
-              {paidOptions.map((term) => (
-                <option key={term} value={term}>
-                  {term}
-                </option>
-              ))}
-            </select>
-          </div>
+          <FilterDropdown
+            label="Membership Term"
+            options={paidOptions}
+            value={filters.paid}
+            onChange={(values) => handleFilterChange('paid', values)}
+          />
         </div>
       </div>
 
