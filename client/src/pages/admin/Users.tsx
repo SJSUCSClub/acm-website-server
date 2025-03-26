@@ -91,8 +91,8 @@ const Users = () => {
         'major[]': filters.major.length > 0 ? filters.major : undefined,
         'role[]': filters.role.length > 0 ? filters.role : undefined,
         'paid[]': filters.paid.length > 0 ? filters.paid : undefined,
-        page: currentPage,
-        per_page: itemsPerPage
+        page: currentPage.toString(),
+        per_page: itemsPerPage.toString()
       }
     }
   });
@@ -127,6 +127,17 @@ const Users = () => {
     }
   };
 
+  const removeFilter = (field: keyof UserFilter, value?: string) => {
+    if (field === 'name') {
+      setFilters((prev) => ({ ...prev, name: '' }));
+    } else if (value) {
+      setFilters((prev) => ({
+        ...prev,
+        [field]: prev[field].filter((v) => v !== value)
+      }));
+    }
+  };
+
   const clearFilters = () => {
     setFilters({
       name: '',
@@ -149,6 +160,45 @@ const Users = () => {
     onChange: (values: string[]) => void;
   }) => {
     const [open, setOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredOptions, setFilteredOptions] = useState(options);
+
+    // Update filtered options when options prop changes
+    React.useEffect(() => {
+      setFilteredOptions(options);
+    }, [options]);
+
+    // Fuzzy search implementation
+    const handleSearch = (input: string) => {
+      setSearchQuery(input);
+      if (!input.trim()) {
+        setFilteredOptions(options);
+        return;
+      }
+
+      // Simple fuzzy search
+      const fuzzySearch = (query: string, text: string) => {
+        query = query.toLowerCase();
+        text = text.toLowerCase();
+        
+        // If query is a substring of text, it's a match
+        if (text.includes(query)) return true;
+        
+        // Fuzzy matching logic
+        let queryIndex = 0;
+        for (let i = 0; i < text.length && queryIndex < query.length; i++) {
+          if (query[queryIndex] === text[i]) {
+            queryIndex++;
+          }
+        }
+        
+        // If all characters in query were found in order in text
+        return queryIndex === query.length;
+      };
+
+      const filtered = options.filter(option => fuzzySearch(input, option));
+      setFilteredOptions(filtered);
+    };
 
     return (
       <div className="w-full">
@@ -167,31 +217,165 @@ const Users = () => {
           </PopoverTrigger>
           <PopoverContent className="w-full p-0">
             <Command>
-              <CommandList>
-                <CommandGroup>
-                  {options.map((option) => (
-                    <CommandItem
-                      key={option}
-                      onSelect={() => {
-                        const newValue = value.includes(option)
-                          ? value.filter((v) => v !== option)
-                          : [...value, option];
-                        onChange(newValue);
-                      }}
+              {options.length > 10 && (
+                <div className="px-2 pt-2">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      className="w-full rounded-md border border-gray-300 px-3 py-2 pl-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Search..."
+                      value={searchQuery}
+                      onChange={(e) => handleSearch(e.target.value)}
+                    />
+                    <svg
+                      className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      <div className="flex items-center gap-2">
-                        <Checkbox checked={value.includes(option)} />
-                        <span>{option}</span>
-                      </div>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
+                      <circle cx="11" cy="11" r="8" />
+                      <path d="m21 21-4.3-4.3" />
+                    </svg>
+                    {searchQuery && (
+                      <button
+                        className="absolute right-2.5 top-2.5 text-gray-400 hover:text-gray-500"
+                        onClick={() => {
+                          setSearchQuery('');
+                          setFilteredOptions(options);
+                        }}
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+              <CommandList className={options.length > 10 ? "max-h-[300px] overflow-auto" : ""}>
+                {filteredOptions.length === 0 ? (
+                  <div className="py-6 text-center text-sm text-gray-500">No results found</div>
+                ) : (
+                  <CommandGroup>
+                    {filteredOptions.map((option) => (
+                      <CommandItem
+                        key={option}
+                        onSelect={() => {
+                          const newValue = value.includes(option)
+                            ? value.filter((v) => v !== option)
+                            : [...value, option];
+                          onChange(newValue);
+                        }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <Checkbox checked={value.includes(option)} />
+                          <span>{option}</span>
+                        </div>
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                )}
               </CommandList>
             </Command>
           </PopoverContent>
         </Popover>
       </div>
     );
+  };
+
+  // Function to render active filter chips
+  const renderFilterChips = () => {
+    const activeFilters = [];
+    
+    if (filters.name) {
+      activeFilters.push(
+        <div key="name" className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-900">
+          <span>Name: {filters.name}</span>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-2 -mr-1 rounded-full p-1 hover:bg-gray-200"
+            onClick={() => removeFilter('name')}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      );
+    }
+    
+    filters.education_level.forEach(level => {
+      activeFilters.push(
+        <div key={`edu-${level}`} className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-900">
+          <span>Education: {level}</span>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-2 -mr-1 rounded-full p-1 hover:bg-gray-200"
+            onClick={() => removeFilter('education_level', level)}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      );
+    });
+    
+    filters.major.forEach(major => {
+      activeFilters.push(
+        <div key={`major-${major}`} className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-900">
+          <span>Major: {major}</span>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-2 -mr-1 rounded-full p-1 hover:bg-gray-200"
+            onClick={() => removeFilter('major', major)}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      );
+    });
+    
+    filters.role.forEach(role => {
+      activeFilters.push(
+        <div key={`role-${role}`} className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-900">
+          <span>Role: {role}</span>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-2 -mr-1 rounded-full p-1 hover:bg-gray-200"
+            onClick={() => removeFilter('role', role)}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      );
+    });
+    
+    filters.paid.forEach(term => {
+      activeFilters.push(
+        <div key={`paid-${term}`} className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-900">
+          <span>Membership: {term}</span>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-2 -mr-1 rounded-full p-1 hover:bg-gray-200"
+            onClick={() => removeFilter('paid', term)}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      );
+    });
+    
+    return activeFilters.length > 0 ? (
+      <div className="flex flex-wrap gap-2 mt-4">
+        {activeFilters}
+      </div>
+    ) : null;
   };
 
   return (
@@ -258,6 +442,8 @@ const Users = () => {
             onChange={(values) => handleFilterChange('paid', values)}
           />
         </div>
+        
+        {renderFilterChips()}
       </div>
 
       {isLoading ? (
