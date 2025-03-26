@@ -50,9 +50,7 @@ export const Faq: React.FC = () => {
                 </div>
               </h2>
 
-              {index === expandedIndex && (
-                <p className="text-lg mb-5 mt-5">{questionObj.answer}</p>
-              )}
+              {index === expandedIndex && <p className="text-lg mb-5 mt-5">{questionObj.answer}</p>}
               <div className="border-t border-white mt-5"></div>
             </div>
           ))}

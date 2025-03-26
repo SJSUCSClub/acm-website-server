@@ -17,17 +17,19 @@ import {
 } from '@/components/ui/pagination';
 
 type MajorsResponse = paths['/v1/majors']['get']['responses']['200']['content']['application/json'];
-type EnumResponse = paths['/v1/enums/{enumType}']['get']['responses']['200']['content']['application/json'];
-type UsersResponse = paths['/v1/users']['get']['responses']['200']['content']['application/json'] & {
-  total: number;
-};
+type EnumResponse =
+  paths['/v1/enums/{enumType}']['get']['responses']['200']['content']['application/json'];
+type UsersResponse =
+  paths['/v1/users']['get']['responses']['200']['content']['application/json'] & {
+    total: number;
+  };
 
 interface UserFilter {
   name: string;
-  education_level: ("Undergraduate" | "Graduate")[];
+  education_level: ('Undergraduate' | 'Graduate')[];
   major: string[];
-  role: ("user" | "member" | "admin")[];
-  paid: ("Semester" | "Annual")[];
+  role: ('user' | 'member' | 'admin')[];
+  paid: ('Semester' | 'Annual')[];
 }
 
 const Users = () => {
@@ -67,7 +69,7 @@ const Users = () => {
   });
 
   // Extract options from API responses with type assertions
-  const majorOptions = (majorsData as MajorsResponse)?.majors.map(major => major.name) || [];
+  const majorOptions = (majorsData as MajorsResponse)?.majors.map((major) => major.name) || [];
   const educationLevelOptions = (educationLevelData as EnumResponse)?.types || [];
   const roleOptions = (roleData as EnumResponse)?.types || [];
   const paidOptions = (membershipTermData as EnumResponse)?.types || [];
@@ -77,7 +79,8 @@ const Users = () => {
     params: {
       query: {
         name: filters.name || undefined,
-        'education_level[]': filters.education_level.length > 0 ? filters.education_level : undefined,
+        'education_level[]':
+          filters.education_level.length > 0 ? filters.education_level : undefined,
         'major[]': filters.major.length > 0 ? filters.major : undefined,
         'role[]': filters.role.length > 0 ? filters.role : undefined,
         'paid[]': filters.paid.length > 0 ? filters.paid : undefined,
@@ -98,13 +101,13 @@ const Users = () => {
 
   const handleFilterChange = (field: keyof UserFilter, value: string | string[]) => {
     if (field === 'name') {
-      setFilters(prev => ({
+      setFilters((prev) => ({
         ...prev,
         [field]: value as string
       }));
     } else {
       const arrayValue = Array.isArray(value) ? value : [value];
-      setFilters(prev => ({
+      setFilters((prev) => ({
         ...prev,
         [field]: arrayValue
       }));
@@ -121,12 +124,12 @@ const Users = () => {
     });
   };
 
-  const FilterDropdown = ({ 
-    label, 
-    options, 
-    value, 
+  const FilterDropdown = ({
+    label,
+    options,
+    value,
     onChange
-  }: { 
+  }: {
     label: string;
     options: string[];
     value: string[];
@@ -189,14 +192,19 @@ const Users = () => {
             variant="outline"
             onClick={clearFilters}
             className="flex items-center gap-2 text-black border-black hover:bg-black/5"
-            disabled={!filters.name && !filters.education_level.length && !filters.major.length && 
-              !filters.role.length && !filters.paid.length}
+            disabled={
+              !filters.name &&
+              !filters.education_level.length &&
+              !filters.major.length &&
+              !filters.role.length &&
+              !filters.paid.length
+            }
           >
             <X className="h-4 w-4" />
             Clear All Filters
           </Button>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <div>
             <label className="block text-sm mb-1">Name</label>
@@ -275,32 +283,36 @@ const Users = () => {
                 {users.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-50">
                     <td className="px-3 md:px-6 py-4 text-sm">{user.name}</td>
-                    <td className="px-3 md:px-6 py-4 text-sm overflow-hidden text-ellipsis">{user.email}</td>
+                    <td className="px-3 md:px-6 py-4 text-sm overflow-hidden text-ellipsis">
+                      {user.email}
+                    </td>
                     <td className="px-3 md:px-6 py-4 text-sm">{user.role}</td>
                     <td className="px-3 md:px-6 py-4 text-sm">{user.education_level}</td>
-                    <td className="px-3 md:px-6 py-4 text-sm overflow-hidden text-ellipsis">{user.major}</td>
+                    <td className="px-3 md:px-6 py-4 text-sm overflow-hidden text-ellipsis">
+                      {user.major}
+                    </td>
                     <td className="px-3 md:px-6 py-4 text-sm">{user.paid || 'None'}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          
+
           <div className="mt-4">
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious 
-                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  <PaginationPrevious
+                    onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
                     disabled={currentPage === 1}
                   />
                 </PaginationItem>
-                
+
                 {[...Array(totalPages)].map((_, i) => {
                   const page = i + 1;
-                  const isWithinRange = 
-                    page === 1 || 
-                    page === totalPages || 
+                  const isWithinRange =
+                    page === 1 ||
+                    page === totalPages ||
                     (page >= currentPage - 1 && page <= currentPage + 1);
 
                   if (!isWithinRange) {
@@ -328,7 +340,7 @@ const Users = () => {
 
                 <PaginationItem>
                   <PaginationNext
-                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
                     disabled={currentPage === totalPages}
                   />
                 </PaginationItem>

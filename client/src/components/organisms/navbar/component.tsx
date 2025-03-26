@@ -26,13 +26,13 @@ export const NavBar: React.FC = () => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 1024);
     };
-    
+
     // Initial check
     checkIfMobile();
-    
+
     // Add event listener
     window.addEventListener('resize', checkIfMobile);
-    
+
     // Clean up
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
@@ -99,24 +99,32 @@ export const NavBar: React.FC = () => {
             className="flex flex-col justify-center items-center w-10 h-10 focus:outline-none"
           >
             <div className="w-6 flex flex-col items-center justify-center space-y-1.5">
-              <span className={`bg-black block w-full h-0.5 rounded-sm transition-all duration-300 ease-out ${
-                isOpen ? 'transform rotate-45 translate-y-2' : ''
-              }`}></span>
-              <span className={`bg-black block w-full h-0.5 rounded-sm transition-all duration-300 ease-out ${
-                isOpen ? 'opacity-0' : 'opacity-100'
-              }`}></span>
-              <span className={`bg-black block w-full h-0.5 rounded-sm transition-all duration-300 ease-out ${
-                isOpen ? 'transform -rotate-45 -translate-y-2' : ''
-              }`}></span>
+              <span
+                className={`bg-black block w-full h-0.5 rounded-sm transition-all duration-300 ease-out ${
+                  isOpen ? 'transform rotate-45 translate-y-2' : ''
+                }`}
+              ></span>
+              <span
+                className={`bg-black block w-full h-0.5 rounded-sm transition-all duration-300 ease-out ${
+                  isOpen ? 'opacity-0' : 'opacity-100'
+                }`}
+              ></span>
+              <span
+                className={`bg-black block w-full h-0.5 rounded-sm transition-all duration-300 ease-out ${
+                  isOpen ? 'transform -rotate-45 -translate-y-2' : ''
+                }`}
+              ></span>
             </div>
           </button>
         )}
       </div>
-      
+
       {/* Mobile Menu - Only visible on screens < 1024px */}
       <div
         className={`fixed top-[69px] left-0 right-0 bg-white border-b-4 shadow-lg transition-all duration-300 ease-in-out lg:hidden z-50 ${
-          isOpen ? 'flex flex-col max-h-[calc(100vh-69px)] opacity-100' : 'max-h-0 opacity-0 overflow-hidden border-b-0 pointer-events-none'
+          isOpen
+            ? 'flex flex-col max-h-[calc(100vh-69px)] opacity-100'
+            : 'max-h-0 opacity-0 overflow-hidden border-b-0 pointer-events-none'
         }`}
       >
         <div className="flex flex-col w-full">
@@ -127,7 +135,7 @@ export const NavBar: React.FC = () => {
           >
             <span className="text-[#196096] font-semibold">About Us</span>
           </Link>
-          
+
           <Link
             to="/events"
             className="flex items-center px-6 py-4 hover:bg-gray-100 transition-colors w-full"
@@ -135,7 +143,7 @@ export const NavBar: React.FC = () => {
           >
             <span className="text-[#196096] font-semibold">Events</span>
           </Link>
-          
+
           <Link
             to="/projects"
             className="flex items-center px-6 py-4 hover:bg-gray-100 transition-colors w-full"
