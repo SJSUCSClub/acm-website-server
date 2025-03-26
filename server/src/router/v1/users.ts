@@ -21,7 +21,7 @@ import {
   membershipTermEnum,
 } from '@/db/schema';
 import { db } from '@/db/db';
-import { eq, count, getTableColumns, and, like, inArray } from 'drizzle-orm';
+import { eq, count, getTableColumns, and, like, or } from 'drizzle-orm';
 import { unauthorizedRequest } from '@/middlewares/auth-middleware';
 import type { User, Event, NewAttendingEvent } from '@/db/schema';
 import type { Context } from '@/lib/context';
@@ -75,27 +75,58 @@ userRouter.openapi(
     },
   }),
   async (c) => {
-    const query = c.req.valid('query');
+    const rawQuery = c.req.query();
+    const query = {
+      name: rawQuery.name,
+      education_level: rawQuery['education_level[]'] ?
+        Array.isArray(rawQuery['education_level[]']) ?
+          rawQuery['education_level[]'] :
+          [rawQuery['education_level[]']] :
+        [],
+      major: rawQuery['major[]'] ?
+        Array.isArray(rawQuery['major[]']) ?
+          rawQuery['major[]'] :
+          [rawQuery['major[]']] :
+        [],
+      role: rawQuery['role[]'] ?
+        Array.isArray(rawQuery['role[]']) ?
+          rawQuery['role[]'] :
+          [rawQuery['role[]']] :
+        [],
+      paid: rawQuery['paid[]'] ?
+        Array.isArray(rawQuery['paid[]']) ?
+          rawQuery['paid[]'] :
+          [rawQuery['paid[]']] :
+        [],
+    };
     const whereConditions = [];
 
     if (query.name) {
       whereConditions.push(like(users.name, `%${query.name}%`));
     }
 
-    if (query.education_level && query.education_level.length > 0) {
-      whereConditions.push(inArray(users.education_level, query.education_level));
+    if (query.education_level.length > 0) {
+      whereConditions.push(
+        or(...query.education_level.map(level => eq(users.education_level, level))),
+      );
     }
 
-    if (query.major && query.major.length > 0) {
-      whereConditions.push(inArray(users.major, query.major));
+    if (query.major.length > 0) {
+      whereConditions.push(
+        or(...query.major.map(major => eq(users.major, major))),
+      );
     }
 
-    if (query.role && query.role.length > 0) {
-      whereConditions.push(inArray(users.role, query.role));
+    if (query.role.length > 0) {
+      whereConditions.push(
+        or(...query.role.map(role => eq(users.role, role))),
+      );
     }
 
-    if (query.paid && query.paid.length > 0) {
-      whereConditions.push(inArray(users.paid, query.paid));
+    if (query.paid.length > 0) {
+      whereConditions.push(
+        or(...query.paid.map(term => eq(users.paid, term))),
+      );
     }
 
     let foundUsers: User[];
