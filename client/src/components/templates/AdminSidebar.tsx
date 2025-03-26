@@ -66,7 +66,7 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
           collapsed ? 'w-full md:w-16' : 'w-full md:w-44'
         )}
       >
-        <div className="flex items-center border-r md:border-r-0 md:border-b px-4 h-12 md:h-14">
+        <div className="hidden md:flex items-center border-r md:border-r-0 md:border-b px-2 md:px-4 h-12 md:h-14">
           {!collapsed && <h2 className="hidden md:block">Admin</h2>}
           <Button
             variant="ghost"
@@ -79,19 +79,23 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
           </Button>
         </div>
 
-        <div className="flex-1 overflow-auto py-2">
-          <nav className="grid grid-flow-col md:grid-flow-row gap-1 px-2">
+        <div className="flex-1 w-full">
+          <nav className="grid grid-cols-7 md:grid-cols-none md:grid-flow-row md:gap-1 w-full">
             {navItems.map((item) => (
               <Link
                 key={item.title}
                 to={item.href}
                 className={clsx(
-                  'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground',
-                  'justify-center md:justify-start'
+                  'flex items-center py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground',
+                  'justify-center md:justify-center',
+                  'md:h-12 md:px-3 md:rounded-md',
+                  !collapsed && 'md:justify-start'
                 )}
               >
-                <item.icon className="h-5 w-5" />
-                <span className="hidden md:inline md:block">{!collapsed && item.title}</span>
+                <div className={clsx('flex items-center', !collapsed && 'md:w-full')}>
+                  <item.icon className="h-5 w-5 flex-shrink-0" />
+                  {!collapsed && <span className="hidden md:block ml-3">{item.title}</span>}
+                </div>
               </Link>
             ))}
           </nav>
