@@ -188,6 +188,8 @@ export interface paths {
                     major?: string[];
                     role?: ("user" | "member" | "admin")[];
                     paid?: ("Semester" | "Annual")[];
+                    page?: string;
+                    per_page?: string;
                 };
                 header?: never;
                 path?: never;
@@ -222,6 +224,7 @@ export interface paths {
                                 github: string | null;
                                 website: string | null;
                             }[];
+                            total: number;
                         };
                     };
                 };
