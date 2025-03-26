@@ -86,7 +86,7 @@ userRouter.openapi(
       role: Array.isArray(rawQuery['role[]']) ? rawQuery['role[]'] : rawQuery['role[]'] ? [rawQuery['role[]']] : [],
       paid: Array.isArray(rawQuery['paid[]']) ? rawQuery['paid[]'] : rawQuery['paid[]'] ? [rawQuery['paid[]']] : [],
       page: parseInt(rawQuery.page as string) || 1,
-      per_page: parseInt(rawQuery.per_page as string) || 10,
+      per_page: parseInt(rawQuery.per_page as string) || 20,
     };
 
     const whereConditions = [];
