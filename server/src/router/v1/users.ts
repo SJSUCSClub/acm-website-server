@@ -17,9 +17,11 @@ import {
   projects,
   interestedInProjects,
   attendingEvents,
+  educationLevelEnum,
+  membershipTermEnum,
 } from '@/db/schema';
 import { db } from '@/db/db';
-import { eq,count, getTableColumns, and } from 'drizzle-orm';
+import { eq, count, getTableColumns, and, like, inArray } from 'drizzle-orm';
 import { unauthorizedRequest } from '@/middlewares/auth-middleware';
 import type { User, Event, NewAttendingEvent } from '@/db/schema';
 import type { Context } from '@/lib/context';
@@ -50,6 +52,15 @@ userRouter.openapi(
     tags: ['users'],
     summary: 'Admin List all users',
     middleware: [authMiddleWare('admin')],
+    request: {
+      query: z.object({
+        name: z.string().optional(),
+        education_level: z.array(z.enum(educationLevelEnum.enumValues)).optional(),
+        major: z.array(z.string()).optional(),
+        role: z.array(z.enum(userRoleEnum.enumValues)).optional(),
+        paid: z.array(z.enum(membershipTermEnum.enumValues)).optional(),
+      }),
+    },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
@@ -64,11 +75,41 @@ userRouter.openapi(
     },
   }),
   async (c) => {
-    const foundUsers: User[] = await db.select().from(users);
+    const query = c.req.valid('query');
+    const whereConditions = [];
+
+    if (query.name) {
+      whereConditions.push(like(users.name, `%${query.name}%`));
+    }
+
+    if (query.education_level && query.education_level.length > 0) {
+      whereConditions.push(inArray(users.education_level, query.education_level));
+    }
+
+    if (query.major && query.major.length > 0) {
+      whereConditions.push(inArray(users.major, query.major));
+    }
+
+    if (query.role && query.role.length > 0) {
+      whereConditions.push(inArray(users.role, query.role));
+    }
+
+    if (query.paid && query.paid.length > 0) {
+      whereConditions.push(inArray(users.paid, query.paid));
+    }
+
+    let foundUsers: User[];
+    if (whereConditions.length > 0) {
+      foundUsers = await db.select().from(users).where(and(...whereConditions));
+    } else {
+      foundUsers = await db.select().from(users);
+    }
+
     const formattedUsers = foundUsers.map((user) => ({
       ...user,
       createdAt: user.createdAt.toISOString(),
     }));
+
     return c.json({ users: formattedUsers }, HttpStatusCodes.OK);
   },
 );
