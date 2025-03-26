@@ -1,9 +1,5 @@
-import React, { useState, useEffect } from 'react';
-
-// Import individual components or check if there's a UI library available in the project
-// For now, using div elements as placeholders
-// Uncomment and adjust the import if these components exist in your project
-// import { Card, Input, Select, Spinner, Table } from '@/components/ui';
+import React, { useState, useMemo } from 'react';
+import { useQuery } from '@/hooks/useFetch';
 
 // These enums should match what's in the database
 const educationLevelOptions = [
@@ -26,16 +22,6 @@ interface UserFilter {
   paid: string[];
 }
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  education_level: string;
-  major: string;
-  paid?: string;
-}
-
 const Users = () => {
   const [filters, setFilters] = useState<UserFilter>({
     name: '',
@@ -44,87 +30,45 @@ const Users = () => {
     role: [],
     paid: []
   });
-  const [users, setUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
 
-  // Construct API URL with query parameters
-  const buildQueryUrl = () => {
-    const params = new URLSearchParams();
-    console.log('Building URL with filters:', filters);
+  // Use the useQuery hook with the correct path from schema
+  const { data, isLoading, error } = useQuery('get', '/v1/users');
 
-    // Add name filter (simple string)
-    if (filters.name) {
-      params.append('name', filters.name);
-    }
+  const allUsers = data?.users || [];
 
-    // Handle array parameters
-    if (filters.education_level.length > 0) {
-      filters.education_level.forEach((level) => {
-        params.append('education_level[]', level);
-      });
-    }
-
-    if (filters.major.length > 0) {
-      filters.major.forEach((major) => {
-        params.append('major[]', major);
-      });
-    }
-
-    if (filters.role.length > 0) {
-      filters.role.forEach((role) => {
-        params.append('role[]', role);
-      });
-    }
-
-    if (filters.paid.length > 0) {
-      filters.paid.forEach((term) => {
-        params.append('paid[]', term);
-      });
-    }
-
-    const url = `/api/v1/users${params.toString() ? '?' + params.toString() : ''}`;
-    console.log('Built URL:', url);
-    return url;
-  };
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setIsLoading(true);
-      setIsError(false);
-
-      try {
-        const url = buildQueryUrl();
-        console.log('Fetching users with URL:', url);
-        console.log('Current filters:', filters);
-
-        const response = await fetch(url, {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Accept': 'application/json',
-          }
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('Server response:', errorText);
-          throw new Error(`Failed to fetch users: ${response.status} ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        console.log('Received users data:', data);
-        setUsers(data.users || []);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-        setIsError(true);
-      } finally {
-        setIsLoading(false);
+  // Apply filters on the client side
+  const users = useMemo(() => {
+    return allUsers.filter(user => {
+      // Name filter (case-insensitive partial match)
+      if (filters.name && !user.name.toLowerCase().includes(filters.name.toLowerCase())) {
+        return false;
       }
-    };
 
-    fetchUsers();
-  }, [filters]);
+      // Education level filter (exact match from array)
+      if (filters.education_level.length > 0 && !filters.education_level.includes(user.education_level)) {
+        return false;
+      }
+
+      // Major filter (case-insensitive exact match from array)
+      if (filters.major.length > 0 && !filters.major.some(m => 
+        m.toLowerCase() === user.major.toLowerCase()
+      )) {
+        return false;
+      }
+
+      // Role filter (exact match from array)
+      if (filters.role.length > 0 && !filters.role.includes(user.role)) {
+        return false;
+      }
+
+      // Paid filter (exact match from array)
+      if (filters.paid.length > 0 && !filters.paid.includes(user.paid || '')) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [allUsers, filters]);
 
   const handleFilterChange = (field: keyof UserFilter, value: string | string[]) => {
     if (field === 'name') {
@@ -243,7 +187,7 @@ const Users = () => {
         <div className="flex justify-center p-8">
           <div className="animate-spin h-8 w-8 border-4 border-blue-500 rounded-full border-t-transparent"></div>
         </div>
-      ) : isError ? (
+      ) : error ? (
         <div className="text-red-500 p-4">Error loading users data</div>
       ) : users.length > 0 ? (
         <div className="overflow-x-auto">
@@ -271,7 +215,7 @@ const Users = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {users.map((user: User) => (
+              {users.map((user) => (
                 <tr key={user.id}>
                   <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
