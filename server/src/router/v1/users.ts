@@ -59,6 +59,8 @@ userRouter.openapi(
         major: z.array(z.string()).optional(),
         role: z.array(z.enum(userRoleEnum.enumValues)).optional(),
         paid: z.array(z.enum(membershipTermEnum.enumValues)).optional(),
+        page: z.string().optional(),
+        per_page: z.string().optional(),
       }),
     },
     responses: {
@@ -67,6 +69,7 @@ userRouter.openapi(
           'application/json': {
             schema: z.object({
               users: z.array(userSchema),
+              total: z.number(),
             }),
           },
         },
@@ -82,6 +85,8 @@ userRouter.openapi(
       major: Array.isArray(rawQuery['major[]']) ? rawQuery['major[]'] : rawQuery['major[]'] ? [rawQuery['major[]']] : [],
       role: Array.isArray(rawQuery['role[]']) ? rawQuery['role[]'] : rawQuery['role[]'] ? [rawQuery['role[]']] : [],
       paid: Array.isArray(rawQuery['paid[]']) ? rawQuery['paid[]'] : rawQuery['paid[]'] ? [rawQuery['paid[]']] : [],
+      page: parseInt(rawQuery.page as string) || 1,
+      per_page: parseInt(rawQuery.per_page as string) || 10,
     };
 
     const whereConditions = [];
@@ -114,11 +119,29 @@ userRouter.openapi(
       );
     }
 
+    // Get total count
+    const totalCount = await db
+      .select({ count: count() })
+      .from(users)
+      .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
+      .then(result => result[0].count);
+
+    // Get paginated users
+    const offset = (query.page - 1) * query.per_page;
     let foundUsers: User[];
     if (whereConditions.length > 0) {
-      foundUsers = await db.select().from(users).where(and(...whereConditions));
+      foundUsers = await db
+        .select()
+        .from(users)
+        .where(and(...whereConditions))
+        .limit(query.per_page)
+        .offset(offset);
     } else {
-      foundUsers = await db.select().from(users);
+      foundUsers = await db
+        .select()
+        .from(users)
+        .limit(query.per_page)
+        .offset(offset);
     }
 
     const formattedUsers = foundUsers.map((user) => ({
@@ -126,7 +149,10 @@ userRouter.openapi(
       createdAt: user.createdAt.toISOString(),
     }));
 
-    return c.json({ users: formattedUsers }, HttpStatusCodes.OK);
+    return c.json({ 
+      users: formattedUsers,
+      total: totalCount,
+    }, HttpStatusCodes.OK);
   },
 );
 

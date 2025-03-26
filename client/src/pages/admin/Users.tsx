@@ -6,10 +6,21 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ChevronsUpDown, X } from 'lucide-react';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious
+} from '@/components/ui/pagination';
 
 type MajorsResponse = paths['/v1/majors']['get']['responses']['200']['content']['application/json'];
 type EnumResponse = paths['/v1/enums/{enumType}']['get']['responses']['200']['content']['application/json'];
-type UsersResponse = paths['/v1/users']['get']['responses']['200']['content']['application/json'];
+type UsersResponse = paths['/v1/users']['get']['responses']['200']['content']['application/json'] & {
+  total: number;
+};
 
 interface UserFilter {
   name: string;
@@ -27,6 +38,9 @@ const Users = () => {
     role: [],
     paid: []
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 10;
 
   // Fetch options from API endpoints
   const { data: majorsData } = useQuery('get', '/v1/majors', {});
@@ -58,7 +72,7 @@ const Users = () => {
   const roleOptions = (roleData as EnumResponse)?.types || [];
   const paidOptions = (membershipTermData as EnumResponse)?.types || [];
 
-  // Use the useQuery hook with the correct path from schema and pass filters as query params
+  // Update the useQuery hook to include pagination parameters
   const { data, isLoading, error } = useQuery('get', '/v1/users', {
     params: {
       query: {
@@ -66,10 +80,19 @@ const Users = () => {
         'education_level[]': filters.education_level.length > 0 ? filters.education_level : undefined,
         'major[]': filters.major.length > 0 ? filters.major : undefined,
         'role[]': filters.role.length > 0 ? filters.role : undefined,
-        'paid[]': filters.paid.length > 0 ? filters.paid : undefined
+        'paid[]': filters.paid.length > 0 ? filters.paid : undefined,
+        page: currentPage,
+        per_page: itemsPerPage
       }
     }
   });
+
+  // Update totalPages when data changes
+  React.useEffect(() => {
+    if (data) {
+      setTotalPages(Math.ceil((data as UsersResponse).total / itemsPerPage));
+    }
+  }, [data]);
 
   const users = (data as UsersResponse)?.users || [];
 
@@ -223,44 +246,96 @@ const Users = () => {
       ) : error ? (
         <div className="text-red-500 p-4">Error loading users data</div>
       ) : users.length > 0 ? (
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Role
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Education
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Major
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Membership
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {users.map((user) => (
-                <tr key={user.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.role}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.education_level}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.major}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.paid || 'None'}</td>
+        <>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Role
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Education
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Major
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Membership
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {users.map((user) => (
+                  <tr key={user.id}>
+                    <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{user.role}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{user.education_level}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{user.major}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{user.paid || 'None'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          
+          <div className="mt-4">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    disabled={currentPage === 1}
+                  />
+                </PaginationItem>
+                
+                {[...Array(totalPages)].map((_, i) => {
+                  const page = i + 1;
+                  const isWithinRange = 
+                    page === 1 || 
+                    page === totalPages || 
+                    (page >= currentPage - 1 && page <= currentPage + 1);
+
+                  if (!isWithinRange) {
+                    if (page === 2 || page === totalPages - 1) {
+                      return (
+                        <PaginationItem key={page}>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                      );
+                    }
+                    return null;
+                  }
+
+                  return (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        isActive={page === currentPage}
+                        onClick={() => setCurrentPage(page)}
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  );
+                })}
+
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    disabled={currentPage === totalPages}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        </>
       ) : (
         <div>No users found</div>
       )}
