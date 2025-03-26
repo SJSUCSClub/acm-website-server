@@ -77,28 +77,13 @@ userRouter.openapi(
   async (c) => {
     const rawQuery = c.req.query();
     const query = {
-      name: rawQuery.name,
-      education_level: rawQuery['education_level[]'] ?
-        Array.isArray(rawQuery['education_level[]']) ?
-          rawQuery['education_level[]'] :
-          [rawQuery['education_level[]']] :
-        [],
-      major: rawQuery['major[]'] ?
-        Array.isArray(rawQuery['major[]']) ?
-          rawQuery['major[]'] :
-          [rawQuery['major[]']] :
-        [],
-      role: rawQuery['role[]'] ?
-        Array.isArray(rawQuery['role[]']) ?
-          rawQuery['role[]'] :
-          [rawQuery['role[]']] :
-        [],
-      paid: rawQuery['paid[]'] ?
-        Array.isArray(rawQuery['paid[]']) ?
-          rawQuery['paid[]'] :
-          [rawQuery['paid[]']] :
-        [],
+      name: rawQuery.name as string | undefined,
+      education_level: Array.isArray(rawQuery['education_level[]']) ? rawQuery['education_level[]'] : rawQuery['education_level[]'] ? [rawQuery['education_level[]']] : [],
+      major: Array.isArray(rawQuery['major[]']) ? rawQuery['major[]'] : rawQuery['major[]'] ? [rawQuery['major[]']] : [],
+      role: Array.isArray(rawQuery['role[]']) ? rawQuery['role[]'] : rawQuery['role[]'] ? [rawQuery['role[]']] : [],
+      paid: Array.isArray(rawQuery['paid[]']) ? rawQuery['paid[]'] : rawQuery['paid[]'] ? [rawQuery['paid[]']] : [],
     };
+
     const whereConditions = [];
 
     if (query.name) {
@@ -107,7 +92,7 @@ userRouter.openapi(
 
     if (query.education_level.length > 0) {
       whereConditions.push(
-        or(...query.education_level.map(level => eq(users.education_level, level))),
+        or(...query.education_level.map(level => eq(users.education_level, level as typeof educationLevelEnum.enumValues[number]))),
       );
     }
 
@@ -119,13 +104,13 @@ userRouter.openapi(
 
     if (query.role.length > 0) {
       whereConditions.push(
-        or(...query.role.map(role => eq(users.role, role))),
+        or(...query.role.map(role => eq(users.role, role as typeof userRoleEnum.enumValues[number]))),
       );
     }
 
     if (query.paid.length > 0) {
       whereConditions.push(
-        or(...query.paid.map(term => eq(users.paid, term))),
+        or(...query.paid.map(term => eq(users.paid, term as typeof membershipTermEnum.enumValues[number]))),
       );
     }
 

@@ -1,25 +1,17 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@/hooks/useFetch';
+import { paths } from '@/types/schema.v1';
 
-// These enums should match what's in the database
-const educationLevelOptions = [
-  'FRESHMAN',
-  'SOPHOMORE',
-  'JUNIOR',
-  'SENIOR',
-  'MASTERS',
-  'PHD',
-  'ALUMNI'
-];
-const roleOptions = ['user', 'member', 'admin'];
-const paidOptions = ['FALL_2023', 'SPRING_2024', 'ACADEMIC_YEAR_2023_2024'];
+type MajorsResponse = paths['/v1/majors']['get']['responses']['200']['content']['application/json'];
+type EnumResponse = paths['/v1/enums/{enumType}']['get']['responses']['200']['content']['application/json'];
+type UsersResponse = paths['/v1/users']['get']['responses']['200']['content']['application/json'];
 
 interface UserFilter {
   name: string;
-  education_level: string[];
+  education_level: ("Undergraduate" | "Graduate")[];
   major: string[];
-  role: string[];
-  paid: string[];
+  role: ("user" | "member" | "admin")[];
+  paid: ("Semester" | "Annual")[];
 }
 
 const Users = () => {
@@ -31,56 +23,62 @@ const Users = () => {
     paid: []
   });
 
-  // Use the useQuery hook with the correct path from schema
-  const { data, isLoading, error } = useQuery('get', '/v1/users');
-
-  const allUsers = data?.users || [];
-
-  // Apply filters on the client side
-  const users = useMemo(() => {
-    return allUsers.filter(user => {
-      // Name filter (case-insensitive partial match)
-      if (filters.name && !user.name.toLowerCase().includes(filters.name.toLowerCase())) {
-        return false;
+  // Fetch options from API endpoints
+  const { data: majorsData } = useQuery('get', '/v1/majors', {});
+  const { data: educationLevelData } = useQuery('get', '/v1/enums/{enumType}', {
+    params: {
+      path: {
+        enumType: 'education_level_enum'
       }
-
-      // Education level filter (exact match from array)
-      if (filters.education_level.length > 0 && !filters.education_level.includes(user.education_level)) {
-        return false;
+    }
+  });
+  const { data: roleData } = useQuery('get', '/v1/enums/{enumType}', {
+    params: {
+      path: {
+        enumType: 'user_role_enum'
       }
-
-      // Major filter (case-insensitive exact match from array)
-      if (filters.major.length > 0 && !filters.major.some(m => 
-        m.toLowerCase() === user.major.toLowerCase()
-      )) {
-        return false;
+    }
+  });
+  const { data: membershipTermData } = useQuery('get', '/v1/enums/{enumType}', {
+    params: {
+      path: {
+        enumType: 'membership_term_enum'
       }
+    }
+  });
 
-      // Role filter (exact match from array)
-      if (filters.role.length > 0 && !filters.role.includes(user.role)) {
-        return false;
+  // Extract options from API responses with type assertions
+  const majorOptions = (majorsData as MajorsResponse)?.majors.map(major => major.name) || [];
+  const educationLevelOptions = (educationLevelData as EnumResponse)?.types || [];
+  const roleOptions = (roleData as EnumResponse)?.types || [];
+  const paidOptions = (membershipTermData as EnumResponse)?.types || [];
+
+  // Use the useQuery hook with the correct path from schema and pass filters as query params
+  const { data, isLoading, error } = useQuery('get', '/v1/users', {
+    params: {
+      query: {
+        name: filters.name || undefined,
+        'education_level[]': filters.education_level.length > 0 ? filters.education_level : undefined,
+        'major[]': filters.major.length > 0 ? filters.major : undefined,
+        'role[]': filters.role.length > 0 ? filters.role : undefined,
+        'paid[]': filters.paid.length > 0 ? filters.paid : undefined
       }
+    }
+  });
 
-      // Paid filter (exact match from array)
-      if (filters.paid.length > 0 && !filters.paid.includes(user.paid || '')) {
-        return false;
-      }
-
-      return true;
-    });
-  }, [allUsers, filters]);
+  const users = (data as UsersResponse)?.users || [];
 
   const handleFilterChange = (field: keyof UserFilter, value: string | string[]) => {
     if (field === 'name') {
-      setFilters((prev) => ({
+      setFilters(prev => ({
         ...prev,
         [field]: value as string
       }));
     } else {
-      // For array fields, ensure we're always working with arrays
-      setFilters((prev) => ({
+      const arrayValue = Array.isArray(value) ? value : [value];
+      setFilters(prev => ({
         ...prev,
-        [field]: Array.isArray(value) ? value : value.split(',').filter(Boolean)
+        [field]: arrayValue
       }));
     }
   };
@@ -109,12 +107,10 @@ const Users = () => {
             <label className="block text-sm mb-1">Education Level</label>
             <select
               multiple
-              className="w-full p-2 border rounded"
+              className="w-full rounded-md border border-gray-300 p-2"
               value={filters.education_level}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                const selectedOptions = Array.from(e.target.selectedOptions).map(
-                  (option) => option.value
-                );
+              onChange={(e) => {
+                const selectedOptions = Array.from(e.target.selectedOptions, option => option.value) as ("Undergraduate" | "Graduate")[];
                 handleFilterChange('education_level', selectedOptions);
               }}
             >
@@ -128,27 +124,31 @@ const Users = () => {
 
           <div>
             <label className="block text-sm mb-1">Major</label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded"
-              value={filters.major.join(',')}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                handleFilterChange('major', e.target.value.split(',').filter(Boolean))
-              }
-              placeholder="CS,EE,etc. (comma separated)"
-            />
+            <select
+              multiple
+              className="w-full rounded-md border border-gray-300 p-2"
+              value={filters.major}
+              onChange={(e) => {
+                const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
+                handleFilterChange('major', selectedOptions);
+              }}
+            >
+              {majorOptions.map((major) => (
+                <option key={major} value={major}>
+                  {major}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
             <label className="block text-sm mb-1">Role</label>
             <select
               multiple
-              className="w-full p-2 border rounded"
+              className="w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
               value={filters.role}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                const selectedOptions = Array.from(e.target.selectedOptions).map(
-                  (option) => option.value
-                );
+              onChange={(e) => {
+                const selectedOptions = Array.from(e.target.selectedOptions, option => option.value) as ("user" | "member" | "admin")[];
                 handleFilterChange('role', selectedOptions);
               }}
             >
@@ -164,18 +164,16 @@ const Users = () => {
             <label className="block text-sm mb-1">Membership Term</label>
             <select
               multiple
-              className="w-full p-2 border rounded"
+              className="w-full rounded-md border border-gray-300 p-2"
               value={filters.paid}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                const selectedOptions = Array.from(e.target.selectedOptions).map(
-                  (option) => option.value
-                );
+              onChange={(e) => {
+                const selectedOptions = Array.from(e.target.selectedOptions, option => option.value) as ("Semester" | "Annual")[];
                 handleFilterChange('paid', selectedOptions);
               }}
             >
               {paidOptions.map((term) => (
                 <option key={term} value={term}>
-                  {term.replace('_', ' ')}
+                  {term}
                 </option>
               ))}
             </select>
