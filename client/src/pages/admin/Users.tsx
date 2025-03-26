@@ -135,27 +135,35 @@ const Users = () => {
     setCurrentPage(1);
   }, [filters]);
 
-  // Update the useQuery hook to include pagination parameters and query options to prevent continuous requests
+  // Create a wrapper function that converts array values into the correct format for the API
+  const createArrayParam = <T extends string>(values: T[]): T | T[] | undefined => {
+    return values.length > 0 ? values : undefined;
+  };
+
+  // Construct the query parameters
+  const queryParams = {
+    name: filters.name ? filters.name.toLowerCase() : undefined,
+    page: currentPage.toString(),
+    per_page: itemsPerPage.toString()
+  };
+
+  // Use the useQuery hook with type-safe parameters
   const { data, isLoading, error } = useQuery('get', '/v1/users', {
     params: {
       query: {
-        // Ensure name is always lowercase for consistent case-insensitive search
-        name: filters.name ? filters.name.toLowerCase() : undefined,
-        'education_level[]':
-          filters.education_level.length > 0 ? filters.education_level : undefined,
-        'major[]': filters.major.length > 0 ? filters.major : undefined,
-        'role[]': filters.role.length > 0 ? filters.role : undefined,
-        'paid[]': filters.paid.length > 0 ? filters.paid : undefined,
-        page: currentPage.toString(),
-        per_page: itemsPerPage.toString()
+        ...queryParams,
+        'education_level[]': createArrayParam(filters.education_level),
+        'major[]': createArrayParam(filters.major),
+        'role[]': createArrayParam(filters.role),
+        'paid[]': createArrayParam(filters.paid)
       }
     },
     options: {
-      refetchOnWindowFocus: false, // Don't refetch when window regains focus
-      refetchOnMount: true, // Only fetch on initial mount
-      refetchOnReconnect: false, // Don't refetch on network reconnection
-      retry: 1, // Only retry failed requests once
-      staleTime: 30000 // Consider data fresh for 30 seconds
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      retry: 1,
+      staleTime: 30000
     }
   });
 

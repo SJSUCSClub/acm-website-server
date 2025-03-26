@@ -78,15 +78,30 @@ userRouter.openapi(
     },
   }),
   async (c) => {
-    const rawQuery = c.req.query();
+    // Get the raw URL to parse query parameters directly
+    const url = new URL(c.req.url);
+    const queryParams = url.searchParams;
+    // Extract array parameters with proper handling of multiple values
+    const getArrayParam = (param: string): string[] => {
+      const values: string[] = [];
+      // Get all instances of the parameter from the URL
+      queryParams.getAll(`${param}[]`).forEach(value => {
+        if (!values.includes(value)) {
+          values.push(value);
+        }
+      });
+
+      return values;
+    };
+
     const query = {
-      name: rawQuery.name as string | undefined,
-      education_level: Array.isArray(rawQuery['education_level[]']) ? rawQuery['education_level[]'] : rawQuery['education_level[]'] ? [rawQuery['education_level[]']] : [],
-      major: Array.isArray(rawQuery['major[]']) ? rawQuery['major[]'] : rawQuery['major[]'] ? [rawQuery['major[]']] : [],
-      role: Array.isArray(rawQuery['role[]']) ? rawQuery['role[]'] : rawQuery['role[]'] ? [rawQuery['role[]']] : [],
-      paid: Array.isArray(rawQuery['paid[]']) ? rawQuery['paid[]'] : rawQuery['paid[]'] ? [rawQuery['paid[]']] : [],
-      page: parseInt(rawQuery.page as string) || 1,
-      per_page: parseInt(rawQuery.per_page as string) || 20,
+      name: queryParams.get('name') || undefined,
+      education_level: getArrayParam('education_level'),
+      major: getArrayParam('major'),
+      role: getArrayParam('role'),
+      paid: getArrayParam('paid'),
+      page: parseInt(queryParams.get('page') || '1'),
+      per_page: parseInt(queryParams.get('per_page') || '20'),
     };
 
     const whereConditions = [];
@@ -149,7 +164,7 @@ userRouter.openapi(
       createdAt: user.createdAt.toISOString(),
     }));
 
-    return c.json({ 
+    return c.json({
       users: formattedUsers,
       total: totalCount,
     }, HttpStatusCodes.OK);
