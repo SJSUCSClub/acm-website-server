@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@/hooks/useFetch';
 import { paths } from '@/types/schema.v1';
 import { Button } from '@/components/ui/button';
@@ -50,28 +50,77 @@ const Users = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(20);
+  const [nameSearch, setNameSearch] = useState('');
 
-  // Fetch options from API endpoints
-  const { data: majorsData } = useQuery('get', '/v1/majors', {});
+  // Debounce name search
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      // Convert to lowercase before sending to API to ensure case-insensitive search
+      setFilters((prev) => ({ ...prev, name: nameSearch.toLowerCase() }));
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [nameSearch]);
+
+  // Handle name search change
+  const handleNameSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Store search value as is - backend handles case insensitivity
+    setNameSearch(e.target.value);
+  };
+
+  // Fetch options from API endpoints with proper query configuration
+  const { data: majorsData } = useQuery('get', '/v1/majors', {
+    options: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      retry: 1,
+      staleTime: 30000
+    }
+  });
+
   const { data: educationLevelData } = useQuery('get', '/v1/enums/{enumType}', {
     params: {
       path: {
         enumType: 'education_level_enum'
       }
+    },
+    options: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      retry: 1,
+      staleTime: 30000
     }
   });
+
   const { data: roleData } = useQuery('get', '/v1/enums/{enumType}', {
     params: {
       path: {
         enumType: 'user_role_enum'
       }
+    },
+    options: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      retry: 1,
+      staleTime: 30000
     }
   });
+
   const { data: membershipTermData } = useQuery('get', '/v1/enums/{enumType}', {
     params: {
       path: {
         enumType: 'membership_term_enum'
       }
+    },
+    options: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      retry: 1,
+      staleTime: 30000
     }
   });
 
@@ -81,11 +130,17 @@ const Users = () => {
   const roleOptions = (roleData as EnumResponse)?.types || [];
   const paidOptions = (membershipTermData as EnumResponse)?.types || [];
 
-  // Update the useQuery hook to include pagination parameters
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters]);
+
+  // Update the useQuery hook to include pagination parameters and query options to prevent continuous requests
   const { data, isLoading, error } = useQuery('get', '/v1/users', {
     params: {
       query: {
-        name: filters.name || undefined,
+        // Ensure name is always lowercase for consistent case-insensitive search
+        name: filters.name ? filters.name.toLowerCase() : undefined,
         'education_level[]':
           filters.education_level.length > 0 ? filters.education_level : undefined,
         'major[]': filters.major.length > 0 ? filters.major : undefined,
@@ -94,6 +149,13 @@ const Users = () => {
         page: currentPage.toString(),
         per_page: itemsPerPage.toString()
       }
+    },
+    options: {
+      refetchOnWindowFocus: false, // Don't refetch when window regains focus
+      refetchOnMount: true, // Only fetch on initial mount
+      refetchOnReconnect: false, // Don't refetch on network reconnection
+      retry: 1, // Only retry failed requests once
+      staleTime: 30000 // Consider data fresh for 30 seconds
     }
   });
 
@@ -113,11 +175,14 @@ const Users = () => {
   const users = (data as UsersResponse)?.users || [];
 
   const handleFilterChange = (field: keyof UserFilter, value: string | string[]) => {
+    setCurrentPage(1); // Reset to first page when filters change
+
     if (field === 'name') {
       setFilters((prev) => ({
         ...prev,
         [field]: value as string
       }));
+      setNameSearch(value as string);
     } else {
       const arrayValue = Array.isArray(value) ? value : [value];
       setFilters((prev) => ({
@@ -130,12 +195,14 @@ const Users = () => {
   const removeFilter = (field: keyof UserFilter, value?: string) => {
     if (field === 'name') {
       setFilters((prev) => ({ ...prev, name: '' }));
+      setNameSearch('');
     } else if (value) {
       setFilters((prev) => ({
         ...prev,
         [field]: prev[field].filter((v) => v !== value)
       }));
     }
+    setCurrentPage(1); // Reset to first page when removing filters
   };
 
   const clearFilters = () => {
@@ -146,6 +213,8 @@ const Users = () => {
       role: [],
       paid: []
     });
+    setNameSearch('');
+    setCurrentPage(1); // Reset to first page when clearing filters
   };
 
   const FilterDropdown = ({
@@ -178,6 +247,7 @@ const Users = () => {
 
       // Simple fuzzy search
       const fuzzySearch = (query: string, text: string) => {
+        // Convert both query and text to lowercase for case-insensitive comparison
         query = query.toLowerCase();
         text = text.toLowerCase();
 
@@ -421,8 +491,8 @@ const Users = () => {
             <input
               type="text"
               className="w-full p-2 border rounded"
-              value={filters.name}
-              onChange={(e) => handleFilterChange('name', e.target.value)}
+              value={nameSearch}
+              onChange={handleNameSearchChange}
               placeholder="Search by name"
             />
           </div>

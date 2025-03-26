@@ -21,7 +21,7 @@ import {
   membershipTermEnum,
 } from '@/db/schema';
 import { db } from '@/db/db';
-import { eq, count, getTableColumns, and, like, or } from 'drizzle-orm';
+import { eq, count, getTableColumns, and, or, sql } from 'drizzle-orm';
 import { unauthorizedRequest } from '@/middlewares/auth-middleware';
 import type { User, Event, NewAttendingEvent } from '@/db/schema';
 import type { Context } from '@/lib/context';
@@ -92,7 +92,7 @@ userRouter.openapi(
     const whereConditions = [];
 
     if (query.name) {
-      whereConditions.push(like(users.name, `%${query.name}%`));
+      whereConditions.push(sql`${users.name} ILIKE ${`%${query.name}%`}`);
     }
 
     if (query.education_level.length > 0) {
