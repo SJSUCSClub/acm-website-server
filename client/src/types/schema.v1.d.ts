@@ -182,7 +182,13 @@ export interface paths {
         /** Admin List all users */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    name?: string;
+                    education_level?: ("Undergraduate" | "Graduate")[];
+                    major?: string[];
+                    role?: ("user" | "member" | "admin")[];
+                    paid?: ("Semester" | "Annual")[];
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;
