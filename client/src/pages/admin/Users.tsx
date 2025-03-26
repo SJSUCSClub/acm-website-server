@@ -180,10 +180,10 @@ const Users = () => {
       const fuzzySearch = (query: string, text: string) => {
         query = query.toLowerCase();
         text = text.toLowerCase();
-        
+
         // If query is a substring of text, it's a match
         if (text.includes(query)) return true;
-        
+
         // Fuzzy matching logic
         let queryIndex = 0;
         for (let i = 0; i < text.length && queryIndex < query.length; i++) {
@@ -191,12 +191,12 @@ const Users = () => {
             queryIndex++;
           }
         }
-        
+
         // If all characters in query were found in order in text
         return queryIndex === query.length;
       };
 
-      const filtered = options.filter(option => fuzzySearch(input, option));
+      const filtered = options.filter((option) => fuzzySearch(input, option));
       setFilteredOptions(filtered);
     };
 
@@ -256,7 +256,7 @@ const Users = () => {
                   </div>
                 </div>
               )}
-              <CommandList className={options.length > 10 ? "max-h-[300px] overflow-auto" : ""}>
+              <CommandList className={options.length > 10 ? 'max-h-[300px] overflow-auto' : ''}>
                 {filteredOptions.length === 0 ? (
                   <div className="py-6 text-center text-sm text-gray-500">No results found</div>
                 ) : (
@@ -290,10 +290,13 @@ const Users = () => {
   // Function to render active filter chips
   const renderFilterChips = () => {
     const activeFilters = [];
-    
+
     if (filters.name) {
       activeFilters.push(
-        <div key="name" className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-900">
+        <div
+          key="name"
+          className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-900"
+        >
           <span>Name: {filters.name}</span>
           <Button
             variant="ghost"
@@ -306,10 +309,13 @@ const Users = () => {
         </div>
       );
     }
-    
-    filters.education_level.forEach(level => {
+
+    filters.education_level.forEach((level) => {
       activeFilters.push(
-        <div key={`edu-${level}`} className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-900">
+        <div
+          key={`edu-${level}`}
+          className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-900"
+        >
           <span>Education: {level}</span>
           <Button
             variant="ghost"
@@ -322,10 +328,13 @@ const Users = () => {
         </div>
       );
     });
-    
-    filters.major.forEach(major => {
+
+    filters.major.forEach((major) => {
       activeFilters.push(
-        <div key={`major-${major}`} className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-900">
+        <div
+          key={`major-${major}`}
+          className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-900"
+        >
           <span>Major: {major}</span>
           <Button
             variant="ghost"
@@ -338,10 +347,13 @@ const Users = () => {
         </div>
       );
     });
-    
-    filters.role.forEach(role => {
+
+    filters.role.forEach((role) => {
       activeFilters.push(
-        <div key={`role-${role}`} className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-900">
+        <div
+          key={`role-${role}`}
+          className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-900"
+        >
           <span>Role: {role}</span>
           <Button
             variant="ghost"
@@ -354,10 +366,13 @@ const Users = () => {
         </div>
       );
     });
-    
-    filters.paid.forEach(term => {
+
+    filters.paid.forEach((term) => {
       activeFilters.push(
-        <div key={`paid-${term}`} className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-900">
+        <div
+          key={`paid-${term}`}
+          className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-900"
+        >
           <span>Membership: {term}</span>
           <Button
             variant="ghost"
@@ -370,11 +385,9 @@ const Users = () => {
         </div>
       );
     });
-    
+
     return activeFilters.length > 0 ? (
-      <div className="flex flex-wrap gap-2 mt-4">
-        {activeFilters}
-      </div>
+      <div className="flex flex-wrap gap-2 mt-4">{activeFilters}</div>
     ) : null;
   };
 
@@ -442,7 +455,7 @@ const Users = () => {
             onChange={(values) => handleFilterChange('paid', values)}
           />
         </div>
-        
+
         {renderFilterChips()}
       </div>
 
