@@ -59,19 +59,19 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
     }
   ];
   return (
-    <div className="flex h-[800px]">
+    <div className="flex flex-col md:flex-row w-full min-h-[calc(100vh-4rem)]">
       <div
         className={clsx(
-          'relative flex flex-col border-r bg-background transition-all duration-300',
-          collapsed ? 'w-16' : 'w-44'
+          'relative flex flex-row md:flex-col border-b md:border-b-0 md:border-r bg-background transition-all duration-300',
+          collapsed ? 'w-full md:w-16' : 'w-full md:w-44'
         )}
       >
-        <div className="flex h-14 items-center border-b px-4">
-          {!collapsed && <h2>Admin</h2>}
+        <div className="flex items-center border-r md:border-r-0 md:border-b px-4 h-12 md:h-14">
+          {!collapsed && <h2 className="hidden md:block">Admin</h2>}
           <Button
             variant="ghost"
             size="icon"
-            className="ml-auto"
+            className="ml-auto hidden md:flex"
             onClick={() => setCollapsed(!collapsed)}
           >
             {collapsed ? <PanelLeftOpen /> : <PanelLeftClose />}
@@ -80,24 +80,26 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
         </div>
 
         <div className="flex-1 overflow-auto py-2">
-          <nav className="grid gap-1 px-2">
+          <nav className="grid grid-flow-col md:grid-flow-row gap-1 px-2">
             {navItems.map((item) => (
               <Link
                 key={item.title}
                 to={item.href}
                 className={clsx(
                   'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground',
-                  collapsed ? 'justify-center' : ''
+                  'justify-center md:justify-start'
                 )}
               >
                 <item.icon className="h-5 w-5" />
-                {!collapsed && <span>{item.title}</span>}
+                <span className="hidden md:inline md:block">{!collapsed && item.title}</span>
               </Link>
             ))}
           </nav>
         </div>
       </div>
-      <Page>{children}</Page>
+      <div className="flex-grow w-full overflow-auto">
+        <Page>{children}</Page>
+      </div>
     </div>
   );
 };

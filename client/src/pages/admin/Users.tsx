@@ -247,39 +247,39 @@ const Users = () => {
         <div className="text-red-500 p-4">Error loading users data</div>
       ) : users.length > 0 ? (
         <>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="w-full overflow-x-auto border rounded-md">
+            <table className="w-full table-auto divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Name
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Email
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Role
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Education
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Major
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Membership
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {users.map((user) => (
-                  <tr key={user.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{user.role}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{user.education_level}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{user.major}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{user.paid || 'None'}</td>
+                  <tr key={user.id} className="hover:bg-gray-50">
+                    <td className="px-3 md:px-6 py-4 text-sm">{user.name}</td>
+                    <td className="px-3 md:px-6 py-4 text-sm overflow-hidden text-ellipsis">{user.email}</td>
+                    <td className="px-3 md:px-6 py-4 text-sm">{user.role}</td>
+                    <td className="px-3 md:px-6 py-4 text-sm">{user.education_level}</td>
+                    <td className="px-3 md:px-6 py-4 text-sm overflow-hidden text-ellipsis">{user.major}</td>
+                    <td className="px-3 md:px-6 py-4 text-sm">{user.paid || 'None'}</td>
                   </tr>
                 ))}
               </tbody>

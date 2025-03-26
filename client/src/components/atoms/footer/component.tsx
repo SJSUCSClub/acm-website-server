@@ -7,11 +7,11 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ layout = 'column' }) => (
   <footer
-    className={`flex flex-col ${layout === 'row' ? '' : 'md:flex-row'} gap-y-4 justify-between items-center bg-white text-gray-400 text-center bottom-0 max-w-full place-content-center p-5 `}
+    className={`flex flex-col ${layout === 'row' ? '' : 'md:flex-row'} gap-y-4 justify-between items-center bg-white text-gray-400 text-center w-full p-5 relative`}
   >
     <img src={Logo} alt="Logo" width={100} className="sm:h-auto" />
 
-    <div className="text-center place-content-center max-w-[50%]">
+    <div className="text-center place-content-center max-w-full md:max-w-[50%]">
       <p className="text-center text-sm">
         ROOM MQH 227, SAN JOSE STATE UNIVERSITY 1 WASHINGTON SQ, SAN JOSE, CA 95192
       </p>
