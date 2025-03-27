@@ -21,11 +21,18 @@ export interface IProjectCardProps {
 }
 
 const ProjectCard: React.FC<IProjectCardProps> = ({ project }) => {
-  const state = useRouterState()
+  const state = useRouterState();
   return (
     <Card key={project.id}>
       <CardHeader>
-        <Link to={state.location.pathname.includes('/admin') ? '/admin/projects/$projectId' : '/projects/$projectId'} params={{ projectId: project.id.toString() }}>
+        <Link
+          to={
+            state.location.pathname.includes('/admin')
+              ? '/admin/projects/$projectId'
+              : '/projects/$projectId'
+          }
+          params={{ projectId: project.id.toString() }}
+        >
           <CardTitle>{project.name}</CardTitle>
         </Link>
         <CardDescription>

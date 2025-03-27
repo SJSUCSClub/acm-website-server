@@ -1,4 +1,4 @@
-import { paths } from "@/types/schema.v1";
+import { paths } from '@/types/schema.v1';
 
 type Project =
   paths['/v1/projects']['get']['responses']['200']['content']['application/json']['projects'][number];

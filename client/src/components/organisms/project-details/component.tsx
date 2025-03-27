@@ -5,7 +5,6 @@ import UsersTable from '@/components/molecules/users-table';
 import { Badge } from '@/components/ui/badge';
 import { useQuery } from '@/hooks/useFetch';
 import { getProjectStatusColor } from '@/utils/colors';
-import { Link } from '@tanstack/react-router';
 import React from 'react';
 import { RxGithubLogo } from 'react-icons/rx';
 
