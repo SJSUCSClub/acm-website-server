@@ -103,4 +103,4 @@ const UserDialog: React.FC<IUserDialogProps> = ({ user, children }) => {
   );
 };
 
-export default UserDialog;
+export { UserDialog };

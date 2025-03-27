@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/table';
 import { paths } from '@/types/schema.v1';
 import React from 'react';
-import { UserDialog } from '@/components/molecules/user-dialog';
+import UserDialog from '@/components/molecules/user-dialog';
 import Btn from '@/components/atoms/btn';
 
 type User =
@@ -75,4 +75,4 @@ const UsersTable: React.FC<IUsersTableProps> = ({ users }) => {
   );
 };
 
-export default UsersTable;
+export { UsersTable };
