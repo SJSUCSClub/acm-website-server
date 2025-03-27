@@ -19,8 +19,8 @@ function FilesTable({ files }: { files: Files }) {
       {files.length === 0 ? (
         <div className="text-text text-center my-10">No files found</div>
       ) : (
-        <Table>
-          <TableHeader>
+        <Table className="overflow-x-auto border rounded-md">
+          <TableHeader className="bg-gray-50">
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Date Added</TableHead>
