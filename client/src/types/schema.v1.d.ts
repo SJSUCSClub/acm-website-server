@@ -4232,10 +4232,10 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
-                        instagram: string | null;
-                        discord: string | null;
-                        linkedin: string | null;
-                        memberApplication: string | null;
+                        instagram?: string | null;
+                        linkedin?: string | null;
+                        discord?: string | null;
+                        memberApplication?: string | null;
                     };
                 };
             };
