@@ -25,6 +25,7 @@ import {
 	urls,
 	paymentLinks,
 	eventsEnum,
+	userRoleEnum,
 } from '@/db/schema';
 
 import { z } from 'zod';
@@ -120,4 +121,14 @@ export const spotlightSchema = z.object({
 	image: z.string(),
 	name: z.string(),
 	description: z.string(),
+});
+
+export const userFilterSchema = z.object({
+	name: z.string().optional(),
+	education_level: z.array(z.enum(educationLevelEnum.enumValues)).optional(),
+	major: z.array(z.string()).optional(),
+	role: z.array(z.enum(userRoleEnum.enumValues)).optional(),
+	paid: z.array(z.enum(membershipTermEnum.enumValues)).optional(),
+	page: z.string().optional(),
+	per_page: z.string().optional(),
 });

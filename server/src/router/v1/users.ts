@@ -41,6 +41,7 @@ import {
   subscribedCompanySchema,
   attendingEventSchema,
   bookmarkedEventSchema,
+  userFilterSchema,
 } from '@/util/zod';
 
 const userRouter = new OpenAPIHono<Context>();
@@ -53,15 +54,7 @@ userRouter.openapi(
     summary: 'Admin List all users',
     middleware: [authMiddleWare('admin')],
     request: {
-      query: z.object({
-        name: z.string().optional(),
-        education_level: z.array(z.enum(educationLevelEnum.enumValues)).optional(),
-        major: z.array(z.string()).optional(),
-        role: z.array(z.enum(userRoleEnum.enumValues)).optional(),
-        paid: z.array(z.enum(membershipTermEnum.enumValues)).optional(),
-        page: z.string().optional(),
-        per_page: z.string().optional(),
-      }),
+      query: userFilterSchema,
     },
     responses: {
       [HttpStatusCodes.OK]: {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useQuery } from '@/hooks/useFetch';
 import { paths } from '@/types/schema.v1';
 import { Button } from '@/components/ui/button';
@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import Spinner from '@/components/atoms/spinner';
 
 type MajorsResponse = paths['/v1/majors']['get']['responses']['200']['content']['application/json'];
 type EnumResponse =
@@ -48,7 +49,6 @@ const Users = () => {
     paid: []
   });
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(20);
   const [nameSearch, setNameSearch] = useState('');
 
@@ -167,11 +167,12 @@ const Users = () => {
     }
   });
 
-  // Update totalPages when data changes
-  React.useEffect(() => {
+  // Calculate total pages using useMemo
+  const totalPages = useMemo(() => {
     if (data) {
-      setTotalPages(Math.ceil((data as UsersResponse).total / itemsPerPage));
+      return Math.ceil((data as UsersResponse).total / itemsPerPage);
     }
+    return 1;
   }, [data, itemsPerPage]);
 
   // Handle changing items per page
@@ -241,7 +242,7 @@ const Users = () => {
     const [filteredOptions, setFilteredOptions] = useState(options);
 
     // Update filtered options when options prop changes
-    React.useEffect(() => {
+    useEffect(() => {
       setFilteredOptions(options);
     }, [options]);
 
@@ -538,9 +539,7 @@ const Users = () => {
       </div>
 
       {isLoading ? (
-        <div className="flex justify-center p-8">
-          <div className="animate-spin h-8 w-8 border-4 border-blue-500 rounded-full border-t-transparent"></div>
-        </div>
+        <Spinner />
       ) : error ? (
         <div className="text-red-500 p-4">Error loading users data</div>
       ) : users.length > 0 ? (
