@@ -6,6 +6,7 @@ import GetInvolvedBtn from '../components/molecules/get-involved-btn';
 import SocialBtn from '../components/molecules/social-btn';
 import Page from '../components/templates/Page';
 import { useQuery } from '@/hooks/useFetch';
+import Faq from '@/components/organisms/faq';
 
 const Hero = () => {
   const { data: links } = useQuery('get', '/v1/club/links');
@@ -150,8 +151,11 @@ const Hero = () => {
             </div>
           </div>
         )}
-        <div className="flex justify-center items-center pt-12">
+        <div className="flex justify-center items-center py-12 border-y-2">
           <GetInvolvedBtn />
+        </div>
+        <div className="mt-5">
+          <Faq />
         </div>
       </div>
     </Page>

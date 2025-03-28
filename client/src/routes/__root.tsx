@@ -43,7 +43,6 @@ const RootComponent = () => {
           <Outlet />
         </div>
         <div className="w-full">
-          <Faq />
           <Footer />
         </div>
       </div>
