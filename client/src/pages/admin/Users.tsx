@@ -6,23 +6,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ChevronsUpDown, X } from 'lucide-react';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious
-} from '@/components/ui/pagination';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
 import Spinner from '@/components/atoms/spinner';
+import UsersTable from '@/components/molecules/users-table';
+import DataTablePagination from '@/components/molecules/data-table-pagination';
 
 type MajorsResponse = paths['/v1/majors']['get']['responses']['200']['content']['application/json'];
 type EnumResponse =
@@ -136,7 +122,7 @@ const Users = () => {
   }, [filters]);
 
   // Create a wrapper function that converts array values into the correct format for the API
-  const createArrayParam = <T extends string>(values: T[]): T | T[] | undefined => {
+  const createArrayParam = <T extends string>(values: T[]): T[] | undefined => {
     return values.length > 0 ? values : undefined;
   };
 
@@ -176,8 +162,8 @@ const Users = () => {
   }, [data, itemsPerPage]);
 
   // Handle changing items per page
-  const handleItemsPerPageChange = (value: string) => {
-    setItemsPerPage(Number(value));
+  const handleItemsPerPageChange = (value: number) => {
+    setItemsPerPage(value);
     setCurrentPage(1); // Reset to first page when changing items per page
   };
 
@@ -544,114 +530,15 @@ const Users = () => {
         <div className="text-red-500 p-4">Error loading users data</div>
       ) : users.length > 0 ? (
         <>
-          <div className="w-full overflow-x-auto border rounded-md">
-            <table className="w-full table-auto divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Email
-                  </th>
-                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Role
-                  </th>
-                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Education
-                  </th>
-                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Major
-                  </th>
-                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Membership
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {users.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50">
-                    <td className="px-3 md:px-6 py-4 text-sm">{user.name}</td>
-                    <td className="px-3 md:px-6 py-4 text-sm overflow-hidden text-ellipsis">
-                      {user.email}
-                    </td>
-                    <td className="px-3 md:px-6 py-4 text-sm">{user.role}</td>
-                    <td className="px-3 md:px-6 py-4 text-sm">{user.education_level}</td>
-                    <td className="px-3 md:px-6 py-4 text-sm overflow-hidden text-ellipsis">
-                      {user.major}
-                    </td>
-                    <td className="px-3 md:px-6 py-4 text-sm">{user.paid || 'None'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 items-center gap-4 sm:gap-0">
-            <div className="flex justify-center sm:justify-start items-center space-x-2">
-              <span className="text-sm text-gray-500 whitespace-nowrap">Items per page:</span>
-              <Select value={itemsPerPage.toString()} onValueChange={handleItemsPerPageChange}>
-                <SelectTrigger className="w-20 h-8">
-                  <SelectValue placeholder="20" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="20">20</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex justify-center">
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-                      disabled={currentPage === 1}
-                    />
-                  </PaginationItem>
-
-                  {[...Array(totalPages)].map((_, i) => {
-                    const page = i + 1;
-                    const isWithinRange =
-                      page === 1 ||
-                      page === totalPages ||
-                      (page >= currentPage - 1 && page <= currentPage + 1);
-
-                    if (!isWithinRange) {
-                      if (page === 2 || page === totalPages - 1) {
-                        return (
-                          <PaginationItem key={page}>
-                            <PaginationEllipsis />
-                          </PaginationItem>
-                        );
-                      }
-                      return null;
-                    }
-
-                    return (
-                      <PaginationItem key={page}>
-                        <PaginationLink
-                          isActive={page === currentPage}
-                          onClick={() => setCurrentPage(page)}
-                        >
-                          {page}
-                        </PaginationLink>
-                      </PaginationItem>
-                    );
-                  })}
-
-                  <PaginationItem>
-                    <PaginationNext
-                      onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
-                      disabled={currentPage === totalPages}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </div>
-            <div className="hidden sm:block"></div> {/* Empty div for the 3-column grid */}
-          </div>
+          <UsersTable users={users} />
+          <DataTablePagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            itemsPerPage={itemsPerPage}
+            onPageChange={setCurrentPage}
+            onItemsPerPageChange={handleItemsPerPageChange}
+            itemsPerPageOptions={[10, 20, 50]}
+          />
         </>
       ) : (
         <div>No users found</div>
