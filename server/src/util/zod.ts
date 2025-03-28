@@ -100,6 +100,12 @@ export const officerSchema = createSelectSchema(officers);
 export const newBlacklistSchema = createInsertSchema(blacklist);
 export const blacklistSchema = createSelectSchema(blacklist);
 export const clubLinkSchema = createSelectSchema(clubLinks);
+export const updateClubLinkSchema = z.object({
+  instagram: clubLinkSchema.shape.instagram.optional(),
+	linkedin: clubLinkSchema.shape.linkedin.optional(),
+	discord:  clubLinkSchema.shape.discord.optional(),
+	memberApplication:  clubLinkSchema.shape.memberApplication.optional(),
+});
 export const landingSpotlightSchema = createSelectSchema(landingSpotlights);
 export const landingQuestionSchema = createSelectSchema(landingQuestions);
 export const errorSchema = z.object({
