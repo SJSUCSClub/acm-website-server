@@ -2540,6 +2540,7 @@ export interface paths {
                     eventTypes?: string;
                     targetAudience?: string;
                     timeframe?: "upcoming" | "today" | "past" | "all";
+                    memberOnly?: "true" | "false";
                 };
                 header?: never;
                 path?: never;
