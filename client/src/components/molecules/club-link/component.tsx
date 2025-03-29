@@ -73,7 +73,6 @@ const EditLink: React.FC<IEditLinkProps> = ({ link, type, setEdit, setLink }) =>
       link
     },
     onSubmit: ({ value }) => {
-      console.log(value);
       mutate(
         {
           body: {
@@ -82,7 +81,6 @@ const EditLink: React.FC<IEditLinkProps> = ({ link, type, setEdit, setLink }) =>
         },
         {
           onSuccess: () => {
-            console.log('success');
             setLink(value.link);
             setEdit(false);
           },
