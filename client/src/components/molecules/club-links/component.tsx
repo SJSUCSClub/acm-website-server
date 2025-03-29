@@ -12,7 +12,7 @@ const ClubLinks = () => {
       ) : !data || error ? (
         <p>Error loading club links</p>
       ) : (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <ClubLink link={data.links.discord || ''} type="discord" />
           <ClubLink link={data.links.instagram || ''} type="instagram" />
           <ClubLink link={data.links.linkedin || ''} type="linkedin" />
