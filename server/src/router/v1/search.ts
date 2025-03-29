@@ -57,6 +57,7 @@ searchRouter.openapi(
     }
     const eventRes = await db
       .select({
+        id: events.id,
         name: events.name,
         type: sql<string>`'event'`.as("type"),
         similarity: sql<number>`similarity(name, ${searchQuery})`,
@@ -65,6 +66,7 @@ searchRouter.openapi(
       .where(sql`${searchQuery} % name`);
     const projectRes = await db
       .select({
+        id: projects.id,
         name: projects.name,
         type: sql<string>`'project'`.as("type"),
         similarity: sql<number>`similarity(name, ${searchQuery})`,
@@ -73,6 +75,7 @@ searchRouter.openapi(
       .where(sql`${searchQuery} % name`);
     const companyRes = await db
       .select({
+        id: companies.id,
         name: companies.name,
         type: sql<string>`'company'`.as("type"),
         similarity: sql<number>`similarity(name, ${searchQuery})`,

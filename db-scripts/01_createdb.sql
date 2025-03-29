@@ -4,6 +4,7 @@ WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'acm_website')\gexec
 \c acm_website;
 
 create extension if not exists pg_trgm;
+set pg_trgm.similarity_threshold = 0.2;
 
 create type events_enum as enum ('Workshop', 'Seminar', 'Hackathon', 'Conference', 'Meetup', 'Tech Talk', 'Other');
 create type cs_fields_enum as enum ('Web Development', 'Machine Learning', 'Cloud Computing', 'Artificial Intelligence', 'Networking', 'Cybersecurity', 'Mobile Development', 'Game Development', 'Data Science');
