@@ -84,7 +84,6 @@ create table if not exists equipment_rentals(
    user_id text,
    date_borrowed date not null default current_date,
    return_date date not null,
---   price money not null,
    price numeric(10,2) not null,
    condition equipment_condition_enum not null default 'Ready',
    PRIMARY KEY(user_id, item_id),
@@ -275,10 +274,10 @@ create table if not exists payment_links(
    PRIMARY KEY(id)
 );
 
-create index projects_name_trgm_idx on projects using gin (name gin_trgm_ops);
-create index companies_name_trgm_idx on companies using gin (name gin_trgm_ops);
-create index events_name_trgm_idx on events using gin (name gin_trgm_ops);
-create index equipment_type_trgm_idx on equipment_rental_type using gin (name gin_trgm_ops);
+create index projects_name_trgm_idx on projects using gist (name gist_trgm_ops);
+create index companies_name_trgm_idx on companies using gist (name gist_trgm_ops);
+create index events_name_trgm_idx on events using gist (name gist_trgm_ops);
+create index equipment_type_trgm_idx on equipment_rental_type using gist (name gist_trgm_ops);
 
 create or replace function get_event_attendance(current_event_id integer)
 RETURNS integer AS $$
