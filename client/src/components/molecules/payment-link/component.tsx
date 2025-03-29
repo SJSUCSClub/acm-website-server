@@ -20,7 +20,7 @@ export interface IReadLinkProps extends IPaymentLinkProps {
   setEdit: (edit: boolean) => void;
 }
 
-export interface IEditLinkProps extends Omit<IPaymentLinkProps, "handleDelete"> {
+export interface IEditLinkProps extends Omit<IPaymentLinkProps, 'handleDelete'> {
   setEdit: (edit: boolean) => void;
   setPayment: (payment: PaymentLink) => void;
 }

@@ -1,5 +1,5 @@
 import { paths } from '@/types/schema.v1';
-import Card, { CardContent, CardHeader } from '@/components/atoms/card';
+import Card, { CardHeader } from '@/components/atoms/card';
 import React from 'react';
 
 type Spotlight =

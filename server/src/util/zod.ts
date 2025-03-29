@@ -1,4 +1,4 @@
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import {
 	educationLevelEnum,
 	projects,
@@ -28,7 +28,7 @@ import {
 	userRoleEnum,
 } from '@/db/schema';
 
-import { z } from "zod";
+import { z } from 'zod';
 
 export const companySchema = createSelectSchema(companies);
 export const subscribedCompanySchema = createSelectSchema(subscribedCompanies);
@@ -40,7 +40,7 @@ export const eventSchema = createSelectSchema(events).extend({
   urls: z.array(z.string()),
 });
 export const csFieldsEnumSchema = z.enum(csFieldsEnum.enumValues);
-export const timestampEnumSchema = z.enum(["upcoming", "today", "past", "all"]);
+export const timestampEnumSchema = z.enum(['upcoming', 'today', 'past', 'all']);
 export const userSchema = createSelectSchema(users).extend({
   interests: z.array(z.enum(csFieldsEnum.enumValues)),
 });
@@ -91,8 +91,8 @@ export const sponsorSchema = createSelectSchema(sponsors);
 export const equipmentTypeIdSchema = z.object({
   equipmentTypeId: z.string().openapi({
     param: {
-      name: "equipmentTypeId",
-      in: "path",
+      name: 'equipmentTypeId',
+      in: 'path',
     },
   }),
 });
@@ -120,8 +120,8 @@ export const updatePaymentLinkSchema = z.object({
 export const paymentIdSchema = z.object({
   paymentId: z.string().openapi({
     param: {
-      name: "paymentId",
-      in: "path",
+      name: 'paymentId',
+      in: 'path',
     },
   }),
 });

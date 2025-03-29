@@ -19,7 +19,7 @@ const SpotlightList = () => {
       ) : !data || error ? (
         <p>Error loading sponsors</p>
       ) : data.spotlights.length === 0 ? (
-        <p className='text-center'>No spotlights</p>
+        <p className="text-center">No spotlights</p>
       ) : (
         <Carousel>
           <CarouselContent>

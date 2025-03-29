@@ -1,12 +1,11 @@
 import Spinner from '@/components/atoms/spinner';
 import { useMutation, useQuery } from '@/hooks/useFetch';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PaymentLink from '@/components/molecules/payment-link';
 import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -16,7 +15,6 @@ import Btn from '@/components/atoms/btn';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from '@tanstack/react-form';
-import { DialogProps } from '@radix-ui/react-dialog';
 
 interface ICreatePaymentLinksProps {
   handleCreate: (payment: PaymentLink) => void;

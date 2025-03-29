@@ -1,50 +1,50 @@
-import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
-import { z } from "zod";
-import * as HttpStatusCodes from "stoker/http-status-codes";
+import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
+import { z } from 'zod';
+import * as HttpStatusCodes from 'stoker/http-status-codes';
 
-import type { Context } from "@/lib/context";
-import { db } from "@/db/db";
-import { paymentLinks } from "@/db/schema";
-import type { PaymentLink } from "@/db/schema";
+import type { Context } from '@/lib/context';
+import { db } from '@/db/db';
+import { paymentLinks } from '@/db/schema';
+import type { PaymentLink } from '@/db/schema';
 import {
   paymentIdSchema,
   paymentLinkSchema,
   newPaymentLinkSchema,
   updatePaymentLinkSchema,
-} from "@/util/zod";
+} from '@/util/zod';
 import {
   authMiddleWare,
   unauthorizedRequest,
   forbiddenRequest,
-} from "@/middlewares/auth-middleware";
-import { eq } from "drizzle-orm";
+} from '@/middlewares/auth-middleware';
+import { eq } from 'drizzle-orm';
 
 const paymentRouter = new OpenAPIHono<Context>();
 
 paymentRouter.openapi(
   createRoute({
-    method: "get",
-    path: "/",
-    tags: ["payments"],
-    summary: "Get all payment links",
+    method: 'get',
+    path: '/',
+    tags: ['payments'],
+    summary: 'Get all payment links',
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               paymentLinks: z.array(paymentLinkSchema),
             }),
           },
         },
-        description: "List of all payment links",
+        description: 'List of all payment links',
       },
       [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({ error: z.string() }),
           },
         },
-        description: "Failed to get payment links",
+        description: 'Failed to get payment links',
       },
     },
   }),
@@ -63,15 +63,15 @@ paymentRouter.openapi(
 
 paymentRouter.openapi(
   createRoute({
-    method: "post",
-    path: "/",
-    tags: ["payments"],
-    summary: "Create payment link",
-    middleware: [authMiddleWare("admin")],
+    method: 'post',
+    path: '/',
+    tags: ['payments'],
+    summary: 'Create payment link',
+    middleware: [authMiddleWare('admin')],
     request: {
       body: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: newPaymentLinkSchema,
           },
         },
@@ -80,21 +80,21 @@ paymentRouter.openapi(
     responses: {
       [HttpStatusCodes.CREATED]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               paymentLink: paymentLinkSchema,
             }),
           },
         },
-        description: "User successfully blacklisted",
+        description: 'User successfully blacklisted',
       },
       [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({ error: z.string() }),
           },
         },
-        description: "Failed to create payment link",
+        description: 'Failed to create payment link',
       },
     },
     ...unauthorizedRequest,
@@ -102,7 +102,7 @@ paymentRouter.openapi(
   }),
   async (c) => {
     try {
-      const { name, link } = c.req.valid("json");
+      const { name, link } = c.req.valid('json');
       const newPaymentLink = await db
         .insert(paymentLinks)
         .values({ name, link })
@@ -111,7 +111,7 @@ paymentRouter.openapi(
 
       if (newPaymentLink.length === 0) {
         return c.json(
-          { error: "Failed to create payment link" },
+          { error: 'Failed to create payment link' },
           HttpStatusCodes.INTERNAL_SERVER_ERROR,
         );
       }
@@ -131,16 +131,16 @@ paymentRouter.openapi(
 
 paymentRouter.openapi(
   createRoute({
-    method: "put",
-    path: "/{paymentId}",
-    tags: ["payments"],
-    summary: "Update a payment link",
-    middleware: [authMiddleWare("admin")],
+    method: 'put',
+    path: '/{paymentId}',
+    tags: ['payments'],
+    summary: 'Update a payment link',
+    middleware: [authMiddleWare('admin')],
     request: {
       params: paymentIdSchema,
       body: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: updatePaymentLinkSchema,
           },
         },
@@ -148,23 +148,23 @@ paymentRouter.openapi(
     },
     responses: {
       [HttpStatusCodes.NO_CONTENT]: {
-        description: "Payment link updated",
+        description: 'Payment link updated',
       },
       [HttpStatusCodes.NOT_FOUND]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({ error: z.string() }),
           },
         },
-        description: "Payment link not found",
+        description: 'Payment link not found',
       },
       [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({ error: z.string() }),
           },
         },
-        description: "Failed to update payment link",
+        description: 'Failed to update payment link',
       },
     },
     ...unauthorizedRequest,
@@ -172,8 +172,8 @@ paymentRouter.openapi(
   }),
   async (c) => {
     try {
-      const { paymentId } = c.req.valid("param");
-      const body = c.req.valid("json");
+      const { paymentId } = c.req.valid('param');
+      const body = c.req.valid('json');
 
       const updatedPaymentLink = await db
         .update(paymentLinks)
@@ -183,12 +183,12 @@ paymentRouter.openapi(
 
       if (updatedPaymentLink.length === 0) {
         return c.json(
-          { error: "Payment link not found" },
+          { error: 'Payment link not found' },
           HttpStatusCodes.NOT_FOUND,
         );
       }
 
-      return c.text("", HttpStatusCodes.NO_CONTENT);
+      return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
       return c.json(
         { error: `Failed to update payment link: ${error}` },
@@ -200,33 +200,33 @@ paymentRouter.openapi(
 
 paymentRouter.openapi(
   createRoute({
-    method: "delete",
-    path: "/{paymentId}",
-    tags: ["payments"],
-    summary: "Delete a payment link",
-    middleware: [authMiddleWare("admin")],
+    method: 'delete',
+    path: '/{paymentId}',
+    tags: ['payments'],
+    summary: 'Delete a payment link',
+    middleware: [authMiddleWare('admin')],
     request: {
       params: paymentIdSchema,
     },
     responses: {
       [HttpStatusCodes.NO_CONTENT]: {
-        description: "Payment link deleted",
+        description: 'Payment link deleted',
       },
       [HttpStatusCodes.NOT_FOUND]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({ error: z.string() }),
           },
         },
-        description: "Payment link not found",
+        description: 'Payment link not found',
       },
       [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({ error: z.string() }),
           },
         },
-        description: "Failed to delete payment link",
+        description: 'Failed to delete payment link',
       },
     },
     ...unauthorizedRequest,
@@ -234,7 +234,7 @@ paymentRouter.openapi(
   }),
   async (c) => {
     try {
-      const { paymentId } = c.req.valid("param");
+      const { paymentId } = c.req.valid('param');
       const deletedPaymentLink = await db
         .delete(paymentLinks)
         .where(eq(paymentLinks.id, parseInt(paymentId)))
@@ -242,11 +242,11 @@ paymentRouter.openapi(
 
       if (deletedPaymentLink.length === 0) {
         return c.json(
-          { error: "Payment link not found" },
+          { error: 'Payment link not found' },
           HttpStatusCodes.NOT_FOUND,
         );
       }
-      return c.text("", HttpStatusCodes.NO_CONTENT);
+      return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
       return c.json(
         { error: `Failed to delete payment link: ${error}` },

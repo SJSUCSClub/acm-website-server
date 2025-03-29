@@ -5,8 +5,7 @@ import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
 import '../globals.css';
 import Footer from '../components/atoms/footer';
-import { NavBar } from '../components/organisms/navbar';
-import Faq from '../components/organisms/faq';
+import NavBar from '../components/organisms/navbar';
 import 'acm-cs-sjsu-hero-component/dist/styles.css';
 
 const queryClient = new QueryClient();

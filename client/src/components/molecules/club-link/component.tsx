@@ -2,7 +2,7 @@ import Btn from '@/components/atoms/btn';
 import { Check, ExternalLink, Pencil, X } from 'lucide-react';
 import React, { useState } from 'react';
 import { RxDiscordLogo, RxFile, RxInstagramLogo, RxLinkedinLogo } from 'react-icons/rx';
-import {  useForm } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
 import { Input } from '@/components/ui/input';
 import { useMutation } from '@/hooks/useFetch';
 import { toast } from 'sonner';

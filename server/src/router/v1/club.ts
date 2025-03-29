@@ -1,50 +1,49 @@
-import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
-import { z } from "zod";
-import * as HttpStatusCodes from "stoker/http-status-codes";
+import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
+import { z } from 'zod';
+import * as HttpStatusCodes from 'stoker/http-status-codes';
 
-import type { Context } from "@/lib/context";
-import { db } from "@/db/db";
+import type { Context } from '@/lib/context';
+import { db } from '@/db/db';
 import {
   clubLinks,
   events,
   landingQuestions,
   landingSpotlights,
-} from "@/db/schema";
-import type { ClubLink, LandingQuestion } from "@/db/schema";
+} from '@/db/schema';
+import type { ClubLink, LandingQuestion } from '@/db/schema';
 import {
   clubLinkSchema,
   landingQuestionSchema,
   landingSpotlightSchema,
   spotlightSchema,
   updateClubLinkSchema,
-} from "@/util/zod";
-import { eq } from "drizzle-orm";
+} from '@/util/zod';
+import { eq } from 'drizzle-orm';
 import {
   authMiddleWare,
   forbiddenRequest,
   unauthorizedRequest,
-} from "@/middlewares/auth-middleware";
-import { env } from "@/env";
-import { generateObjectUrl } from "@/lib/aws/s3";
+} from '@/middlewares/auth-middleware';
+import { generateObjectUrl } from '@/lib/aws/s3';
 
 const clubRouter = new OpenAPIHono<Context>();
 
 clubRouter.openapi(
   createRoute({
-    method: "get",
-    path: "/links",
-    tags: ["club"],
-    summary: "List all club links",
+    method: 'get',
+    path: '/links',
+    tags: ['club'],
+    summary: 'List all club links',
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               links: clubLinkSchema,
             }),
           },
         },
-        description: "Successful response",
+        description: 'Successful response',
       },
     },
   }),
@@ -56,40 +55,40 @@ clubRouter.openapi(
 
 clubRouter.openapi(
   createRoute({
-    method: "put",
-    path: "/links",
-    tags: ["club"],
-    summary: "Update club link",
-    middleware: [authMiddleWare("admin")],
+    method: 'put',
+    path: '/links',
+    tags: ['club'],
+    summary: 'Update club link',
+    middleware: [authMiddleWare('admin')],
     request: {
       body: {
         content: {
-          "application/json": {
-            schema: updateClubLinkSchema
+          'application/json': {
+            schema: updateClubLinkSchema,
           },
         },
       },
     },
     responses: {
       [HttpStatusCodes.NO_CONTENT]: {
-        description: "No content",
+        description: 'No content',
       },
       [HttpStatusCodes.CONFLICT]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               error: z.string(),
             }),
           },
         },
-        description: "Conflict",
+        description: 'Conflict',
       },
       ...unauthorizedRequest,
       ...forbiddenRequest,
     },
   }),
   async (c) => {
-    const body = c.req.valid("json");
+    const body = c.req.valid('json');
 
     const newLinks = await db
       .update(clubLinks)
@@ -98,30 +97,30 @@ clubRouter.openapi(
       .returning();
     if (newLinks.length === 0) {
       return c.json(
-        { error: "Club link not updated" },
+        { error: 'Club link not updated' },
         HttpStatusCodes.CONFLICT,
       );
     }
-    return c.text("", HttpStatusCodes.NO_CONTENT);
+    return c.text('', HttpStatusCodes.NO_CONTENT);
   },
 );
 
 clubRouter.openapi(
   createRoute({
-    method: "get",
-    path: "/spotlights",
-    tags: ["club"],
-    summary: "List all spotlights",
+    method: 'get',
+    path: '/spotlights',
+    tags: ['club'],
+    summary: 'List all spotlights',
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               spotlights: z.array(spotlightSchema),
             }),
           },
         },
-        description: "Successful response",
+        description: 'Successful response',
       },
     },
   }),
@@ -146,15 +145,15 @@ clubRouter.openapi(
 
 clubRouter.openapi(
   createRoute({
-    method: "post",
-    path: "/spotlights",
-    tags: ["club"],
-    summary: "Create club spotlight",
-    middleware: [authMiddleWare("admin")],
+    method: 'post',
+    path: '/spotlights',
+    tags: ['club'],
+    summary: 'Create club spotlight',
+    middleware: [authMiddleWare('admin')],
     request: {
       body: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: landingSpotlightSchema.omit({ id: true }),
           },
         },
@@ -163,30 +162,30 @@ clubRouter.openapi(
     responses: {
       [HttpStatusCodes.CREATED]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               spotlight: landingSpotlightSchema,
             }),
           },
         },
-        description: "Create spotlight",
+        description: 'Create spotlight',
       },
       [HttpStatusCodes.CONFLICT]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               error: z.string(),
             }),
           },
         },
-        description: "Conflict",
+        description: 'Conflict',
       },
       ...unauthorizedRequest,
       ...forbiddenRequest,
     },
   }),
   async (c) => {
-    const body = c.req.valid("json");
+    const body = c.req.valid('json');
 
     const newSpotlight = await db
       .insert(landingSpotlights)
@@ -194,7 +193,7 @@ clubRouter.openapi(
       .returning();
     if (newSpotlight.length === 0) {
       return c.json(
-        { error: "Spotlight not created" },
+        { error: 'Spotlight not created' },
         HttpStatusCodes.CONFLICT,
       );
     }
@@ -204,18 +203,18 @@ clubRouter.openapi(
 
 clubRouter.openapi(
   createRoute({
-    method: "put",
-    path: "/spotlights/{spotlightID}",
-    tags: ["club"],
-    summary: "Update club spotlight",
-    middleware: [authMiddleWare("admin")],
+    method: 'put',
+    path: '/spotlights/{spotlightID}',
+    tags: ['club'],
+    summary: 'Update club spotlight',
+    middleware: [authMiddleWare('admin')],
     request: {
       params: z.object({
         spotlightID: z.string(),
       }),
       body: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: landingSpotlightSchema.omit({ id: true }),
           },
         },
@@ -223,25 +222,25 @@ clubRouter.openapi(
     },
     responses: {
       [HttpStatusCodes.NO_CONTENT]: {
-        description: "No content",
+        description: 'No content',
       },
       [HttpStatusCodes.CONFLICT]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               error: z.string(),
             }),
           },
         },
-        description: "Conflict",
+        description: 'Conflict',
       },
       ...unauthorizedRequest,
       ...forbiddenRequest,
     },
   }),
   async (c) => {
-    const { spotlightID } = c.req.valid("param");
-    const body = c.req.valid("json");
+    const { spotlightID } = c.req.valid('param');
+    const body = c.req.valid('json');
 
     const newSpotlight = await db
       .update(landingSpotlights)
@@ -250,30 +249,30 @@ clubRouter.openapi(
       .returning();
     if (newSpotlight.length === 0) {
       return c.json(
-        { error: "Spotlight not updated" },
+        { error: 'Spotlight not updated' },
         HttpStatusCodes.CONFLICT,
       );
     }
-    return c.text("", HttpStatusCodes.NO_CONTENT);
+    return c.text('', HttpStatusCodes.NO_CONTENT);
   },
 );
 
 clubRouter.openapi(
   createRoute({
-    method: "get",
-    path: "/questions",
-    tags: ["club"],
-    summary: "List all questions",
+    method: 'get',
+    path: '/questions',
+    tags: ['club'],
+    summary: 'List all questions',
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               questions: z.array(landingQuestionSchema),
             }),
           },
         },
-        description: "Successful response",
+        description: 'Successful response',
       },
     },
   }),
@@ -287,15 +286,15 @@ clubRouter.openapi(
 
 clubRouter.openapi(
   createRoute({
-    method: "post",
-    path: "/questions",
-    tags: ["club"],
-    summary: "Create club question",
-    middleware: [authMiddleWare("admin")],
+    method: 'post',
+    path: '/questions',
+    tags: ['club'],
+    summary: 'Create club question',
+    middleware: [authMiddleWare('admin')],
     request: {
       body: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: landingQuestionSchema.omit({ id: true }),
           },
         },
@@ -304,30 +303,30 @@ clubRouter.openapi(
     responses: {
       [HttpStatusCodes.CREATED]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               question: landingQuestionSchema,
             }),
           },
         },
-        description: "Create question",
+        description: 'Create question',
       },
       [HttpStatusCodes.CONFLICT]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               error: z.string(),
             }),
           },
         },
-        description: "Conflict",
+        description: 'Conflict',
       },
       ...unauthorizedRequest,
       ...forbiddenRequest,
     },
   }),
   async (c) => {
-    const body = c.req.valid("json");
+    const body = c.req.valid('json');
 
     const newQuestion = await db
       .insert(landingQuestions)
@@ -335,7 +334,7 @@ clubRouter.openapi(
       .returning();
     if (newQuestion.length === 0) {
       return c.json(
-        { error: "Question not created" },
+        { error: 'Question not created' },
         HttpStatusCodes.CONFLICT,
       );
     }
@@ -345,18 +344,18 @@ clubRouter.openapi(
 
 clubRouter.openapi(
   createRoute({
-    method: "put",
-    path: "/questions/{questionID}",
-    tags: ["club"],
-    summary: "Update club question",
-    middleware: [authMiddleWare("admin")],
+    method: 'put',
+    path: '/questions/{questionID}',
+    tags: ['club'],
+    summary: 'Update club question',
+    middleware: [authMiddleWare('admin')],
     request: {
       params: z.object({
         questionID: z.string(),
       }),
       body: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: landingQuestionSchema.omit({ id: true }),
           },
         },
@@ -364,25 +363,25 @@ clubRouter.openapi(
     },
     responses: {
       [HttpStatusCodes.NO_CONTENT]: {
-        description: "No content",
+        description: 'No content',
       },
       [HttpStatusCodes.CONFLICT]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               error: z.string(),
             }),
           },
         },
-        description: "Conflict",
+        description: 'Conflict',
       },
       ...unauthorizedRequest,
       ...forbiddenRequest,
     },
   }),
   async (c) => {
-    const { questionID } = c.req.valid("param");
-    const body = c.req.valid("json");
+    const { questionID } = c.req.valid('param');
+    const body = c.req.valid('json');
 
     const newQuestion = await db
       .update(landingQuestions)
@@ -391,11 +390,11 @@ clubRouter.openapi(
       .returning();
     if (newQuestion.length === 0) {
       return c.json(
-        { error: "Question not updated" },
+        { error: 'Question not updated' },
         HttpStatusCodes.CONFLICT,
       );
     }
-    return c.text("", HttpStatusCodes.NO_CONTENT);
+    return c.text('', HttpStatusCodes.NO_CONTENT);
   },
 );
 
