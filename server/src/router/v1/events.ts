@@ -214,6 +214,7 @@ eventRouter.openapi(
         eventTypes: z.string().optional(),
         targetAudience: targetAudienceEnumSchema.optional(),
         timeframe: timestampEnumSchema.optional(),
+        memberOnly: z.union([z.literal('true'), z.literal('false')]).optional(),
       }),
     },
     responses: {
@@ -235,6 +236,7 @@ eventRouter.openapi(
       timeframe = 'all',
       eventTypes = '',
       targetAudience = 'All',
+      memberOnly,
     } = c.req.valid('query');
 
     const conditions = [];
@@ -282,6 +284,10 @@ eventRouter.openapi(
       targetAudienceEnumSchema._def.values.includes(targetAudience)
     ) {
       conditions.push(eq(events.targetAudience, targetAudience));
+    }
+
+    if (memberOnly === 'true') {
+      conditions.push(eq(events.memberOnly, true));
     }
 
     const foundEvents: Event[] = await db

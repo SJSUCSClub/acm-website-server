@@ -4,6 +4,7 @@ import BtnDateFilter from '@/components/molecules/btn-date-filter';
 import BtnTagFilter from '@/components/molecules/btn-tag-filter';
 import BtnEventTypeFilter from '@/components/molecules/btn-event-type-filter';
 import BtnTargetAudienceFilter from '@/components/molecules/btn-target-audience-filter';
+import BtnMemberOnlyFilter from '@/components/molecules/btn-member-only-filter';
 import { useQuery } from '@/hooks/useFetch';
 import { paths } from '@/types/schema.v1';
 
@@ -16,6 +17,7 @@ const EventsPage = () => {
   const [tagFilter, setTagFilter] = useState<string[]>([]);
   const [eventTypeFilter, setEventTypeFilter] = useState<string[]>([]);
   const [targetAudienceFilter, setTargetAudienceFilter] = useState<string>('All');
+  const [memberOnlyFilter, setMemberOnlyFilter] = useState<boolean>(false);
 
   const { data: eventData } = useQuery('get', '/v1/events', {
     params: {
@@ -23,7 +25,8 @@ const EventsPage = () => {
         tags: tagFilter.join(',') || '',
         timeframe: dateFilter || 'all',
         eventTypes: eventTypeFilter.join(',') || '',
-        targetAudience: targetAudienceFilter || 'All'
+        targetAudience: targetAudienceFilter || 'All',
+        memberOnly: memberOnlyFilter
       }
     }
   });
@@ -50,6 +53,7 @@ const EventsPage = () => {
           <BtnDateFilter fcn={setDateFilter} />
           <BtnTagFilter selectedTags={tagFilter} fcn={setTagFilter} />
           <BtnEventTypeFilter selectedEventTypes={eventTypeFilter} fcn={setEventTypeFilter} />
+          <BtnMemberOnlyFilter fcn={setMemberOnlyFilter} memberOnly={memberOnlyFilter} />
           <BtnTargetAudienceFilter
             fcn={setTargetAudienceFilter}
             targetAudience={targetAudienceFilter}
