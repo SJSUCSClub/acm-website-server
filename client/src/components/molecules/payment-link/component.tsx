@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { useMutation } from '@/hooks/useFetch';
 import { paths } from '@/types/schema.v1';
 import { useForm } from '@tanstack/react-form';
-import { Check, CreditCard, ExternalLink, Link, Pencil, X } from 'lucide-react';
+import { Check, CreditCard, ExternalLink, Link, Pencil, Trash, X } from 'lucide-react';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -13,18 +13,19 @@ type PaymentLink =
 
 export interface IPaymentLinkProps {
   payment: PaymentLink;
+  handleDelete: (paymentId: number) => void;
 }
 
 export interface IReadLinkProps extends IPaymentLinkProps {
   setEdit: (edit: boolean) => void;
 }
 
-export interface IEditLinkProps extends IPaymentLinkProps {
+export interface IEditLinkProps extends Omit<IPaymentLinkProps, "handleDelete"> {
   setEdit: (edit: boolean) => void;
   setPayment: (payment: PaymentLink) => void;
 }
 
-const PaymentLink: React.FC<IPaymentLinkProps> = ({ payment: paymentProp }) => {
+const PaymentLink: React.FC<IPaymentLinkProps> = ({ payment: paymentProp, handleDelete }) => {
   const [edit, setEdit] = useState(false);
   const [payment, setPayment] = useState(paymentProp);
 
@@ -33,13 +34,13 @@ const PaymentLink: React.FC<IPaymentLinkProps> = ({ payment: paymentProp }) => {
       {edit ? (
         <EditLink payment={payment} setEdit={setEdit} setPayment={setPayment} />
       ) : (
-        <ReadLink payment={payment} setEdit={setEdit} />
+        <ReadLink payment={payment} setEdit={setEdit} handleDelete={handleDelete} />
       )}
     </Card>
   );
 };
 
-const ReadLink: React.FC<IReadLinkProps> = ({ payment, setEdit }) => {
+const ReadLink: React.FC<IReadLinkProps> = ({ payment, setEdit, handleDelete }) => {
   return (
     <CardContent className="p-0">
       <div className="p-4">
@@ -56,6 +57,9 @@ const ReadLink: React.FC<IReadLinkProps> = ({ payment, setEdit }) => {
             </Btn>
             <Btn variant="ghost" onClick={() => setEdit(true)}>
               <Pencil className="h-4 w-4" />
+            </Btn>
+            <Btn variant="ghost" onClick={() => handleDelete(payment.id)}>
+              <Trash className="h-4 w-4" />
             </Btn>
           </div>
         </div>
