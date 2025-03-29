@@ -1,0 +1,2 @@
+export { BtnTargetAudienceFilter as default } from './component';
+export * from './component';

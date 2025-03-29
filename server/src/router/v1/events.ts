@@ -1,7 +1,7 @@
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
 import { z } from 'zod';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
-import { eventTypesEnumSchema, urlSchema } from '@/util/zod';
+import { urlSchema } from '@/util/zod';
 
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
@@ -40,6 +40,8 @@ import {
   eventSchema,
   csFieldsEnumSchema,
   timestampEnumSchema,
+  eventTypesEnumSchema,
+  targetAudienceEnumSchema,
 } from '@/util/zod';
 import { generateObjectUrl } from '@/lib/aws/s3';
 
@@ -210,6 +212,7 @@ eventRouter.openapi(
       query: z.object({
         tags: z.string().optional(),
         eventTypes: z.string().optional(),
+        targetAudience: targetAudienceEnumSchema.optional(),
         timeframe: timestampEnumSchema.optional(),
       }),
     },
@@ -231,6 +234,7 @@ eventRouter.openapi(
       tags = '',
       timeframe = 'all',
       eventTypes = '',
+      targetAudience = 'All',
     } = c.req.valid('query');
 
     const conditions = [];
@@ -271,6 +275,13 @@ eventRouter.openapi(
 
     if (validEventTypes?.length > 0) {
       conditions.push(inArray(events.eventType, validEventTypes));
+    }
+
+    if (
+      targetAudience !== 'All' &&
+      targetAudienceEnumSchema._def.values.includes(targetAudience)
+    ) {
+      conditions.push(eq(events.targetAudience, targetAudience));
     }
 
     const foundEvents: Event[] = await db

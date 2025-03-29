@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import EventCard from '../../components/molecules/event-card';
-import BtnDateFilter from '../../components/molecules/btn-date-filter';
-import BtnTagFilter from '../../components/molecules/btn-tag-filter';
+import EventCard from '@/components/molecules/event-card';
+import BtnDateFilter from '@/components/molecules/btn-date-filter';
+import BtnTagFilter from '@/components/molecules/btn-tag-filter';
 import BtnEventTypeFilter from '@/components/molecules/btn-event-type-filter';
+import BtnTargetAudienceFilter from '@/components/molecules/btn-target-audience-filter';
 import { useQuery } from '@/hooks/useFetch';
 import { paths } from '@/types/schema.v1';
 
@@ -14,13 +15,15 @@ const EventsPage = () => {
   const [dateFilter, setDateFilter] = useState<'upcoming' | 'today' | 'past' | 'all'>('all');
   const [tagFilter, setTagFilter] = useState<string[]>([]);
   const [eventTypeFilter, setEventTypeFilter] = useState<string[]>([]);
+  const [targetAudienceFilter, setTargetAudienceFilter] = useState<string>('All');
 
   const { data: eventData } = useQuery('get', '/v1/events', {
     params: {
       query: {
         tags: tagFilter.join(',') || '',
         timeframe: dateFilter || 'all',
-        eventTypes: eventTypeFilter.join(',') || ''
+        eventTypes: eventTypeFilter.join(',') || '',
+        targetAudience: targetAudienceFilter || 'All'
       }
     }
   });
@@ -47,6 +50,10 @@ const EventsPage = () => {
           <BtnDateFilter fcn={setDateFilter} />
           <BtnTagFilter selectedTags={tagFilter} fcn={setTagFilter} />
           <BtnEventTypeFilter selectedEventTypes={eventTypeFilter} fcn={setEventTypeFilter} />
+          <BtnTargetAudienceFilter
+            fcn={setTargetAudienceFilter}
+            targetAudience={targetAudienceFilter}
+          />
         </div>
 
         {events.length === 0 ? (
