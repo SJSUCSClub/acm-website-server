@@ -108,7 +108,7 @@ const CreatePaymentLink: React.FC<ICreatePaymentLinksProps> = ({ handleCreate })
     }
   });
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger asChild>
         <Btn variant="outline" onClick={() => setOpen(true)}>
           Create Payment Link
