@@ -160,7 +160,7 @@ const CreatePaymentLink: React.FC<ICreatePaymentLinksProps> = ({ handleCreate })
           </div>
           <DialogFooter>
             <Btn variant="outline" type="submit">
-              Save changes
+              Create
             </Btn>
           </DialogFooter>
         </form>
