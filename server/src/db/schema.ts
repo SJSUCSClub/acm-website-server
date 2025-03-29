@@ -1,7 +1,7 @@
 import { boolean, text, timestamp, date, integer, bigint, pgEnum, pgTable, serial, time, numeric, varchar } from 'drizzle-orm/pg-core';
 
 // Enums
-export const eventsEnum = pgEnum('events_enum', ['Workshop', 'seminar', 'Hackathon', 'Conference', 'Meetup', 'Tech Talk', 'Other']);
+export const eventsEnum = pgEnum('events_enum', ['Workshop', 'Seminar', 'Hackathon', 'Conference', 'Meetup', 'Tech Talk', 'Other']);
 export const csFieldsEnum = pgEnum('cs_fields_enum', ['Web Development', 'Machine Learning', 'Cloud Computing', 'Artificial Intelligence', 'Networking', 'Cybersecurity', 'Mobile Development', 'Game Development', 'Data Science']);
 export const targetAudienceEnum = pgEnum('target_audience_enum', ['Students']);
 export const equipmentConditionEnum = pgEnum('equipment_condition_enum', ['Ready', 'Broken', 'In Maintenance']);
