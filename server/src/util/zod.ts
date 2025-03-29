@@ -41,6 +41,7 @@ export const eventSchema = createSelectSchema(events).extend({
 });
 export const csFieldsEnumSchema = z.enum(csFieldsEnum.enumValues);
 export const timestampEnumSchema = z.enum(['upcoming', 'today', 'past', 'all']);
+export const eventTypesEnumSchema = z.enum(eventsEnum.enumValues);
 export const userSchema = createSelectSchema(users).extend({
   interests: z.array(z.enum(csFieldsEnum.enumValues)),
 });

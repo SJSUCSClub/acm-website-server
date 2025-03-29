@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import EventCard from '../../components/molecules/event-card';
 import BtnDateFilter from '../../components/molecules/btn-date-filter';
 import BtnTagFilter from '../../components/molecules/btn-tag-filter';
+import BtnEventTypeFilter from '@/components/molecules/btn-event-type-filter';
 import { useQuery } from '@/hooks/useFetch';
 import { paths } from '@/types/schema.v1';
 
@@ -12,12 +13,14 @@ const EventsPage = () => {
   const [events, setEvents] = useState<Events>([]);
   const [dateFilter, setDateFilter] = useState<'upcoming' | 'today' | 'past' | 'all'>('all');
   const [tagFilter, setTagFilter] = useState<string[]>([]);
+  const [eventTypeFilter, setEventTypeFilter] = useState<string[]>([]);
 
   const { data: eventData } = useQuery('get', '/v1/events', {
     params: {
       query: {
         tags: tagFilter.join(',') || '',
-        timeframe: dateFilter || 'all'
+        timeframe: dateFilter || 'all',
+        eventTypes: eventTypeFilter.join(',') || ''
       }
     }
   });
@@ -43,6 +46,7 @@ const EventsPage = () => {
           </p>
           <BtnDateFilter fcn={setDateFilter} />
           <BtnTagFilter selectedTags={tagFilter} fcn={setTagFilter} />
+          <BtnEventTypeFilter selectedEventTypes={eventTypeFilter} fcn={setEventTypeFilter} />
         </div>
 
         {events.length === 0 ? (
