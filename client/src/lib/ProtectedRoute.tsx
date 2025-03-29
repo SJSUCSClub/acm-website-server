@@ -43,7 +43,8 @@ export function ProtectedRoute({
     requireAdmin,
     requireMember,
     navigate,
-    showNotFoundOnUnauthorized
+    showNotFoundOnUnauthorized,
+    requireNoAuth
   ]);
 
   if (isLoading) {
