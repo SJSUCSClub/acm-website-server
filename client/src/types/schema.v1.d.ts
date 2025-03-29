@@ -4779,9 +4779,8 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
-                        id?: number;
-                        name: string;
-                        link: string;
+                        name?: string;
+                        link?: string;
                     };
                 };
             };
