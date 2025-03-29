@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
+import { SearchBar } from '@/components/molecules/search-bar';
 
 export const NavBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,11 +47,15 @@ export const NavBar: React.FC = () => {
   };
 
   return (
-    <div className="navbar z-10 sticky w-full top-0 bg-white">
-      <div className="flex bg-white px-[5%] py-4 border-b-4 w-full items-center justify-between">
-        <a href="/" className="flex-shrink-0">
-          <img src={Logo} alt="Logo" className="h-10 max-w-[100px]" />
-        </a>
+    <div className="navbar z-10 sticky w-full">
+      <div className="flex items-center justify-between bg-white px-[5%] py-4 border-b-4 w-full">
+        <Link to="/">
+          <img src={Logo} alt="Logo" className="sm:h-auto max-w-[100px] h-auto" />
+        </Link>
+
+        <div className="w-[400px]">
+          <SearchBar />
+        </div>
 
         {/* Desktop Navigation - Only visible on screens >= 1024px (lg) */}
         <div className="hidden lg:flex items-center gap-4">
