@@ -455,7 +455,7 @@ export interface paths {
                                 description: string;
                                 urls: string[];
                                 /** @enum {string} */
-                                eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
+                                eventType: "Workshop" | "Seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
                                 eventCapacity: number | null;
                                 image: string;
                                 startTime: string;
@@ -690,7 +690,7 @@ export interface paths {
                                 description: string;
                                 urls: string[];
                                 /** @enum {string} */
-                                eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
+                                eventType: "Workshop" | "Seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
                                 eventCapacity: number | null;
                                 image: string;
                                 startTime: string;
@@ -1499,7 +1499,7 @@ export interface paths {
                                 description: string;
                                 urls: string[];
                                 /** @enum {string} */
-                                eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
+                                eventType: "Workshop" | "Seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
                                 eventCapacity: number | null;
                                 image: string;
                                 startTime: string;
@@ -2273,6 +2273,7 @@ export interface paths {
             parameters: {
                 query?: {
                     tags?: string;
+                    eventTypes?: string;
                     timeframe?: "upcoming" | "today" | "past" | "all";
                 };
                 header?: never;
@@ -2298,7 +2299,7 @@ export interface paths {
                                 description: string;
                                 urls: string[];
                                 /** @enum {string} */
-                                eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
+                                eventType: "Workshop" | "Seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
                                 eventCapacity: number | null;
                                 image: string;
                                 startTime: string;
@@ -2333,7 +2334,7 @@ export interface paths {
                         description: string;
                         urls: string[];
                         /** @enum {string} */
-                        eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
+                        eventType: "Workshop" | "Seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
                         eventCapacity: number | null;
                         image: string;
                         startTime: string;
@@ -2364,7 +2365,7 @@ export interface paths {
                                 description: string;
                                 urls: string[];
                                 /** @enum {string} */
-                                eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
+                                eventType: "Workshop" | "Seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
                                 eventCapacity: number | null;
                                 image: string;
                                 startTime: string;
@@ -2444,7 +2445,7 @@ export interface paths {
                                 description: string;
                                 urls: string[];
                                 /** @enum {string} */
-                                eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
+                                eventType: "Workshop" | "Seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
                                 eventCapacity: number | null;
                                 image: string;
                                 startTime: string;
@@ -2915,7 +2916,7 @@ export interface paths {
                                 description: string;
                                 urls: string[];
                                 /** @enum {string} */
-                                eventType: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
+                                eventType: "Workshop" | "Seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
                                 eventCapacity: number | null;
                                 image: string;
                                 startTime: string;
@@ -4307,7 +4308,7 @@ export interface paths {
                             spotlights: {
                                 id: number;
                                 /** @enum {string} */
-                                type: "Workshop" | "seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
+                                type: "Workshop" | "Seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
                                 image: string;
                                 name: string;
                                 description: string;
