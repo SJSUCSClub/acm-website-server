@@ -25,7 +25,7 @@ const EventsPage = () => {
         tags: tagFilter.join(',') || '',
         timeframe: dateFilter || 'all',
         eventTypes: eventTypeFilter.join(',') || '',
-        targetAudience: targetAudienceFilter || 'All',
+        targetAudience: targetAudienceFilter === 'All' ? '' : targetAudienceFilter,
         memberOnly: memberOnlyFilter
       }
     }
