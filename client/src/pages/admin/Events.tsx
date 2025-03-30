@@ -54,7 +54,7 @@ const EventsPage = () => {
             or prior experience.
           </p>
 
-          <SearchBar fcn={setNameFilter} />
+          <SearchBar fcn={setNameFilter} label="Search By Name" />
           <BtnDateFilter fcn={setDateFilter} />
           <BtnTagFilter selectedTags={tagFilter} fcn={setTagFilter} />
           <BtnEventTypeFilter selectedEventTypes={eventTypeFilter} fcn={setEventTypeFilter} />

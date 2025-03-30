@@ -29,6 +29,7 @@ const SearchBar = () => {
     }
   });
 
+  // update after 500ms typing delay from user
   useEffect(() => {
     setSelectedIndex(-1);
   }, [query, isFocused]);
