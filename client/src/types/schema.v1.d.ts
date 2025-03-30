@@ -2536,6 +2536,7 @@ export interface paths {
         get: {
             parameters: {
                 query?: {
+                    name?: string;
                     tags?: string;
                     eventTypes?: string;
                     targetAudience?: string;
