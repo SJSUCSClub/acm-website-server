@@ -212,7 +212,7 @@ eventRouter.openapi(
       query: z.object({
         tags: z.string().optional(),
         eventTypes: z.string().optional(),
-        targetAudience: targetAudienceEnumSchema.optional(),
+        targetAudience: z.string().optional(),
         timeframe: timestampEnumSchema.optional(),
         memberOnly: z.union([z.literal('true'), z.literal('false')]).optional(),
       }),
@@ -235,7 +235,7 @@ eventRouter.openapi(
       tags = '',
       timeframe = 'all',
       eventTypes = '',
-      targetAudience = 'All',
+      targetAudience = '',
       memberOnly,
     } = c.req.valid('query');
 
@@ -280,10 +280,17 @@ eventRouter.openapi(
     }
 
     if (
-      targetAudience !== 'All' &&
-      targetAudienceEnumSchema._def.values.includes(targetAudience)
+      targetAudience &&
+      targetAudienceEnumSchema._def.values.includes(
+        targetAudience as z.infer<typeof targetAudienceEnumSchema>,
+      )
     ) {
-      conditions.push(eq(events.targetAudience, targetAudience));
+      conditions.push(
+        eq(
+          events.targetAudience,
+          targetAudience as z.infer<typeof targetAudienceEnumSchema>,
+        ),
+      );
     }
 
     if (memberOnly === 'true') {

@@ -2274,7 +2274,7 @@ export interface paths {
                 query?: {
                     tags?: string;
                     eventTypes?: string;
-                    targetAudience?: "All" | "Students";
+                    targetAudience?: string;
                     timeframe?: "upcoming" | "today" | "past" | "all";
                 };
                 header?: never;
