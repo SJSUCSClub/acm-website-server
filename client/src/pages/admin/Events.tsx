@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import EventCard from '@/components/molecules/event-card';
+import SearchBar from '@/components/molecules/search-bar-filter';
 import BtnDateFilter from '@/components/molecules/btn-date-filter';
 import BtnTagFilter from '@/components/molecules/btn-tag-filter';
 import BtnEventTypeFilter from '@/components/molecules/btn-event-type-filter';
@@ -13,6 +14,7 @@ type Events =
 
 const EventsPage = () => {
   const [events, setEvents] = useState<Events>([]);
+  const [nameFilter, setNameFilter] = useState<string>('');
   const [dateFilter, setDateFilter] = useState<'upcoming' | 'today' | 'past' | 'all'>('all');
   const [tagFilter, setTagFilter] = useState<string[]>([]);
   const [eventTypeFilter, setEventTypeFilter] = useState<string[]>([]);
@@ -22,11 +24,12 @@ const EventsPage = () => {
   const { data: eventData } = useQuery('get', '/v1/events', {
     params: {
       query: {
+        name: nameFilter,
         tags: tagFilter.join(',') || '',
         timeframe: dateFilter || 'all',
         eventTypes: eventTypeFilter.join(',') || '',
         targetAudience: targetAudienceFilter === 'All' ? '' : targetAudienceFilter,
-        memberOnly: memberOnlyFilter
+        memberOnly: memberOnlyFilter ? 'true' : 'false'
       }
     }
   });
@@ -50,6 +53,8 @@ const EventsPage = () => {
             These events are accessible to all those who are interested, irrespective of their major
             or prior experience.
           </p>
+
+          <SearchBar fcn={setNameFilter} />
           <BtnDateFilter fcn={setDateFilter} />
           <BtnTagFilter selectedTags={tagFilter} fcn={setTagFilter} />
           <BtnEventTypeFilter selectedEventTypes={eventTypeFilter} fcn={setEventTypeFilter} />

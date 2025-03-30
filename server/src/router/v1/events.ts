@@ -25,6 +25,7 @@ import {
   gt,
   arrayContains,
   inArray,
+  ilike,
 } from 'drizzle-orm';
 import type { User, Company, File, Event, Url } from '@/db/schema';
 import {
@@ -210,6 +211,7 @@ eventRouter.openapi(
     summary: 'List all events',
     request: {
       query: z.object({
+        name: z.string().optional(),
         tags: z.string().optional(),
         eventTypes: z.string().optional(),
         targetAudience: z.string().optional(),
@@ -232,6 +234,7 @@ eventRouter.openapi(
   }),
   async (c) => {
     const {
+      name = '',
       tags = '',
       timeframe = 'all',
       eventTypes = '',
@@ -295,6 +298,10 @@ eventRouter.openapi(
 
     if (memberOnly === 'true') {
       conditions.push(eq(events.memberOnly, true));
+    }
+
+    if (name) {
+      conditions.push(ilike(events.name, `%${name}%`));
     }
 
     const foundEvents: Event[] = await db
