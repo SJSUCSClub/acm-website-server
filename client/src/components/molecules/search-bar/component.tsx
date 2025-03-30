@@ -4,13 +4,15 @@ import Btn from '@/components/atoms/btn';
 import Input from '@/components/atoms/input';
 
 type SearchBarProps = {
-  fcn: (name: string) => void;
+  fcn: (query: string) => void;
+  label: string;
 };
 
-export const SearchBar: React.FC<SearchBarProps> = ({ fcn }) => {
+export const SearchBar: React.FC<SearchBarProps> = ({ fcn, label }) => {
   const [query, setQuery] = useState<string>('');
   const debouncedQuery = useDebounce(query, 500);
 
+  // update after 500ms typing delay from user
   useEffect(() => {
     if (debouncedQuery) fcn(debouncedQuery);
   }, [fcn, debouncedQuery]);
@@ -26,7 +28,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ fcn }) => {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         className="h-[40px] w-[250px]"
-        label="Name Filter"
+        label={label}
         required={false}
         icon="/icons/search.svg"
       />
