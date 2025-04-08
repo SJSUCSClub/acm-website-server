@@ -5,7 +5,7 @@ import { Command, CommandGroup, CommandItem, CommandList } from '../../../compon
 import { Popover, PopoverContent, PopoverTrigger } from '../../../components/ui/popover';
 
 export type EventCardProps = {
-  fcn: React.Dispatch<React.SetStateAction<'upcoming' | 'today' | 'past' | 'all'>>;
+  fcn: (timeframe: 'upcoming' | 'today' | 'past' | 'all') => void;
 };
 
 export const BtnDateFilter: React.FC<EventCardProps> = ({ fcn }) => {

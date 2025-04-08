@@ -6,15 +6,18 @@ import Input from '@/components/atoms/input';
 type SearchBarProps = {
   fcn: (query: string) => void;
   label: string;
+  name: string;
 };
 
-export const SearchBar: React.FC<SearchBarProps> = ({ fcn, label }) => {
-  const [query, setQuery] = useState<string>('');
-  const debouncedQuery = useDebounce(query, 500);
+const DELAY_MS = 300;
+
+export const SearchBar: React.FC<SearchBarProps> = ({ fcn, label, name }) => {
+  const [query, setQuery] = useState<string>(name);
+  const debouncedQuery = useDebounce(query, DELAY_MS);
 
   // update after 500ms typing delay from user
   useEffect(() => {
-    if (debouncedQuery) fcn(debouncedQuery);
+    fcn(debouncedQuery);
   }, [fcn, debouncedQuery]);
 
   const handleClear = () => {
@@ -23,11 +26,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({ fcn, label }) => {
   };
 
   return (
-    <div className="relative w-[325px] flex items-center">
+    <div className="relative w-[350px] flex items-center">
       <Input
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="h-[40px] w-[250px]"
+        className="h-[40px] w-[275px]"
         label={label}
         required={false}
         icon="/icons/search.svg"
