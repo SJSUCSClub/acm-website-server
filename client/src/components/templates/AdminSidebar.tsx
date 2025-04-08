@@ -45,7 +45,8 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
     {
       title: 'Events',
       icon: Calendar,
-      href: '/admin/events'
+      href: '/admin/events',
+      params: {}
     },
     {
       title: 'Companies',
@@ -58,6 +59,7 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
       href: '/admin/officers'
     }
   ];
+
   return (
     <div className="flex max-h-[2400px]">
       <div
@@ -91,6 +93,7 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
                   'md:h-12 md:px-3 md:rounded-md',
                   !collapsed && 'md:justify-start'
                 )}
+                search={item.params ?? {}}
               >
                 <div className={clsx('flex items-center', !collapsed && 'md:w-full')}>
                   <item.icon className="h-5 w-5 flex-shrink-0" />
