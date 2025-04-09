@@ -1,1 +1,1 @@
-export { UserDialog } from './component';
+export { default as UserDialog } from './component';
