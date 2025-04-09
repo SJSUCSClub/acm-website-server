@@ -11,7 +11,7 @@ const eventsFilterSchema = z.object({
   memberOnly: z.boolean().default(false)
 });
 
-type EventsFilters = z.infer<typeof eventsFilterSchema>;
+export type EventsFilters = z.infer<typeof eventsFilterSchema>;
 
 export const Route = createFileRoute('/admin/_layout/events')({
   component: Events,
