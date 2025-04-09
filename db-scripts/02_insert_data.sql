@@ -324,4 +324,28 @@ INSERT INTO landing_questions(question, answer) VALUES
 ($$Who's allowed to join this club?$$, $$ACM@SJSU is open to all SJSU students, regardless of their major!$$),
 ($$What are the rules of the club?$$, $$Be respectful, keep the clubroom clean, and have fun!$$),
 ($$Is there a membership fee for the club?$$, $$Yes. It's $20 for 1 semester or $30 for 2 semesters$$),
-($$What do I get for a paid membership?$$, $$Paid members are invited to attend exclusive networking sessions, tech talks, and company events. We collaborate with many industry leaders, including Google, Tesla, and Nvidia, so don't miss out!$$);
+($$What do I get for a paid membership?$$, $$Paid members are invited to attend exclusive networking sessions, tech talks, and company events. We collaborate with many industry leaders, including Google, Tesla, and Nvidia, so don''t miss out!$$);
+
+INSERT INTO users (
+    id, name, email, major, education_level, grad_date, interests, profile_pic, linkedin, github, website, role, paid 
+) VALUES 
+('Karthik Manishankar', 'Karthik Manishankar', 'karthik.manishankar@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'pfp.png', 'https://www.linkedin.com/in/karthikmanishankar/', 'https://github.com/placeholder', NULL, 'user', NULL),
+('Shirley Li', 'Shirley Li', 'shirley.li@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'pfp.png', 'https://www.linkedin.com/in/shirley-shuhua-li', 'https://github.com/placeholder', NULL, 'user', NULL),
+('Angela Huang', 'Angela Huang', 'angela.huang@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'pfp.png', 'https://www.linkedin.com/in/angela-huang-725a25169/', 'https://github.com/placeholder', NULL, 'user', NULL),
+('Bineet Anand', 'Bineet Anand', 'bineet.anand@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'pfp.png', 'https://www.linkedin.com/in/bineet-anand/', 'https://github.com/placeholder', NULL, 'user', NULL),
+('Anne Mai', 'Anne Mai', 'anne.mai@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'pfp.png', 'https://www.linkedin.com/in/annepmai/', 'https://github.com/placeholder', NULL, 'user', NULL),
+('Timothy Kim', 'Timothy Kim', 'timothy.kim@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'pfp.png', 'https://www.linkedin.com/in/timothy-kim712/', 'https://github.com/placeholder', NULL, 'user', NULL),
+('Trique Nguyen', 'Trique Nguyen', 'trique.nguyen@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'pfp.png', 'https://www.linkedin.com/in/trique-nguyen/', 'https://github.com/placeholder', NULL, 'user', NULL),
+('Galit Bolotin', 'Galit Bolotin', 'galit.bolotin@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'pfp.png', 'https://www.linkedin.com/in/gbolotin/', 'https://github.com/placeholder', NULL, 'user', NULL);
+INSERT INTO officers(user_id, position, linkedin, photo) VALUES
+('Karthik Manishankar', 'President', 'https://www.linkedin.com/in/karthikmanishankar/', 'pfp.png'),
+('Shirley Li', 'Vice President', 'https://www.linkedin.com/in/shirley-shuhua-li', 'pfp.png'),
+('Angela Huang', 'Secretary', 'https://www.linkedin.com/in/angela-huang-725a25169/', 'pfp.png'),
+('Bineet Anand', 'Social Media Manager', 'https://www.linkedin.com/in/bineet-anand/', 'pfp.png'),
+('Anne Mai', 'Event Chair', 'https://www.linkedin.com/in/annepmai/', 'pfp.png'),
+('Timothy Kim', 'Treasurer', 'https://www.linkedin.com/in/timothy-kim712/', 'pfp.png'),
+('Trique Nguyen', 'Dev Team Officer', 'https://www.linkedin.com/in/trique-nguyen/', 'pfp.png'),
+('Galit Bolotin', 'Event Chair', 'https://www.linkedin.com/in/gbolotin/', 'pfp.png');
+
+
+

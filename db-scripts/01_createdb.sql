@@ -14,7 +14,7 @@ create type membership_term_enum as enum ('Semester', 'Annual');
 create type education_level_enum as enum('Undergraduate', 'Graduate');
 create type membership_request_status_enum as enum ('Pending', 'Approved', 'Declined');
 create type industry_enum as enum ('Banking and Finance', 'Aerospace', 'Healthcare', 'Automotive', 'Energy', 'Technology');
-create type officer_position_enum as enum ('President', 'Vice President', 'Dev Team Officer', 'Treasurer', 'Social Media Manager', 'Secretary');
+create type officer_position_enum as enum ('President', 'Vice President', 'Dev Team Officer', 'Treasurer', 'Social Media Manager', 'Secretary', 'Event Chair');
 create type user_role_enum as enum ('user', 'member', 'admin');
 create type year_enum as enum ('Freshman', 'Sophomore', 'Junior', 'Senior', 'Alumni');
 create type project_status_enum as enum ('Not Started', 'Looking for Members', 'In Progress', 'Completed');
@@ -233,8 +233,8 @@ create table if not exists officers(
    linkedin text,
    photo text,
    PRIMARY KEY(id),
-   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade,
-   FOREIGN KEY(photo) REFERENCES files(key) on update cascade
+   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade
+   -- FOREIGN KEY(photo) REFERENCES files(key) on update cascade
 );
 
 create table if not exists sponsors(
