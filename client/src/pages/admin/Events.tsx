@@ -63,7 +63,7 @@ const EventsPage = () => {
     updateSearchFilters('targetAudience', newTargetAudience);
 
   return (
-    <div className="container mx-auto px-4 py-8 h-[800px]">
+    <div className="container mx-auto px-4 py-8">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <div className="intro space-y-4">
           <h1 className="text-4xl font-bold">Events</h1>
@@ -87,7 +87,7 @@ const EventsPage = () => {
         {events.length === 0 ? (
           <div className="text-text text-center my-10">No events found</div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8 max-h-[400px] overflow-y-scroll">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
             {events.map((event) => (
               <EventCard key={event.id} event={event} />
             ))}
