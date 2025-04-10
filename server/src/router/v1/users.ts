@@ -42,6 +42,7 @@ import {
   attendingEventSchema,
   bookmarkedEventSchema,
   userFilterSchema,
+  projectIDSchema,
 } from '@/util/zod';
 
 const userRouter = new OpenAPIHono<Context>();
@@ -1283,6 +1284,45 @@ userRouter.openapi(
 );
 
 userRouter.openapi(
+	createRoute({
+		method: 'get',
+		path: '/my/projects-interest/{projectID}',
+		tags: ['users'],
+		summary: 'Check if current user has shown interest in a project',
+		middleware: [authMiddleWare('user')],
+    request: {
+      params: projectIDSchema,
+    },
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful response',
+				content: {
+					'application/json': {
+						schema: z.object({
+							interested: z.boolean(),
+						}),
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+    const { projectID } = c.req.valid('param');
+		const interest = await db
+			.select()
+			.from(interestedInProjects)
+			.where(and(eq(interestedInProjects.userId, session.userId), eq(interestedInProjects.projectId, parseInt(projectID))));
+
+		return c.json({ interested: interest.length > 0 }, HttpStatusCodes.OK);
+	},
+);
+
+userRouter.openapi(
   createRoute({
     method: 'post',
     path: '/my/projects-interest/{projectID}',
@@ -1290,9 +1330,7 @@ userRouter.openapi(
     summary: 'Show interest in a project',
     middleware: [authMiddleWare('user')],
     request: {
-      params: z.object({
-        projectID: z.string(),
-      }),
+      params: projectIDSchema,
     },
     responses: {
       [HttpStatusCodes.NO_CONTENT]: {
@@ -1340,9 +1378,7 @@ userRouter.openapi(
     summary: 'Delete interest in a project',
     middleware: [authMiddleWare('user')],
     request: {
-      params: z.object({
-        projectID: z.string(),
-      }),
+      params: projectIDSchema,
     },
     responses: {
       [HttpStatusCodes.NO_CONTENT]: {
@@ -1406,9 +1442,7 @@ userRouter.openapi(
         description: 'Internal server error',
         content: {
           'application/json': {
-            schema: z.object({
-              error: z.string(),
-            }),
+            schema: errorSchema,
           },
         },
       },
@@ -1464,9 +1498,7 @@ userRouter.openapi(
         description: 'Internal server error',
         content: {
           'application/json': {
-            schema: z.object({
-              error: z.string(),
-            }),
+            schema: errorSchema,
           },
         },
       },

@@ -20,7 +20,7 @@ interface IAdminSidebarProps {
 }
 
 const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const navItems = [
     {
       title: 'Home',

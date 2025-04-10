@@ -106,7 +106,10 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ event, companies, files, a
           </div>
         )}
 
-        {files.length > 0 && <FilesTable files={files} />}
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold mb-3">Files</h2>
+          <FilesTable files={files} />
+        </div>
       </div>
 
       <div className="space-y-8">
