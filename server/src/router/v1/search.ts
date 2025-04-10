@@ -1,21 +1,22 @@
-import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
-import { sql } from "drizzle-orm";
-import { z } from "zod";
-import * as HttpStatusCodes from "stoker/http-status-codes";
+import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
+import { sql } from 'drizzle-orm';
+import { z } from 'zod';
+import * as HttpStatusCodes from 'stoker/http-status-codes';
 
-import type { Context } from "@/lib/context";
-import { db } from "@/db/db";
-import { companies, events, projects } from "@/db/schema";
-import { errorSchema, searchResultSchema } from "@/util/zod";
+import type { Context } from '@/lib/context';
+import { db } from '@/db/db';
+import { companies, events, projects } from '@/db/schema';
+import { errorSchema, searchResultSchema, searchTypeEnum } from '@/util/zod';
 
 const searchRouter = new OpenAPIHono<Context>();
+type searchType = z.infer<typeof searchTypeEnum>;
 
 searchRouter.openapi(
   createRoute({
-    method: "get",
-    path: "/",
-    tags: ["search"],
-    summary: "Get fuzzy search results",
+    method: 'get',
+    path: '/',
+    tags: ['search'],
+    summary: 'Get fuzzy search results',
     request: {
       query: z.object({
         query: z.string().optional(),
@@ -23,9 +24,9 @@ searchRouter.openapi(
     },
     responses: {
       [HttpStatusCodes.OK]: {
-        description: "Get array of values for enum type",
+        description: 'Get array of values for enum type',
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               results: z.array(searchResultSchema),
             }),
@@ -33,25 +34,26 @@ searchRouter.openapi(
         },
       },
       [HttpStatusCodes.NOT_FOUND]: {
-        description: "Enum type does not exist",
+        description: 'Enum type does not exist',
         content: {
-          "application/json": {
-            schema: errorSchema
+          'application/json': {
+            schema: errorSchema,
           },
         },
       },
     },
   }),
   async (c) => {
-    const searchQuery = c.req.query("query");
+    const searchQuery = c.req.query('query');
     if (!searchQuery) {
       return c.json({ results: [] }, HttpStatusCodes.OK);
     }
+
     const eventRes = await db
       .select({
         id: events.id,
         name: events.name,
-        type: sql<string>`'event'`.as("type"),
+        type: sql<searchType>`'event'`.as('type'),
         similarity: sql<number>`similarity(name, ${searchQuery})`,
       })
       .from(events)
@@ -60,7 +62,7 @@ searchRouter.openapi(
       .select({
         id: projects.id,
         name: projects.name,
-        type: sql<string>`'project'`.as("type"),
+        type: sql<searchType>`'project'`.as('type'),
         similarity: sql<number>`similarity(name, ${searchQuery})`,
       })
       .from(projects)
@@ -69,7 +71,7 @@ searchRouter.openapi(
       .select({
         id: companies.id,
         name: companies.name,
-        type: sql<string>`'company'`.as("type"),
+        type: sql<searchType>`'company'`.as('type'),
         similarity: sql<number>`similarity(name, ${searchQuery})`,
       })
       .from(companies)
