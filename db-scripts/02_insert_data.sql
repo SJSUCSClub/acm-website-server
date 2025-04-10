@@ -177,7 +177,7 @@ insert into files(key, name) values
 ('companies/5/logo.jpg', 'ExxonMobil Logo'),
 ('spotlights/1/image.webp', 'Spotlight Image'),
 ('spotlights/2/image.webp', 'Spotlight Image'),
-('spotlights/3/image.webp', 'Spotlight Image');
+('spotlights/3/image.webp', 'Spotlight Image'),
 ('projects/2/files/README.md', 'README.md');
 
 -- Insert company 1
