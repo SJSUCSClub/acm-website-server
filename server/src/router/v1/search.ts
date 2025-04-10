@@ -6,6 +6,7 @@ import * as HttpStatusCodes from "stoker/http-status-codes";
 import type { Context } from "@/lib/context";
 import { db } from "@/db/db";
 import { companies, events, projects } from "@/db/schema";
+import { errorSchema, searchResultSchema } from "@/util/zod";
 
 const searchRouter = new OpenAPIHono<Context>();
 
@@ -26,13 +27,7 @@ searchRouter.openapi(
         content: {
           "application/json": {
             schema: z.object({
-              results: z.array(
-                z.object({
-                  name: z.string(),
-                  type: z.enum(["event", "project", "company"]),
-                  similarity: z.number(),
-                }),
-              ),
+              results: z.array(searchResultSchema),
             }),
           },
         },
@@ -41,9 +36,7 @@ searchRouter.openapi(
         description: "Enum type does not exist",
         content: {
           "application/json": {
-            schema: z.object({
-              error: z.string(),
-            }),
+            schema: errorSchema
           },
         },
       },
@@ -51,7 +44,6 @@ searchRouter.openapi(
   }),
   async (c) => {
     const searchQuery = c.req.query("query");
-    console.log("searchQuery", searchQuery);
     if (!searchQuery) {
       return c.json({ results: [] }, HttpStatusCodes.OK);
     }

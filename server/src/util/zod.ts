@@ -142,3 +142,10 @@ export const userFilterSchema = z.object({
   page: z.string().optional(),
   per_page: z.string().optional(),
 });
+
+export const searchResultSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  type: z.enum(["event", "project", "company"]),
+  similarity: z.number(),
+});

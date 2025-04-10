@@ -4985,6 +4985,7 @@ export interface paths {
                     content: {
                         "application/json": {
                             results: {
+                                id: number;
                                 name: string;
                                 /** @enum {string} */
                                 type: "event" | "project" | "company";
