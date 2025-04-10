@@ -4,13 +4,19 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
-import { clubLinks, events, landingQuestions, landingSpotlights } from '@/db/schema';
+import {
+  clubLinks,
+  events,
+  landingQuestions,
+  landingSpotlights,
+} from '@/db/schema';
 import type { ClubLink, LandingQuestion } from '@/db/schema';
 import {
   clubLinkSchema,
   landingQuestionSchema,
   landingSpotlightSchema,
   spotlightSchema,
+  updateClubLinkSchema,
 } from '@/util/zod';
 import { eq } from 'drizzle-orm';
 import {
@@ -18,7 +24,7 @@ import {
   forbiddenRequest,
   unauthorizedRequest,
 } from '@/middlewares/auth-middleware';
-import { env } from '@/env';
+import { generateObjectUrl } from '@/lib/aws/s3';
 
 const clubRouter = new OpenAPIHono<Context>();
 
@@ -58,7 +64,7 @@ clubRouter.openapi(
       body: {
         content: {
           'application/json': {
-            schema: clubLinkSchema.omit({ id: true }),
+            schema: updateClubLinkSchema,
           },
         },
       },
@@ -84,12 +90,12 @@ clubRouter.openapi(
   async (c) => {
     const body = c.req.valid('json');
 
-    const newMajor = await db
+    const newLinks = await db
       .update(clubLinks)
       .set(body)
       .where(eq(clubLinks.id, 1))
       .returning();
-    if (newMajor.length === 0) {
+    if (newLinks.length === 0) {
       return c.json(
         { error: 'Club link not updated' },
         HttpStatusCodes.CONFLICT,
@@ -120,11 +126,20 @@ clubRouter.openapi(
   }),
   async (c) => {
     const spotlights = await db
-      .select({id: landingSpotlights.id, type: events.eventType, image: landingSpotlights.imageKey, name: events.name, description: events.description})
+      .select({
+        id: landingSpotlights.id,
+        type: events.eventType,
+        image: landingSpotlights.imageKey,
+        name: events.name,
+        description: events.description,
+      })
       .from(landingSpotlights)
       .innerJoin(events, eq(landingSpotlights.eventId, events.id));
-    const nspotlights = spotlights.map((spotlight) => ({...spotlight, image: env.S3_BUCKET_URL + spotlight.image}));
-    return c.json({spotlights: nspotlights}, HttpStatusCodes.OK);
+    const nspotlights = spotlights.map((spotlight) => ({
+      ...spotlight,
+      image: generateObjectUrl(spotlight.image),
+    }));
+    return c.json({ spotlights: nspotlights }, HttpStatusCodes.OK);
   },
 );
 

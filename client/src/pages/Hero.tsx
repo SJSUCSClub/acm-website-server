@@ -1,15 +1,16 @@
 import ACMCSHero from 'acm-cs-sjsu-hero-component';
-import SpotLightCard from '../components/molecules/spotlight-card';
 
 import MemberBtn from '../components/molecules/member-btn';
 import GetInvolvedBtn from '../components/molecules/get-involved-btn';
 import SocialBtn from '../components/molecules/social-btn';
 import Page from '../components/templates/Page';
 import { useQuery } from '@/hooks/useFetch';
+import Faq from '@/components/organisms/faq';
+import SponsorList from '@/components/organisms/sponsor-list';
+import SpotlightList from '@/components/organisms/spotlight-list';
 
 const Hero = () => {
   const { data: links } = useQuery('get', '/v1/club/links');
-  const { data: spotlightsData } = useQuery('get', '/v1/club/spotlights');
 
   return (
     <Page>
@@ -83,11 +84,9 @@ const Hero = () => {
           />
         </div>
 
-        <div className="border-y-2 place-items-center grid grid-cols-4 grid-rows-1 py-12">
-          <img src="./icons/kohlslogo.svg" width={200} height={200} alt={''} className="" />
-          <img src="./icons/teslalogo.svg" width={95} height={95} alt={''} />
-          <img src="./icons/google.png" width={95} height={95} alt={''} />
-          <img src="./icons/fetch-ai.png" width={200} height={200} alt={''} />
+        <div className="border-y-2 space-y-5 py-12">
+          <h1 className="text-4xl font-bold">Sponsors</h1>
+          <SponsorList />
         </div>
 
         <div className="border-y-2 place-items-center py-5">
@@ -131,27 +130,17 @@ const Hero = () => {
           </div>
         </div>
 
-        {spotlightsData && spotlightsData?.spotlights.length > 0 && (
-          <div className="p-50 pt-16 border-y-2 pb-5">
-            <h1 className="text-4xl font-bold">Spotlights</h1>
-            <h2 className="text-1xl font-bold pb-10 pt-3 text-gray-400">Our past events.</h2>
-            <div className="flex-cols gap-3 md:flex items-center md:gap-5 overflow-auto p-10 mb-5">
-              {spotlightsData?.spotlights.map((event) => {
-                return (
-                  <SpotLightCard
-                    type={event.type}
-                    image={event.image}
-                    title={event.name}
-                    description={event.description}
-                    key={event.id}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        )}
-        <div className="flex justify-center items-center pt-12">
+        <div className="p-50 pt-16 border-y-2 pb-5">
+          <h1 className="text-4xl font-bold">Spotlights</h1>
+          <h2 className="text-1xl font-bold pb-10 pt-3 text-gray-400">Our past events.</h2>
+          <SpotlightList />
+        </div>
+
+        <div className="flex justify-center items-center py-12 border-y-2">
           <GetInvolvedBtn />
+        </div>
+        <div className="mt-5">
+          <Faq />
         </div>
       </div>
     </Page>
