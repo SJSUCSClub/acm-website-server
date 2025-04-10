@@ -11,7 +11,6 @@ import { paths } from '@/types/schema.v1';
 import React from 'react';
 import UserDialog from '@/components/molecules/user-dialog';
 import Btn from '@/components/atoms/btn';
-import Card, { CardContent } from '@/components/atoms/card';
 
 type User =
   paths['/v1/users']['get']['responses']['200']['content']['application/json']['users'][number];

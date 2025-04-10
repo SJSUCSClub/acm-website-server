@@ -4,7 +4,7 @@ import { useQuery } from '@/hooks/useFetch';
 import { Search } from 'lucide-react';
 import React, { ChangeEvent, KeyboardEvent, useCallback, useEffect, useState } from 'react';
 import { debounce } from 'lodash';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { FileRouteTypes } from '@/routeTree.gen';
 import { paths } from '@/types/schema.v1';
 
@@ -44,7 +44,7 @@ const SearchBar = () => {
     if (!isFocused || !query || data?.results.length === 0) return;
 
     if (data) {
-      console.log(e.key)
+      console.log(e.key);
       switch (e.key) {
         case 'ArrowDown':
           e.preventDefault();

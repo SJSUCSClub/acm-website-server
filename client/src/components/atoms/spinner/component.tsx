@@ -1,9 +1,7 @@
 import { cn } from '@/utils/cn';
 import type React from 'react';
 
-export interface ISpinnerProps extends React.HTMLAttributes<HTMLDivElement> { }
-
-export const Spinner: React.FC<ISpinnerProps> = ({ className, ...props }) => {
+export const Spinner: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, ...props }) => {
   return (
     <div
       {...props}
