@@ -10,10 +10,10 @@ import { paths } from '@/types/schema.v1';
 
 type Result =
   paths['/v1/search']['get']['responses']['200']['content']['application/json']['results'][number];
-const typeRoutes: Record<Result['type'], FileRouteTypes['to']> = {
-  event: '/events',
-  project: '/projects',
-  company: '/projects'
+const typeRoutes: Record<Result['type'], FileRouteTypes['to'] | null> = {
+  event: '/events/$eventId',
+  project: '/projects/$projectId',
+  company: null
 };
 
 const SearchBar = () => {
@@ -44,6 +44,7 @@ const SearchBar = () => {
     if (!isFocused || !query || data?.results.length === 0) return;
 
     if (data) {
+      console.log(e.key)
       switch (e.key) {
         case 'ArrowDown':
           e.preventDefault();
@@ -59,7 +60,7 @@ const SearchBar = () => {
           e.preventDefault();
           if (selectedIndex >= 0) {
             setQuery('');
-            setIsFocused(false);
+            handleNavigate(data.results[selectedIndex]);
           }
           break;
         case 'Escape':
@@ -71,11 +72,11 @@ const SearchBar = () => {
     }
   };
 
-  const handleResultEnter = (e: KeyboardEvent<HTMLDivElement>, item: Result) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      console.log('entered');
-      navigate({ to: typeRoutes[item.type] });
+  const handleNavigate = (item: Result) => {
+    const route = typeRoutes[item.type];
+    const param = item.type === 'event' ? 'eventId' : 'projectId';
+    if (route) {
+      navigate({ to: route, params: { [param]: item.id } });
     }
   };
 
@@ -120,21 +121,20 @@ const SearchBar = () => {
                   role="option"
                   aria-selected={selectedIndex === index}
                   tabIndex={0}
-                  className={`px-4 py-2 cursor-pointer flex items-center gap-3 ${selectedIndex === index ? 'bg-accent text-accent-foreground' : 'hover:bg-muted'
-                    }`}
+                  className={`px-4 py-2 cursor-pointer flex items-center gap-3 ${
+                    selectedIndex === index ? 'bg-accent text-accent-foreground' : 'hover:bg-muted'
+                  }`}
                   onMouseEnter={() => setSelectedIndex(index)}
-                  onKeyDown={(e) => handleResultEnter(e, result)}
                   onClick={() => {
                     setQuery('');
                     setIsFocused(false);
+                    handleNavigate(result);
                   }}
                 >
-                  <Link key={index} to={typeRoutes[result.type]}>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{result.name}</p>
-                      <p className="text-xs text-muted-foreground">{result.type.toUpperCase()}</p>
-                    </div>
-                  </Link>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{result.name}</p>
+                    <p className="text-xs text-muted-foreground">{result.type.toUpperCase()}</p>
+                  </div>
                 </div>
               ))}
             </div>
