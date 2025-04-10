@@ -17,6 +17,7 @@ import { Route as ProjectsImport } from './routes/projects'
 import { Route as ProfileImport } from './routes/profile'
 import { Route as OnboardingImport } from './routes/onboarding'
 import { Route as LoginImport } from './routes/login'
+import { Route as InternalErrorImport } from './routes/internalError'
 import { Route as DashboardImport } from './routes/dashboard'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
@@ -60,6 +61,12 @@ const OnboardingRoute = OnboardingImport.update({
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const InternalErrorRoute = InternalErrorImport.update({
+  id: '/internalError',
+  path: '/internalError',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -139,6 +146,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardImport
+      parentRoute: typeof rootRoute
+    }
+    '/internalError': {
+      id: '/internalError'
+      path: '/internalError'
+      fullPath: '/internalError'
+      preLoaderRoute: typeof InternalErrorImport
       parentRoute: typeof rootRoute
     }
     '/login': {
@@ -253,6 +267,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRoute
+  '/internalError': typeof InternalErrorRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
@@ -269,6 +284,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRoute
+  '/internalError': typeof InternalErrorRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
@@ -285,6 +301,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRoute
+  '/internalError': typeof InternalErrorRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
@@ -304,6 +321,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/dashboard'
+    | '/internalError'
     | '/login'
     | '/onboarding'
     | '/profile'
@@ -319,6 +337,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/dashboard'
+    | '/internalError'
     | '/login'
     | '/onboarding'
     | '/profile'
@@ -333,6 +352,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/dashboard'
+    | '/internalError'
     | '/login'
     | '/onboarding'
     | '/profile'
@@ -351,6 +371,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   DashboardRoute: typeof DashboardRoute
+  InternalErrorRoute: typeof InternalErrorRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
   ProfileRoute: typeof ProfileRoute
@@ -364,6 +385,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   DashboardRoute: DashboardRoute,
+  InternalErrorRoute: InternalErrorRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
   ProfileRoute: ProfileRoute,
@@ -386,6 +408,7 @@ export const routeTree = rootRoute
         "/",
         "/about",
         "/dashboard",
+        "/internalError",
         "/login",
         "/onboarding",
         "/profile",
@@ -403,6 +426,9 @@ export const routeTree = rootRoute
     },
     "/dashboard": {
       "filePath": "dashboard.tsx"
+    },
+    "/internalError": {
+      "filePath": "internalError.tsx"
     },
     "/login": {
       "filePath": "login.tsx"
