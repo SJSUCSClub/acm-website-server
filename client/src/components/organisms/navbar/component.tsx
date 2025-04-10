@@ -47,18 +47,18 @@ export const NavBar: React.FC = () => {
   };
 
   return (
-    <div className="navbar z-10 sticky w-full">
-      <div className="flex items-center justify-between bg-white px-[5%] py-4 border-b-4 w-full">
+    <div className="navbar z-10 sticky border-b-4 w-full">
+      <div className="flex max-w-7xl mx-auto items-center justify-between bg-white px-2 md:px-6 py-4 w-full">
         <Link to="/">
           <img src={Logo} alt="Logo" className="sm:h-auto max-w-[100px] h-auto" />
         </Link>
 
-        <div className="w-[400px]">
+        <div className="sm:w-[400px] sm:block hidden xl:w-[600px]">
           <SearchBar />
         </div>
 
         {/* Desktop Navigation - Only visible on screens >= 1024px (lg) */}
-        <div className="hidden lg:flex items-center gap-4">
+        <div className="hidden lg:flex items-center gap-2">
           <LinkCard path="/about" pathName="About Us" />
           <LinkCard path="/events" pathName="Events" />
           <LinkCard path="/projects" pathName="Projects" />
