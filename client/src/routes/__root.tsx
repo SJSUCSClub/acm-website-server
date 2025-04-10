@@ -1,11 +1,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { createRootRoute, Outlet } from '@tanstack/react-router';
+import { createRootRoute, Outlet, useMatches } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
 import '../globals.css';
 import Footer from '../components/atoms/footer';
-import Navbar from '../components/organisms/navbar';
+import { NavBar } from '../components/organisms/navbar';
 import Faq from '../components/organisms/faq';
 import 'acm-cs-sjsu-hero-component/dist/styles.css';
 
@@ -31,20 +31,29 @@ const NotFoundPage = () => (
   </div>
 );
 
-export const Route = createRootRoute({
-  component: () => (
+const RootComponent = () => {
+  const matches = useMatches();
+  const isAdminRoute = matches.some((match) => match.pathname.startsWith('/admin'));
+
+  return (
     <QueryClientProvider client={queryClient}>
-      <div>
-        <Navbar />
-        <Outlet />
-        <div className="flex">
-          <Faq />
+      <div className="flex flex-col min-h-screen w-full overflow-x-hidden">
+        <NavBar />
+        <div className={`flex-grow w-full ${isAdminRoute ? 'mb-auto' : ''}`}>
+          <Outlet />
         </div>
-        <Footer />
+        <div className="w-full">
+          <Faq />
+          <Footer />
+        </div>
       </div>
       <ReactQueryDevtools initialIsOpen={false} />
       {process.env.NODE_ENV === 'development' && <TanStackRouterDevtools />}
     </QueryClientProvider>
-  ),
-  notFoundComponent: () => <NotFoundPage />
+  );
+};
+
+export const Route = createRootRoute({
+  component: RootComponent,
+  notFoundComponent: NotFoundPage
 });

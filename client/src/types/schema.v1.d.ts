@@ -182,7 +182,15 @@ export interface paths {
         /** Admin List all users */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    name?: string;
+                    education_level?: ("Undergraduate" | "Graduate")[];
+                    major?: string[];
+                    role?: ("user" | "member" | "admin")[];
+                    paid?: ("Semester" | "Annual")[];
+                    page?: string;
+                    per_page?: string;
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;
@@ -216,6 +224,7 @@ export interface paths {
                                 github: string | null;
                                 website: string | null;
                             }[];
+                            total: number;
                         };
                     };
                 };
