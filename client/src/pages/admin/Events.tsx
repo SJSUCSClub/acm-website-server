@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearch } from '@tanstack/react-router';
+import { X } from 'lucide-react';
 import { useQuery } from '@/hooks/useFetch';
 import EventCard from '@/components/molecules/event-card';
 import SearchBar from '@/components/molecules/search-bar';
@@ -10,6 +11,8 @@ import BtnTargetAudienceFilter from '@/components/molecules/btn-target-audience-
 import BtnMemberOnlyFilter from '@/components/molecules/btn-member-only-filter';
 import { paths } from '@/types/schema.v1';
 import { Route } from '@/routes/admin/_layout/events';
+import { Button } from '@/components/ui/button';
+import { DEFAULT_EVENT_FILTERS } from '@/utils/constants';
 
 type Events =
   paths['/v1/events']['get']['responses']['200']['content']['application/json']['foundEvents'];
@@ -63,37 +66,75 @@ const EventsPage = () => {
     updateSearchFilters('targetAudience', newTargetAudience);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <div className="intro space-y-4">
-          <h1 className="text-4xl font-bold">Events</h1>
-          <p className="text-lg">
-            Our student group organizes a variety of events during each academic semester, including
-            workshops, informational sessions, community engagement activities, and much more!
-          </p>
-          <p>
-            These events are accessible to all those who are interested, irrespective of their major
-            or prior experience.
-          </p>
+    <div className="p-4">
+      <div className="intro space-y-4 mb-4">
+        <h1 className="text-2xl font-bold">Events</h1>
+        <p className="text-lg">
+          Our student group organizes a variety of events during each academic semester, including
+          workshops, informational sessions, community engagement activities, and much more!
+        </p>
+        <p>
+          These events are accessible to all those who are interested, irrespective of their major
+          or prior experience.
+        </p>
+      </div>
 
-          <SearchBar name={name} fcn={setNameFilter} label="Search By Name" />
-          <BtnDateFilter fcn={setDateFilter} />
-          <BtnTagFilter selectedTags={tags} fcn={setTagFilter} />
-          <BtnEventTypeFilter selectedEventTypes={eventTypes} fcn={setEventTypesFilter} />
-          <BtnMemberOnlyFilter fcn={setMemberOnlyFilter} memberOnly={memberOnly} />
-          <BtnTargetAudienceFilter fcn={setTargetAudienceFilter} targetAudience={targetAudience} />
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-medium">Filters</h2>
+          <Button
+            variant="outline"
+            onClick={() => navigate({ search: { ...DEFAULT_EVENT_FILTERS } })}
+            className="flex items-center gap-2 text-black border-black hover:bg-black/5"
+            disabled={JSON.stringify(searchParams) === JSON.stringify(DEFAULT_EVENT_FILTERS)}
+          >
+            <X className="h-4 w-4" />
+            Clear All Filters
+          </Button>
         </div>
 
-        {events.length === 0 ? (
-          <div className="text-text text-center my-10">No events found</div>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
-            {events.map((event) => (
-              <EventCard key={event.id} event={event} />
-            ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
+          <SearchBar name={name} fcn={setNameFilter} label="Name" placeholder="Search by Name" />
+
+          <div>
+            <label className="block text-sm mb-1">Timeframe</label>
+            <BtnDateFilter fcn={setDateFilter} />
           </div>
-        )}
+
+          <div>
+            <label className="block text-sm mb-1">Tags</label>
+            <BtnTagFilter selectedTags={tags} fcn={setTagFilter} />
+          </div>
+
+          <div>
+            <label className="block text-sm mb-1">Event Types</label>
+            <BtnEventTypeFilter selectedEventTypes={eventTypes} fcn={setEventTypesFilter} />
+          </div>
+
+          <div>
+            <label className="block text-sm mb-1">Member Only</label>
+            <BtnMemberOnlyFilter fcn={setMemberOnlyFilter} memberOnly={memberOnly} />
+          </div>
+
+          <div>
+            <label className="block text-sm mb-1">Audience</label>
+            <BtnTargetAudienceFilter
+              fcn={setTargetAudienceFilter}
+              targetAudience={targetAudience}
+            />
+          </div>
+        </div>
       </div>
+
+      {events.length === 0 ? (
+        <div className="text-text text-center my-10">No events found</div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
+          {events.map((event) => (
+            <EventCard key={event.id} event={event} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

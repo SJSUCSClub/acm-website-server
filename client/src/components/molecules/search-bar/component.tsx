@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
 import useDebounce from '@/hooks/useDebounce';
-import Btn from '@/components/atoms/btn';
-import Input from '@/components/atoms/input';
 
 type SearchBarProps = {
   fcn: (query: string) => void;
   label: string;
   name: string;
+  placeholder?: string;
 };
 
 const DELAY_MS = 300;
 
-export const SearchBar: React.FC<SearchBarProps> = ({ fcn, label, name }) => {
+export const SearchBar: React.FC<SearchBarProps> = ({ fcn, label, name, placeholder }) => {
   const [query, setQuery] = useState<string>(name);
   const debouncedQuery = useDebounce(query, DELAY_MS);
 
@@ -20,29 +19,22 @@ export const SearchBar: React.FC<SearchBarProps> = ({ fcn, label, name }) => {
     fcn(debouncedQuery);
   }, [fcn, debouncedQuery]);
 
-  const handleClear = () => {
-    setQuery('');
-    fcn('');
-  };
+  useEffect(() => {
+    if (name !== query) {
+      setQuery(name);
+    }
+  }, [name]);
 
   return (
-    <div className="relative w-[350px] flex items-center">
-      <Input
+    <div className="">
+      <label className="block text-sm mb-1">{label}</label>
+      <input
+        type="text"
+        className="w-full p-2 border rounded text-sm"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="h-[40px] w-[275px]"
-        label={label}
-        required={false}
-        icon="/icons/search.svg"
+        placeholder={placeholder}
       />
-      <Btn
-        onClick={handleClear}
-        disabled={query.length === 0}
-        className="absolute top-8 right-0"
-        variant="ghost"
-      >
-        Clear
-      </Btn>
     </div>
   );
 };
