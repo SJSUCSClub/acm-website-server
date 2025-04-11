@@ -7,13 +7,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 export type TargetAudienceFilterProps = {
   fcn: (targetAudience: string) => void;
-  targetAudience: string;
 };
 
-export const BtnTargetAudienceFilter: React.FC<TargetAudienceFilterProps> = ({
-  fcn,
-  targetAudience
-}) => {
+export const BtnTargetAudienceFilter: React.FC<TargetAudienceFilterProps> = ({ fcn }) => {
   const [open, setOpen] = React.useState(false);
   const { data } = useQuery('get', '/v1/enums/{enumType}', {
     params: {
@@ -34,7 +30,7 @@ export const BtnTargetAudienceFilter: React.FC<TargetAudienceFilterProps> = ({
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          Audience: {targetAudience}
+          Audience Filter
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
