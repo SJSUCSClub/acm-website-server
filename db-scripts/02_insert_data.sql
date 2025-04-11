@@ -174,7 +174,11 @@ insert into files(key, name) values
 ('companies/2/logo.jpg', 'JPMorgan Chase Logo'),
 ('companies/3/logo.png', 'Boeing Logo'),
 ('companies/4/logo.jpeg', 'Johnson & Johnson Logo'),
-('companies/5/logo.jpg', 'ExxonMobil Logo');
+('companies/5/logo.jpg', 'ExxonMobil Logo'),
+('spotlights/1/image.webp', 'Spotlight Image'),
+('spotlights/2/image.webp', 'Spotlight Image'),
+('spotlights/3/image.webp', 'Spotlight Image'),
+('projects/2/files/README.md', 'README.md');
 
 -- Insert company 1
 INSERT INTO companies (name, location, description, industry_id, logo) values
@@ -184,12 +188,13 @@ INSERT INTO companies (name, location, description, industry_id, logo) values
 ('Johnson & Johnson', 'New Brunswick, NJ', 'A multinational healthcare company that develops medical devices, pharmaceuticals, and consumer packaged goods.', 'Healthcare', 'companies/4/logo.jpeg'),
 ('ExxonMobil', 'Irving, TX', 'A multinational oil and gas corporation that explores, produces, and sells crude oil, natural gas, and petroleum products.', 'Energy', 'companies/5/logo.jpg');
 
-INSERT INTO projects (name, description) values
-('AI Chatbot', 'An intelligent chatbot using natural language processing'),
-('Weather App', 'A weather forecasting app using open weather API'),
-('Task Manager', 'A task management tool to organize daily activities'),
-('Portfolio Website', 'A personal portfolio website built with React and Tailwind CSS'),
-('Inventory System', 'A desktop application for managing inventory in small businesses');
+INSERT INTO projects (name, description, github_link, status) values
+('ACM@SJSU Website', 'A user portal for ACM@SJSU members to manage their profiles, events, and projects.', 'https://github.com/SJSUCSClub/acm-website-server', 'In Progress'),
+('Lenses', 'A review platform that allows users to rate and review professors and courses at SJSU.', 'https://github.com/SJSUCSClub/course-scheduling', 'Completed'),
+('File Sharing', 'End to end encyrpted file sharing platform for ACM@SJSU members.', 'https://github.com/SJSUCSClub/e2ee-file-sharing', 'In Progress');
+
+INSERT INTO projects_files(project_id, file_key) VALUES
+('2', 'projects/2/files/README.md');
 
 -- Insert event 1
 INSERT INTO events (
@@ -212,6 +217,12 @@ VALUES (
     'A one-day workshop on data science fundamentals and techniques.', 
     'Workshop', 150, '10:00', '16:00', 
     '{"Data Science"}', 'Students', true, null
+),
+(
+  'ACM x Tesla Tech Talk', 'Online', '2024-09-15', '2024-09-15', 'Guest speaker Phuc Ngo, an NLP and Senior Data Engineer at Tesla, talks about his experiences and journey in the industry.', 'Tech Talk', null, '17:00', '18:00', '{"Machine Learning", "Data Science"}', 'Students', false, null),
+('Google Alumni Panel', 'San Jose, CA', '2023-08-15', '2023-08-15', 'ACM hosted a Q&A panel with SJSU alumni who are now working at Google. Members had the opportunity to gain insight into the technical interview process and what a typical workday at Google looks like, as well as network with panelists.', 'Other', null, '17:00', '18:00', '{"Networking"}', 'Students', false, null),
+(
+ 'Google Cloud Hero', 'Mountain View, CA', '2023-10-12', '2023-10-12', 'Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!', 'Workshop', null, '17:00', '18:00', '{"Cloud Computing"}', 'Students', true, null
 );
 
 INSERT INTO event_companies(event_id, company_id) VALUES
@@ -258,15 +269,11 @@ INSERT INTO interested_in_projects(user_id, project_id) VALUES
 ('user1', 1),
 ('user1', 3),
 ('user2', 2),
-('user2', 5),
 ('user3', 1),
 ('user3', 2),
 ('user3', 3),
-('user3', 4),
-('user3', 5),
 ('user5', 2),
-('user5', 3),
-('user5', 4);
+('user5', 3);
 
 INSERT INTO equipment_rental_type (name, price, description) VALUES
 ('Laptop Rental', 150.00, 'High-performance laptop rental for projects or events.'),
@@ -300,16 +307,18 @@ INSERT INTO equipment_item(equipment_type) VALUES
 (5);
 
 INSERT INTO sponsors VALUES
-('Kohls', '/sponsors/kohls/logo'),
-('Google', '/sponsors/google/logo'),
-('Tesla', '/sponsors/tesla/logo'),
-('FetchAI', '/sponsors/fetchai/logo');
+('Kohls', 'sponsors/kohls/logo.png'),
+('Google', 'sponsors/google/logo.png'),
+('Tesla', 'sponsors/tesla/logo.png'),
+('FetchAI', 'sponsors/fetchai/logo.png');
 
 INSERT INTO club_links(instagram, discord, linkedin, member_application) VALUES
 ('https://www.instagram.com/sjsuacm/', 'https://discord.gg/Rw85ngkExu', 'https://www.linkedin.com/company/sjsu-computer-science-club/about/', 'https://docs.google.com/forms/d/e/1FAIpQLSfNBu-IGm7bhUmMf2cSOmNca3SiJZyVRzPBVTVOYVBNZIyeYA/viewform?pli=1');
 
 INSERT INTO landing_spotlights(event_id, image_key) VALUES
-(1, 'default.png');
+(4, 'spotlights/1/image.webp'),
+(5, 'spotlights/2/image.webp'),
+(6, 'spotlights/3/image.webp');
 
 INSERT INTO landing_questions(question, answer) VALUES
 ($$Who's allowed to join this club?$$, $$ACM@SJSU is open to all SJSU students, regardless of their major!$$),

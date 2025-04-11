@@ -7,7 +7,7 @@ interface IPageProps {
 
 const Page: React.FC<IPageProps> = ({ children }) => {
   return (
-    <div className="max-w-7xl m-auto p-10 space-y-10">
+    <div className="w-full max-w-7xl mx-auto p-2 md:p-6 space-y-4 md:space-y-6 lg:space-y-10 overflow-x-hidden">
       {children}
       <Toaster />
     </div>

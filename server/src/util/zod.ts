@@ -26,6 +26,7 @@ import {
   paymentLinks,
   eventsEnum,
   targetAudienceEnum,
+  userRoleEnum,
 } from '@/db/schema';
 
 import { z } from 'zod';
@@ -102,6 +103,12 @@ export const officerSchema = createSelectSchema(officers);
 export const newBlacklistSchema = createInsertSchema(blacklist);
 export const blacklistSchema = createSelectSchema(blacklist);
 export const clubLinkSchema = createSelectSchema(clubLinks);
+export const updateClubLinkSchema = z.object({
+  instagram: clubLinkSchema.shape.instagram.optional(),
+  linkedin: clubLinkSchema.shape.linkedin.optional(),
+  discord: clubLinkSchema.shape.discord.optional(),
+  memberApplication: clubLinkSchema.shape.memberApplication.optional(),
+});
 export const landingSpotlightSchema = createSelectSchema(landingSpotlights);
 export const landingQuestionSchema = createSelectSchema(landingQuestions);
 export const errorSchema = z.object({
@@ -109,6 +116,10 @@ export const errorSchema = z.object({
 });
 export const paymentLinkSchema = createSelectSchema(paymentLinks);
 export const newPaymentLinkSchema = createInsertSchema(paymentLinks);
+export const updatePaymentLinkSchema = z.object({
+  name: paymentLinkSchema.shape.name.optional(),
+  link: paymentLinkSchema.shape.link.optional(),
+});
 export const paymentIdSchema = z.object({
   paymentId: z.string().openapi({
     param: {
@@ -123,4 +134,14 @@ export const spotlightSchema = z.object({
   image: z.string(),
   name: z.string(),
   description: z.string(),
+});
+
+export const userFilterSchema = z.object({
+  name: z.string().optional(),
+  education_level: z.array(z.enum(educationLevelEnum.enumValues)).optional(),
+  major: z.array(z.string()).optional(),
+  role: z.array(z.enum(userRoleEnum.enumValues)).optional(),
+  paid: z.array(z.enum(membershipTermEnum.enumValues)).optional(),
+  page: z.string().optional(),
+  per_page: z.string().optional(),
 });

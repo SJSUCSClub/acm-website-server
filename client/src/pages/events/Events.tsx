@@ -4,6 +4,7 @@ import BtnDateFilter from '../../components/molecules/btn-date-filter';
 import BtnTagFilter from '../../components/molecules/btn-tag-filter';
 import { useQuery } from '@/hooks/useFetch';
 import { paths } from '@/types/schema.v1';
+import Page from '@/components/templates/Page';
 
 type Events =
   paths['/v1/events']['get']['responses']['200']['content']['application/json']['foundEvents'];
@@ -28,8 +29,8 @@ const EventsPage = () => {
     }
   }, [dateFilter, tagFilter, eventData]);
   return (
-    <>
-      <div className="about text-text my-10 px-[15%]">
+    <Page>
+      <div className="about text-text">
         <div className="intro space-y-4">
           <h1 className="text-4xl font-bold">Events</h1>
           <p className="text-lg">
@@ -51,7 +52,7 @@ const EventsPage = () => {
           ))}
         </div>
       </div>
-    </>
+    </Page>
   );
 };
 

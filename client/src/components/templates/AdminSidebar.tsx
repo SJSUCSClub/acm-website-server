@@ -20,7 +20,7 @@ interface IAdminSidebarProps {
 }
 
 const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const navItems = [
     {
       title: 'Home',
@@ -61,19 +61,19 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
   ];
 
   return (
-    <div className="flex min-h-[800px]">
+    <div className="flex flex-col md:flex-row w-full min-h-[calc(100vh-4rem)]">
       <div
         className={clsx(
-          'relative flex flex-col border-r bg-background transition-all duration-300',
-          collapsed ? 'w-16' : 'w-44'
+          'relative flex flex-row md:flex-col border-b md:border-b-0 md:border-r bg-background transition-all duration-300',
+          collapsed ? 'w-full md:w-16' : 'w-full md:w-44'
         )}
       >
-        <div className="flex h-14 items-center border-b px-4">
-          {!collapsed && <h2>Admin</h2>}
+        <div className="hidden md:flex items-center border-r md:border-r-0 md:border-b px-2 md:px-4 h-12 md:h-14">
+          {!collapsed && <h2 className="hidden md:block">Admin</h2>}
           <Button
             variant="ghost"
             size="icon"
-            className="ml-auto"
+            className="ml-auto hidden md:flex"
             onClick={() => setCollapsed(!collapsed)}
           >
             {collapsed ? <PanelLeftOpen /> : <PanelLeftClose />}
@@ -81,26 +81,32 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
           </Button>
         </div>
 
-        <div className="flex-1 overflow-auto py-2">
-          <nav className="grid gap-1 px-2">
+        <div className="flex-1 w-full">
+          <nav className="grid grid-cols-7 md:grid-cols-none md:grid-flow-row md:gap-1 w-full">
             {navItems.map((item) => (
               <Link
                 key={item.title}
                 to={item.href}
                 className={clsx(
-                  'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground',
-                  collapsed ? 'justify-center' : ''
+                  'flex items-center py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground',
+                  'justify-center md:justify-center',
+                  'md:h-12 md:px-3 md:rounded-md',
+                  !collapsed && 'md:justify-start'
                 )}
                 search={item.params ?? {}}
               >
-                <item.icon className="h-5 w-5" />
-                {!collapsed && <span>{item.title}</span>}
+                <div className={clsx('flex items-center', !collapsed && 'md:w-full')}>
+                  <item.icon className="h-5 w-5 flex-shrink-0" />
+                  {!collapsed && <span className="hidden md:block ml-3">{item.title}</span>}
+                </div>
               </Link>
             ))}
           </nav>
         </div>
       </div>
-      <Page>{children}</Page>
+      <div className="flex-grow w-full overflow-auto">
+        <Page>{children}</Page>
+      </div>
     </div>
   );
 };

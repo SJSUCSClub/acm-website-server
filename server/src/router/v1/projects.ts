@@ -23,8 +23,9 @@ import {
   userSchema,
   fileSchema,
   projectSchema,
+  errorSchema,
 } from '@/util/zod';
-import { uploadFile, deleteFile } from '@/lib/aws/s3';
+import { uploadFile, deleteFile, generateObjectUrl } from '@/lib/aws/s3';
 
 const projectRouter = new OpenAPIHono<Context>();
 const fileRequestSchema = z.object({
@@ -63,7 +64,7 @@ projectRouter.openapi(
   async (c) => {
     const formDataBody = await c.req.parseBody();
     const file: File = <File>formDataBody['file'];
-    const projectId: string = <string> c.req.param('projectID');
+    const projectId: string = <string>c.req.param('projectID');
     const res = await uploadFile(file, `projects/${projectId}/${file.name}`);
     if (res) {
       return c.json({ status: 'successful' });
@@ -126,6 +127,54 @@ projectRouter.openapi(
   async (c) => {
     const foundProjects: Project[] = await db.select().from(projects);
     return c.json({ projects: foundProjects }, HttpStatusCodes.OK);
+  },
+);
+
+projectRouter.openapi(
+  createRoute({
+    method: 'get',
+    path: '/{projectID}',
+    tags: ['projects'],
+    summary: 'Get a project by ID',
+    request: {
+      params: projectIDSchema,
+    },
+    responses: {
+      [HttpStatusCodes.OK]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              project: projectSchema,
+            }),
+          },
+        },
+        description: 'Successful response',
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Project not found',
+      },
+    },
+  }),
+  async (c) => {
+    const { projectID } = c.req.valid('param');
+    const project = await db
+      .select()
+      .from(projects)
+      .where(eq(projects.id, parseInt(projectID)));
+
+    if (!project.length) {
+      return c.json({ error: 'Project not found' }, HttpStatusCodes.NOT_FOUND);
+    }
+
+    return c.json(
+      { project: project[0] },
+      HttpStatusCodes.OK,
+    );
   },
 );
 
@@ -202,7 +251,12 @@ projectRouter.openapi(
       .innerJoin(files, eq(files.key, projectsFiles.fileKey))
       .where(eq(projectsFiles.projectId, parseInt(projectID)));
 
-    return c.json({ projectFiles }, HttpStatusCodes.OK);
+    const mappedProjectFiles = projectFiles.map(file => ({
+      ...file,
+      key: generateObjectUrl(file.key),
+    }));
+
+    return c.json({ projectFiles: mappedProjectFiles }, HttpStatusCodes.OK);
   },
 );
 
