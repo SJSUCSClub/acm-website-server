@@ -45,7 +45,7 @@ const EventsPage = () => {
     if (eventData) {
       setEvents(eventData.foundEvents);
     }
-  }, [timeframe, tags, eventData]);
+  }, [eventData]);
 
   const updateSearchFilters = (field: keyof EventsFilters, value: unknown) => {
     navigate({ search: (prev) => ({ ...prev, [field]: value }), replace: true });
