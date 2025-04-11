@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import useDebounce from '@/hooks/useDebounce';
 
 type SearchBarProps = {
-  fcn: (query: string) => void;
+  onQueryChange: (query: string) => void;
   label: string;
   value: string;
   placeholder?: string;
@@ -10,14 +10,19 @@ type SearchBarProps = {
 
 const DELAY_MS = 300;
 
-export const SearchBar: React.FC<SearchBarProps> = ({ fcn, label, value, placeholder }) => {
+export const SearchBar: React.FC<SearchBarProps> = ({
+  onQueryChange,
+  label,
+  value,
+  placeholder
+}) => {
   const [query, setQuery] = useState<string>(value);
   const debouncedQuery = useDebounce(query, DELAY_MS);
 
   // update after 500ms typing delay from user
   useEffect(() => {
-    fcn(debouncedQuery);
-  }, [fcn, debouncedQuery]);
+    onQueryChange(debouncedQuery);
+  }, [onQueryChange, debouncedQuery]);
 
   // sync the query if incoming value is different
   useEffect(() => {

@@ -41,8 +41,8 @@ const EventsPage = () => {
             These events are accessible to all those who are interested, irrespective of their major
             or prior experience.
           </p>
-          <BtnDateFilter fcn={setDateFilter} />
-          <BtnTagFilter selectedTags={tagFilter} fcn={setTagFilter} />
+          <BtnDateFilter onSelectChange={setDateFilter} />
+          <BtnTagFilter selectedTags={tagFilter} onSelectChange={setTagFilter} />
         </div>
         {events.length === 0 && <div className="text-text text-center my-10">No events found</div>}
 

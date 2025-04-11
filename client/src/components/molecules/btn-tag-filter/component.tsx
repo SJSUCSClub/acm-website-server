@@ -9,10 +9,10 @@ import { useQuery } from '@/hooks/useFetch';
 
 export type EventCardProps = {
   selectedTags: string[];
-  fcn: (data: string[]) => void;
+  onSelectChange: (data: string[]) => void;
 };
 
-export const BtnTagFilter: React.FC<EventCardProps> = ({ selectedTags, fcn }) => {
+export const BtnTagFilter: React.FC<EventCardProps> = ({ selectedTags, onSelectChange }) => {
   const [open, setOpen] = useState(false);
   const value = 'Tag Filter';
   const { data: tags } = useQuery('get', '/v1/enums/{enumType}', {
@@ -25,9 +25,9 @@ export const BtnTagFilter: React.FC<EventCardProps> = ({ selectedTags, fcn }) =>
 
   const handleCheckboxChange = (tag: string, checked: boolean) => {
     if (checked) {
-      fcn([...selectedTags, tag]);
+      onSelectChange([...selectedTags, tag]);
     } else {
-      fcn(selectedTags.filter((item) => item !== tag));
+      onSelectChange(selectedTags.filter((item) => item !== tag));
     }
   };
 

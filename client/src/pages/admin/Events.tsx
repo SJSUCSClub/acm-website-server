@@ -164,31 +164,39 @@ const EventsPage = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
-          <SearchBar value={name} fcn={setNameFilter} label="Name" placeholder="Search by Name" />
+          <SearchBar
+            value={name}
+            onQueryChange={setNameFilter}
+            label="Name"
+            placeholder="Search by Name"
+          />
 
           <div>
             <label className="block text-sm mb-1">Timeframe</label>
-            <BtnDateFilter fcn={setDateFilter} date={cfl(timeframe)} />
+            <BtnDateFilter onSelectChange={setDateFilter} date={cfl(timeframe)} />
           </div>
 
           <div>
             <label className="block text-sm mb-1">Tags</label>
-            <BtnTagFilter selectedTags={tags} fcn={setTagFilter} />
+            <BtnTagFilter selectedTags={tags} onSelectChange={setTagFilter} />
           </div>
 
           <div>
             <label className="block text-sm mb-1">Event Types</label>
-            <BtnEventTypeFilter selectedEventTypes={eventTypes} fcn={setEventTypesFilter} />
+            <BtnEventTypeFilter
+              selectedEventTypes={eventTypes}
+              onSelectChange={setEventTypesFilter}
+            />
           </div>
 
           <div>
             <label className="block text-sm mb-1">Member Only</label>
-            <BtnMemberOnlyFilter fcn={setMemberOnlyFilter} memberOnly={memberOnly} />
+            <BtnMemberOnlyFilter onSelectChange={setMemberOnlyFilter} memberOnly={memberOnly} />
           </div>
 
           <div>
             <label className="block text-sm mb-1">Audience</label>
-            <BtnTargetAudienceFilter fcn={setTargetAudienceFilter} />
+            <BtnTargetAudienceFilter onSelectChange={setTargetAudienceFilter} />
           </div>
         </div>
 
