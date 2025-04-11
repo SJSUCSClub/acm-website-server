@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 body {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
+  height: 100%;
 }
 
 progress::-webkit-progress-value {
@@ -102,8 +103,6 @@ progress::-moz-progress-bar {
     @apply bg-background text-foreground;
   }
 }
-
-
 
 @layer base {
   * {

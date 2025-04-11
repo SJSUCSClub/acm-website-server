@@ -1,2 +1,2 @@
-export { ProgressMarker as default } from "./component";
-export * from "./component";
+export { ProgressMarker as default } from './component';
+export * from './component';

@@ -1,2 +1,2 @@
-export { EventDetails as default } from "./component";
-export * from "./component";
+export { EventDetails as default } from './component';
+export * from './component';

@@ -1,8 +1,8 @@
-import Card from "../../atoms/card";
-import React from "react";
-import PlanBtn from "../plan-btn";
+import Card from '../../atoms/card';
+import React from 'react';
+import PlanBtn from '../plan-btn';
 
-type Variant = "primary" | "secondary" | "tertiary" | "ghost";
+type Variant = 'primary' | 'secondary' | 'tertiary' | 'ghost';
 
 export interface IGetInvolvedCardProps {
   plan: string;
@@ -20,7 +20,7 @@ export const GetInvolvedCard: React.FC<IGetInvolvedCardProps> = ({
   description,
   priceStyling,
   textList,
-  buttonStyling,
+  buttonStyling
 }) => (
   <Card className="bg-white rounded-xl text-center shadow-lg transition ease-in hover:shadow-2xl p-10 pt-20  pb-20">
     <h2 className=" text-base md:text-2xl ont-bold mb-2">{plan}</h2>

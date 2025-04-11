@@ -1,13 +1,10 @@
-import { useMutation, useQuery } from "@/hooks/useFetch";
-import React, { useEffect, useState } from "react";
-import EventCard, { Event } from "@/pages/dashboard/EventCard";
+import { useMutation, useQuery } from '@/hooks/useFetch';
+import React, { useEffect, useState } from 'react';
+import EventCard, { Event } from '@/pages/dashboard/EventCard';
 
 const SubscribedEvents = () => {
-  const { data: se } = useQuery("get", "/v1/users/my/subscribed-events");
-  const { mutate } = useMutation(
-    "delete",
-    "/v1/users/my/subscribed-events/{eventID}",
-  );
+  const { data: se } = useQuery('get', '/v1/users/my/subscribed-events');
+  const { mutate } = useMutation('delete', '/v1/users/my/subscribed-events/{eventID}');
   const [subscribedEvents, setSubscribedEvents] = useState<Event[]>([]);
 
   useEffect(() => {
@@ -21,15 +18,15 @@ const SubscribedEvents = () => {
       {
         params: {
           path: {
-            eventID: event.id.toString(),
-          },
-        },
+            eventID: event.id.toString()
+          }
+        }
       },
       {
         onSuccess: () => {
           setSubscribedEvents(newEvents);
-        },
-      },
+        }
+      }
     );
   };
 
@@ -41,11 +38,7 @@ const SubscribedEvents = () => {
       ) : (
         <div className="space-y-5">
           {subscribedEvents.map((event) => (
-            <EventCard
-              key={event.id}
-              event={event as Event}
-              onRemove={removeEvent}
-            />
+            <EventCard key={event.id} event={event as Event} onRemove={removeEvent} />
           ))}
         </div>
       )}

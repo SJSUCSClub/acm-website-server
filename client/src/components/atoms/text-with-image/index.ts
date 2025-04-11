@@ -1,2 +1,2 @@
-export { TextWithImage as default } from "./component";
-export * from "./component";
+export { TextWithImage as default } from './component';
+export * from './component';

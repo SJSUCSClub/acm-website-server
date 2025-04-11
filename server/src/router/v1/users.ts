@@ -17,9 +17,11 @@ import {
   projects,
   interestedInProjects,
   attendingEvents,
+  educationLevelEnum,
+  membershipTermEnum,
 } from '@/db/schema';
 import { db } from '@/db/db';
-import { eq,count, getTableColumns, and } from 'drizzle-orm';
+import { eq, count, getTableColumns, and, or, sql } from 'drizzle-orm';
 import { unauthorizedRequest } from '@/middlewares/auth-middleware';
 import type { User, Event, NewAttendingEvent } from '@/db/schema';
 import type { Context } from '@/lib/context';
@@ -39,6 +41,8 @@ import {
   subscribedCompanySchema,
   attendingEventSchema,
   bookmarkedEventSchema,
+  userFilterSchema,
+  projectIDSchema,
 } from '@/util/zod';
 
 const userRouter = new OpenAPIHono<Context>();
@@ -50,12 +54,16 @@ userRouter.openapi(
     tags: ['users'],
     summary: 'Admin List all users',
     middleware: [authMiddleWare('admin')],
+    request: {
+      query: userFilterSchema,
+    },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
           'application/json': {
             schema: z.object({
               users: z.array(userSchema),
+              total: z.number(),
             }),
           },
         },
@@ -64,12 +72,96 @@ userRouter.openapi(
     },
   }),
   async (c) => {
-    const foundUsers: User[] = await db.select().from(users);
+    // Get the raw URL to parse query parameters directly
+    const url = new URL(c.req.url);
+    const queryParams = url.searchParams;
+    // Extract array parameters with proper handling of multiple values
+    const getArrayParam = (param: string): string[] => {
+      const values: string[] = [];
+      // Get all instances of the parameter from the URL
+      queryParams.getAll(`${param}[]`).forEach(value => {
+        if (!values.includes(value)) {
+          values.push(value);
+        }
+      });
+
+      return values;
+    };
+
+    const query = {
+      name: queryParams.get('name') || undefined,
+      education_level: getArrayParam('education_level'),
+      major: getArrayParam('major'),
+      role: getArrayParam('role'),
+      paid: getArrayParam('paid'),
+      page: parseInt(queryParams.get('page') || '1'),
+      per_page: parseInt(queryParams.get('per_page') || '20'),
+    };
+
+    const whereConditions = [];
+
+    if (query.name) {
+      whereConditions.push(sql`${users.name} ILIKE ${`%${query.name}%`}`);
+    }
+
+    if (query.education_level.length > 0) {
+      whereConditions.push(
+        or(...query.education_level.map(level => eq(users.education_level, level as typeof educationLevelEnum.enumValues[number]))),
+      );
+    }
+
+    if (query.major.length > 0) {
+      whereConditions.push(
+        or(...query.major.map(major => eq(users.major, major))),
+      );
+    }
+
+    if (query.role.length > 0) {
+      whereConditions.push(
+        or(...query.role.map(role => eq(users.role, role as typeof userRoleEnum.enumValues[number]))),
+      );
+    }
+
+    if (query.paid.length > 0) {
+      whereConditions.push(
+        or(...query.paid.map(term => eq(users.paid, term as typeof membershipTermEnum.enumValues[number]))),
+      );
+    }
+
+    // Get total count
+    const totalCount = await db
+      .select({ count: count() })
+      .from(users)
+      .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
+      .then(result => result[0].count);
+
+    // Get paginated users
+    const offset = (query.page - 1) * query.per_page;
+    let foundUsers: User[];
+    if (whereConditions.length > 0) {
+      foundUsers = await db
+        .select()
+        .from(users)
+        .where(and(...whereConditions))
+        .limit(query.per_page)
+        .offset(offset);
+    } else {
+      foundUsers = await db
+        .select()
+        .from(users)
+        .limit(query.per_page)
+        .offset(offset);
+    }
+
     const formattedUsers = foundUsers.map((user) => ({
       ...user,
       createdAt: user.createdAt.toISOString(),
     }));
-    return c.json({ users: formattedUsers }, HttpStatusCodes.OK);
+
+    return c.json({
+      users: formattedUsers,
+      total: totalCount,
+    }, HttpStatusCodes.OK);
   },
 );
 
@@ -891,6 +983,84 @@ userRouter.openapi(
 );
 
 userRouter.openapi(
+	createRoute({
+		method: 'get',
+		path: '/my/subscribed-companies/{companyID}',
+		tags: ['users'],
+		summary: 'Check if current user has subscribed to a company',
+		middleware: [authMiddleWare('user')],
+    request: {
+      params: companyIDSchema,
+    },
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful response',
+				content: {
+					'application/json': {
+						schema: z.object({
+							subscribed: z.boolean(),
+						}),
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+    const { companyID } = c.req.valid('param');
+		const sub = await db
+			.select()
+			.from(subscribedCompanies)
+			.where(and(eq(subscribedCompanies.userId, session.userId), eq(subscribedCompanies.companyId, parseInt(companyID))));
+
+		return c.json({ subscribed: sub.length > 0 }, HttpStatusCodes.OK);
+	},
+);
+
+userRouter.openapi(
+	createRoute({
+		method: 'get',
+		path: '/my/subscribed-companies/{companyID}',
+		tags: ['users'],
+		summary: 'Check if current user has subscribed to a company',
+		middleware: [authMiddleWare('user')],
+    request: {
+      params: companyIDSchema,
+    },
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful response',
+				content: {
+					'application/json': {
+						schema: z.object({
+							subscribed: z.boolean(),
+						}),
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+    const { companyID } = c.req.valid('param');
+		const sub = await db
+			.select()
+			.from(subscribedCompanies)
+			.where(and(eq(subscribedCompanies.userId, session.userId), eq(subscribedCompanies.companyId, parseInt(companyID))));
+
+		return c.json({ subscribed: sub.length > 0 }, HttpStatusCodes.OK);
+	},
+);
+
+userRouter.openapi(
   createRoute({
     method: 'get',
     path: '/{userId}',
@@ -1114,6 +1284,45 @@ userRouter.openapi(
 );
 
 userRouter.openapi(
+	createRoute({
+		method: 'get',
+		path: '/my/projects-interest/{projectID}',
+		tags: ['users'],
+		summary: 'Check if current user has shown interest in a project',
+		middleware: [authMiddleWare('user')],
+    request: {
+      params: projectIDSchema,
+    },
+		responses: {
+			[HttpStatusCodes.OK]: {
+				description: 'Successful response',
+				content: {
+					'application/json': {
+						schema: z.object({
+							interested: z.boolean(),
+						}),
+					},
+				},
+			},
+			...unauthorizedRequest,
+		},
+	}),
+	async (c) => {
+		const session = c.get('session');
+		if (!session) {
+			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+		}
+    const { projectID } = c.req.valid('param');
+		const interest = await db
+			.select()
+			.from(interestedInProjects)
+			.where(and(eq(interestedInProjects.userId, session.userId), eq(interestedInProjects.projectId, parseInt(projectID))));
+
+		return c.json({ interested: interest.length > 0 }, HttpStatusCodes.OK);
+	},
+);
+
+userRouter.openapi(
   createRoute({
     method: 'post',
     path: '/my/projects-interest/{projectID}',
@@ -1121,9 +1330,7 @@ userRouter.openapi(
     summary: 'Show interest in a project',
     middleware: [authMiddleWare('user')],
     request: {
-      params: z.object({
-        projectID: z.string(),
-      }),
+      params: projectIDSchema,
     },
     responses: {
       [HttpStatusCodes.NO_CONTENT]: {
@@ -1171,9 +1378,7 @@ userRouter.openapi(
     summary: 'Delete interest in a project',
     middleware: [authMiddleWare('user')],
     request: {
-      params: z.object({
-        projectID: z.string(),
-      }),
+      params: projectIDSchema,
     },
     responses: {
       [HttpStatusCodes.NO_CONTENT]: {
@@ -1237,9 +1442,7 @@ userRouter.openapi(
         description: 'Internal server error',
         content: {
           'application/json': {
-            schema: z.object({
-              error: z.string(),
-            }),
+            schema: errorSchema,
           },
         },
       },
@@ -1295,9 +1498,7 @@ userRouter.openapi(
         description: 'Internal server error',
         content: {
           'application/json': {
-            schema: z.object({
-              error: z.string(),
-            }),
+            schema: errorSchema,
           },
         },
       },

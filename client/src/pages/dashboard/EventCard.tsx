@@ -1,26 +1,16 @@
-import Btn from "@/components/atoms/btn";
+import Btn from '@/components/atoms/btn';
 import Card, {
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
-} from "@/components/atoms/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { paths } from "@/types/schema.v1";
-import {
-  CiCalendar,
-  CiClock1,
-  CiLocationOn,
-  CiLock,
-  CiUser,
-} from "react-icons/ci";
+  CardTitle
+} from '@/components/atoms/card';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { paths } from '@/types/schema.v1';
+import { Link } from '@tanstack/react-router';
+import { Lock, User, MapPin, Calendar, Clock } from 'lucide-react';
 
 interface IEventCardProps {
   event: Event;
@@ -28,26 +18,26 @@ interface IEventCardProps {
 }
 
 type BookmarkedEvent =
-  paths["/v1/users/my/bookmarks"]["get"]["responses"]["200"]["content"]["application/json"]["bookmarks"][number];
+  paths['/v1/users/my/bookmarks']['get']['responses']['200']['content']['application/json']['bookmarks'][number];
 type SubscribedEvent =
-  paths["/v1/users/my/subscribed-events"]["get"]["responses"]["200"]["content"]["application/json"]["events"][number];
+  paths['/v1/users/my/subscribed-events']['get']['responses']['200']['content']['application/json']['events'][number];
 export type Event = BookmarkedEvent & SubscribedEvent;
 
 const EventCard: React.FC<IEventCardProps> = ({ event, onRemove }) => {
-  const date = new Date(event.bookmarkedDate || event.subscribedDate)
-    .toISOString()
-    .slice(0, 10);
+  const date = new Date(event.bookmarkedDate || event.subscribedDate).toISOString().slice(0, 10);
   return (
     <Card>
       <CardHeader className="space-y-3">
         <CardTitle className="flex justify-between items-center space-x-2">
           <div className="flex justify-between items-center space-x-2">
-            <p>{event.name}</p>
+            <Link to="/events/$eventId" params={{ eventId: event.id.toString() }}>
+              <p>{event.name}</p>
+            </Link>
             {event.memberOnly && (
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
-                    <CiLock />
+                    <Lock />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Event is member only</p>
@@ -62,34 +52,32 @@ const EventCard: React.FC<IEventCardProps> = ({ event, onRemove }) => {
                 <span className="text-sm">{date}</span>
               </TooltipTrigger>
               <TooltipContent>
-                <p>{event.bookmarkedDate ? "Bookmarked" : "Subscribed"} at</p>
+                <p>{event.bookmarkedDate ? 'Bookmarked' : 'Subscribed'} at</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </CardTitle>
         <CardDescription className="flex space-x-5 flex-wrap">
           <Badge>{event.eventType}</Badge>
-          <Badge variant="secondary">
-            For: {event.targetAudience || "All"}
-          </Badge>
+          <Badge variant="secondary">For: {event.targetAudience || 'All'}</Badge>
           <div className="flex items-center space-x-1">
-            <CiLocationOn />
+            <MapPin />
             <p>{event.location}</p>
           </div>
           <div className="flex items-center space-x-1">
-            <CiCalendar />
+            <Calendar />
             <p>
               {event.startDate} - {event.endDate}
             </p>
           </div>
           <div className="flex items-center space-x-1">
-            <CiClock1 />
+            <Clock />
             <p>
               {event.startTime} - {event.endTime}
             </p>
           </div>
           <div className="flex items-center space-x-1">
-            <CiUser />
+            <User />
             <p>{event.eventCapacity}</p>
           </div>
         </CardDescription>

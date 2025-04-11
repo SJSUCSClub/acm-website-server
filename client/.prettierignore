@@ -1,0 +1,9 @@
+# Build outputs
+dist/
+build/
+
+# Node modules
+node_modules/
+
+# Auto-generated files
+src/types/schema.v1.d.ts 

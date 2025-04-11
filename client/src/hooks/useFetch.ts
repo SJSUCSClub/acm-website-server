@@ -3,8 +3,10 @@ import createFetchClient, { Middleware } from "openapi-fetch";
 import createClient from "openapi-react-query";
 import { useNavigate } from "@tanstack/react-router";
 
-const api = createFetchClient<paths>({
-  baseUrl: '/api/'
+
+export const api = createFetchClient<paths>({
+  baseUrl: '/api/',
+  credentials: 'include'
 });
 
 const middleware: Middleware = {
@@ -39,4 +41,3 @@ const $api = createClient(api);
 
 export const useQuery = $api.useQuery;
 export const useMutation = $api.useMutation;
-

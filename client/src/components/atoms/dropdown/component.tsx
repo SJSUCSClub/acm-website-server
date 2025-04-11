@@ -1,7 +1,6 @@
-import { cn } from "../../../utils/cn";
+import { cn } from '../../../utils/cn';
 
-export interface IDropdownProps
-  extends React.SelectHTMLAttributes<HTMLSelectElement> {
+export interface IDropdownProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
   footer?: string;
   options: string[];
@@ -10,7 +9,7 @@ export interface IDropdownProps
 
 export const Dropdown: React.FC<IDropdownProps> = ({
   label,
-  footer = "",
+  footer = '',
   required,
   options,
   className,
@@ -24,8 +23,8 @@ export const Dropdown: React.FC<IDropdownProps> = ({
       </div>
       <select
         className={cn(
-          "rounded-xl bg-border text-text px-[16px] py-[10px] focus:outline-none w-full placeholder-neutral mb-2 border-border-hovered border-2 appearance-none text-[14px]",
-          className,
+          'rounded-xl bg-border text-text px-[16px] py-[10px] focus:outline-none w-full placeholder-neutral mb-2 border-border-hovered border-2 appearance-none text-[14px]',
+          className
         )}
         {...props}
       >
@@ -48,6 +47,6 @@ export const Dropdown: React.FC<IDropdownProps> = ({
         </svg>
       </div>
     </div>
-    {footer !== "" && <p className="text-neutral mb-2 text-[14px]">{footer}</p>}
+    {footer !== '' && <p className="text-neutral mb-2 text-[14px]">{footer}</p>}
   </div>
 );

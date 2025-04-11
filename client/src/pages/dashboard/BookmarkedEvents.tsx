@@ -1,10 +1,10 @@
-import { useMutation, useQuery } from "@/hooks/useFetch";
-import React, { useEffect, useState } from "react";
-import EventCard, { Event } from "@/pages/dashboard/EventCard";
+import { useMutation, useQuery } from '@/hooks/useFetch';
+import React, { useEffect, useState } from 'react';
+import EventCard, { Event } from '@/pages/dashboard/EventCard';
 
 const BookmarkedEvents = () => {
-  const { data: be } = useQuery("get", "/v1/users/my/bookmarks");
-  const { mutate } = useMutation("delete", "/v1/users/my/bookmarked/{eventID}");
+  const { data: be } = useQuery('get', '/v1/users/my/bookmarks');
+  const { mutate } = useMutation('delete', '/v1/users/my/bookmarked/{eventID}');
   const [bookmarkedEvents, setBookmarkedEvents] = useState<Event[]>([]);
 
   useEffect(() => {
@@ -18,15 +18,15 @@ const BookmarkedEvents = () => {
       {
         params: {
           path: {
-            eventID: event.id.toString(),
-          },
-        },
+            eventID: event.id.toString()
+          }
+        }
       },
       {
         onSuccess: () => {
           setBookmarkedEvents(newEvents);
-        },
-      },
+        }
+      }
     );
   };
 
@@ -38,11 +38,7 @@ const BookmarkedEvents = () => {
       ) : (
         <div className="space-y-5">
           {bookmarkedEvents.map((event) => (
-            <EventCard
-              key={event.id}
-              event={event as Event}
-              onRemove={removeEvent}
-            />
+            <EventCard key={event.id} event={event as Event} onRemove={removeEvent} />
           ))}
         </div>
       )}

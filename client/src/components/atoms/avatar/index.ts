@@ -1,2 +1,2 @@
-export { Avatar as default } from "./component";
-export * from "./component";
+export { Avatar as default } from './component';
+export * from './component';

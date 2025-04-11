@@ -138,6 +138,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/auth/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get current user */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Current user */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/users": {
         parameters: {
             query?: never;
@@ -148,7 +182,15 @@ export interface paths {
         /** Admin List all users */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    name?: string;
+                    education_level?: ("Undergraduate" | "Graduate")[];
+                    major?: string[];
+                    role?: ("user" | "member" | "admin")[];
+                    paid?: ("Semester" | "Annual")[];
+                    page?: string;
+                    per_page?: string;
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;
@@ -170,7 +212,7 @@ export interface paths {
                                 major: string;
                                 gradDate: string;
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                                profilePic: string | null;
+                                profilePic: string;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
@@ -182,6 +224,7 @@ export interface paths {
                                 github: string | null;
                                 website: string | null;
                             }[];
+                            total: number;
                         };
                     };
                 };
@@ -226,7 +269,7 @@ export interface paths {
                             major: string;
                             gradDate: string;
                             interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                            profilePic: string | null;
+                            profilePic: string;
                             /** @enum {string} */
                             role: "user" | "member" | "admin";
                             /** @enum {string|null} */
@@ -293,7 +336,7 @@ export interface paths {
                             major: string;
                             gradDate: string;
                             interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                            profilePic: string | null;
+                            profilePic: string;
                             /** @enum {string} */
                             role: "user" | "member" | "admin";
                             /** @enum {string|null} */
@@ -1102,7 +1145,7 @@ export interface paths {
                             major: string;
                             gradDate: string;
                             interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                            profilePic: string | null;
+                            profilePic: string;
                             /** @enum {string} */
                             role: "user" | "member" | "admin";
                             /** @enum {string|null} */
@@ -1184,7 +1227,7 @@ export interface paths {
                             major: string;
                             gradDate: string;
                             interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                            profilePic: string | null;
+                            profilePic: string;
                             /** @enum {string} */
                             role: "user" | "member" | "admin";
                             /** @enum {string|null} */
@@ -1338,7 +1381,42 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Check if current user has shown interest in a project */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    projectID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            interested: boolean;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
         put?: never;
         /** Show interest in a project */
         post: {
@@ -1977,6 +2055,64 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/projects/{projectID}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a project by ID */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    projectID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            project: {
+                                id: number;
+                                name: string;
+                                description: string;
+                                /** @enum {string} */
+                                status: "Not Started" | "Looking for Members" | "In Progress" | "Completed";
+                                githubLink: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description Project not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/projects/{projectID}/interested": {
         parameters: {
             query?: never;
@@ -2011,7 +2147,7 @@ export interface paths {
                                 major: string;
                                 gradDate: string;
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                                profilePic: string | null;
+                                profilePic: string;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
@@ -2118,7 +2254,7 @@ export interface paths {
                                 major: string;
                                 gradDate: string;
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                                profilePic: string | null;
+                                profilePic: string;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
@@ -2523,7 +2659,7 @@ export interface paths {
                                 major: string;
                                 gradDate: string;
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                                profilePic: string | null;
+                                profilePic: string;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
@@ -2939,7 +3075,7 @@ export interface paths {
                                 major: string;
                                 gradDate: string;
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                                profilePic: string | null;
+                                profilePic: string;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
@@ -3864,7 +4000,7 @@ export interface paths {
                                 major: string;
                                 gradDate: string;
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
-                                profilePic: string | null;
+                                profilePic: string;
                                 /** @enum {string} */
                                 role: "user" | "member" | "admin";
                                 /** @enum {string|null} */
@@ -4189,10 +4325,10 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
-                        instagram: string | null;
-                        discord: string | null;
-                        linkedin: string | null;
-                        memberApplication: string | null;
+                        instagram?: string | null;
+                        linkedin?: string | null;
+                        discord?: string | null;
+                        memberApplication?: string | null;
                     };
                 };
             };
@@ -4736,9 +4872,8 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
-                        id?: number;
-                        name: string;
-                        link: string;
+                        name?: string;
+                        link?: string;
                     };
                 };
             };

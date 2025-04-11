@@ -1,2 +1,2 @@
-export { CompanyDialog as default } from "./component";
-export * from "./component";
+export { CompanyDialog as default } from './component';
+export * from './component';

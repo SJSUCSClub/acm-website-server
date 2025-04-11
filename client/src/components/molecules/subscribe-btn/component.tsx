@@ -1,10 +1,9 @@
-import Btn from "@/components/atoms/btn";
-import { useMutation, useQuery } from "@/hooks/useFetch";
-import { Check } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import Btn from '@/components/atoms/btn';
+import { useMutation, useQuery } from '@/hooks/useFetch';
+import React, { useEffect, useState } from 'react';
 
 export interface ISubscribeBtnProps {
-  source: "company" | "event";
+  source: 'company' | 'event';
   id: string;
 }
 
@@ -17,7 +16,7 @@ interface ISubscribeCompanyBtnProps {
 }
 
 const SubscribeBtn: React.FC<ISubscribeBtnProps> = ({ source, id }) => {
-  if (source === "company") {
+  if (source === 'company') {
     return <SubscribeCompanyBtn companyId={id} />;
   }
 
@@ -25,25 +24,15 @@ const SubscribeBtn: React.FC<ISubscribeBtnProps> = ({ source, id }) => {
 };
 
 const SubscribeEventBtn: React.FC<ISubscribeEventBtnProps> = ({ eventId }) => {
-  const { data, isError, isLoading } = useQuery(
-    "get",
-    "/v1/users/my/subscribed-events/{eventID}",
-    {
-      params: {
-        path: {
-          eventID: eventId,
-        },
-      },
-    },
-  );
-  const { mutate: subscribe } = useMutation(
-    "post",
-    "/v1/users/my/subscribed-events/{eventID}",
-  );
-  const { mutate: unsubscribe } = useMutation(
-    "delete",
-    "/v1/users/my/subscribed-events/{eventID}",
-  );
+  const { data, isError, isLoading } = useQuery('get', '/v1/users/my/subscribed-events/{eventID}', {
+    params: {
+      path: {
+        eventID: eventId
+      }
+    }
+  });
+  const { mutate: subscribe } = useMutation('post', '/v1/users/my/subscribed-events/{eventID}');
+  const { mutate: unsubscribe } = useMutation('delete', '/v1/users/my/subscribed-events/{eventID}');
   const [subscribed, setSubscribed] = useState<boolean>(false);
 
   useEffect(() => {
@@ -60,30 +49,30 @@ const SubscribeEventBtn: React.FC<ISubscribeEventBtnProps> = ({ eventId }) => {
         {
           params: {
             path: {
-              eventID: eventId,
-            },
-          },
+              eventID: eventId
+            }
+          }
         },
         {
           onSuccess: () => {
             setSubscribed(false);
-          },
-        },
+          }
+        }
       );
     } else {
       subscribe(
         {
           params: {
             path: {
-              eventID: eventId,
-            },
-          },
+              eventID: eventId
+            }
+          }
         },
         {
           onSuccess: () => {
             setSubscribed(true);
-          },
-        },
+          }
+        }
       );
     }
   };
@@ -93,38 +82,32 @@ const SubscribeEventBtn: React.FC<ISubscribeEventBtnProps> = ({ eventId }) => {
       className="w-full"
       disabled={isLoading || isError}
       onClick={handleSubscribe}
-      variant={subscribed ? "outline" : "primary"}
+      variant={subscribed ? 'outline' : 'primary'}
     >
-      {isLoading || isError
-        ? "Login to Subscribe"
-        : subscribed
-          ? "Unsubscribe"
-          : "Subscribe"}
+      {isLoading || isError ? 'Login to Subscribe' : subscribed ? 'Unsubscribe' : 'Subscribe'}
     </Btn>
   );
 };
 
-const SubscribeCompanyBtn: React.FC<ISubscribeCompanyBtnProps> = ({
-  companyId,
-}) => {
+const SubscribeCompanyBtn: React.FC<ISubscribeCompanyBtnProps> = ({ companyId }) => {
   const { data, isError, isLoading } = useQuery(
-    "get",
-    "/v1/users/my/subscribed-companies/{companyID}",
+    'get',
+    '/v1/users/my/subscribed-companies/{companyID}',
     {
       params: {
         path: {
-          companyID: companyId,
-        },
-      },
-    },
+          companyID: companyId
+        }
+      }
+    }
   );
   const { mutate: subscribe } = useMutation(
-    "post",
-    "/v1/users/my/subscribed-companies/{companyID}",
+    'post',
+    '/v1/users/my/subscribed-companies/{companyID}'
   );
   const { mutate: unsubscribe } = useMutation(
-    "delete",
-    "/v1/users/my/subscribed-companies/{companyID}",
+    'delete',
+    '/v1/users/my/subscribed-companies/{companyID}'
   );
   const [subscribed, setSubscribed] = useState<boolean>(false);
 
@@ -142,30 +125,30 @@ const SubscribeCompanyBtn: React.FC<ISubscribeCompanyBtnProps> = ({
         {
           params: {
             path: {
-              companyID: companyId,
-            },
-          },
+              companyID: companyId
+            }
+          }
         },
         {
           onSuccess: () => {
             setSubscribed(false);
-          },
-        },
+          }
+        }
       );
     } else {
       subscribe(
         {
           params: {
             path: {
-              companyID: companyId,
-            },
-          },
+              companyID: companyId
+            }
+          }
         },
         {
           onSuccess: () => {
             setSubscribed(true);
-          },
-        },
+          }
+        }
       );
     }
   };
@@ -175,13 +158,9 @@ const SubscribeCompanyBtn: React.FC<ISubscribeCompanyBtnProps> = ({
       className="w-full"
       disabled={isLoading || isError}
       onClick={handleSubscribe}
-      variant={subscribed ? "outline" : "primary"}
+      variant={subscribed ? 'outline' : 'primary'}
     >
-      {isLoading || isError
-        ? "Login to Subscribe"
-        : subscribed
-          ? "Unsubscribe"
-          : "Subscribe"}
+      {isLoading || isError ? 'Login to Subscribe' : subscribed ? 'Unsubscribe' : 'Subscribe'}
     </Btn>
   );
 };

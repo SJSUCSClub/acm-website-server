@@ -1,2 +1,2 @@
-export { GetInvolvedCard as default } from "./component";
-export * from "./component";
+export { GetInvolvedCard as default } from './component';
+export * from './component';
