@@ -13,6 +13,7 @@ import { paths } from '@/types/schema.v1';
 import { Route } from '@/routes/admin/_layout/events';
 import { Button } from '@/components/ui/button';
 import { DEFAULT_EVENT_FILTERS } from '@/utils/constants';
+import { capitalizeFirstLetter as cfl } from '@/utils/helpers';
 
 type Events =
   paths['/v1/events']['get']['responses']['200']['content']['application/json']['foundEvents'];
@@ -94,11 +95,11 @@ const EventsPage = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
-          <SearchBar name={name} fcn={setNameFilter} label="Name" placeholder="Search by Name" />
+          <SearchBar value={name} fcn={setNameFilter} label="Name" placeholder="Search by Name" />
 
           <div>
             <label className="block text-sm mb-1">Timeframe</label>
-            <BtnDateFilter fcn={setDateFilter} />
+            <BtnDateFilter fcn={setDateFilter} date={cfl(timeframe)} />
           </div>
 
           <div>

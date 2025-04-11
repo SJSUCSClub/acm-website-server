@@ -4,14 +4,14 @@ import useDebounce from '@/hooks/useDebounce';
 type SearchBarProps = {
   fcn: (query: string) => void;
   label: string;
-  name: string;
+  value: string;
   placeholder?: string;
 };
 
 const DELAY_MS = 300;
 
-export const SearchBar: React.FC<SearchBarProps> = ({ fcn, label, name, placeholder }) => {
-  const [query, setQuery] = useState<string>(name);
+export const SearchBar: React.FC<SearchBarProps> = ({ fcn, label, value, placeholder }) => {
+  const [query, setQuery] = useState<string>(value);
   const debouncedQuery = useDebounce(query, DELAY_MS);
 
   // update after 500ms typing delay from user
@@ -19,11 +19,12 @@ export const SearchBar: React.FC<SearchBarProps> = ({ fcn, label, name, placehol
     fcn(debouncedQuery);
   }, [fcn, debouncedQuery]);
 
+  // sync the query if incoming value is different
   useEffect(() => {
-    if (name !== query) {
-      setQuery(name);
+    if (value !== query) {
+      setQuery(value);
     }
-  }, [name]);
+  }, [value]);
 
   return (
     <div className="">
