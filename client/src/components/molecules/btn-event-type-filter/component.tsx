@@ -8,10 +8,13 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 export type EventTypeFilterProps = {
   selectedEventTypes: string[];
-  fcn: (data: string[]) => void;
+  onSelectChange: (data: string[]) => void;
 };
 
-export const BtnEventTypeFilter: React.FC<EventTypeFilterProps> = ({ fcn, selectedEventTypes }) => {
+export const BtnEventTypeFilter: React.FC<EventTypeFilterProps> = ({
+  onSelectChange,
+  selectedEventTypes
+}) => {
   const [open, setOpen] = useState(false);
   const value = 'Event Type Filter';
   const { data: eventTypes } = useQuery('get', '/v1/enums/{enumType}', {
@@ -24,9 +27,9 @@ export const BtnEventTypeFilter: React.FC<EventTypeFilterProps> = ({ fcn, select
 
   const handleCheckboxChange = (eventType: string, checked: boolean) => {
     if (checked) {
-      fcn([...selectedEventTypes, eventType]);
+      onSelectChange([...selectedEventTypes, eventType]);
     } else {
-      fcn(selectedEventTypes.filter((item) => item !== eventType));
+      onSelectChange(selectedEventTypes.filter((item) => item !== eventType));
     }
   };
 

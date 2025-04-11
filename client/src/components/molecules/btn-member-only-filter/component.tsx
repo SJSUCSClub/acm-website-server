@@ -5,11 +5,14 @@ import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 export type MemberOnlyFilterProps = {
-  fcn: (targetAudience: boolean) => void;
+  onSelectChange: (targetAudience: boolean) => void;
   memberOnly: boolean;
 };
 
-export const BtnMemberOnlyFilter: React.FC<MemberOnlyFilterProps> = ({ fcn, memberOnly }) => {
+export const BtnMemberOnlyFilter: React.FC<MemberOnlyFilterProps> = ({
+  onSelectChange,
+  memberOnly
+}) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -33,7 +36,7 @@ export const BtnMemberOnlyFilter: React.FC<MemberOnlyFilterProps> = ({ fcn, memb
                 value={'No'}
                 onSelect={() => {
                   setOpen(false);
-                  fcn(false);
+                  onSelectChange(false);
                 }}
               >
                 No
@@ -42,7 +45,7 @@ export const BtnMemberOnlyFilter: React.FC<MemberOnlyFilterProps> = ({ fcn, memb
               <CommandItem
                 onSelect={() => {
                   setOpen(false);
-                  fcn(true);
+                  onSelectChange(true);
                 }}
               >
                 Yes

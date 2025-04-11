@@ -5,11 +5,11 @@ import { Command, CommandGroup, CommandItem, CommandList } from '../../../compon
 import { Popover, PopoverContent, PopoverTrigger } from '../../../components/ui/popover';
 
 export type EventCardProps = {
-  fcn: (timeframe: 'upcoming' | 'today' | 'past' | 'all') => void;
+  onSelectChange: (timeframe: 'upcoming' | 'today' | 'past' | 'all') => void;
   date?: string;
 };
 
-export const BtnDateFilter: React.FC<EventCardProps> = ({ fcn, date = 'All' }) => {
+export const BtnDateFilter: React.FC<EventCardProps> = ({ onSelectChange, date = 'All' }) => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(date);
   const options = ['All', 'Upcoming', 'Today', 'Past'];
@@ -37,7 +37,9 @@ export const BtnDateFilter: React.FC<EventCardProps> = ({ fcn, date = 'All' }) =
                   onSelect={(currentValue) => {
                     setValue(currentValue);
                     setOpen(false);
-                    fcn(currentValue.toLowerCase() as 'upcoming' | 'today' | 'past' | 'all');
+                    onSelectChange(
+                      currentValue.toLowerCase() as 'upcoming' | 'today' | 'past' | 'all'
+                    );
                   }}
                 >
                   {option}

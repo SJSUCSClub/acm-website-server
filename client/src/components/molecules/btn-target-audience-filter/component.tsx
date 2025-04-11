@@ -6,10 +6,12 @@ import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 export type TargetAudienceFilterProps = {
-  fcn: (targetAudience: string) => void;
+  onSelectChange: (targetAudience: string) => void;
 };
 
-export const BtnTargetAudienceFilter: React.FC<TargetAudienceFilterProps> = ({ fcn }) => {
+export const BtnTargetAudienceFilter: React.FC<TargetAudienceFilterProps> = ({
+  onSelectChange
+}) => {
   const [open, setOpen] = React.useState(false);
   const { data } = useQuery('get', '/v1/enums/{enumType}', {
     params: {
@@ -44,7 +46,7 @@ export const BtnTargetAudienceFilter: React.FC<TargetAudienceFilterProps> = ({ f
                   value={targetAudience}
                   onSelect={(currentValue) => {
                     setOpen(false);
-                    fcn(currentValue);
+                    onSelectChange(currentValue);
                   }}
                 >
                   {targetAudience}
