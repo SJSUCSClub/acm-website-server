@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import Page from "../components/templates/Page";
+import Page from "@/components/templates/Page";
 
 const page = () => {
   // You have an internal error, redirect to home page with a button
