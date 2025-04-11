@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { useQuery } from '@/hooks/useFetch';
 import { Search } from 'lucide-react';
 import React, { ChangeEvent, KeyboardEvent, useCallback, useEffect, useState } from 'react';
-import { debounce } from 'lodash';
+import debounce from '@/utils/debounce';
 import { useNavigate } from '@tanstack/react-router';
 import { FileRouteTypes } from '@/routeTree.gen';
 import { paths } from '@/types/schema.v1';
