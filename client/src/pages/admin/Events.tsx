@@ -10,7 +10,7 @@ import BtnEventTypeFilter from '@/components/molecules/btn-event-type-filter';
 import BtnTargetAudienceFilter from '@/components/molecules/btn-target-audience-filter';
 import BtnMemberOnlyFilter from '@/components/molecules/btn-member-only-filter';
 import { paths } from '@/types/schema.v1';
-import { Route } from '@/routes/admin/_layout/events';
+import { Route, EventsFilters } from '@/routes/admin/_layout/events';
 import { Button } from '@/components/ui/button';
 import { DEFAULT_EVENT_FILTERS } from '@/utils/constants';
 import { capitalizeFirstLetter as cfl } from '@/utils/helpers';
@@ -47,7 +47,7 @@ const EventsPage = () => {
     }
   }, [timeframe, tags, eventData]);
 
-  const updateSearchFilters = (field: keyof typeof searchParams, value: unknown) => {
+  const updateSearchFilters = (field: keyof EventsFilters, value: unknown) => {
     navigate({ search: (prev) => ({ ...prev, [field]: value }), replace: true });
   };
 
@@ -65,6 +65,75 @@ const EventsPage = () => {
 
   const setTargetAudienceFilter = (newTargetAudience: string) =>
     updateSearchFilters('targetAudience', newTargetAudience);
+
+  const renderChip = (
+    key: keyof EventsFilters,
+    value: string,
+    label: string,
+    getUpdatedValue?: () => unknown
+  ) => {
+    return (
+      <div
+        key={`${key}-${value}`}
+        className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-900"
+      >
+        <span>
+          {label}: {value}
+        </span>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="ml-2 -mr-1 rounded-full p-1 hover:bg-gray-200"
+          onClick={() =>
+            updateSearchFilters(
+              key,
+              getUpdatedValue ? getUpdatedValue() : DEFAULT_EVENT_FILTERS[key]
+            )
+          }
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      </div>
+    );
+  };
+
+  const renderFilterChips = () => {
+    const activeFilters = [];
+
+    if (name) {
+      activeFilters.push(renderChip('name', name, 'Name'));
+    }
+
+    if (timeframe !== DEFAULT_EVENT_FILTERS.timeframe) {
+      activeFilters.push(renderChip('timeframe', cfl(timeframe), 'Timeframe'));
+    }
+
+    if (tags !== DEFAULT_EVENT_FILTERS.tags) {
+      tags.forEach((tag) =>
+        activeFilters.push(
+          renderChip('tags', tag, 'Tags', () => tags.filter((item) => item !== tag))
+        )
+      );
+    }
+
+    if (eventTypes !== DEFAULT_EVENT_FILTERS.eventTypes) {
+      eventTypes.forEach((eventType) =>
+        activeFilters.push(
+          renderChip('eventTypes', eventType, 'Event Types', () =>
+            eventTypes.filter((item) => item !== eventType)
+          )
+        )
+      );
+    }
+
+    if (targetAudience !== DEFAULT_EVENT_FILTERS.targetAudience) {
+      activeFilters.push(renderChip('targetAudience', targetAudience, 'Target Audience'));
+    }
+
+    return activeFilters.length > 0 ? (
+      <div className="flex flex-wrap gap-2 mt-4">{activeFilters}</div>
+    ) : null;
+  };
 
   return (
     <div className="p-4">
@@ -119,12 +188,11 @@ const EventsPage = () => {
 
           <div>
             <label className="block text-sm mb-1">Audience</label>
-            <BtnTargetAudienceFilter
-              fcn={setTargetAudienceFilter}
-              targetAudience={targetAudience}
-            />
+            <BtnTargetAudienceFilter fcn={setTargetAudienceFilter} />
           </div>
         </div>
+
+        {renderFilterChips()}
       </div>
 
       {events.length === 0 ? (
