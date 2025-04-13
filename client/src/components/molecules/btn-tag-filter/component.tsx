@@ -15,7 +15,7 @@ export type EventCardProps = {
 export const BtnTagFilter: React.FC<EventCardProps> = ({ selectedTags, onSelectChange }) => {
   const [open, setOpen] = useState(false);
   const value = 'Tag Filter';
-  const { data: tags } = useQuery('get', '/v1/enums/{enumType}', {
+  const { data: tags, error } = useQuery('get', '/v1/enums/{enumType}', {
     params: {
       path: {
         enumType: 'cs_fields_enum'
@@ -47,23 +47,26 @@ export const BtnTagFilter: React.FC<EventCardProps> = ({ selectedTags, onSelectC
       <PopoverContent className="w-[200px] p-0">
         <Command>
           <CommandList>
-            <CommandGroup>
-              {tags?.types.map((option: string) => (
-                <CommandItem key={option}>
-                  {' '}
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id={option}
-                      checked={selectedTags.includes(option)}
-                      onCheckedChange={(checked) =>
-                        handleCheckboxChange(option, checked as boolean)
-                      }
-                    />
-                    <label htmlFor={option}>{option}</label>
-                  </div>
-                </CommandItem>
-              ))}
-            </CommandGroup>
+            {error || tags?.types.length === 0 ? (
+              <div className="py-6 text-center text-sm text-gray-500">No Tags Found</div>
+            ) : (
+              <CommandGroup>
+                {tags?.types.map((option: string) => (
+                  <CommandItem key={option}>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id={option}
+                        checked={selectedTags.includes(option)}
+                        onCheckedChange={(checked) =>
+                          handleCheckboxChange(option, checked as boolean)
+                        }
+                      />
+                      <label htmlFor={option}>{option}</label>
+                    </div>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
           </CommandList>
         </Command>
       </PopoverContent>
