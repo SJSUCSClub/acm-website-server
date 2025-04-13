@@ -9,6 +9,7 @@ import BtnTagFilter from '@/components/molecules/btn-tag-filter';
 import BtnEventTypeFilter from '@/components/molecules/btn-event-type-filter';
 import BtnTargetAudienceFilter from '@/components/molecules/btn-target-audience-filter';
 import BtnMemberOnlyFilter from '@/components/molecules/btn-member-only-filter';
+import Spinner from '@/components/atoms/spinner';
 import { paths } from '@/types/schema.v1';
 import { Route, EventsFilters } from '@/routes/admin/_layout/events';
 import { Button } from '@/components/ui/button';
@@ -28,7 +29,11 @@ const EventsPage = () => {
 
   const [events, setEvents] = useState<Events>([]);
 
-  const { data: eventData } = useQuery('get', '/v1/events', {
+  const {
+    data: eventData,
+    isLoading,
+    error
+  } = useQuery('get', '/v1/events', {
     params: {
       query: {
         name,
@@ -163,7 +168,7 @@ const EventsPage = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
+        <div className="flex flex-wrap gap-4 items-center">
           <SearchBar
             value={name}
             onQueryChange={setNameFilter}
@@ -203,7 +208,11 @@ const EventsPage = () => {
         {renderFilterChips()}
       </div>
 
-      {events.length === 0 ? (
+      {isLoading ? (
+        <Spinner />
+      ) : error ? (
+        <div className="text-red-500 p-4 text-center">Error loading events data</div>
+      ) : events.length === 0 ? (
         <div className="text-text text-center my-10">No events found</div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">

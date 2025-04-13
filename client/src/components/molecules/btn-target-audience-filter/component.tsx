@@ -13,7 +13,7 @@ export const BtnTargetAudienceFilter: React.FC<TargetAudienceFilterProps> = ({
   onSelectChange
 }) => {
   const [open, setOpen] = React.useState(false);
-  const { data } = useQuery('get', '/v1/enums/{enumType}', {
+  const { data, error } = useQuery('get', '/v1/enums/{enumType}', {
     params: {
       path: {
         enumType: 'target_audience_enum'
@@ -39,20 +39,24 @@ export const BtnTargetAudienceFilter: React.FC<TargetAudienceFilterProps> = ({
       <PopoverContent className="w-[200px] p-0">
         <Command>
           <CommandList>
-            <CommandGroup>
-              {targetAudiences.map((targetAudience) => (
-                <CommandItem
-                  key={targetAudience}
-                  value={targetAudience}
-                  onSelect={(currentValue) => {
-                    setOpen(false);
-                    onSelectChange(currentValue);
-                  }}
-                >
-                  {targetAudience}
-                </CommandItem>
-              ))}
-            </CommandGroup>
+            {error || targetAudiences.length === 0 ? (
+              <div className="py-6 text-center text-sm text-gray-500">No Audiences Found</div>
+            ) : (
+              <CommandGroup>
+                {targetAudiences.map((targetAudience) => (
+                  <CommandItem
+                    key={targetAudience}
+                    value={targetAudience}
+                    onSelect={(currentValue) => {
+                      setOpen(false);
+                      onSelectChange(currentValue);
+                    }}
+                  >
+                    {targetAudience}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
           </CommandList>
         </Command>
       </PopoverContent>

@@ -17,7 +17,7 @@ export const BtnEventTypeFilter: React.FC<EventTypeFilterProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const value = 'Event Type Filter';
-  const { data: eventTypes } = useQuery('get', '/v1/enums/{enumType}', {
+  const { data: eventTypes, error } = useQuery('get', '/v1/enums/{enumType}', {
     params: {
       path: {
         enumType: 'events_enum'
@@ -50,23 +50,27 @@ export const BtnEventTypeFilter: React.FC<EventTypeFilterProps> = ({
       <PopoverContent className="w-[200px] p-0">
         <Command>
           <CommandList>
-            <CommandGroup>
-              {eventTypes?.types.map((option: string) => (
-                <CommandItem key={option}>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id={option}
-                      checked={selectedEventTypes.includes(option)}
-                      onCheckedChange={(checked) =>
-                        handleCheckboxChange(option, checked as boolean)
-                      }
-                    />
+            {error || eventTypes?.types.length === 0 ? (
+              <div className="py-6 text-center text-sm text-gray-500">No Event Types Found</div>
+            ) : (
+              <CommandGroup>
+                {eventTypes?.types.map((option: string) => (
+                  <CommandItem key={option}>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id={option}
+                        checked={selectedEventTypes.includes(option)}
+                        onCheckedChange={(checked) =>
+                          handleCheckboxChange(option, checked as boolean)
+                        }
+                      />
 
-                    <label htmlFor={option}>{option}</label>
-                  </div>
-                </CommandItem>
-              ))}
-            </CommandGroup>
+                      <label htmlFor={option}>{option}</label>
+                    </div>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
           </CommandList>
         </Command>
       </PopoverContent>
