@@ -14,6 +14,7 @@ import officerRouter from '@/router/v1/officer';
 import blacklistRouter from '@/router/v1/blacklist';
 import clubRouter from '@/router/v1/club';
 import paymentRouter from '@/router/v1/payments';
+import searchRouter from './search';
 const v1App = new OpenAPIHono<Context>();
 
 v1App.route('/auth', authRouter);
@@ -29,5 +30,6 @@ v1App.route('/officers', officerRouter);
 v1App.route('/blacklist', blacklistRouter);
 v1App.route('/club', clubRouter);
 v1App.route('/payments', paymentRouter);
+v1App.route('/search', searchRouter);
 
 export default v1App;

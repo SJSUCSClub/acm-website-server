@@ -1,9 +1,17 @@
+import { cn } from '@/utils/cn';
 import type React from 'react';
 
-export const Spinner: React.FC = () => {
+export const Spinner: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+  ...props
+}) => {
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
-    </div>
+    <div
+      {...props}
+      className={cn(
+        'animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900',
+        className
+      )}
+    ></div>
   );
 };
