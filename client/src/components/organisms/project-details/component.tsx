@@ -5,14 +5,16 @@ import UsersTable from '@/components/molecules/users-table';
 import { Badge } from '@/components/ui/badge';
 import { useQuery } from '@/hooks/useFetch';
 import { getProjectStatusColor } from '@/utils/colors';
+import { Link } from '@tanstack/react-router';
 import React from 'react';
 import { RxGithubLogo } from 'react-icons/rx';
 
 export interface IProjectDetailsProps {
   projectId: string;
+  admin?: boolean;
 }
 
-const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId }) => {
+const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = false }) => {
   const { data: project } = useQuery('get', '/v1/projects/{projectID}', {
     params: {
       path: {
@@ -41,10 +43,19 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId }) => {
         <div className="space-y-16">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h1 className="text-3xl font-bold">{project.project.name}</h1>
-              <Badge className={getProjectStatusColor(project.project.status)}>
-                {project.project.status}
-              </Badge>
+              <div className="flex items-center space-x-4">
+                <h1 className="text-3xl font-bold">{project.project.name}</h1>
+                <Badge className={getProjectStatusColor(project.project.status)}>
+                  {project.project.status}
+                </Badge>
+              </div>
+              {admin && (
+                <Link to={'/admin/projects/$projectId/edit'} params={{ projectId: project.project.id.toString() }}>
+                  <Btn>
+                    Edit
+                  </Btn>
+                </Link>
+              )}
             </div>
 
             <p className="text-muted-foreground mb-4">{project.project.description}</p>
