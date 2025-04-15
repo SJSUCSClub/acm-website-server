@@ -1,7 +1,9 @@
 import { cn } from '@/utils/cn';
 import type React from 'react';
 
-export const Spinner: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+export type SpinnerProps = React.HTMLAttributes<HTMLDivElement>;
+
+export const Spinner: React.FC<SpinnerProps> = ({
   className,
   ...props
 }) => {
