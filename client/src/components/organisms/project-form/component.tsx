@@ -212,7 +212,7 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ projectId = null }) => {
                 </div>
               )}
             />
-            <Btn type="submit">{projectId ? 'Update' : 'Create'}</Btn>
+            <Btn type="submit" variant="outline">{projectId ? 'Update' : 'Create'}</Btn>
           </form>
         </div>
       </FetchError>
