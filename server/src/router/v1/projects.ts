@@ -24,6 +24,7 @@ import {
   fileSchema,
   projectSchema,
   errorSchema,
+  newProjectSchema,
 } from '@/util/zod';
 import { uploadFile, deleteFile, generateObjectUrl } from '@/lib/aws/s3';
 
@@ -271,7 +272,7 @@ projectRouter.openapi(
       body: {
         content: {
           'application/json': {
-            schema: projectSchema,
+            schema: newProjectSchema,
           },
         },
       },
@@ -287,17 +288,27 @@ projectRouter.openapi(
         },
         description: 'Successful response',
       },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Failed to create project',
+      },
       ...unauthorizedRequest,
       ...forbiddenRequest,
     },
   }),
   async (c) => {
-    const { id, name, description, githubLink } = c.req.valid('json');
+    const body = c.req.valid('json');
     const newProject = await db
       .insert(projects)
-      .values({ id, name, description, githubLink })
-      // .onConflictDoNothing()
+      .values(body)
       .returning();
+    if (newProject.length === 0) {
+      return c.json({ error: 'Failed to create project' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
     return c.json({ project: newProject[0] }, HttpStatusCodes.CREATED);
   },
 );

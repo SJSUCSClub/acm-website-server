@@ -1999,12 +1999,12 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
-                        id: number;
+                        id?: number;
                         name: string;
                         description: string;
                         /** @enum {string} */
-                        status: "Not Started" | "Looking for Members" | "In Progress" | "Completed";
-                        githubLink: string | null;
+                        status?: "Not Started" | "Looking for Members" | "In Progress" | "Completed";
+                        githubLink?: string | null;
                     };
                 };
             };
@@ -2040,6 +2040,17 @@ export interface paths {
                 };
                 /** @description Forbidden */
                 403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Failed to create project */
+                500: {
                     headers: {
                         [name: string]: unknown;
                     };
