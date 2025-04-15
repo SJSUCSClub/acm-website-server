@@ -313,4 +313,65 @@ projectRouter.openapi(
   },
 );
 
+projectRouter.openapi(
+  createRoute({
+    method: 'put',
+    path: '/{projectID}',
+    tags: ['projects'],
+    summary: 'Update project',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: projectIDSchema,
+      body: {
+        content: {
+          'application/json': {
+            schema: newProjectSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: 'Successful response',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Failed to create project',
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Failed to update project',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const body = c.req.valid('json');
+    const projectID = c.req.param('projectID');
+
+    if (!projectID) {
+      return c.json({ error: 'Project ID is required' }, HttpStatusCodes.BAD_REQUEST);
+    }
+
+    try {
+      const newProject = await db.update(projects).set(body).where(eq(projects.id, parseInt(projectID))).returning();
+      if (newProject.length === 0) {
+        return c.json({ error: 'Project not found' }, HttpStatusCodes.NOT_FOUND);
+      }
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error: `Failed to update project: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  },
+);
+
 export default projectRouter;
