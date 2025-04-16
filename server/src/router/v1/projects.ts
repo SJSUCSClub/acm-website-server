@@ -155,7 +155,7 @@ projectRouter.openapi(
 
     if (!fileName || !projectId) {
       return c.json(
-        { status: 'Not valid parameters' },
+        { error: 'Not valid parameters' },
         HttpStatusCodes.BAD_REQUEST,
       );
     }
@@ -178,7 +178,7 @@ projectRouter.openapi(
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
       return c.json(
-        { status: `error occured deleting file: ${error}` },
+        { error: `error occured deleting file: ${error}` },
         HttpStatusCodes.INTERNAL_SERVER_ERROR,
       );
     }
