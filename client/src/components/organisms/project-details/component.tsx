@@ -10,7 +10,7 @@ import { Link } from '@tanstack/react-router';
 import React, { useState } from 'react';
 import { RxGithubLogo } from 'react-icons/rx';
 import { toast } from 'sonner';
-import { File } from '@/components/molecules/files-table';
+import { File as TableFile } from '@/components/molecules/files-table';
 
 export interface IProjectDetailsProps {
   projectId: string;
@@ -44,7 +44,7 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
     'post',
     '/v1/projects/{projectID}/files/{filename}'
   );
-  const { mutate: deleteFile } = useMutation('delete', '/v1/projects/{projectID}/files/{fileKey}');
+  const { mutate: deleteFile } = useMutation('delete', '/v1/projects/{projectID}/files/{fileName}');
 
   const handleUpload = async (files: File[]) => {
     for (const file of files) {
@@ -83,27 +83,26 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
     setIsOpen(false);
   };
 
-  const handleFileDelete = async (file: File) => {
-    console.log(file);
+  const handleFileDelete = async (file: TableFile) => {
     deleteFile(
       {
         params: {
           path: {
-            projectID: projectId.toString(),
-            filekey: file.key
+            projectID: projectId,
+            fileName: file.name
           }
         }
       },
       {
         onSuccess() {
           toast.success(`File deleted successfully: ${file.name}`);
+          refetchFiles();
         },
         onError() {
           toast.error(`Failed to delete file: ${file.name}`);
         }
       }
     );
-    refetchFiles();
   };
 
   return (
