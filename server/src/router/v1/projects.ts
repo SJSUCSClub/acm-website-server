@@ -11,7 +11,7 @@ import {
   interestedInProjects,
   projectsFiles,
 } from '@/db/schema';
-import { eq, getTableColumns } from 'drizzle-orm';
+import { and, eq, getTableColumns } from 'drizzle-orm';
 import type { User, Project, File as FileSchema } from '@/db/schema'; // naming conflict with File and schema File type
 import {
   authMiddleWare,
@@ -24,53 +24,94 @@ import {
   fileSchema,
   projectSchema,
   errorSchema,
+  newProjectSchema,
 } from '@/util/zod';
-import { uploadFile, deleteFile, generateObjectUrl } from '@/lib/aws/s3';
+import {
+  deleteFile,
+  generateObjectUrl,
+  getPresignedUrlPutObj,
+} from '@/lib/aws/s3';
 
 const projectRouter = new OpenAPIHono<Context>();
-const fileRequestSchema = z.object({
-  file: z
-    .custom<File>((v) => v instanceof File)
-    .openapi({
-      type: 'string',
-      format: 'binary',
-    }),
-});
+
+const generateFileKey = (
+  projectId: string | number,
+  filename: string,
+): string => `projects/${projectId}/files/${filename}`;
 
 projectRouter.openapi(
   createRoute({
     method: 'post',
-    path: '/{projectID}/files',
+    path: '/{projectID}/files/{filename}',
     tags: ['projects'],
     summary: 'Upload a file to a project',
     middleware: [authMiddleWare('admin')],
     request: {
-      body: {
-        content: {
-          'multipart/form-data': {
-            schema: fileRequestSchema,
-          },
-        },
-      },
+      params: z.object({
+        projectID: projectIDSchema.shape.projectID,
+        filename: z.string(),
+      }),
     },
     responses: {
       [HttpStatusCodes.OK]: {
-        description: 'Successful Upload',
+        content: {
+          'application/json': {
+            schema: z.object({
+              presigned_url: z.string(),
+            }),
+          },
+        },
+        description: 'Successful',
+      },
+      [HttpStatusCodes.BAD_REQUEST]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Bad request',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Internal server error',
       },
       ...forbiddenRequest,
       ...unauthorizedRequest,
     },
   }),
   async (c) => {
-    const formDataBody = await c.req.parseBody();
-    const file: File = <File>formDataBody['file'];
-    const projectId: string = <string>c.req.param('projectID');
-    const res = await uploadFile(file, `projects/${projectId}/${file.name}`);
-    if (res) {
-      return c.json({ status: 'successful' });
-    } else {
-      c.status(400);
-      return c.json({ status: 'error occured uploading file' });
+    const projectId = c.req.param('projectID');
+    const filename = c.req.param('filename');
+    if (!projectId || !filename) {
+      return c.json(
+        { error: 'error occured uploading file' },
+        HttpStatusCodes.BAD_REQUEST,
+      );
+    }
+
+    const key = generateFileKey(projectId, filename);
+
+    try {
+      await db.insert(files).values({ key, name: filename });
+      await db
+        .insert(projectsFiles)
+        .values({ projectId: parseInt(projectId), fileKey: key });
+
+      const res = await getPresignedUrlPutObj(key);
+      if (!res) {
+        throw new Error('Failed to generate presigned url');
+      }
+      return c.json({ presigned_url: res }, HttpStatusCodes.OK);
+    } catch (error) {
+      console.log(error);
+      return c.json(
+        { error: 'error generating presigned url' },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
     }
   },
 );
@@ -78,29 +119,72 @@ projectRouter.openapi(
 projectRouter.openapi(
   createRoute({
     method: 'delete',
-    path: '/{projectID}/files/{fileKey}',
+    path: '/{projectID}/files/{fileName}',
     tags: ['projects'],
     summary: 'Delete a file from a project',
     middleware: [authMiddleWare('admin')],
     request: {
-      params: projectIDSchema,
+      params: z.object({
+        projectID: projectIDSchema.shape.projectID,
+        fileName: z.string(),
+      }),
     },
     responses: {
-      [HttpStatusCodes.OK]: {
+      [HttpStatusCodes.NO_CONTENT]: {
         description: 'Successful response',
+      },
+      [HttpStatusCodes.BAD_REQUEST]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Bad request',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Internal server error',
       },
       ...unauthorizedRequest,
       ...forbiddenRequest,
     },
   }),
   async (c) => {
-    const fileKey: string = c.req.param('fileKey');
-    const res = await deleteFile(fileKey);
-    if (res) {
-      return c.json({ status: 'successful' });
-    } else {
-      c.status(400);
-      return c.json({ status: 'error occured deleting file' });
+    const fileName = c.req.param('fileName');
+    const projectId = c.req.param('projectID');
+
+    if (!fileName || !projectId) {
+      return c.json(
+        { error: 'Not valid parameters' },
+        HttpStatusCodes.BAD_REQUEST,
+      );
+    }
+
+    try {
+      const fileKey = generateFileKey(projectId, fileName);
+      await db
+        .delete(projectsFiles)
+        .where(
+          and(
+            eq(projectsFiles.fileKey, fileKey),
+            eq(projectsFiles.projectId, parseInt(projectId)),
+          ),
+        );
+      await db.delete(files).where(eq(files.key, fileKey));
+      const res = await deleteFile(fileKey);
+      if (!res) {
+        throw new Error('Failed to delete file');
+      }
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json(
+        { error: `error occured deleting file: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
     }
   },
 );
@@ -171,10 +255,7 @@ projectRouter.openapi(
       return c.json({ error: 'Project not found' }, HttpStatusCodes.NOT_FOUND);
     }
 
-    return c.json(
-      { project: project[0] },
-      HttpStatusCodes.OK,
-    );
+    return c.json({ project: project[0] }, HttpStatusCodes.OK);
   },
 );
 
@@ -251,7 +332,7 @@ projectRouter.openapi(
       .innerJoin(files, eq(files.key, projectsFiles.fileKey))
       .where(eq(projectsFiles.projectId, parseInt(projectID)));
 
-    const mappedProjectFiles = projectFiles.map(file => ({
+    const mappedProjectFiles = projectFiles.map((file) => ({
       ...file,
       url: generateObjectUrl(file.key),
     }));
@@ -271,7 +352,7 @@ projectRouter.openapi(
       body: {
         content: {
           'application/json': {
-            schema: projectSchema,
+            schema: newProjectSchema,
           },
         },
       },
@@ -287,18 +368,110 @@ projectRouter.openapi(
         },
         description: 'Successful response',
       },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Failed to create project',
+      },
       ...unauthorizedRequest,
       ...forbiddenRequest,
     },
   }),
   async (c) => {
-    const { id, name, description, githubLink } = c.req.valid('json');
-    const newProject = await db
-      .insert(projects)
-      .values({ id, name, description, githubLink })
-      // .onConflictDoNothing()
-      .returning();
+    const body = c.req.valid('json');
+    const newProject = await db.insert(projects).values(body).returning();
+    if (newProject.length === 0) {
+      return c.json(
+        { error: 'Failed to create project' },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
     return c.json({ project: newProject[0] }, HttpStatusCodes.CREATED);
+  },
+);
+
+projectRouter.openapi(
+  createRoute({
+    method: 'put',
+    path: '/{projectID}',
+    tags: ['projects'],
+    summary: 'Update project',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: projectIDSchema,
+      body: {
+        content: {
+          'application/json': {
+            schema: newProjectSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: 'Successful response',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Failed to create project',
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Failed to update project',
+      },
+      [HttpStatusCodes.BAD_REQUEST]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Bad request',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const body = c.req.valid('json');
+    const projectID = c.req.param('projectID');
+
+    if (!projectID) {
+      return c.json(
+        { error: 'Project ID is required' },
+        HttpStatusCodes.BAD_REQUEST,
+      );
+    }
+
+    try {
+      const newProject = await db
+        .update(projects)
+        .set(body)
+        .where(eq(projects.id, parseInt(projectID)))
+        .returning();
+      if (newProject.length === 0) {
+        return c.json(
+          { error: 'Project not found' },
+          HttpStatusCodes.NOT_FOUND,
+        );
+      }
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json(
+        { error: `Failed to update project: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
   },
 );
 

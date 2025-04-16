@@ -1,7 +1,7 @@
 import React from 'react';
 import { Calendar, Clock, MapPin, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import FilesTable, { Files } from '@/components/molecules/files-table';
+import FilesTable, { File } from '@/components/molecules/files-table';
 import CompanyDialog from '@/components/molecules/company-dialog';
 import SubscribeBtn from '@/components/molecules/subscribe-btn';
 import AttendBtn from '@/components/molecules/attend-btn';
@@ -17,7 +17,7 @@ type Companies =
 interface IEventDetailsProps {
   event: Event;
   companies: Companies;
-  files: Files;
+  files: File[];
   attendeeCount: number;
 }
 

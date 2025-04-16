@@ -59,6 +59,7 @@ export const projectIDSchema = z.object({
   projectID: z.string(),
 });
 export const projectSchema = createSelectSchema(projects);
+export const newProjectSchema = createInsertSchema(projects);
 export const bookmarkedEvent = eventSchema.extend({
   bookmarkedDate: z.string(),
 });

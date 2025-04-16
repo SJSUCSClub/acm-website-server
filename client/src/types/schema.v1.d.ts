@@ -1799,68 +1799,49 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/projects/{projectID}/files": {
+    "/v1/projects/{projectID}/files/{filename}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** List all files for a project */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    projectID: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            projectFiles: {
-                                key: string;
-                                name: string;
-                                createdAt: string;
-                                /** Format: uri */
-                                url: string;
-                            }[];
-                        };
-                    };
-                };
-            };
-        };
+        get?: never;
         put?: never;
         /** Upload a file to a project */
         post: {
             parameters: {
                 query?: never;
                 header?: never;
-                path?: never;
+                path: {
+                    projectID: string;
+                    filename: string;
+                };
                 cookie?: never;
             };
-            requestBody?: {
-                content: {
-                    "multipart/form-data": {
-                        /** Format: binary */
-                        file?: string;
-                    };
-                };
-            };
+            requestBody?: never;
             responses: {
-                /** @description Successful Upload */
+                /** @description Successful */
                 200: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": {
+                            presigned_url: string;
+                        };
+                    };
+                };
+                /** @description Bad request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
                 };
                 /** @description Unauthorized */
                 401: {
@@ -1875,6 +1856,17 @@ export interface paths {
                 };
                 /** @description Forbidden */
                 403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Internal server error */
+                500: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -1892,7 +1884,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/projects/{projectID}/files/{fileKey}": {
+    "/v1/projects/{projectID}/files/{fileName}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1909,17 +1901,29 @@ export interface paths {
                 header?: never;
                 path: {
                     projectID: string;
+                    fileName: string;
                 };
                 cookie?: never;
             };
             requestBody?: never;
             responses: {
                 /** @description Successful response */
-                200: {
+                204: {
                     headers: {
                         [name: string]: unknown;
                     };
                     content?: never;
+                };
+                /** @description Bad request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
                 };
                 /** @description Unauthorized */
                 401: {
@@ -1934,6 +1938,17 @@ export interface paths {
                 };
                 /** @description Forbidden */
                 403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Internal server error */
+                500: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -1999,12 +2014,12 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
-                        id: number;
+                        id?: number;
                         name: string;
                         description: string;
                         /** @enum {string} */
-                        status: "Not Started" | "Looking for Members" | "In Progress" | "Completed";
-                        githubLink: string | null;
+                        status?: "Not Started" | "Looking for Members" | "In Progress" | "Completed";
+                        githubLink?: string | null;
                     };
                 };
             };
@@ -2040,6 +2055,17 @@ export interface paths {
                 };
                 /** @description Forbidden */
                 403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Failed to create project */
+                500: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -2107,7 +2133,93 @@ export interface paths {
                 };
             };
         };
-        put?: never;
+        /** Update project */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    projectID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        id?: number;
+                        name: string;
+                        description: string;
+                        /** @enum {string} */
+                        status?: "Not Started" | "Looking for Members" | "In Progress" | "Completed";
+                        githubLink?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Successful response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Failed to update project */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Failed to create project */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
         post?: never;
         delete?: never;
         options?: never;
@@ -2160,6 +2272,52 @@ export interface paths {
                                 linkedin: string | null;
                                 github: string | null;
                                 website: string | null;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/projects/{projectID}/files": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all files for a project */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    projectID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            projectFiles: {
+                                key: string;
+                                name: string;
+                                createdAt: string;
+                                /** Format: uri */
+                                url: string;
                             }[];
                         };
                     };
