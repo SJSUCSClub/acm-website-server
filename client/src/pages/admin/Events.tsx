@@ -3,7 +3,7 @@ import { useNavigate, useSearch } from '@tanstack/react-router';
 import { X } from 'lucide-react';
 import { useQuery } from '@/hooks/useFetch';
 import EventCard from '@/components/molecules/event-card';
-import SearchBar from '@/components/molecules/search-bar';
+import SearchBar from '@/components/molecules/search-bar-filter';
 import BtnDateFilter from '@/components/molecules/btn-date-filter';
 import BtnTagFilter from '@/components/molecules/btn-tag-filter';
 import BtnEventTypeFilter from '@/components/molecules/btn-event-type-filter';
