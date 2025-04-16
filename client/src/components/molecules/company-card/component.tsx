@@ -1,8 +1,9 @@
-import Card, { CardContent, CardHeader, CardTitle } from '@/components/atoms/card'
-import { Badge } from '@/components/ui/badge'
+import Card, { CardContent, CardHeader, CardTitle } from '@/components/atoms/card';
+import { Badge } from '@/components/ui/badge';
 import { paths } from '@/types/schema.v1';
-import { MapPin } from 'lucide-react'
-import React from 'react'
+import { Link } from '@tanstack/react-router';
+import { MapPin } from 'lucide-react';
+import React from 'react';
 
 type Company =
   paths['/v1/companies']['get']['responses']['200']['content']['application/json']['companies'][number];
@@ -24,7 +25,9 @@ const CompanyCard: React.FC<ICompanyCardProps> = ({ company }) => {
             />
           </div>
           <div>
-            <CardTitle className="text-xl">{company.name}</CardTitle>
+            <Link to="/admin/companies/$companyId" params={{ companyId: company.id.toString() }}>
+              <CardTitle className="text-xl">{company.name}</CardTitle>
+            </Link>
             <Badge variant="outline" className="mt-1">
               {company.industryId.replace('_', ' ')}
             </Badge>
@@ -42,10 +45,9 @@ const CompanyCard: React.FC<ICompanyCardProps> = ({ company }) => {
         <div className="mt-2">
           <p className="text-muted-foreground">{company.description}</p>
         </div>
-
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export { CompanyCard }
+export { CompanyCard };
