@@ -51,7 +51,9 @@ export const equipmentRentalSchema = createSelectSchema(equipmentRentals);
 export const eventIDSchema = z.object({
   eventID: z.string(),
 });
-export const fileSchema = createSelectSchema(files);
+export const fileSchema = createSelectSchema(files).extend({
+  url: z.string().url(),
+});
 export const majorSchema = createSelectSchema(majors);
 export const projectIDSchema = z.object({
   projectID: z.string(),

@@ -39,7 +39,7 @@ function FilesTable({ files }: { files: Files }) {
                   </TableCell>
                   <TableCell>{formatDate(file.createdAt)}</TableCell>
                   <TableCell>
-                    <a href={file.key} target="_blank">
+                    <a href={file.url} target="_blank">
                       <ExternalLink className="h-4 w-4" />
                       <span className="sr-only">Open</span>
                     </a>

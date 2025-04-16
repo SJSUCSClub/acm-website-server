@@ -253,7 +253,7 @@ projectRouter.openapi(
 
     const mappedProjectFiles = projectFiles.map(file => ({
       ...file,
-      key: generateObjectUrl(file.key),
+      url: generateObjectUrl(file.key),
     }));
 
     return c.json({ projectFiles: mappedProjectFiles }, HttpStatusCodes.OK);
