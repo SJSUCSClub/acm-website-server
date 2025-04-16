@@ -59,7 +59,7 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
     }
   ];
   return (
-    <div className="flex flex-col md:flex-row w-full min-h-[calc(100vh-4rem)]">
+    <div className="flex max-h-[2400px]">
       <div
         className={clsx(
           'relative flex flex-row md:flex-col border-b md:border-b-0 md:border-r bg-background transition-all duration-300',
