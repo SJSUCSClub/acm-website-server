@@ -85,7 +85,7 @@ projectRouter.openapi(
     const filename = c.req.param('filename');
     if (!projectId || !filename) {
       return c.json(
-        { status: 'error occured uploading file' },
+        { error: 'error occured uploading file' },
         HttpStatusCodes.BAD_REQUEST,
       );
     }
