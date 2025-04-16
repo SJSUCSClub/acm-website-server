@@ -2,7 +2,6 @@ import Btn from '@/components/atoms/btn';
 import FieldErrorMessage from '@/components/atoms/field-error-message';
 import FetchError from '@/components/molecules/fetch-error';
 import Loading from '@/components/molecules/loading';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -31,12 +30,16 @@ const formSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
   description: z.string().min(1, { message: 'Description is required' }),
   githubLink: z.string().url().or(z.literal('')),
-  status: z.enum(['Not Started', 'Looking for Members', 'In Progress', 'Completed'])
+  status: z.enum(['Not Started', 'Looking for Members', 'In Progress', 'Completed']),
 });
 
 const ProjectForm: React.FC<IProjectFormProps> = ({ projectId = null }) => {
   const navigate = useNavigate();
-  const { data, isLoading, error } = useQuery(
+  const {
+    data: projectData,
+    isLoading: projectIsLoading,
+    error: projectError
+  } = useQuery(
     'get',
     '/v1/projects/{projectID}',
     {
@@ -55,10 +58,10 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ projectId = null }) => {
 
   const form = useForm({
     defaultValues: {
-      name: data?.project.name || '',
-      description: data?.project.description || '',
-      githubLink: data?.project.githubLink || '',
-      status: data?.project.status || 'Not Started'
+      name: projectData?.project.name || '',
+      description: projectData?.project.description || '',
+      githubLink: projectData?.project.githubLink || '',
+      status: projectData?.project.status || 'Not Started',
     },
     validators: {
       onChange: formSchema
@@ -114,8 +117,8 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ projectId = null }) => {
   });
 
   return (
-    <Loading isLoading={isLoading}>
-      <FetchError isError={!!error}>
+    <Loading isLoading={projectIsLoading}>
+      <FetchError isError={!!projectError}>
         <div>
           <h1 className="text-4xl font-bold mb-5">
             {projectId ? 'Edit Project' : 'Create Project'}
@@ -212,7 +215,10 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ projectId = null }) => {
                 </div>
               )}
             />
-            <Btn type="submit" variant="outline">{projectId ? 'Update' : 'Create'}</Btn>
+
+            <Btn type="submit" variant="outline">
+              {projectId ? 'Update' : 'Create'}
+            </Btn>
           </form>
         </div>
       </FetchError>

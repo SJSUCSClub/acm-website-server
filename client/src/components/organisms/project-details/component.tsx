@@ -1,13 +1,16 @@
 import Btn from '@/components/atoms/btn';
 import Spinner from '@/components/atoms/spinner';
+import FileUpload from '@/components/molecules/file-upload';
 import FilesTable from '@/components/molecules/files-table';
 import UsersTable from '@/components/molecules/users-table';
 import { Badge } from '@/components/ui/badge';
-import { useQuery } from '@/hooks/useFetch';
+import { useMutation, useQuery } from '@/hooks/useFetch';
 import { getProjectStatusColor } from '@/utils/colors';
 import { Link } from '@tanstack/react-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { RxGithubLogo } from 'react-icons/rx';
+import { toast } from 'sonner';
+import { File } from '@/components/molecules/files-table';
 
 export interface IProjectDetailsProps {
   projectId: string;
@@ -15,6 +18,7 @@ export interface IProjectDetailsProps {
 }
 
 const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = false }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const { data: project } = useQuery('get', '/v1/projects/{projectID}', {
     params: {
       path: {
@@ -22,7 +26,7 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
       }
     }
   });
-  const { data: files } = useQuery('get', '/v1/projects/{projectID}/files', {
+  const { data: files, refetch: refetchFiles } = useQuery('get', '/v1/projects/{projectID}/files', {
     params: {
       path: {
         projectID: projectId
@@ -36,6 +40,71 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
       }
     }
   });
+  const { mutateAsync: uploadFile } = useMutation(
+    'post',
+    '/v1/projects/{projectID}/files/{filename}'
+  );
+  const { mutate: deleteFile } = useMutation('delete', '/v1/projects/{projectID}/files/{fileKey}');
+
+  const handleUpload = async (files: File[]) => {
+    for (const file of files) {
+      await uploadFile(
+        {
+          params: {
+            path: {
+              projectID: projectId.toString(),
+              filename: file.name
+            }
+          }
+        },
+        {
+          onSuccess: async (data) => {
+            const res = await fetch(data.presigned_url, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': file.type
+              },
+              body: file
+            });
+
+            if (res.ok) {
+              toast.success(`File uploaded successfully: ${file.name}`);
+            } else {
+              toast.error(`Failed to upload file: ${file.name}`);
+            }
+          },
+          onError() {
+            toast.error(`Failed to upload file: ${file.name}`);
+          }
+        }
+      );
+    }
+    refetchFiles();
+    setIsOpen(false);
+  };
+
+  const handleFileDelete = async (file: File) => {
+    console.log(file);
+    deleteFile(
+      {
+        params: {
+          path: {
+            projectID: projectId.toString(),
+            filekey: file.key
+          }
+        }
+      },
+      {
+        onSuccess() {
+          toast.success(`File deleted successfully: ${file.name}`);
+        },
+        onError() {
+          toast.error(`Failed to delete file: ${file.name}`);
+        }
+      }
+    );
+    refetchFiles();
+  };
 
   return (
     <div className="w-full">
@@ -50,10 +119,11 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
                 </Badge>
               </div>
               {admin && (
-                <Link to={'/admin/projects/$projectId/edit'} params={{ projectId: project.project.id.toString() }}>
-                  <Btn>
-                    Edit
-                  </Btn>
+                <Link
+                  to={'/admin/projects/$projectId/edit'}
+                  params={{ projectId: project.project.id.toString() }}
+                >
+                  <Btn>Edit</Btn>
                 </Link>
               )}
             </div>
@@ -70,8 +140,13 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
             )}
           </div>
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold mb-3">Files</h2>
-            <FilesTable files={files.projectFiles} />
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold mb-3">Files</h2>
+              <FileUpload onUpload={handleUpload} open={isOpen} onOpenChange={setIsOpen}>
+                <Btn size="sm">Upload File</Btn>
+              </FileUpload>
+            </div>
+            <FilesTable files={files.projectFiles} admin onFileDelete={handleFileDelete} />
           </div>
 
           {interestedUsers && (
