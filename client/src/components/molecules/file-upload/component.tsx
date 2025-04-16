@@ -3,7 +3,6 @@ import Spinner from '@/components/atoms/spinner';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,

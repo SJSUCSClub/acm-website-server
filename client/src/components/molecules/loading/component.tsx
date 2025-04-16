@@ -1,5 +1,5 @@
-import Spinner, { SpinnerProps } from '@/components/atoms/spinner'
-import React from 'react'
+import Spinner, { SpinnerProps } from '@/components/atoms/spinner';
+import React from 'react';
 
 export interface LoadingProps {
   isLoading: boolean;
@@ -8,11 +8,7 @@ export interface LoadingProps {
 }
 
 const Loading: React.FC<LoadingProps> = ({ isLoading, children, spinnerProps }) => {
-  return (
-    <div>
-      {isLoading ? <Spinner {...spinnerProps} /> : children}
-    </div>
-  )
-}
+  return <div>{isLoading ? <Spinner {...spinnerProps} /> : children}</div>;
+};
 
-export { Loading }
+export { Loading };

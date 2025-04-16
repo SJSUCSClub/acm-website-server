@@ -30,7 +30,7 @@ const formSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
   description: z.string().min(1, { message: 'Description is required' }),
   githubLink: z.string().url().or(z.literal('')),
-  status: z.enum(['Not Started', 'Looking for Members', 'In Progress', 'Completed']),
+  status: z.enum(['Not Started', 'Looking for Members', 'In Progress', 'Completed'])
 });
 
 const ProjectForm: React.FC<IProjectFormProps> = ({ projectId = null }) => {
@@ -61,7 +61,7 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ projectId = null }) => {
       name: projectData?.project.name || '',
       description: projectData?.project.description || '',
       githubLink: projectData?.project.githubLink || '',
-      status: projectData?.project.status || 'Not Started',
+      status: projectData?.project.status || 'Not Started'
     },
     validators: {
       onChange: formSchema
