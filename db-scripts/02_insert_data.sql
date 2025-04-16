@@ -178,7 +178,15 @@ insert into files(key, name) values
 ('spotlights/1/image.webp', 'Spotlight Image'),
 ('spotlights/2/image.webp', 'Spotlight Image'),
 ('spotlights/3/image.webp', 'Spotlight Image'),
-('projects/2/files/README.md', 'README.md');
+('projects/2/files/README.md', 'README.md'),
+('officers/1/pfp.png', 'Karthik Pfp'),
+('officers/2/pfp.png', 'Shirley Pfp'),
+('officers/3/pfp.png', 'Angela Pfp'),
+('officers/4/pfp.png', 'Bineet Pfp'),
+('officers/5/pfp.png', 'Anne Pfp'),
+('officers/6/pfp.png', 'Timothy Pfp'),
+('officers/7/pfp.png', 'Trique Pfp'),
+('officers/8/pfp.png', 'Galit Pfp');
 
 -- Insert company 1
 INSERT INTO companies (name, location, description, industry_id, logo) values
@@ -329,23 +337,23 @@ INSERT INTO landing_questions(question, answer) VALUES
 INSERT INTO users (
     id, name, email, major, education_level, grad_date, interests, profile_pic, linkedin, github, website, role, paid 
 ) VALUES 
-('Karthik Manishankar', 'Karthik Manishankar', 'karthik.manishankar@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'pfp.png', 'https://www.linkedin.com/in/karthikmanishankar/', 'https://github.com/placeholder', NULL, 'user', NULL),
-('Shirley Li', 'Shirley Li', 'shirley.li@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'pfp.png', 'https://www.linkedin.com/in/shirley-shuhua-li', 'https://github.com/placeholder', NULL, 'user', NULL),
-('Angela Huang', 'Angela Huang', 'angela.huang@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'pfp.png', 'https://www.linkedin.com/in/angela-huang-725a25169/', 'https://github.com/placeholder', NULL, 'user', NULL),
-('Bineet Anand', 'Bineet Anand', 'bineet.anand@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'pfp.png', 'https://www.linkedin.com/in/bineet-anand/', 'https://github.com/placeholder', NULL, 'user', NULL),
-('Anne Mai', 'Anne Mai', 'anne.mai@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'pfp.png', 'https://www.linkedin.com/in/annepmai/', 'https://github.com/placeholder', NULL, 'user', NULL),
-('Timothy Kim', 'Timothy Kim', 'timothy.kim@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'pfp.png', 'https://www.linkedin.com/in/timothy-kim712/', 'https://github.com/placeholder', NULL, 'user', NULL),
-('Trique Nguyen', 'Trique Nguyen', 'trique.nguyen@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'pfp.png', 'https://www.linkedin.com/in/trique-nguyen/', 'https://github.com/placeholder', NULL, 'user', NULL),
-('Galit Bolotin', 'Galit Bolotin', 'galit.bolotin@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'pfp.png', 'https://www.linkedin.com/in/gbolotin/', 'https://github.com/placeholder', NULL, 'user', NULL);
+('Karthik Manishankar', 'Karthik Manishankar', 'karthik.manishankar@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'officers/1/pfp.png', 'https://www.linkedin.com/in/karthikmanishankar/', 'https://github.com/placeholder', NULL, 'user', NULL),
+('Shirley Li', 'Shirley Li', 'shirley.li@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'officers/2/pfp.png', 'https://www.linkedin.com/in/shirley-shuhua-li', 'https://github.com/placeholder', NULL, 'user', NULL),
+('Angela Huang', 'Angela Huang', 'angela.huang@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'officers/3/pfp.png', 'https://www.linkedin.com/in/angela-huang-725a25169/', 'https://github.com/placeholder', NULL, 'user', NULL),
+('Bineet Anand', 'Bineet Anand', 'bineet.anand@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'officers/4/pfp.png', 'https://www.linkedin.com/in/bineet-anand/', 'https://github.com/placeholder', NULL, 'user', NULL),
+('Anne Mai', 'Anne Mai', 'anne.mai@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'officers//pfp.png', 'https://www.linkedin.com/in/annepmai/', 'https://github.com/placeholder', NULL, 'user', NULL),
+('Timothy Kim', 'Timothy Kim', 'timothy.kim@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'officers/6/pfp.png', 'https://www.linkedin.com/in/timothy-kim712/', 'https://github.com/placeholder', NULL, 'user', NULL),
+('Trique Nguyen', 'Trique Nguyen', 'trique.nguyen@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'officers/7/pfp.png', 'https://www.linkedin.com/in/trique-nguyen/', 'https://github.com/placeholder', NULL, 'user', NULL),
+('Galit Bolotin', 'Galit Bolotin', 'galit.bolotin@sjsu.edu', 'Undeclared', 'Undergraduate', '2025-05-15', '{}', 'officers/8/pfp.png', 'https://www.linkedin.com/in/gbolotin/', 'https://github.com/placeholder', NULL, 'user', NULL);
 INSERT INTO officers(user_id, position, linkedin, photo) VALUES
-('Karthik Manishankar', 'President', 'https://www.linkedin.com/in/karthikmanishankar/', 'pfp.png'),
-('Shirley Li', 'Vice President', 'https://www.linkedin.com/in/shirley-shuhua-li', 'pfp.png'),
-('Angela Huang', 'Secretary', 'https://www.linkedin.com/in/angela-huang-725a25169/', 'pfp.png'),
-('Bineet Anand', 'Social Media Manager', 'https://www.linkedin.com/in/bineet-anand/', 'pfp.png'),
-('Anne Mai', 'Event Chair', 'https://www.linkedin.com/in/annepmai/', 'pfp.png'),
-('Timothy Kim', 'Treasurer', 'https://www.linkedin.com/in/timothy-kim712/', 'pfp.png'),
-('Trique Nguyen', 'Dev Team Officer', 'https://www.linkedin.com/in/trique-nguyen/', 'pfp.png'),
-('Galit Bolotin', 'Event Chair', 'https://www.linkedin.com/in/gbolotin/', 'pfp.png');
+('Karthik Manishankar', 'President', 'https://www.linkedin.com/in/karthikmanishankar/', 'officers/1/pfp.png'),
+('Shirley Li', 'Vice President', 'https://www.linkedin.com/in/shirley-shuhua-li', 'officers/2/pfp.png'),
+('Angela Huang', 'Secretary', 'https://www.linkedin.com/in/angela-huang-725a25169/', 'officers/3/pfp.png'),
+('Bineet Anand', 'Social Media Manager', 'https://www.linkedin.com/in/bineet-anand/', 'officers/4/pfp.png'),
+('Anne Mai', 'Event Chair', 'https://www.linkedin.com/in/annepmai/', 'officers/5/pfp.png'),
+('Timothy Kim', 'Treasurer', 'https://www.linkedin.com/in/timothy-kim712/', 'officers/6/pfp.png'),
+('Trique Nguyen', 'Dev Team Officer', 'https://www.linkedin.com/in/trique-nguyen/', 'officers/7/pfp.png'),
+('Galit Bolotin', 'Event Chair', 'https://www.linkedin.com/in/gbolotin/', 'officers/8/pfp.png');
 
 
 

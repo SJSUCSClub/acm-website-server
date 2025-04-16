@@ -233,8 +233,8 @@ create table if not exists officers(
    linkedin text,
    photo text,
    PRIMARY KEY(id),
-   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade
-   -- FOREIGN KEY(photo) REFERENCES files(key) on update cascade
+   FOREIGN KEY(user_id) REFERENCES users(id) on update cascade on delete cascade,
+   FOREIGN KEY(photo) REFERENCES files(key) on update cascade
 );
 
 create table if not exists sponsors(

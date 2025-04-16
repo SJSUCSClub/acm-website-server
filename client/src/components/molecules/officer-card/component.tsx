@@ -12,7 +12,7 @@ export interface IOfficerCardProps {
 export const OfficerCard: React.FC<IOfficerCardProps> = ({ photo, name, position, linkedin }) => (
   <Card className="transition duration-100 ease-in-out hover:shadow-2xl justify-center items-center w-[19rem] h-[rem] border-[2px] gap-2px py-2 text-[16px] sm:text-sm rounded-xl shadow-lg mb-10">
     <img
-      src={photo}
+      src={(photo)}
       alt="Officers"
       width={700}
       height={1440}

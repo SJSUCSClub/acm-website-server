@@ -7,6 +7,7 @@ import { db } from '@/db/db';
 import { officers } from '@/db/schema';
 import type { Officer} from '@/db/schema';
 import { officerSchema } from '@/util/zod';
+import { generateObjectUrl } from '@/lib/aws/s3';
 
 const officerRouter = new OpenAPIHono<Context>();
 
@@ -33,7 +34,12 @@ officerRouter.openapi(
 		const foundOfficers: Officer[] = await db
 			.select()
 			.from(officers);
-		return c.json({ officers: foundOfficers }, HttpStatusCodes.OK);
+			const officersWithUrls = foundOfficers.map(officer => ({
+				...officer,
+				photo: generateObjectUrl(officer.photo)
+			}));
+	
+			return c.json({ officers: officersWithUrls }, HttpStatusCodes.OK);
 	},
 );
 
