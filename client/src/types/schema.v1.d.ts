@@ -3103,7 +3103,7 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
-                            companies: {
+                            company: {
                                 id: number;
                                 name: string;
                                 location: string | null;

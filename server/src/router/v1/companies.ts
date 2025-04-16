@@ -71,7 +71,7 @@ companyRouter.openapi(
         content: {
           'application/json': {
             schema: z.object({
-              companies: companySchema,
+              company: companySchema,
             }),
           },
         },
@@ -115,13 +115,13 @@ companyRouter.openapi(
         );
       }
 
-      const company = foundCompanies[0];
+      const foundcompany = foundCompanies[0];
       const mappedCompany = {
-        ...company,
-        logo: generateObjectUrl(company.logo),
+        ...foundcompany,
+        logo: generateObjectUrl(foundcompany.logo),
       };
 
-      return c.json({ companies: mappedCompany }, HttpStatusCodes.OK);
+      return c.json({ company: mappedCompany }, HttpStatusCodes.OK);
     } catch (error) {
       return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
@@ -218,6 +218,7 @@ companyRouter.openapi(
       .where(eq(eventCompanies.companyId, parseInt(companyID)));
     const formattedCompanyEvents = companyEvents.map((event) => ({
       ...event,
+      image: generateObjectUrl(event.image),
       createdAt: event.createdAt.toISOString(),
     }));
     return c.json(
