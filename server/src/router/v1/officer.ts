@@ -36,7 +36,7 @@ officerRouter.openapi(
 			.from(officers);
 			const officersWithUrls = foundOfficers.map(officer => ({
 				...officer,
-				photo: generateObjectUrl(officer.photo)
+				photo: generateObjectUrl(officer.photo),
 			}));
 	
 			return c.json({ officers: officersWithUrls }, HttpStatusCodes.OK);
