@@ -8,20 +8,28 @@ import {
   Calendar,
   ShieldUser,
   Building,
-  List
+  List,
+  LucideIcon
 } from 'lucide-react';
 import clsx from 'clsx';
 import { Button } from '@/components/ui/button';
 import Page from '@/components/templates/Page';
 import { Link } from '@tanstack/react-router';
+import { FileRouteTypes } from '@/routeTree.gen';
 
 interface IAdminSidebarProps {
   children: React.ReactNode;
 }
 
+type NavItem = {
+  title: string;
+  icon: LucideIcon
+  href: FileRouteTypes['to'];
+}
+
 const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
-  const navItems = [
+  const navItems: NavItem[] = [
     {
       title: 'Home',
       icon: House,
