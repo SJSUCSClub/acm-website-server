@@ -1829,6 +1829,8 @@ export interface paths {
                                 key: string;
                                 name: string;
                                 createdAt: string;
+                                /** Format: uri */
+                                url: string;
                             }[];
                         };
                     };
@@ -2349,6 +2351,8 @@ export interface paths {
                                 key: string;
                                 name: string;
                                 createdAt: string;
+                                /** Format: uri */
+                                url: string;
                             }[];
                         };
                     };
