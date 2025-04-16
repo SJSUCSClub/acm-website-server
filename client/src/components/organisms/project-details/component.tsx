@@ -141,17 +141,19 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold mb-3">Files</h2>
-              <FileUpload onUpload={handleUpload} open={isOpen} onOpenChange={setIsOpen}>
-                <Btn size="sm">Upload File</Btn>
-              </FileUpload>
+              {admin && (
+                <FileUpload onUpload={handleUpload} open={isOpen} onOpenChange={setIsOpen}>
+                  <Btn size="sm">Upload File</Btn>
+                </FileUpload>
+              )}
             </div>
-            <FilesTable files={files.projectFiles} admin onFileDelete={handleFileDelete} />
+            <FilesTable files={files.projectFiles} admin={admin} onFileDelete={handleFileDelete} />
           </div>
 
-          {interestedUsers && (
+          {admin && (
             <div className="space-y-4">
               <h2 className="text-xl font-semibold mb-3">Interested Users</h2>
-              <UsersTable users={interestedUsers.interestedUsers} />
+              <UsersTable users={interestedUsers?.interestedUsers || []} />
             </div>
           )}
         </div>
