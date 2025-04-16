@@ -34,14 +34,10 @@ import {
 } from "@/lib/aws/s3";
 
 const projectRouter = new OpenAPIHono<Context>();
-const fileRequestSchema = z.object({
-  file: z
-    .custom<File>((v) => v instanceof File)
-    .openapi({
-      type: "string",
-      format: "binary",
-    }),
-});
+
+const generateFileKey = (projectId: string | number, filename: string) => {
+  return `projects/${projectId}/files/${filename}`;
+};
 
 projectRouter.openapi(
   createRoute({
@@ -97,7 +93,7 @@ projectRouter.openapi(
       );
     }
 
-    const key = `projects/${projectId}/files/${filename}`;
+    const key = generateFileKey(projectId, filename);
 
     try {
       await db.insert(files).values({ key, name: filename });
@@ -121,14 +117,14 @@ projectRouter.openapi(
 projectRouter.openapi(
   createRoute({
     method: "delete",
-    path: "/{projectID}/files/{fileKey}",
+    path: "/{projectID}/files/{fileName}",
     tags: ["projects"],
     summary: "Delete a file from a project",
     middleware: [authMiddleWare("admin")],
     request: {
       params: z.object({
         projectID: projectIDSchema.shape.projectID,
-        filekey: z.string(),
+        fileName: z.string(),
       }),
     },
     responses: {
@@ -156,10 +152,10 @@ projectRouter.openapi(
     },
   }),
   async (c) => {
-    const fileKey = c.req.param("fileKey");
+    const fileName = c.req.param("fileName");
     const projectId = c.req.param("projectID");
 
-    if (!fileKey || !projectId) {
+    if (!fileName || !projectId) {
       return c.json(
         { status: "Not valid parameters" },
         HttpStatusCodes.BAD_REQUEST,
@@ -167,6 +163,7 @@ projectRouter.openapi(
     }
 
     try {
+      const fileKey = generateFileKey(projectId, fileName);
       await db
         .delete(projectsFiles)
         .where(
