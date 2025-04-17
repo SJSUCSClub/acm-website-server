@@ -153,7 +153,7 @@ export const companies = pgTable('companies', {
   location: text('location'),
   description: text('description').notNull(),
   industryId: industryEnum('industry_id').notNull(),
-  logo: text('logo').references(() => files.key, { onUpdate: 'cascade' }),
+  logo: text('logo').references(() => files.key, { onUpdate: 'cascade' }).notNull().default('default/image-placeholder.svg'),
 });
 
 export const eventCompanies = pgTable('event_companies', {

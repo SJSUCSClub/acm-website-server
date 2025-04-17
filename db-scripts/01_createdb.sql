@@ -179,7 +179,7 @@ create table if not exists companies(
    location text,
    description text not null,
    industry_id industry_enum not null,
-   logo text,
+   logo text not null default 'default/image-placeholder.svg',
    PRIMARY KEY(id),
    FOREIGN KEY(logo) REFERENCES files(key) on update cascade
 );
