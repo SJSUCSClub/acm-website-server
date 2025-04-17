@@ -196,7 +196,7 @@ eventRouter.openapi(
 
     const mappedFiles = eventFiles.map((file) => ({
       ...file,
-      key: generateObjectUrl(file.key),
+      url: generateObjectUrl(file.key),
     }));
 
     return c.json({ eventFiles: mappedFiles }, HttpStatusCodes.OK);
