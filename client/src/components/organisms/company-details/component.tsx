@@ -1,9 +1,11 @@
+import Btn from '@/components/atoms/btn';
 import EventsTable from '@/components/molecules/events-table';
 import FetchError from '@/components/molecules/fetch-error';
 import Loading from '@/components/molecules/loading';
 import UsersTable from '@/components/molecules/users-table';
 import { Badge } from '@/components/ui/badge';
 import { useQuery } from '@/hooks/useFetch';
+import { Link } from '@tanstack/react-router';
 import { MapPin } from 'lucide-react';
 import React from 'react';
 
@@ -59,20 +61,28 @@ const CompanyDetails: React.FC<ICompanyDetailsProps> = ({ companyId, admin = fal
       <Loading isLoading={isLoadingCompany}>
         <FetchError isError={!!errorCompany || !company}>
           <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <div className="relative h-24 w-24 rounded-lg overflow-hidden bg-muted">
-                <img
-                  src={company?.company.logo || ''}
-                  alt={company?.company.name}
-                  className="h-full w-full object-cover"
-                />
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-4">
+                {' '}
+                <div className="relative h-24 w-24 rounded-lg overflow-hidden bg-muted">
+                  <img
+                    src={company?.company.logo || ''}
+                    alt={company?.company.name}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold">{company?.company.name}</h1>
+                  <Badge variant="outline" className="mt-1">
+                    {company?.company.industryId.replace('_', ' ')}
+                  </Badge>
+                </div>
               </div>
-              <div>
-                <h1 className="text-3xl font-bold">{company?.company.name}</h1>
-                <Badge variant="outline" className="mt-1">
-                  {company?.company.industryId.replace('_', ' ')}
-                </Badge>
-              </div>
+              {admin && (
+                <Link to={'/admin/companies/$companyId/edit'} params={{ companyId }}>
+                  <Btn>Edit</Btn>
+                </Link>
+              )}
             </div>
             <div>
               {company?.company.location && (
