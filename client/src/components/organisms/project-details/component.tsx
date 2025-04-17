@@ -11,6 +11,7 @@ import React, { useState } from 'react';
 import { RxGithubLogo } from 'react-icons/rx';
 import { toast } from 'sonner';
 import { File as TableFile } from '@/components/molecules/files-table';
+import { presignedUrlFetch } from '@/utils/presignedUrlFetch';
 
 export interface IProjectDetailsProps {
   projectId: string;
@@ -59,17 +60,10 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
         },
         {
           onSuccess: async (data) => {
-            const res = await fetch(data.presigned_url, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': file.type
-              },
-              body: file
-            });
-
-            if (res.ok) {
+            try {
+              await presignedUrlFetch(data.presigned_url, file);
               toast.success(`File uploaded successfully: ${file.name}`);
-            } else {
+            } catch (e) {
               toast.error(`Failed to upload file: ${file.name}`);
             }
           },
