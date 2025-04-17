@@ -12,7 +12,7 @@ import {
   companies,
   files,
 } from "@/db/schema";
-import { eq, count, getTableColumns } from "drizzle-orm";
+import { eq, count, getTableColumns, sql } from "drizzle-orm";
 import type { User, Event, Company } from "@/db/schema";
 import {
   authMiddleWare,
@@ -27,7 +27,11 @@ import {
   errorSchema,
   newCompanySchema,
 } from "@/util/zod";
-import { deleteFile, generateObjectUrl, getPresignedUrlPutObj } from "@/lib/aws/s3";
+import {
+  deleteFile,
+  generateObjectUrl,
+  getPresignedUrlPutObj,
+} from "@/lib/aws/s3";
 
 const companyRouter = new OpenAPIHono<Context>();
 
@@ -207,6 +211,85 @@ companyRouter.openapi(
 
 companyRouter.openapi(
   createRoute({
+    method: "put",
+    path: "/{companyID}",
+    tags: ["companies"],
+    summary: "Update company",
+    middleware: [authMiddleWare("admin")],
+    request: {
+      params: companyIDSchema,
+      body: {
+        content: {
+          "application/json": {
+            schema: newCompanySchema,
+          },
+        },
+      },
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: "Successful response",
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+      [HttpStatusCodes.BAD_REQUEST]: {
+        content: {
+          "application/json": {
+            schema: errorSchema,
+          },
+        },
+        description: "Conflict",
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        content: {
+          "application/json": {
+            schema: errorSchema,
+          },
+        },
+        description: "Not found",
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          "application/json": {
+            schema: errorSchema,
+          },
+        },
+        description: "Internal server error",
+      },
+    },
+  }),
+  async (c) => {
+    const companyId = c.req.param("companyID");
+    const body = c.req.valid("json");
+
+    if (!companyId) {
+      return c.json(
+        { error: "Company ID is required" },
+        HttpStatusCodes.BAD_REQUEST,
+      );
+    }
+
+    try {
+      const updatedCompany = await db
+        .update(companies)
+        .set(body)
+        .where(eq(companies.id, parseInt(companyId)))
+        .returning();
+      if (updatedCompany.length === 0) {
+        return c.json(
+          { error: "Company not found" },
+          HttpStatusCodes.NOT_FOUND,
+        );
+      }
+      return c.text("", HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  },
+);
+
+companyRouter.openapi(
+  createRoute({
     method: "post",
     path: "/{companyID}/logo",
     tags: ["companies"],
@@ -328,6 +411,10 @@ companyRouter.openapi(
 
     const key = generateLogoKey(companyId);
     try {
+      await db
+        .update(companies)
+        .set({ logo: sql`DEFAULT` })
+        .where(eq(companies.id, parseInt(companyId)));
       await db.delete(files).where(eq(files.key, key));
       const res = await deleteFile(key);
       if (!res) {
