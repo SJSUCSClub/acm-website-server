@@ -1,33 +1,35 @@
 import { ChevronsUpDown } from 'lucide-react';
-import * as React from 'react';
-import { Checkbox } from '../../../components/ui/checkbox';
-import { Button } from '../../../components/ui/button';
-import { Command, CommandGroup, CommandItem, CommandList } from '../../../components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '../../../components/ui/popover';
 import { useState } from 'react';
 import { useQuery } from '@/hooks/useFetch';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/ui/button';
+import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-export type EventCardProps = {
-  selectedTags: string[];
+export type EventTypeFilterProps = {
+  selectedEventTypes: string[];
   onSelectChange: (data: string[]) => void;
 };
 
-export const BtnTagFilter: React.FC<EventCardProps> = ({ selectedTags, onSelectChange }) => {
+export const BtnEventTypeFilter: React.FC<EventTypeFilterProps> = ({
+  onSelectChange,
+  selectedEventTypes
+}) => {
   const [open, setOpen] = useState(false);
-  const value = 'Tag Filter';
-  const { data: tags, error } = useQuery('get', '/v1/enums/{enumType}', {
+  const value = 'Event Type Filter';
+  const { data: eventTypes, error } = useQuery('get', '/v1/enums/{enumType}', {
     params: {
       path: {
-        enumType: 'cs_fields_enum'
+        enumType: 'events_enum'
       }
     }
   });
 
-  const handleCheckboxChange = (tag: string, checked: boolean) => {
+  const handleCheckboxChange = (eventType: string, checked: boolean) => {
     if (checked) {
-      onSelectChange([...selectedTags, tag]);
+      onSelectChange([...selectedEventTypes, eventType]);
     } else {
-      onSelectChange(selectedTags.filter((item) => item !== tag));
+      onSelectChange(selectedEventTypes.filter((item) => item !== eventType));
     }
   };
 
@@ -44,23 +46,25 @@ export const BtnTagFilter: React.FC<EventCardProps> = ({ selectedTags, onSelectC
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
+
       <PopoverContent className="w-[200px] p-0">
         <Command>
           <CommandList>
-            {error || tags?.types.length === 0 ? (
-              <div className="py-6 text-center text-sm text-gray-500">No Tags Found</div>
+            {error || eventTypes?.types.length === 0 ? (
+              <div className="py-6 text-center text-sm text-gray-500">No Event Types Found</div>
             ) : (
               <CommandGroup>
-                {tags?.types.map((option: string) => (
+                {eventTypes?.types.map((option: string) => (
                   <CommandItem key={option}>
                     <div className="flex items-center space-x-2">
                       <Checkbox
                         id={option}
-                        checked={selectedTags.includes(option)}
+                        checked={selectedEventTypes.includes(option)}
                         onCheckedChange={(checked) =>
                           handleCheckboxChange(option, checked as boolean)
                         }
                       />
+
                       <label htmlFor={option}>{option}</label>
                     </div>
                   </CommandItem>
