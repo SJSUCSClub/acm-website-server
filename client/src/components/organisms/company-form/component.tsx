@@ -15,10 +15,11 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useMutation, useQuery } from '@/hooks/useFetch';
 import { paths } from '@/types/schema.v1';
+import { s3UrlToFile } from '@/utils/convert';
 import { presignedUrlFetch } from '@/utils/presignedUrlFetch';
 import { AnyFieldApi, useForm } from '@tanstack/react-form';
 import { useNavigate } from '@tanstack/react-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -36,11 +37,15 @@ const formSchema = z.object({
     'Energy',
     'Technology'
   ]),
-  logo: z.instanceof(File).nullable()
+  logo: z.instanceof(File).or(z.string()).nullable()
 });
 type FormValues = z.infer<typeof formSchema>;
 
-const CompanyForm = () => {
+export interface ICompanyForm {
+  companyId?: string;
+}
+
+const CompanyForm: React.FC<ICompanyForm> = ({ companyId }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const {
@@ -54,59 +59,125 @@ const CompanyForm = () => {
       }
     }
   });
-  const { mutateAsync: createCompany } = useMutation('post', '/v1/companies');
-  const { mutateAsync: createLogo } = useMutation('post', '/v1/companies/{companyID}/logo');
-
-  const handleLogoSubmit = async (companyId: string, logo: File) => {
-    try {
-      const data = await createLogo({
-        params: {
-          path: {
-            companyID: companyId
-          }
+  const {
+    data: companyData,
+    isLoading: isLoadingCompany,
+    error: errorCompany
+  } = useQuery(
+    'get',
+    '/v1/companies/{companyID}',
+    {
+      params: {
+        path: {
+          companyID: companyId || ''
         }
-      });
-      await presignedUrlFetch(data.presigned_url, logo);
-      toast.success('Logo uploaded successfully');
-    } catch (e) {
-      toast.error('Failed to upload logo');
+      }
+    },
+    {
+      enabled: !!companyId
     }
-  };
+  );
+  const { mutateAsync: createCompany } = useMutation('post', '/v1/companies');
+  const { mutateAsync: updateCompany } = useMutation('put', '/v1/companies/{companyID}');
+  const { mutateAsync: createLogo } = useMutation('post', '/v1/companies/{companyID}/logo');
+  const { mutate: deleteLogo } = useMutation('delete', '/v1/companies/{companyID}/logo');
 
   const form = useForm({
     defaultValues: {
-      name: '',
-      location: null,
-      description: '',
-      industryId: !industryData ? '' : industryData.types[0],
-      logo: null
+      name: companyData?.company.name || '',
+      location: companyData?.company.location || null,
+      description: companyData?.company.description || '',
+      industryId: companyData?.company.industryId || industryData?.types[0],
+      logo: companyData?.company.logo || null
     } as FormValues,
     validators: {
       onSubmit: formSchema
     },
     onSubmit: async ({ value }) => {
-      try {
-        const data = await createCompany({
-          body: {
-            ...value,
-            logo: undefined
-          }
-        });
+      if (!companyId) {
+        try {
+          const data = await createCompany({
+            body: {
+              ...value,
+              logo: undefined
+            }
+          });
 
-        const companyId = data.company.id.toString();
-        if (value.logo) {
-          await handleLogoSubmit(companyId, value.logo);
+          const companyid = data.company.id.toString();
+          if (typeof value.logo !== 'string') {
+            await handleLogoSubmit(companyid, value.logo);
+          }
+          toast.success(`Company created successfully`);
+          navigate({
+            to: '/admin/companies/$companyId',
+            params: { companyId: companyid }
+          });
+        } catch (e) {
+          toast.error('Failed to create company');
         }
-        toast.success(`Company created successfully`);
-        navigate({
-          to: '/admin/companies/$companyId',
-          params: { companyId: companyId }
-        });
-      } catch (e) {
-        toast.error('Failed to create company');
+      } else {
+        try {
+          await updateCompany({
+            params: {
+              path: {
+                companyID: companyId
+              }
+            },
+            body: {
+              ...value,
+              logo: undefined
+            }
+          });
+          if (typeof value.logo !== 'string') {
+            await handleLogoSubmit(companyId, value.logo);
+          }
+          toast.success(`Company updated successfully`);
+          navigate({
+            to: '/admin/companies/$companyId',
+            params: { companyId: companyId }
+          });
+        } catch (e) {
+          toast.error('Failed to update company');
+        }
       }
     }
   });
+
+  const handleLogoSubmit = async (companyId: string, logo: File | null) => {
+    if (logo) {
+      try {
+        const data = await createLogo({
+          params: {
+            path: {
+              companyID: companyId
+            }
+          }
+        });
+        await presignedUrlFetch(data.presigned_url, logo);
+        toast.success('Logo uploaded successfully');
+      } catch (e) {
+        toast.error('Failed to upload logo');
+      }
+    } else if (typeof form.options.defaultValues?.logo === 'string' && !logo) {
+      deleteLogo(
+        {
+          params: {
+            path: {
+              companyID: companyId
+            }
+          }
+        },
+        {
+          onSuccess() {
+            toast.success('Logo deleted successfully');
+          },
+          onError() {
+            toast.error('Failed to delete logo');
+          }
+        }
+      );
+    }
+  };
 
   const handleLogoUpload = (files: File[], field: AnyFieldApi) => {
     field.handleChange(files[0]);
@@ -116,8 +187,8 @@ const CompanyForm = () => {
   return (
     <div>
       <h1 className="text-4xl font-bold mb-5">Create Company</h1>
-      <Loading isLoading={isLoading}>
-        <FetchError isError={!!error}>
+      <Loading isLoading={isLoading || isLoadingCompany}>
+        <FetchError isError={!!error || !!errorCompany}>
           <form
             className="space-y-5"
             onSubmit={(e) => {
@@ -132,8 +203,12 @@ const CompanyForm = () => {
                   <div className="relative h-24 w-24 rounded-lg overflow-hidden">
                     {field.state.value ? (
                       <img
-                        src={URL.createObjectURL(field.state.value)}
-                        alt={field.state.value.name}
+                        src={
+                          typeof field.state.value === 'string'
+                            ? field.state.value
+                            : URL.createObjectURL(field.state.value)
+                        }
+                        alt={field.name}
                         className="h-full w-full object-cover"
                       />
                     ) : (
@@ -141,16 +216,18 @@ const CompanyForm = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <FileUpload
-                      onUpload={(files: File[]) => handleLogoUpload(files, field)}
-                      open={isOpen}
-                      onOpenChange={setIsOpen}
-                      maxFiles={1}
-                    >
-                      <Btn type="button" variant="primary">
-                        Upload
-                      </Btn>
-                    </FileUpload>
+                    <div>
+                      <FileUpload
+                        onUpload={(files: File[]) => handleLogoUpload(files, field)}
+                        open={isOpen}
+                        onOpenChange={setIsOpen}
+                        maxFiles={1}
+                      >
+                        <Btn type="button" variant="outline">
+                          Upload
+                        </Btn>
+                      </FileUpload>
+                    </div>
                     <Btn type="button" variant="outline" onClick={() => field.handleChange(null)}>
                       Remove
                     </Btn>
@@ -244,7 +321,7 @@ const CompanyForm = () => {
             />
 
             <Btn type="submit" variant="outline">
-              Create
+              {companyId ? 'Update' : 'Create'}
             </Btn>
           </form>
         </FetchError>
