@@ -18,9 +18,16 @@ export interface IFileUploadProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   children: React.ReactNode;
+  maxFiles?: number;
 }
 
-const FileUpload: React.FC<IFileUploadProps> = ({ onUpload, open, onOpenChange, children }) => {
+const FileUpload: React.FC<IFileUploadProps> = ({
+  onUpload,
+  open,
+  onOpenChange,
+  children,
+  maxFiles
+}) => {
   const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,7 +46,8 @@ const FileUpload: React.FC<IFileUploadProps> = ({ onUpload, open, onOpenChange, 
       });
 
       // Limit to maxFiles
-      setFiles(newFiles);
+      const limitedFiles = maxFiles ? newFiles.slice(0, maxFiles) : newFiles;
+      setFiles(limitedFiles);
     },
     [files]
   );
@@ -58,7 +66,8 @@ const FileUpload: React.FC<IFileUploadProps> = ({ onUpload, open, onOpenChange, 
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop
+    maxFiles: maxFiles ? maxFiles - files.length : undefined,
+    onDrop,
   });
 
   return (
@@ -86,6 +95,11 @@ const FileUpload: React.FC<IFileUploadProps> = ({ onUpload, open, onOpenChange, 
                     ? 'Drop the files here...'
                     : 'Drag & drop files here, or click to select files'}
                 </p>
+                {maxFiles && (
+                  <p className="text-xs text-gray-500">
+                    {files.length}/{maxFiles} files uploaded
+                  </p>
+                )}
               </div>
             </div>
           </div>
