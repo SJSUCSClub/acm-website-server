@@ -36,6 +36,7 @@ import { Route as AdminLayoutCompaniesCreateImport } from './routes/admin/_layou
 import { Route as AdminLayoutProjectsProjectIdIndexImport } from './routes/admin/_layout/projects/$projectId/index'
 import { Route as AdminLayoutCompaniesCompanyIdIndexImport } from './routes/admin/_layout/companies/$companyId/index'
 import { Route as AdminLayoutProjectsProjectIdEditImport } from './routes/admin/_layout/projects/$projectId/edit'
+import { Route as AdminLayoutCompaniesCompanyIdEditImport } from './routes/admin/_layout/companies/$companyId/edit'
 
 // Create Virtual Routes
 
@@ -191,6 +192,13 @@ const AdminLayoutProjectsProjectIdEditRoute =
     getParentRoute: () => AdminLayoutRoute,
   } as any)
 
+const AdminLayoutCompaniesCompanyIdEditRoute =
+  AdminLayoutCompaniesCompanyIdEditImport.update({
+    id: '/companies/$companyId/edit',
+    path: '/companies/$companyId/edit',
+    getParentRoute: () => AdminLayoutRoute,
+  } as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -342,6 +350,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLayoutProjectsIndexImport
       parentRoute: typeof AdminLayoutImport
     }
+    '/admin/_layout/companies/$companyId/edit': {
+      id: '/admin/_layout/companies/$companyId/edit'
+      path: '/companies/$companyId/edit'
+      fullPath: '/admin/companies/$companyId/edit'
+      preLoaderRoute: typeof AdminLayoutCompaniesCompanyIdEditImport
+      parentRoute: typeof AdminLayoutImport
+    }
     '/admin/_layout/projects/$projectId/edit': {
       id: '/admin/_layout/projects/$projectId/edit'
       path: '/projects/$projectId/edit'
@@ -378,6 +393,7 @@ interface AdminLayoutRouteChildren {
   AdminLayoutProjectsCreateRoute: typeof AdminLayoutProjectsCreateRoute
   AdminLayoutCompaniesIndexRoute: typeof AdminLayoutCompaniesIndexRoute
   AdminLayoutProjectsIndexRoute: typeof AdminLayoutProjectsIndexRoute
+  AdminLayoutCompaniesCompanyIdEditRoute: typeof AdminLayoutCompaniesCompanyIdEditRoute
   AdminLayoutProjectsProjectIdEditRoute: typeof AdminLayoutProjectsProjectIdEditRoute
   AdminLayoutCompaniesCompanyIdIndexRoute: typeof AdminLayoutCompaniesCompanyIdIndexRoute
   AdminLayoutProjectsProjectIdIndexRoute: typeof AdminLayoutProjectsProjectIdIndexRoute
@@ -393,6 +409,8 @@ const AdminLayoutRouteChildren: AdminLayoutRouteChildren = {
   AdminLayoutProjectsCreateRoute: AdminLayoutProjectsCreateRoute,
   AdminLayoutCompaniesIndexRoute: AdminLayoutCompaniesIndexRoute,
   AdminLayoutProjectsIndexRoute: AdminLayoutProjectsIndexRoute,
+  AdminLayoutCompaniesCompanyIdEditRoute:
+    AdminLayoutCompaniesCompanyIdEditRoute,
   AdminLayoutProjectsProjectIdEditRoute: AdminLayoutProjectsProjectIdEditRoute,
   AdminLayoutCompaniesCompanyIdIndexRoute:
     AdminLayoutCompaniesCompanyIdIndexRoute,
@@ -435,6 +453,7 @@ export interface FileRoutesByFullPath {
   '/admin/projects/create': typeof AdminLayoutProjectsCreateRoute
   '/admin/companies': typeof AdminLayoutCompaniesIndexRoute
   '/admin/projects': typeof AdminLayoutProjectsIndexRoute
+  '/admin/companies/$companyId/edit': typeof AdminLayoutCompaniesCompanyIdEditRoute
   '/admin/projects/$projectId/edit': typeof AdminLayoutProjectsProjectIdEditRoute
   '/admin/companies/$companyId': typeof AdminLayoutCompaniesCompanyIdIndexRoute
   '/admin/projects/$projectId': typeof AdminLayoutProjectsProjectIdIndexRoute
@@ -460,6 +479,7 @@ export interface FileRoutesByTo {
   '/admin/projects/create': typeof AdminLayoutProjectsCreateRoute
   '/admin/companies': typeof AdminLayoutCompaniesIndexRoute
   '/admin/projects': typeof AdminLayoutProjectsIndexRoute
+  '/admin/companies/$companyId/edit': typeof AdminLayoutCompaniesCompanyIdEditRoute
   '/admin/projects/$projectId/edit': typeof AdminLayoutProjectsProjectIdEditRoute
   '/admin/companies/$companyId': typeof AdminLayoutCompaniesCompanyIdIndexRoute
   '/admin/projects/$projectId': typeof AdminLayoutProjectsProjectIdIndexRoute
@@ -488,6 +508,7 @@ export interface FileRoutesById {
   '/admin/_layout/projects/create': typeof AdminLayoutProjectsCreateRoute
   '/admin/_layout/companies/': typeof AdminLayoutCompaniesIndexRoute
   '/admin/_layout/projects/': typeof AdminLayoutProjectsIndexRoute
+  '/admin/_layout/companies/$companyId/edit': typeof AdminLayoutCompaniesCompanyIdEditRoute
   '/admin/_layout/projects/$projectId/edit': typeof AdminLayoutProjectsProjectIdEditRoute
   '/admin/_layout/companies/$companyId/': typeof AdminLayoutCompaniesCompanyIdIndexRoute
   '/admin/_layout/projects/$projectId/': typeof AdminLayoutProjectsProjectIdIndexRoute
@@ -516,6 +537,7 @@ export interface FileRouteTypes {
     | '/admin/projects/create'
     | '/admin/companies'
     | '/admin/projects'
+    | '/admin/companies/$companyId/edit'
     | '/admin/projects/$projectId/edit'
     | '/admin/companies/$companyId'
     | '/admin/projects/$projectId'
@@ -540,6 +562,7 @@ export interface FileRouteTypes {
     | '/admin/projects/create'
     | '/admin/companies'
     | '/admin/projects'
+    | '/admin/companies/$companyId/edit'
     | '/admin/projects/$projectId/edit'
     | '/admin/companies/$companyId'
     | '/admin/projects/$projectId'
@@ -566,6 +589,7 @@ export interface FileRouteTypes {
     | '/admin/_layout/projects/create'
     | '/admin/_layout/companies/'
     | '/admin/_layout/projects/'
+    | '/admin/_layout/companies/$companyId/edit'
     | '/admin/_layout/projects/$projectId/edit'
     | '/admin/_layout/companies/$companyId/'
     | '/admin/_layout/projects/$projectId/'
@@ -660,6 +684,7 @@ export const routeTree = rootRoute
         "/admin/_layout/projects/create",
         "/admin/_layout/companies/",
         "/admin/_layout/projects/",
+        "/admin/_layout/companies/$companyId/edit",
         "/admin/_layout/projects/$projectId/edit",
         "/admin/_layout/companies/$companyId/",
         "/admin/_layout/projects/$projectId/"
@@ -711,6 +736,10 @@ export const routeTree = rootRoute
     },
     "/admin/_layout/projects/": {
       "filePath": "admin/_layout/projects/index.tsx",
+      "parent": "/admin/_layout"
+    },
+    "/admin/_layout/companies/$companyId/edit": {
+      "filePath": "admin/_layout/companies/$companyId/edit.tsx",
       "parent": "/admin/_layout"
     },
     "/admin/_layout/projects/$projectId/edit": {
