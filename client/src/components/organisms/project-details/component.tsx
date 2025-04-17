@@ -64,6 +64,7 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
               await presignedUrlFetch(data.presigned_url, file);
               toast.success(`File uploaded successfully: ${file.name}`);
             } catch (e) {
+              console.log(e);
               toast.error(`Failed to upload file: ${file.name}`);
             }
           },

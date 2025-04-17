@@ -48,8 +48,8 @@ const EventsTable: React.FC<IEventsTableProps> = ({ events }) => {
                 <TableCell>{event.eventType}</TableCell>
                 <TableCell>{event.memberOnly ? 'Yes' : 'No'}</TableCell>
                 <TableCell>
-                <Link to="/events/$eventId" params={{ eventId: event.id.toString() }}>
-                  <Btn variant="outline">Open</Btn>
+                  <Link to="/events/$eventId" params={{ eventId: event.id.toString() }}>
+                    <Btn variant="outline">Open</Btn>
                   </Link>
                 </TableCell>
               </TableRow>

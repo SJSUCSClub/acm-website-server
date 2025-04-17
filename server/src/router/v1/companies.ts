@@ -1,9 +1,9 @@
-import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
-import { z } from "zod";
-import * as HttpStatusCodes from "stoker/http-status-codes";
+import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
+import { z } from 'zod';
+import * as HttpStatusCodes from 'stoker/http-status-codes';
 
-import type { Context } from "@/lib/context";
-import { db } from "@/db/db";
+import type { Context } from '@/lib/context';
+import { db } from '@/db/db';
 import {
   users,
   events,
@@ -11,14 +11,14 @@ import {
   subscribedCompanies,
   companies,
   files,
-} from "@/db/schema";
-import { eq, count, getTableColumns, sql } from "drizzle-orm";
-import type { User, Event, Company } from "@/db/schema";
+} from '@/db/schema';
+import { eq, count, getTableColumns, sql } from 'drizzle-orm';
+import type { User, Event, Company } from '@/db/schema';
 import {
   authMiddleWare,
   unauthorizedRequest,
   forbiddenRequest,
-} from "@/middlewares/auth-middleware";
+} from '@/middlewares/auth-middleware';
 import {
   companySchema,
   companyIDSchema,
@@ -26,12 +26,12 @@ import {
   userSchema,
   errorSchema,
   newCompanySchema,
-} from "@/util/zod";
+} from '@/util/zod';
 import {
   deleteFile,
   generateObjectUrl,
   getPresignedUrlPutObj,
-} from "@/lib/aws/s3";
+} from '@/lib/aws/s3';
 
 const companyRouter = new OpenAPIHono<Context>();
 
@@ -39,20 +39,20 @@ const generateLogoKey = (id: string | number): string => `companies/${id}/logo`;
 
 companyRouter.openapi(
   createRoute({
-    method: "get",
-    path: "/",
-    tags: ["companies"],
-    summary: "List all companies",
+    method: 'get',
+    path: '/',
+    tags: ['companies'],
+    summary: 'List all companies',
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               companies: z.array(companySchema),
             }),
           },
         },
-        description: "Successful response",
+        description: 'Successful response',
       },
     },
   }),
@@ -68,49 +68,49 @@ companyRouter.openapi(
 
 companyRouter.openapi(
   createRoute({
-    method: "get",
-    path: "/{companyID}",
-    tags: ["companies"],
-    summary: "Get a company by ID",
+    method: 'get',
+    path: '/{companyID}',
+    tags: ['companies'],
+    summary: 'Get a company by ID',
     request: {
       params: companyIDSchema,
     },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               company: companySchema,
             }),
           },
         },
-        description: "Successful response",
+        description: 'Successful response',
       },
       [HttpStatusCodes.NOT_FOUND]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               error: z.string(),
             }),
           },
         },
-        description: "Company not found",
+        description: 'Company not found',
       },
       [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               error: z.string(),
             }),
           },
         },
-        description: "Internal server error",
+        description: 'Internal server error',
       },
     },
   }),
   async (c) => {
     try {
-      const { companyID } = c.req.valid("param");
+      const { companyID } = c.req.valid('param');
 
       const foundCompanies = await db
         .select()
@@ -119,7 +119,7 @@ companyRouter.openapi(
 
       if (foundCompanies.length === 0) {
         return c.json(
-          { error: "Company not found" },
+          { error: 'Company not found' },
           HttpStatusCodes.NOT_FOUND,
         );
       }
@@ -139,15 +139,15 @@ companyRouter.openapi(
 
 companyRouter.openapi(
   createRoute({
-    method: "post",
-    path: "/",
-    tags: ["companies"],
-    summary: "Creates a new company",
-    middleware: [authMiddleWare("admin")],
+    method: 'post',
+    path: '/',
+    tags: ['companies'],
+    summary: 'Creates a new company',
+    middleware: [authMiddleWare('admin')],
     request: {
       body: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: newCompanySchema,
           },
         },
@@ -156,36 +156,36 @@ companyRouter.openapi(
     responses: {
       [HttpStatusCodes.CREATED]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               company: companySchema,
             }),
           },
         },
-        description: "Successful response",
+        description: 'Successful response',
       },
       ...unauthorizedRequest,
       ...forbiddenRequest,
       [HttpStatusCodes.CONFLICT]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: errorSchema,
           },
         },
-        description: "Conflict",
+        description: 'Conflict',
       },
       [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: errorSchema,
           },
         },
-        description: "Internal server error",
+        description: 'Internal server error',
       },
     },
   }),
   async (c) => {
-    const body = c.req.valid("json");
+    const body = c.req.valid('json');
     try {
       const newCompany = await db
         .insert(companies)
@@ -194,7 +194,7 @@ companyRouter.openapi(
         .returning();
       if (newCompany.length === 0) {
         return c.json(
-          { error: "Company already exists" },
+          { error: 'Company already exists' },
           HttpStatusCodes.CONFLICT,
         );
       }
@@ -211,16 +211,16 @@ companyRouter.openapi(
 
 companyRouter.openapi(
   createRoute({
-    method: "put",
-    path: "/{companyID}",
-    tags: ["companies"],
-    summary: "Update company",
-    middleware: [authMiddleWare("admin")],
+    method: 'put',
+    path: '/{companyID}',
+    tags: ['companies'],
+    summary: 'Update company',
+    middleware: [authMiddleWare('admin')],
     request: {
       params: companyIDSchema,
       body: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: newCompanySchema,
           },
         },
@@ -228,43 +228,43 @@ companyRouter.openapi(
     },
     responses: {
       [HttpStatusCodes.NO_CONTENT]: {
-        description: "Successful response",
+        description: 'Successful response',
       },
       ...unauthorizedRequest,
       ...forbiddenRequest,
       [HttpStatusCodes.BAD_REQUEST]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: errorSchema,
           },
         },
-        description: "Conflict",
+        description: 'Conflict',
       },
       [HttpStatusCodes.NOT_FOUND]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: errorSchema,
           },
         },
-        description: "Not found",
+        description: 'Not found',
       },
       [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: errorSchema,
           },
         },
-        description: "Internal server error",
+        description: 'Internal server error',
       },
     },
   }),
   async (c) => {
-    const companyId = c.req.param("companyID");
-    const body = c.req.valid("json");
+    const companyId = c.req.param('companyID');
+    const body = c.req.valid('json');
 
     if (!companyId) {
       return c.json(
-        { error: "Company ID is required" },
+        { error: 'Company ID is required' },
         HttpStatusCodes.BAD_REQUEST,
       );
     }
@@ -277,11 +277,11 @@ companyRouter.openapi(
         .returning();
       if (updatedCompany.length === 0) {
         return c.json(
-          { error: "Company not found" },
+          { error: 'Company not found' },
           HttpStatusCodes.NOT_FOUND,
         );
       }
-      return c.text("", HttpStatusCodes.NO_CONTENT);
+      return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
       return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
@@ -290,51 +290,51 @@ companyRouter.openapi(
 
 companyRouter.openapi(
   createRoute({
-    method: "post",
-    path: "/{companyID}/logo",
-    tags: ["companies"],
-    summary: "Create logo",
-    middleware: [authMiddleWare("admin")],
+    method: 'post',
+    path: '/{companyID}/logo',
+    tags: ['companies'],
+    summary: 'Create logo',
+    middleware: [authMiddleWare('admin')],
     request: {
       params: companyIDSchema,
     },
     responses: {
       [HttpStatusCodes.CREATED]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               presigned_url: z.string().url(),
             }),
           },
         },
-        description: "Successful response",
+        description: 'Successful response',
       },
       [HttpStatusCodes.BAD_REQUEST]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: errorSchema,
           },
         },
-        description: "Bad request",
+        description: 'Bad request',
       },
       [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: errorSchema,
           },
         },
-        description: "Failed to create logo",
+        description: 'Failed to create logo',
       },
       ...unauthorizedRequest,
       ...forbiddenRequest,
     },
   }),
   async (c) => {
-    const companyId = c.req.param("companyID");
+    const companyId = c.req.param('companyID');
 
     if (!companyId) {
       return c.json(
-        { error: "Not valid parameters" },
+        { error: 'Not valid parameters' },
         HttpStatusCodes.BAD_REQUEST,
       );
     }
@@ -343,7 +343,7 @@ companyRouter.openapi(
     try {
       await db
         .insert(files)
-        .values({ key, name: "logo" })
+        .values({ key, name: 'logo' })
         .onConflictDoNothing();
       await db
         .update(companies)
@@ -352,13 +352,13 @@ companyRouter.openapi(
 
       const res = await getPresignedUrlPutObj(key);
       if (!res) {
-        throw new Error("Failed to generate presigned url");
+        throw new Error('Failed to generate presigned url');
       }
       return c.json({ presigned_url: res }, HttpStatusCodes.CREATED);
     } catch (error) {
       console.log(error);
       return c.json(
-        { error: "Failed to create logo" },
+        { error: 'Failed to create logo' },
         HttpStatusCodes.INTERNAL_SERVER_ERROR,
       );
     }
@@ -367,44 +367,44 @@ companyRouter.openapi(
 
 companyRouter.openapi(
   createRoute({
-    method: "delete",
-    path: "/{companyID}/logo",
-    tags: ["companies"],
-    summary: "Delete logo",
-    middleware: [authMiddleWare("admin")],
+    method: 'delete',
+    path: '/{companyID}/logo',
+    tags: ['companies'],
+    summary: 'Delete logo',
+    middleware: [authMiddleWare('admin')],
     request: {
       params: companyIDSchema,
     },
     responses: {
       [HttpStatusCodes.NO_CONTENT]: {
-        description: "Successful response",
+        description: 'Successful response',
       },
       [HttpStatusCodes.BAD_REQUEST]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: errorSchema,
           },
         },
-        description: "Bad request",
+        description: 'Bad request',
       },
       [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: errorSchema,
           },
         },
-        description: "Failed to create logo",
+        description: 'Failed to create logo',
       },
       ...unauthorizedRequest,
       ...forbiddenRequest,
     },
   }),
   async (c) => {
-    const companyId = c.req.param("companyID");
+    const companyId = c.req.param('companyID');
 
     if (!companyId) {
       return c.json(
-        { error: "Not valid parameters" },
+        { error: 'Not valid parameters' },
         HttpStatusCodes.BAD_REQUEST,
       );
     }
@@ -418,13 +418,13 @@ companyRouter.openapi(
       await db.delete(files).where(eq(files.key, key));
       const res = await deleteFile(key);
       if (!res) {
-        throw new Error("Failed to delete file");
+        throw new Error('Failed to delete file');
       }
-      return c.text("", HttpStatusCodes.NO_CONTENT);
+      return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
       console.log(error);
       return c.json(
-        { error: "Failed to create logo" },
+        { error: 'Failed to create logo' },
         HttpStatusCodes.INTERNAL_SERVER_ERROR,
       );
     }
@@ -433,28 +433,28 @@ companyRouter.openapi(
 
 companyRouter.openapi(
   createRoute({
-    method: "get",
-    path: "/{companyID}/events",
-    tags: ["companies"],
-    summary: "List all events for a company",
+    method: 'get',
+    path: '/{companyID}/events',
+    tags: ['companies'],
+    summary: 'List all events for a company',
     request: {
       params: companyIDSchema,
     },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               companyEvents: z.array(eventSchema),
             }),
           },
         },
-        description: "Successful response",
+        description: 'Successful response',
       },
     },
   }),
   async (c) => {
-    const { companyID } = c.req.valid("param");
+    const { companyID } = c.req.valid('param');
     const companyEvents: Event[] = await db
       .select(getTableColumns(events))
       .from(eventCompanies)
@@ -474,29 +474,29 @@ companyRouter.openapi(
 
 companyRouter.openapi(
   createRoute({
-    method: "get",
-    path: "/{companyID}/subscribers",
-    tags: ["companies"],
-    summary: "List all subscribers for a company",
-    middleware: [authMiddleWare("admin")],
+    method: 'get',
+    path: '/{companyID}/subscribers',
+    tags: ['companies'],
+    summary: 'List all subscribers for a company',
+    middleware: [authMiddleWare('admin')],
     request: {
       params: companyIDSchema,
     },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               companySubscribers: z.array(userSchema),
             }),
           },
         },
-        description: "Successful response",
+        description: 'Successful response',
       },
     },
   }),
   async (c) => {
-    const { companyID } = c.req.valid("param");
+    const { companyID } = c.req.valid('param');
     const companySubscribers: User[] = await db
       .select(getTableColumns(users))
       .from(subscribedCompanies)
@@ -515,29 +515,29 @@ companyRouter.openapi(
 
 companyRouter.openapi(
   createRoute({
-    method: "get",
-    path: "/{companyID}/subscribers/count",
-    tags: ["companies"],
-    summary: "Get the number of subscribers for a company",
-    middleware: [authMiddleWare("admin")],
+    method: 'get',
+    path: '/{companyID}/subscribers/count',
+    tags: ['companies'],
+    summary: 'Get the number of subscribers for a company',
+    middleware: [authMiddleWare('admin')],
     request: {
       params: companyIDSchema,
     },
     responses: {
       [HttpStatusCodes.OK]: {
         content: {
-          "application/json": {
+          'application/json': {
             schema: z.object({
               subscribersCount: z.number(),
             }),
           },
         },
-        description: "Successful response",
+        description: 'Successful response',
       },
     },
   }),
   async (c) => {
-    const { companyID } = c.req.valid("param");
+    const { companyID } = c.req.valid('param');
     const subscribersCount = await db
       .select({ count: count() })
       .from(subscribedCompanies)

@@ -15,11 +15,10 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useMutation, useQuery } from '@/hooks/useFetch';
 import { paths } from '@/types/schema.v1';
-import { s3UrlToFile } from '@/utils/convert';
 import { presignedUrlFetch } from '@/utils/presignedUrlFetch';
 import { AnyFieldApi, useForm } from '@tanstack/react-form';
 import { useNavigate } from '@tanstack/react-router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -113,6 +112,7 @@ const CompanyForm: React.FC<ICompanyForm> = ({ companyId }) => {
             params: { companyId: companyid }
           });
         } catch (e) {
+          console.log(e);
           toast.error('Failed to create company');
         }
       } else {
@@ -137,6 +137,7 @@ const CompanyForm: React.FC<ICompanyForm> = ({ companyId }) => {
             params: { companyId: companyId }
           });
         } catch (e) {
+          console.log(e);
           toast.error('Failed to update company');
         }
       }
@@ -156,6 +157,7 @@ const CompanyForm: React.FC<ICompanyForm> = ({ companyId }) => {
         await presignedUrlFetch(data.presigned_url, logo);
         toast.success('Logo uploaded successfully');
       } catch (e) {
+        console.log(e);
         toast.error('Failed to upload logo');
       }
     } else if (typeof form.options.defaultValues?.logo === 'string' && !logo) {

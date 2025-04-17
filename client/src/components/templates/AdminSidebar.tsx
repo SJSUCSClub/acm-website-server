@@ -23,9 +23,10 @@ interface IAdminSidebarProps {
 
 type NavItem = {
   title: string;
-  icon: LucideIcon
+  icon: LucideIcon;
   href: FileRouteTypes['to'];
-}
+  params?: Record<string, string>;
+};
 
 const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
