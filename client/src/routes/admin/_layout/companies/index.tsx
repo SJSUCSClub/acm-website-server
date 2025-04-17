@@ -6,5 +6,5 @@ export const Route = createFileRoute('/admin/_layout/companies/')({
 });
 
 function RouteComponent() {
-  return <CompanyList />;
+  return <CompanyList admin />;
 }

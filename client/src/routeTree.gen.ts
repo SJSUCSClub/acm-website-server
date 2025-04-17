@@ -32,6 +32,7 @@ import { Route as AdminLayoutClubImport } from './routes/admin/_layout/club'
 import { Route as AdminLayoutProjectsIndexImport } from './routes/admin/_layout/projects/index'
 import { Route as AdminLayoutCompaniesIndexImport } from './routes/admin/_layout/companies/index'
 import { Route as AdminLayoutProjectsCreateImport } from './routes/admin/_layout/projects/create'
+import { Route as AdminLayoutCompaniesCreateImport } from './routes/admin/_layout/companies/create'
 import { Route as AdminLayoutProjectsProjectIdIndexImport } from './routes/admin/_layout/projects/$projectId/index'
 import { Route as AdminLayoutCompaniesCompanyIdIndexImport } from './routes/admin/_layout/companies/$companyId/index'
 import { Route as AdminLayoutProjectsProjectIdEditImport } from './routes/admin/_layout/projects/$projectId/edit'
@@ -160,6 +161,14 @@ const AdminLayoutProjectsCreateRoute = AdminLayoutProjectsCreateImport.update({
   path: '/projects/create',
   getParentRoute: () => AdminLayoutRoute,
 } as any)
+
+const AdminLayoutCompaniesCreateRoute = AdminLayoutCompaniesCreateImport.update(
+  {
+    id: '/companies/create',
+    path: '/companies/create',
+    getParentRoute: () => AdminLayoutRoute,
+  } as any,
+)
 
 const AdminLayoutProjectsProjectIdIndexRoute =
   AdminLayoutProjectsProjectIdIndexImport.update({
@@ -305,6 +314,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLayoutIndexImport
       parentRoute: typeof AdminLayoutImport
     }
+    '/admin/_layout/companies/create': {
+      id: '/admin/_layout/companies/create'
+      path: '/companies/create'
+      fullPath: '/admin/companies/create'
+      preLoaderRoute: typeof AdminLayoutCompaniesCreateImport
+      parentRoute: typeof AdminLayoutImport
+    }
     '/admin/_layout/projects/create': {
       id: '/admin/_layout/projects/create'
       path: '/projects/create'
@@ -358,6 +374,7 @@ interface AdminLayoutRouteChildren {
   AdminLayoutOfficersRoute: typeof AdminLayoutOfficersRoute
   AdminLayoutUsersRoute: typeof AdminLayoutUsersRoute
   AdminLayoutIndexRoute: typeof AdminLayoutIndexRoute
+  AdminLayoutCompaniesCreateRoute: typeof AdminLayoutCompaniesCreateRoute
   AdminLayoutProjectsCreateRoute: typeof AdminLayoutProjectsCreateRoute
   AdminLayoutCompaniesIndexRoute: typeof AdminLayoutCompaniesIndexRoute
   AdminLayoutProjectsIndexRoute: typeof AdminLayoutProjectsIndexRoute
@@ -372,6 +389,7 @@ const AdminLayoutRouteChildren: AdminLayoutRouteChildren = {
   AdminLayoutOfficersRoute: AdminLayoutOfficersRoute,
   AdminLayoutUsersRoute: AdminLayoutUsersRoute,
   AdminLayoutIndexRoute: AdminLayoutIndexRoute,
+  AdminLayoutCompaniesCreateRoute: AdminLayoutCompaniesCreateRoute,
   AdminLayoutProjectsCreateRoute: AdminLayoutProjectsCreateRoute,
   AdminLayoutCompaniesIndexRoute: AdminLayoutCompaniesIndexRoute,
   AdminLayoutProjectsIndexRoute: AdminLayoutProjectsIndexRoute,
@@ -413,6 +431,7 @@ export interface FileRoutesByFullPath {
   '/admin/officers': typeof AdminLayoutOfficersRoute
   '/admin/users': typeof AdminLayoutUsersRoute
   '/admin/': typeof AdminLayoutIndexRoute
+  '/admin/companies/create': typeof AdminLayoutCompaniesCreateRoute
   '/admin/projects/create': typeof AdminLayoutProjectsCreateRoute
   '/admin/companies': typeof AdminLayoutCompaniesIndexRoute
   '/admin/projects': typeof AdminLayoutProjectsIndexRoute
@@ -437,6 +456,7 @@ export interface FileRoutesByTo {
   '/admin/events': typeof AdminLayoutEventsRoute
   '/admin/officers': typeof AdminLayoutOfficersRoute
   '/admin/users': typeof AdminLayoutUsersRoute
+  '/admin/companies/create': typeof AdminLayoutCompaniesCreateRoute
   '/admin/projects/create': typeof AdminLayoutProjectsCreateRoute
   '/admin/companies': typeof AdminLayoutCompaniesIndexRoute
   '/admin/projects': typeof AdminLayoutProjectsIndexRoute
@@ -464,6 +484,7 @@ export interface FileRoutesById {
   '/admin/_layout/officers': typeof AdminLayoutOfficersRoute
   '/admin/_layout/users': typeof AdminLayoutUsersRoute
   '/admin/_layout/': typeof AdminLayoutIndexRoute
+  '/admin/_layout/companies/create': typeof AdminLayoutCompaniesCreateRoute
   '/admin/_layout/projects/create': typeof AdminLayoutProjectsCreateRoute
   '/admin/_layout/companies/': typeof AdminLayoutCompaniesIndexRoute
   '/admin/_layout/projects/': typeof AdminLayoutProjectsIndexRoute
@@ -491,6 +512,7 @@ export interface FileRouteTypes {
     | '/admin/officers'
     | '/admin/users'
     | '/admin/'
+    | '/admin/companies/create'
     | '/admin/projects/create'
     | '/admin/companies'
     | '/admin/projects'
@@ -514,6 +536,7 @@ export interface FileRouteTypes {
     | '/admin/events'
     | '/admin/officers'
     | '/admin/users'
+    | '/admin/companies/create'
     | '/admin/projects/create'
     | '/admin/companies'
     | '/admin/projects'
@@ -539,6 +562,7 @@ export interface FileRouteTypes {
     | '/admin/_layout/officers'
     | '/admin/_layout/users'
     | '/admin/_layout/'
+    | '/admin/_layout/companies/create'
     | '/admin/_layout/projects/create'
     | '/admin/_layout/companies/'
     | '/admin/_layout/projects/'
@@ -632,6 +656,7 @@ export const routeTree = rootRoute
         "/admin/_layout/officers",
         "/admin/_layout/users",
         "/admin/_layout/",
+        "/admin/_layout/companies/create",
         "/admin/_layout/projects/create",
         "/admin/_layout/companies/",
         "/admin/_layout/projects/",
@@ -670,6 +695,10 @@ export const routeTree = rootRoute
     },
     "/admin/_layout/": {
       "filePath": "admin/_layout/index.tsx",
+      "parent": "/admin/_layout"
+    },
+    "/admin/_layout/companies/create": {
+      "filePath": "admin/_layout/companies/create.tsx",
       "parent": "/admin/_layout"
     },
     "/admin/_layout/projects/create": {
