@@ -290,6 +290,70 @@ companyRouter.openapi(
 
 companyRouter.openapi(
   createRoute({
+    method: 'delete',
+    path: '/{companyID}',
+    tags: ['companies'],
+    summary: 'Delete company',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: companyIDSchema,
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: 'Successful response',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+      [HttpStatusCodes.BAD_REQUEST]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Conflict',
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Not found',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Internal server error',
+      },
+    },
+  }),
+  async (c) => {
+    const companyId = c.req.param('companyID');
+
+    if (!companyId) {
+      return c.json(
+        { error: 'Company ID is required' },
+        HttpStatusCodes.BAD_REQUEST,
+      );
+    }
+
+    try {
+      const key = generateLogoKey(companyId);
+      await db.delete(companies).where(eq(companies.id, parseInt(companyId)));
+      await db.delete(files).where(eq(files.key, key));
+      await deleteFile(key);
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  },
+);
+
+companyRouter.openapi(
+  createRoute({
     method: 'post',
     path: '/{companyID}/logo',
     tags: ['companies'],
