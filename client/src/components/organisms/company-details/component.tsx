@@ -1,13 +1,15 @@
 import Btn from '@/components/atoms/btn';
+import DeleteAlert from '@/components/molecules/delete-alert';
 import EventsTable from '@/components/molecules/events-table';
 import FetchError from '@/components/molecules/fetch-error';
 import Loading from '@/components/molecules/loading';
 import UsersTable from '@/components/molecules/users-table';
 import { Badge } from '@/components/ui/badge';
-import { useQuery } from '@/hooks/useFetch';
-import { Link } from '@tanstack/react-router';
+import { useMutation, useQuery } from '@/hooks/useFetch';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { MapPin } from 'lucide-react';
 import React from 'react';
+import { toast } from 'sonner';
 
 export interface ICompanyDetailsProps {
   companyId: string;
@@ -15,6 +17,7 @@ export interface ICompanyDetailsProps {
 }
 
 const CompanyDetails: React.FC<ICompanyDetailsProps> = ({ companyId, admin = false }) => {
+  const navigate = useNavigate();
   const {
     data: company,
     isLoading: isLoadingCompany,
@@ -55,6 +58,31 @@ const CompanyDetails: React.FC<ICompanyDetailsProps> = ({ companyId, admin = fal
       enabled: admin
     }
   );
+  const { mutate: deleteCompany } = useMutation('delete', '/v1/companies/{companyID}');
+
+  const handleCompanyDelete = () => {
+    deleteCompany(
+      {
+        params: {
+          path: {
+            companyID: companyId
+          }
+        }
+      },
+      {
+        onSuccess() {
+          toast.success('Company deleted successfully');
+          navigate({
+            to: '/admin/companies',
+            replace: true
+          });
+        },
+        onError() {
+          toast.error('Failed to delete company');
+        }
+      }
+    );
+  };
 
   return (
     <div className="space-y-16">
@@ -79,9 +107,16 @@ const CompanyDetails: React.FC<ICompanyDetailsProps> = ({ companyId, admin = fal
                 </div>
               </div>
               {admin && (
-                <Link to={'/admin/companies/$companyId/edit'} params={{ companyId }}>
-                  <Btn>Edit</Btn>
-                </Link>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Link to={'/admin/companies/$companyId/edit'} params={{ companyId }}>
+                    <Btn>Edit</Btn>
+                  </Link>
+                  <DeleteAlert
+                    onDelete={handleCompanyDelete}
+                  >
+                    <Btn className="bg-red-500">Delete</Btn>
+                  </DeleteAlert>
+                </div>
               )}
             </div>
             <div>
