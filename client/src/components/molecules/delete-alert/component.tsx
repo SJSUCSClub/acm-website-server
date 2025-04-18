@@ -22,8 +22,8 @@ export interface IDeleteAlertProps {
 const DeleteAlert: React.FC<IDeleteAlertProps> = ({
   onDelete,
   children,
-  alertTitle = "Are you absolutely sure?",
-  alertDescription = "This action cannot be undone."
+  alertTitle = 'Are you absolutely sure?',
+  alertDescription = 'This action cannot be undone.'
 }) => {
   return (
     <AlertDialog>
@@ -31,9 +31,7 @@ const DeleteAlert: React.FC<IDeleteAlertProps> = ({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{alertTitle}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {alertDescription}
-          </AlertDialogDescription>
+          <AlertDialogDescription>{alertDescription}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>

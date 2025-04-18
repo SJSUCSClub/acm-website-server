@@ -111,9 +111,7 @@ const CompanyDetails: React.FC<ICompanyDetailsProps> = ({ companyId, admin = fal
                   <Link to={'/admin/companies/$companyId/edit'} params={{ companyId }}>
                     <Btn>Edit</Btn>
                   </Link>
-                  <DeleteAlert
-                    onDelete={handleCompanyDelete}
-                  >
+                  <DeleteAlert onDelete={handleCompanyDelete}>
                     <Btn className="bg-red-500">Delete</Btn>
                   </DeleteAlert>
                 </div>
