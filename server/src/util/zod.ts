@@ -32,6 +32,7 @@ import {
 import { z } from 'zod';
 
 export const companySchema = createSelectSchema(companies);
+export const newCompanySchema = createInsertSchema(companies);
 export const subscribedCompanySchema = createSelectSchema(subscribedCompanies);
 export const companyIDSchema = z.object({
   companyID: z.string(),

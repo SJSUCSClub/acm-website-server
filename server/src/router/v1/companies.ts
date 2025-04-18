@@ -10,8 +10,9 @@ import {
   eventCompanies,
   subscribedCompanies,
   companies,
+  files,
 } from '@/db/schema';
-import { eq, count, getTableColumns } from 'drizzle-orm';
+import { eq, count, getTableColumns, sql } from 'drizzle-orm';
 import type { User, Event, Company } from '@/db/schema';
 import {
   authMiddleWare,
@@ -23,10 +24,18 @@ import {
   companyIDSchema,
   eventSchema,
   userSchema,
+  errorSchema,
+  newCompanySchema,
 } from '@/util/zod';
-import { generateObjectUrl } from '@/lib/aws/s3';
+import {
+  deleteFile,
+  generateObjectUrl,
+  getPresignedUrlPutObj,
+} from '@/lib/aws/s3';
 
 const companyRouter = new OpenAPIHono<Context>();
+
+const generateLogoKey = (id: string | number): string => `companies/${id}/logo`;
 
 companyRouter.openapi(
   createRoute({
@@ -71,7 +80,7 @@ companyRouter.openapi(
         content: {
           'application/json': {
             schema: z.object({
-              companies: companySchema,
+              company: companySchema,
             }),
           },
         },
@@ -115,13 +124,13 @@ companyRouter.openapi(
         );
       }
 
-      const company = foundCompanies[0];
+      const foundcompany = foundCompanies[0];
       const mappedCompany = {
-        ...company,
-        logo: generateObjectUrl(company.logo),
+        ...foundcompany,
+        logo: generateObjectUrl(foundcompany.logo),
       };
 
-      return c.json({ companies: mappedCompany }, HttpStatusCodes.OK);
+      return c.json({ company: mappedCompany }, HttpStatusCodes.OK);
     } catch (error) {
       return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
@@ -139,7 +148,7 @@ companyRouter.openapi(
       body: {
         content: {
           'application/json': {
-            schema: companySchema,
+            schema: newCompanySchema,
           },
         },
       },
@@ -160,30 +169,329 @@ companyRouter.openapi(
       [HttpStatusCodes.CONFLICT]: {
         content: {
           'application/json': {
-            schema: z.object({
-              error: z.string(),
-            }),
+            schema: errorSchema,
           },
         },
         description: 'Conflict',
       },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Internal server error',
+      },
     },
   }),
   async (c) => {
-    const { id, name, location, description, industryId, logo } =
-      c.req.valid('json');
-    const newCompany = await db
-      .insert(companies)
-      .values({ id, name, location, description, industryId, logo })
-      .onConflictDoNothing()
-      .returning();
-    if (newCompany.length === 0) {
+    const body = c.req.valid('json');
+    try {
+      const newCompany = await db
+        .insert(companies)
+        .values(body)
+        .onConflictDoNothing()
+        .returning();
+      if (newCompany.length === 0) {
+        return c.json(
+          { error: 'Company already exists' },
+          HttpStatusCodes.CONFLICT,
+        );
+      }
+      const company = {
+        ...newCompany[0],
+        logo: generateObjectUrl(newCompany[0].logo),
+      };
+      return c.json({ company }, HttpStatusCodes.CREATED);
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  },
+);
+
+companyRouter.openapi(
+  createRoute({
+    method: 'put',
+    path: '/{companyID}',
+    tags: ['companies'],
+    summary: 'Update company',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: companyIDSchema,
+      body: {
+        content: {
+          'application/json': {
+            schema: newCompanySchema,
+          },
+        },
+      },
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: 'Successful response',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+      [HttpStatusCodes.BAD_REQUEST]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Conflict',
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Not found',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Internal server error',
+      },
+    },
+  }),
+  async (c) => {
+    const companyId = c.req.param('companyID');
+    const body = c.req.valid('json');
+
+    if (!companyId) {
       return c.json(
-        { error: 'Company already exists' },
-        HttpStatusCodes.CONFLICT,
+        { error: 'Company ID is required' },
+        HttpStatusCodes.BAD_REQUEST,
       );
     }
-    return c.json({ company: newCompany[0] }, HttpStatusCodes.CREATED);
+
+    try {
+      const updatedCompany = await db
+        .update(companies)
+        .set(body)
+        .where(eq(companies.id, parseInt(companyId)))
+        .returning();
+      if (updatedCompany.length === 0) {
+        return c.json(
+          { error: 'Company not found' },
+          HttpStatusCodes.NOT_FOUND,
+        );
+      }
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  },
+);
+
+companyRouter.openapi(
+  createRoute({
+    method: 'delete',
+    path: '/{companyID}',
+    tags: ['companies'],
+    summary: 'Delete company',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: companyIDSchema,
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: 'Successful response',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+      [HttpStatusCodes.BAD_REQUEST]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Conflict',
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Not found',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Internal server error',
+      },
+    },
+  }),
+  async (c) => {
+    const companyId = c.req.param('companyID');
+
+    if (!companyId) {
+      return c.json(
+        { error: 'Company ID is required' },
+        HttpStatusCodes.BAD_REQUEST,
+      );
+    }
+
+    try {
+      const key = generateLogoKey(companyId);
+      await db.delete(companies).where(eq(companies.id, parseInt(companyId)));
+      await db.delete(files).where(eq(files.key, key));
+      await deleteFile(key);
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  },
+);
+
+companyRouter.openapi(
+  createRoute({
+    method: 'post',
+    path: '/{companyID}/logo',
+    tags: ['companies'],
+    summary: 'Create logo',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: companyIDSchema,
+    },
+    responses: {
+      [HttpStatusCodes.CREATED]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              presigned_url: z.string().url(),
+            }),
+          },
+        },
+        description: 'Successful response',
+      },
+      [HttpStatusCodes.BAD_REQUEST]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Bad request',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Failed to create logo',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const companyId = c.req.param('companyID');
+
+    if (!companyId) {
+      return c.json(
+        { error: 'Not valid parameters' },
+        HttpStatusCodes.BAD_REQUEST,
+      );
+    }
+
+    const key = generateLogoKey(companyId);
+    try {
+      await db
+        .insert(files)
+        .values({ key, name: 'logo' })
+        .onConflictDoNothing();
+      await db
+        .update(companies)
+        .set({ logo: key })
+        .where(eq(companies.id, parseInt(companyId)));
+
+      const res = await getPresignedUrlPutObj(key);
+      if (!res) {
+        throw new Error('Failed to generate presigned url');
+      }
+      return c.json({ presigned_url: res }, HttpStatusCodes.CREATED);
+    } catch (error) {
+      console.log(error);
+      return c.json(
+        { error: 'Failed to create logo' },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
+  },
+);
+
+companyRouter.openapi(
+  createRoute({
+    method: 'delete',
+    path: '/{companyID}/logo',
+    tags: ['companies'],
+    summary: 'Delete logo',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: companyIDSchema,
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: 'Successful response',
+      },
+      [HttpStatusCodes.BAD_REQUEST]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Bad request',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Failed to create logo',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const companyId = c.req.param('companyID');
+
+    if (!companyId) {
+      return c.json(
+        { error: 'Not valid parameters' },
+        HttpStatusCodes.BAD_REQUEST,
+      );
+    }
+
+    const key = generateLogoKey(companyId);
+    try {
+      await db
+        .update(companies)
+        .set({ logo: sql`DEFAULT` })
+        .where(eq(companies.id, parseInt(companyId)));
+      await db.delete(files).where(eq(files.key, key));
+      const res = await deleteFile(key);
+      if (!res) {
+        throw new Error('Failed to delete file');
+      }
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      console.log(error);
+      return c.json(
+        { error: 'Failed to create logo' },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
   },
 );
 
@@ -218,6 +526,7 @@ companyRouter.openapi(
       .where(eq(eventCompanies.companyId, parseInt(companyID)));
     const formattedCompanyEvents = companyEvents.map((event) => ({
       ...event,
+      image: generateObjectUrl(event.image),
       createdAt: event.createdAt.toISOString(),
     }));
     return c.json(

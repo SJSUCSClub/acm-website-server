@@ -168,7 +168,7 @@ INSERT INTO users (
   '{"Data Science", "Cloud Computing"}', 'default.png', NULL, 'https://github.com', 'https://www.google.com/', 'user', NULL);
 
 insert into files(key, name) values
-('default.png', 'Default Image'),
+('default/image-placeholder.svg', 'Default Image'),
 ('events/2/image.png', 'image'),
 ('companies/1/logo.png', 'Microsoft Logo'),
 ('companies/2/logo.jpg', 'JPMorgan Chase Logo'),
