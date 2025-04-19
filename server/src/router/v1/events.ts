@@ -45,7 +45,11 @@ import {
   eventTypesEnumSchema,
   targetAudienceEnumSchema,
 } from "@/util/zod";
-import { deleteFile, generateObjectUrl, getPresignedUrlPutObj } from "@/lib/aws/s3";
+import {
+  deleteFile,
+  generateObjectUrl,
+  getPresignedUrlPutObj,
+} from "@/lib/aws/s3";
 
 const eventRouter = new OpenAPIHono<Context>();
 
@@ -478,6 +482,46 @@ eventRouter.openapi(
         return c.json({ error: "Event not found" }, HttpStatusCodes.NOT_FOUND);
       }
 
+      return c.text("", HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  },
+);
+
+eventRouter.openapi(
+  createRoute({
+    method: "delete",
+    path: "/{eventID}",
+    tags: ["events"],
+    summary: "Delete event",
+    middleware: [authMiddleWare("admin")],
+    request: {
+      params: eventIDSchema,
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: "Successful response",
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          "application/json": {
+            schema: errorSchema,
+          },
+        },
+        description: "Internal server error",
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const { eventID } = c.req.valid("param");
+    try {
+      const key = generateImageKey(eventID);
+      await db.delete(events).where(eq(events.id, parseInt(eventID)));
+      await db.delete(files).where(eq(files.key, key));
+      await deleteFile(key);
       return c.text("", HttpStatusCodes.NO_CONTENT);
     } catch (error) {
       return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
