@@ -3,7 +3,7 @@ import Card, { CardContent, CardFooter, CardHeader, CardTitle } from '../../atom
 import { Badge } from '@/components/ui/badge';
 import { paths } from '@/types/schema.v1';
 import { formatDate, formatTime } from '@/utils/formatter';
-import { Link } from '@tanstack/react-router';
+import { Link, useRouterState } from '@tanstack/react-router';
 import { Lock } from 'lucide-react';
 
 type Event =
@@ -13,13 +13,21 @@ interface IEventCardProps {
 }
 
 export const EventCard: React.FC<IEventCardProps> = ({ event }) => {
+  const state = useRouterState();
   return (
     <Card className="pt-4 shadow-md">
       <CardHeader>
         <CardTitle>
           <p className="text-xs text-neutral">{event.eventType.toUpperCase()}</p>
           <div className="flex space-x-3">
-            <Link to="/events/$eventId" params={{ eventId: event.id.toString() }}>
+            <Link
+              to={
+                state.location.pathname.includes('/admin')
+                  ? '/admin/events/$eventId'
+                  : '/events/$eventId'
+              }
+              params={{ eventId: event.id.toString() }}
+            >
               <p className="text-lg">{event.name}</p>
             </Link>
             {event.memberOnly && (
