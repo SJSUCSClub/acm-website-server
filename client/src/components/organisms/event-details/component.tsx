@@ -10,6 +10,9 @@ import { formatDate, formatTime } from '@/utils/formatter';
 import { useQuery } from '@/hooks/useFetch';
 import Loading from '@/components/molecules/loading';
 import FetchError from '@/components/molecules/fetch-error';
+import DeleteAlert from '@/components/molecules/delete-alert';
+import Btn from '@/components/atoms/btn';
+import { Link } from '@tanstack/react-router';
 
 interface IEventDetailsProps {
   eventId: string;
@@ -50,9 +53,7 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
       }
     }
   });
-  const {
-    data: attendeeCount,
-  } = useQuery('get', '/v1/events/{eventID}/attendance/count', {
+  const { data: attendeeCount } = useQuery('get', '/v1/events/{eventID}/attendance/count', {
     params: {
       path: {
         eventID: eventId
@@ -76,9 +77,50 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
                 </div>
               )}
             </div>
+          </FetchError>
+        </Loading>
+        <div className="bg-muted p-6 rounded-xl space-y-4">
+          <SubscribeBtn source="event" id={event?.event.id.toString() || ''} />
+          <AttendBtn
+            id={event?.event.id.toString() || ''}
+            full={
+              event?.event.eventCapacity !== null &&
+              attendeeCount?.attendeesCount >= event?.event.eventCapacity
+            }
+          />
+        </div>
 
+        <Loading isLoading={isLoadingEventCompanies}>
+          <FetchError isError={!!errorEventCompanies}>
+            <div className="bg-muted p-6 rounded-xl">
+              <h2 className="text-xl font-semibold mb-4">Participating Companies</h2>
+              <div className="space-y-4">
+                {eventCompanies?.eventCompanies.map((company) => (
+                  <CompanyDialog key={company.id} company={company} />
+                ))}
+              </div>
+            </div>
+          </FetchError>
+        </Loading>
+      </div>
+
+      <div className="space-y-8 lg:col-span-2">
+        <Loading isLoading={isLoadingEvent}>
+          <FetchError isError={!!errorEvent}>
             <div className="space-y-4">
-              <h1 className="text-3xl font-bold">{event?.event.name}</h1>
+              <div className="flex items-center justify-between">
+                <h1 className="text-3xl font-bold">{event?.event.name}</h1>
+                {admin && (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Link to={'/admin/events/$eventId/edit'} params={{ eventId }}>
+                      <Btn>Edit</Btn>
+                    </Link>
+                    <DeleteAlert onDelete={() => {}}>
+                      <Btn className="bg-red-500">Delete</Btn>
+                    </DeleteAlert>
+                  </div>
+                )}
+              </div>
               <div className="space-y-4">
                 <div className="flex flex-wrap gap-2">
                   {event?.event.memberOnly && <Badge variant="destructive">Members Only</Badge>}
@@ -97,13 +139,15 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
                 <div className="flex items-center gap-2">
                   <Calendar className="h-5 w-5 text-primary" />
                   <span>
-                    {formatDate(event?.event.startDate || '')} - {formatDate(event?.event.endDate || '')}
+                    {formatDate(event?.event.startDate || '')} -{' '}
+                    {formatDate(event?.event.endDate || '')}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock className="h-5 w-5 text-primary" />
                   <span>
-                    {formatTime(event?.event.startTime || '')} - {formatTime(event?.event.endTime || '')}
+                    {formatTime(event?.event.startTime || '')} -{' '}
+                    {formatTime(event?.event.endTime || '')}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -129,7 +173,9 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
 
             <div>
               <h2 className="text-xl font-semibold mb-3">About this event</h2>
-              <p className="text-muted-foreground whitespace-pre-line">{event?.event.description}</p>
+              <p className="text-muted-foreground whitespace-pre-line">
+                {event?.event.description}
+              </p>
             </div>
 
             {event && event?.event.urls.length > 0 && (
@@ -154,29 +200,6 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
             <div className="space-y-4">
               <h2 className="text-xl font-semibold mb-3">Files</h2>
               <FilesTable files={eventFiles?.eventFiles || []} />
-            </div>
-          </FetchError>
-        </Loading>
-      </div>
-
-      <div className="space-y-8 lg:col-span-2">
-        <div className="bg-muted p-6 rounded-xl space-y-4">
-          <SubscribeBtn source="event" id={event?.event.id.toString() || ''} />
-          <AttendBtn
-            id={event?.event.id.toString() || ''}
-            full={event?.event.eventCapacity !== null && attendeeCount?.attendeesCount >= event?.event.eventCapacity}
-          />
-        </div>
-
-        <Loading isLoading={isLoadingEventCompanies}>
-          <FetchError isError={!!errorEventCompanies}>
-            <div className="bg-muted p-6 rounded-xl">
-              <h2 className="text-xl font-semibold mb-4">Participating Companies</h2>
-              <div className="space-y-4">
-                {eventCompanies?.eventCompanies.map((company) => (
-                  <CompanyDialog key={company.id} company={company} />
-                ))}
-              </div>
             </div>
           </FetchError>
         </Loading>
