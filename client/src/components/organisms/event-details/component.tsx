@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Calendar, Clock, MapPin, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import FilesTable from '@/components/molecules/files-table';
@@ -15,6 +15,9 @@ import Btn from '@/components/atoms/btn';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { DEFAULT_EVENT_FILTERS } from '@/utils/constants';
+import FileUpload from '@/components/molecules/file-upload';
+import { presignedUrlFetch } from '@/utils/presignedUrlFetch';
+import { File as TableFile } from '@/components/molecules/files-table';
 
 interface IEventDetailsProps {
   eventId: string;
@@ -22,6 +25,7 @@ interface IEventDetailsProps {
 }
 
 const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const {
     data: event,
@@ -48,7 +52,8 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
   const {
     data: eventFiles,
     isLoading: isLoadingEventFiles,
-    error: errorEventFiles
+    error: errorEventFiles,
+    refetch: refetchEventFiles
   } = useQuery('get', '/v1/events/{eventID}/files', {
     params: {
       path: {
@@ -64,6 +69,8 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
     }
   });
   const { mutate: deleteEvent } = useMutation('delete', '/v1/events/{eventID}');
+  const { mutateAsync: uploadFile } = useMutation('post', '/v1/events/{eventID}/files/{filename}');
+  const { mutate: deleteFile } = useMutation('delete', '/v1/events/{eventID}/files/{filename}');
 
   const handleEventDelete = () => {
     deleteEvent(
@@ -85,6 +92,59 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
         },
         onError() {
           toast.error('Failed to delete event');
+        }
+      }
+    );
+  };
+
+  const handleUpload = async (files: File[]) => {
+    for (const file of files) {
+      await uploadFile(
+        {
+          params: {
+            path: {
+              eventID: eventId.toString(),
+              filename: file.name
+            }
+          }
+        },
+        {
+          onSuccess: async (data) => {
+            try {
+              await presignedUrlFetch(data.presigned_url, file);
+              toast.success(`File uploaded successfully: ${file.name}`);
+            } catch (e) {
+              console.log(e);
+              toast.error(`Failed to upload file: ${file.name}`);
+            }
+          },
+          onError() {
+            toast.error(`Failed to upload file: ${file.name}`);
+          }
+        }
+      );
+    }
+    refetchEventFiles();
+    setIsOpen(false);
+  };
+
+  const handleFileDelete = async (file: TableFile) => {
+    deleteFile(
+      {
+        params: {
+          path: {
+            eventID: eventId,
+            filename: file.name
+          }
+        }
+      },
+      {
+        onSuccess() {
+          toast.success(`File deleted successfully: ${file.name}`);
+          refetchEventFiles();
+        },
+        onError() {
+          toast.error(`Failed to delete file: ${file.name}`);
         }
       }
     );
@@ -228,8 +288,19 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
         <Loading isLoading={isLoadingEventFiles}>
           <FetchError isError={!!errorEventFiles}>
             <div className="space-y-4">
-              <h2 className="text-xl font-semibold mb-3">Files</h2>
-              <FilesTable files={eventFiles?.eventFiles || []} />
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold mb-3">Files</h2>
+                {admin && (
+                  <FileUpload onUpload={handleUpload} open={isOpen} onOpenChange={setIsOpen}>
+                    <Btn size="sm">Upload File</Btn>
+                  </FileUpload>
+                )}
+              </div>
+              <FilesTable
+                files={eventFiles?.eventFiles || []}
+                admin={admin}
+                onFileDelete={handleFileDelete}
+              />
             </div>
           </FetchError>
         </Loading>
