@@ -48,7 +48,7 @@ const AdminHome = () => {
           <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">
             Create and manage events
           </p>
-          <Link to="/admin/events" search={{ ...DEFAULT_EVENT_FILTERS }}>
+          <Link to="/admin/events" search={DEFAULT_EVENT_FILTERS}>
             <button className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded w-full mt-auto">
               Manage Events
             </button>

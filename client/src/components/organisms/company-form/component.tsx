@@ -188,7 +188,7 @@ const CompanyForm: React.FC<ICompanyForm> = ({ companyId }) => {
 
   return (
     <div>
-      <h1 className="text-4xl font-bold mb-5">Create Company</h1>
+      <h1 className="text-4xl font-bold mb-5">{companyId ? 'Edit Company' : 'Create Company'}</h1>
       <Loading isLoading={isLoading || isLoadingCompany}>
         <FetchError isError={!!error || !!errorCompany}>
           <form
