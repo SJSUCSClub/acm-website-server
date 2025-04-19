@@ -54,6 +54,8 @@ import {
 const eventRouter = new OpenAPIHono<Context>();
 
 const generateImageKey = (id: string | number): string => `events/${id}/image`;
+const generateFileKey = (id: string | number, filename: string): string =>
+  `events/${id}/files/${filename}`;
 
 eventRouter.openapi(
   createRoute({
@@ -207,6 +209,125 @@ eventRouter.openapi(
     }));
 
     return c.json({ eventFiles: mappedFiles }, HttpStatusCodes.OK);
+  },
+);
+
+eventRouter.openapi(
+  createRoute({
+    method: "post",
+    path: "/{eventID}/files/{filename}",
+    tags: ["events"],
+    summary: "Upload a file to an event",
+    middleware: [authMiddleWare("admin")],
+    request: {
+      params: z.object({
+        eventID: eventIDSchema.shape.eventID,
+        filename: z.string(),
+      }),
+    },
+    responses: {
+      [HttpStatusCodes.OK]: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              presigned_url: z.string(),
+            }),
+          },
+        },
+        description: "Successful response",
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          "application/json": {
+            schema: errorSchema,
+          },
+        },
+        description: "Internal server error",
+      },
+      ...forbiddenRequest,
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const { eventID, filename } = c.req.valid("param");
+    const key = generateFileKey(eventID, filename);
+
+    try {
+      await db.insert(files).values({ key, name: filename });
+      await db
+        .insert(eventsFiles)
+        .values({ eventId: parseInt(eventID), fileKey: key });
+
+      const res = await getPresignedUrlPutObj(key);
+      if (!res) {
+        throw new Error("Failed to generate presigned url");
+      }
+      return c.json({ presigned_url: res }, HttpStatusCodes.OK);
+    } catch (error) {
+      console.log(error);
+      return c.json(
+        { error: `Failed to upload file: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
+  },
+);
+
+eventRouter.openapi(
+  createRoute({
+    method: "delete",
+    path: "/{eventID}/files/{filename}",
+    tags: ["events"],
+    summary: "Delete  file of an event",
+    middleware: [authMiddleWare("admin")],
+    request: {
+      params: z.object({
+        eventID: eventIDSchema.shape.eventID,
+        filename: z.string(),
+      }),
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: "Successful response",
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          "application/json": {
+            schema: errorSchema,
+          },
+        },
+        description: "Internal server error",
+      },
+      ...forbiddenRequest,
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const { eventID, filename } = c.req.valid("param");
+    const key = generateFileKey(eventID, filename);
+
+    try {
+      await db
+        .delete(eventsFiles)
+        .where(
+          and(
+            eq(eventsFiles.fileKey, key),
+            eq(eventsFiles.eventId, parseInt(eventID)),
+          ),
+        );
+      await db.delete(files).where(eq(files.key, key));
+      const res = await deleteFile(key);
+      if (!res) {
+        throw new Error("Failed to delete file");
+      }
+      return c.text("", HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      console.log(error);
+      return c.json(
+        { error: `Failed to upload file: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
   },
 );
 
