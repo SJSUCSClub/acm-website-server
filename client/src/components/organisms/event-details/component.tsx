@@ -1,18 +1,20 @@
 import React from 'react';
 import { Calendar, Clock, MapPin, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import FilesTable, { File } from '@/components/molecules/files-table';
+import FilesTable from '@/components/molecules/files-table';
 import CompanyDialog from '@/components/molecules/company-dialog';
 import SubscribeBtn from '@/components/molecules/subscribe-btn';
 import AttendBtn from '@/components/molecules/attend-btn';
 import BookmarkIcon from '@/components/molecules/bookmark-icon';
 import { formatDate, formatTime } from '@/utils/formatter';
-import { useQuery } from '@/hooks/useFetch';
+import { useMutation, useQuery } from '@/hooks/useFetch';
 import Loading from '@/components/molecules/loading';
 import FetchError from '@/components/molecules/fetch-error';
 import DeleteAlert from '@/components/molecules/delete-alert';
 import Btn from '@/components/atoms/btn';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { toast } from 'sonner';
+import { DEFAULT_EVENT_FILTERS } from '@/utils/constants';
 
 interface IEventDetailsProps {
   eventId: string;
@@ -20,6 +22,7 @@ interface IEventDetailsProps {
 }
 
 const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) => {
+  const navigate = useNavigate();
   const {
     data: event,
     isLoading: isLoadingEvent,
@@ -60,6 +63,33 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
       }
     }
   });
+  const { mutate: deleteEvent } = useMutation('delete', '/v1/events/{eventID}');
+
+  const handleEventDelete = () => {
+    deleteEvent(
+      {
+        params: {
+          path: {
+            eventID: eventId
+          }
+        }
+      },
+      {
+        onSuccess() {
+          toast.success('Event deleted successfully');
+          navigate({
+            to: '/admin/events',
+            replace: true,
+            search: DEFAULT_EVENT_FILTERS
+          });
+        },
+        onError() {
+          toast.error('Failed to delete event');
+        }
+      }
+    );
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-1 space-y-8">
@@ -115,7 +145,7 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
                     <Link to={'/admin/events/$eventId/edit'} params={{ eventId }}>
                       <Btn>Edit</Btn>
                     </Link>
-                    <DeleteAlert onDelete={() => {}}>
+                    <DeleteAlert onDelete={handleEventDelete}>
                       <Btn className="bg-red-500">Delete</Btn>
                     </DeleteAlert>
                   </div>
