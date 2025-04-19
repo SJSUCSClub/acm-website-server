@@ -1,7 +1,7 @@
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
 import { z } from "zod";
 import * as HttpStatusCodes from "stoker/http-status-codes";
-import { newEventSchema, urlSchema } from "@/util/zod";
+import { errorSchema, newEventSchema, urlSchema } from "@/util/zod";
 
 import type { Context } from "@/lib/context";
 import { db } from "@/db/db";
@@ -26,6 +26,7 @@ import {
   arrayContains,
   inArray,
   ilike,
+  sql,
 } from "drizzle-orm";
 import type { User, Company, File, Event, Url } from "@/db/schema";
 import {
@@ -44,7 +45,7 @@ import {
   eventTypesEnumSchema,
   targetAudienceEnumSchema,
 } from "@/util/zod";
-import { generateObjectUrl, getPresignedUrlPutObj } from "@/lib/aws/s3";
+import { deleteFile, generateObjectUrl, getPresignedUrlPutObj } from "@/lib/aws/s3";
 
 const eventRouter = new OpenAPIHono<Context>();
 
@@ -424,6 +425,68 @@ eventRouter.openapi(
 
 eventRouter.openapi(
   createRoute({
+    method: "put",
+    path: "/{eventID}",
+    tags: ["events"],
+    summary: "Update event information",
+    middleware: [authMiddleWare("admin")],
+    request: {
+      params: eventIDSchema,
+      body: {
+        content: {
+          "application/json": {
+            schema: newEventSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: "Successful response",
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        content: {
+          "application/json": {
+            schema: errorSchema,
+          },
+        },
+        description: "Not Found",
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          "application/json": {
+            schema: errorSchema,
+          },
+        },
+        description: "Internal server error",
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const { eventID } = c.req.valid("param");
+    const body = c.req.valid("json");
+    try {
+      const updatedEvent = await db
+        .update(events)
+        .set(body)
+        .where(eq(events.id, parseInt(eventID)))
+        .returning();
+
+      if (updatedEvent.length === 0) {
+        return c.json({ error: "Event not found" }, HttpStatusCodes.NOT_FOUND);
+      }
+
+      return c.text("", HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  },
+);
+
+eventRouter.openapi(
+  createRoute({
     method: "post",
     path: "/{eventID}/image",
     tags: ["events"],
@@ -493,6 +556,76 @@ eventRouter.openapi(
       }
       return c.json({ presigned_url: res }, HttpStatusCodes.CREATED);
     } catch (error) {
+      return c.json(
+        { error: `Failed to upload image: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
+  },
+);
+
+eventRouter.openapi(
+  createRoute({
+    method: "delete",
+    path: "/{eventID}/image",
+    tags: ["events"],
+    summary: "Delete event image",
+    middleware: [authMiddleWare("admin")],
+    request: {
+      params: eventIDSchema,
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: "Successful response",
+      },
+      [HttpStatusCodes.BAD_REQUEST]: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: "Bad request",
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: "Not Found",
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const { eventID } = c.req.valid("param");
+
+    if (!eventID) {
+      return c.json(
+        { error: "Event ID is required" },
+        HttpStatusCodes.BAD_REQUEST,
+      );
+    }
+
+    const key = generateImageKey(eventID);
+    try {
+      await db
+        .update(events)
+        .set({ image: sql`DEFAULT` })
+        .where(eq(events.id, parseInt(eventID)));
+      await db.delete(files).where(eq(files.key, key));
+      const res = await deleteFile(key);
+      if (!res) {
+        throw new Error("Failed to delete file");
+      }
+      return c.text("", HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      console.log(error);
       return c.json(
         { error: `Failed to upload image: ${error}` },
         HttpStatusCodes.INTERNAL_SERVER_ERROR,
