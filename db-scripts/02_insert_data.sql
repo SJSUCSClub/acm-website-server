@@ -213,7 +213,7 @@ VALUES (
     'Tech Conference 2024', 'San Francisco, CA', '2024-11-01', '2024-11-03', 
     'A three-day conference on the latest in technology and innovation.', 
     'Conference', 500, '09:00', '17:00', 
-    '{"Artificial Intelligence", "Machine Learning"}', 'Students', false, null
+    '{"Artificial Intelligence", "Machine Learning"}', 'Students', false, default
 ),
 ('Hackathon 2024', 'New York, NY', '2024-12-10', '2024-12-12', 
     'A 48-hour hackathon focused on software development and innovation.', 
@@ -224,13 +224,13 @@ VALUES (
     'Data Science Workshop', 'Boston, MA', '2024-09-15', '2024-09-15', 
     'A one-day workshop on data science fundamentals and techniques.', 
     'Workshop', 150, '10:00', '16:00', 
-    '{"Data Science"}', 'Students', true, null
+    '{"Data Science"}', 'Students', true, default
 ),
 (
-  'ACM x Tesla Tech Talk', 'Online', '2024-09-15', '2024-09-15', 'Guest speaker Phuc Ngo, an NLP and Senior Data Engineer at Tesla, talks about his experiences and journey in the industry.', 'Tech Talk', null, '17:00', '18:00', '{"Machine Learning", "Data Science"}', 'Students', false, null),
-('Google Alumni Panel', 'San Jose, CA', '2023-08-15', '2023-08-15', 'ACM hosted a Q&A panel with SJSU alumni who are now working at Google. Members had the opportunity to gain insight into the technical interview process and what a typical workday at Google looks like, as well as network with panelists.', 'Other', null, '17:00', '18:00', '{"Networking"}', 'Students', false, null),
+  'ACM x Tesla Tech Talk', 'Online', '2024-09-15', '2024-09-15', 'Guest speaker Phuc Ngo, an NLP and Senior Data Engineer at Tesla, talks about his experiences and journey in the industry.', 'Tech Talk', null, '17:00', '18:00', '{"Machine Learning", "Data Science"}', 'Students', false, default),
+('Google Alumni Panel', 'San Jose, CA', '2023-08-15', '2023-08-15', 'ACM hosted a Q&A panel with SJSU alumni who are now working at Google. Members had the opportunity to gain insight into the technical interview process and what a typical workday at Google looks like, as well as network with panelists.', 'Other', null, '17:00', '18:00', '{"Networking"}', 'Students', false, default),
 (
- 'Google Cloud Hero', 'Mountain View, CA', '2023-10-12', '2023-10-12', 'Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!', 'Workshop', null, '17:00', '18:00', '{"Cloud Computing"}', 'Students', true, null
+ 'Google Cloud Hero', 'Mountain View, CA', '2023-10-12', '2023-10-12', 'Cloud Hero gets a room full of people competing head-to-head, with a live play-by-play leaderboard and lots of prizes. To date, over 1,000 players have played Cloud Hero at 12 public events like Google Cloud Next and Google Cloud Summits—with more venues on the way!', 'Workshop', null, '17:00', '18:00', '{"Cloud Computing"}', 'Students', true, default 
 );
 
 INSERT INTO event_companies(event_id, company_id) VALUES
