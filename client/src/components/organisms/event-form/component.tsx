@@ -41,7 +41,7 @@ const formSchema = z.object({
     { required_error: 'Event type is required' }
   ),
   eventCapacity: z.number().int().positive().nullable(),
-  image: z.instanceof(File).nullable(),
+  image: z.instanceof(File).or(z.string()).nullable(),
   startTime: z.string().min(1, { message: 'Start time is required' }),
   endTime: z.string().min(1, { message: 'End time is required' }),
   tags: z.array(
@@ -64,7 +64,11 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const EventForm = () => {
+export interface IEventFormProps {
+  eventId?: string;
+}
+
+const EventForm: React.FC<IEventFormProps> = ({ eventId }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [newUrl, setNewUrl] = useState('');
@@ -90,71 +94,140 @@ const EventForm = () => {
       }
     }
   });
+  const {
+    data: eventData,
+    isLoading: isLoadingEvent,
+    error: errorEvent
+  } = useQuery(
+    'get',
+    '/v1/events/{eventID}',
+    {
+      params: {
+        path: {
+          eventID: eventId || ''
+        }
+      }
+    },
+    {
+      enabled: !!eventId
+    }
+  );
   const { mutateAsync: createEvent } = useMutation('post', '/v1/events');
+  const { mutateAsync: updateEvent } = useMutation('put', '/v1/events/{eventID}');
   const { mutateAsync: createImage } = useMutation('post', '/v1/events/{eventID}/image');
+  const { mutate: deleteImage } = useMutation('delete', '/v1/events/{eventID}/image');
 
   const form = useForm({
     defaultValues: {
-      name: '',
-      location: '',
-      startDate: new Date(),
-      endDate: new Date(),
-      description: '',
-      urls: [],
-      eventType: 'Workshop',
-      eventCapacity: null,
-      image: null,
-      startTime: '',
-      endTime: '',
-      tags: [],
-      targetAudience: null,
-      memberOnly: false,
-      shortenedEventUrl: null
+      name: eventData?.event.name || '',
+      location: eventData?.event.location || '',
+      startDate: eventData?.event.startDate ? new Date(eventData?.event.startDate) : new Date(),
+      endDate: eventData?.event.endDate ? new Date(eventData?.event.endDate) : new Date(),
+      description: eventData?.event.description || '',
+      urls: eventData?.event.urls || [],
+      eventType: eventData?.event.eventType || 'Workshop',
+      eventCapacity: eventData?.event.eventCapacity || null,
+      image: eventData?.event.image || null,
+      startTime: eventData?.event.startTime || '',
+      endTime: eventData?.event.endTime || '',
+      tags: eventData?.event.tags || [],
+      targetAudience: eventData?.event.targetAudience || null,
+      memberOnly: eventData?.event.memberOnly || false,
+      shortenedEventUrl: eventData?.event.shortenedEventUrl || null
     } as FormValues,
     validators: {
       onSubmit: formSchema
     },
     onSubmit: async ({ value }) => {
-      try {
-        const data = await createEvent({
-          body: {
-            ...value,
-            startDate: value.startDate.toISOString(),
-            endDate: value.endDate.toISOString(),
-            image: undefined 
-          }
-        });
+      if (!eventId) {
+        try {
+          const data = await createEvent({
+            body: {
+              ...value,
+              startDate: value.startDate.toISOString(),
+              endDate: value.endDate.toISOString(),
+              image: undefined
+            }
+          });
 
-        const eventId = data.event.id.toString();
-        if (value.image) {
-          await handleImageUpload(eventId, value.image);
+          const eventId = data.event.id.toString();
+          if (typeof value.image !== 'string') {
+            await handleImageUpload(eventId, value.image);
+          }
+          toast.success(`Event created successfully`);
+          navigate({
+            to: '/admin/events/$eventId',
+            params: { eventId }
+          });
+        } catch (e) {
+          console.log(e);
+          toast.error('Failed to create event');
         }
-        toast.success(`Event created successfully`);
-        navigate({
-          to: '/admin/events/$eventId',
-          params: { eventId }
-        });
-      } catch (e) {
-        console.log(e);
-        toast.error('Failed to create event');
+      } else {
+        try {
+          await updateEvent({
+            params: {
+              path: {
+                eventID: eventId
+              }
+            },
+            body: {
+              ...value,
+              startDate: value.startDate.toISOString(),
+              endDate: value.endDate.toISOString(),
+              image: undefined
+            }
+          });
+          if (typeof value.image !== 'string') {
+            await handleImageUpload(eventId, value.image);
+          }
+          toast.success(`Event updated successfully`);
+          navigate({
+            to: '/admin/events/$eventId',
+            params: { eventId }
+          });
+        } catch (e) {
+          console.log(e);
+          toast.error('Failed to update event');
+        }
       }
     }
   });
 
-  const handleImageUpload = async (eventId: string, image: File) => {
-    try {
-      const data = await createImage({
-        params: {
-          path: {
-            eventID: eventId.toString()
+  const handleImageUpload = async (eventId: string, image: File | null) => {
+    if (image) {
+      try {
+        const data = await createImage({
+          params: {
+            path: {
+              eventID: eventId.toString()
+            }
+          }
+        });
+        await presignedUrlFetch(data.presigned_url, image);
+        toast.success('Image uploaded successfully');
+      } catch (e) {
+        console.log(e);
+        toast.error('Failed to upload image');
+      }
+    } else {
+      deleteImage(
+        {
+          params: {
+            path: {
+              eventID: eventId
+            }
+          }
+        },
+        {
+          onSuccess() {
+            toast.success('Image deleted successfully');
+          },
+          onError() {
+            toast.error('Failed to delete image');
           }
         }
-      });
-      await presignedUrlFetch(data.presigned_url, image);
-      toast.success('Image uploaded successfully');
-    } catch (e) {
-      console.log(e);
-      toast.error('Failed to upload image');
+      );
     }
   };
 
@@ -176,9 +249,9 @@ const EventForm = () => {
 
   return (
     <div>
-      <h1 className="text-4xl font-bold mb-5">Create Event</h1>
-      <Loading isLoading={isLoadingEventType || isLoadingTargetAudience}>
-        <FetchError isError={!!errorEventType || !!errorTargetAudience}>
+      <h1 className="text-4xl font-bold mb-5">{eventId ? 'Edit Event' : 'Create Event'}</h1>
+      <Loading isLoading={isLoadingEventType || isLoadingTargetAudience || isLoadingEvent}>
+        <FetchError isError={!!errorEventType || !!errorTargetAudience || !!errorEvent}>
           <form
             className="grid grid-cols-1 lg:grid-cols-3 gap-8"
             onSubmit={(e) => {
@@ -387,7 +460,7 @@ const EventForm = () => {
                         Event Type
                       </Label>
                       <Select
-                        onValueChange={(val) => field.handleChange(val as FormValues['event_type'])}
+                        onValueChange={(val) => field.handleChange(val as FormValues['eventType'])}
                         defaultValue={field.state.value}
                         name={field.name}
                       >
@@ -438,10 +511,10 @@ const EventForm = () => {
                       <Select
                         onValueChange={(val) =>
                           field.handleChange(
-                            val !== 'All' ? (val as FormValues['target_audience']) : null
+                            val !== 'All' ? (val as FormValues['targetAudience']) : null
                           )
                         }
-                        defaultValue={''}
+                        defaultValue={field.options.defaultValue || 'All'}
                         name={field.name}
                       >
                         <SelectTrigger className="w-full">
@@ -588,7 +661,9 @@ const EventForm = () => {
                   )}
                 />
               </div>
-              <Btn variant="outline">Create</Btn>
+              <Btn variant="outline" type="submit">
+                {eventId ? 'Update' : 'Create'}
+              </Btn>
             </div>
           </form>
         </FetchError>
