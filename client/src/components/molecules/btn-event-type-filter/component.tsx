@@ -2,13 +2,15 @@ import { ChevronsUpDown } from 'lucide-react';
 import { useState } from 'react';
 import { useQuery } from '@/hooks/useFetch';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Button } from '@/components/ui/button';
 import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { paths } from '@/types/schema.v1';
+import Btn from '@/components/atoms/btn';
 
+export type EventType = paths['/v1/events/{eventID}']['get']['responses']['200']['content']['application/json']['event']['eventType'];
 export type EventTypeFilterProps = {
-  selectedEventTypes: string[];
-  onSelectChange: (data: string[]) => void;
+  selectedEventTypes: EventType[];
+  onSelectChange: (data: EventType[]) => void;
 };
 
 export const BtnEventTypeFilter: React.FC<EventTypeFilterProps> = ({
@@ -25,7 +27,7 @@ export const BtnEventTypeFilter: React.FC<EventTypeFilterProps> = ({
     }
   });
 
-  const handleCheckboxChange = (eventType: string, checked: boolean) => {
+  const handleCheckboxChange = (eventType: EventType, checked: boolean) => {
     if (checked) {
       onSelectChange([...selectedEventTypes, eventType]);
     } else {
@@ -36,7 +38,7 @@ export const BtnEventTypeFilter: React.FC<EventTypeFilterProps> = ({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
+        <Btn
           variant="outline"
           role="combobox"
           aria-expanded={open}
@@ -44,7 +46,7 @@ export const BtnEventTypeFilter: React.FC<EventTypeFilterProps> = ({
         >
           {value}
           <ChevronsUpDown className="opacity-50" />
-        </Button>
+        </Btn>
       </PopoverTrigger>
 
       <PopoverContent className="w-[200px] p-0">
@@ -59,9 +61,9 @@ export const BtnEventTypeFilter: React.FC<EventTypeFilterProps> = ({
                     <div className="flex items-center space-x-2">
                       <Checkbox
                         id={option}
-                        checked={selectedEventTypes.includes(option)}
+                        checked={selectedEventTypes.includes(option as EventType)}
                         onCheckedChange={(checked) =>
-                          handleCheckboxChange(option, checked as boolean)
+                          handleCheckboxChange(option as EventType, checked as boolean)
                         }
                       />
 
