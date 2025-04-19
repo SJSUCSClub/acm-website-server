@@ -101,7 +101,7 @@ export const events = pgTable('events', {
   urls: text('urls').array().notNull().default([]),
   eventType: eventsEnum('event_type').notNull(),
   eventCapacity: integer('event_capacity'),
-  image: text('image').notNull(),
+  image: text('image').references(() => files.key, { onUpdate: 'cascade' }).notNull().default('default/image-placeholder.svg'),
   startTime: time('start_time').notNull(),
   endTime: time('end_time').notNull(),
   tags: csFieldsEnum('tags').array().notNull().default([]),
