@@ -97,7 +97,8 @@ const EventList: React.FC<IEventListProps> = ({ searchParams, fullPath, admin = 
   const setEventTypesFilter = (newEventTypes: EventListSearch['eventTypes']) =>
     updateSearchFilters('eventTypes', newEventTypes);
 
-  const setMemberOnlyFilter = (membOnly: EventListSearch['memberOnly']) => updateSearchFilters('memberOnly', membOnly);
+  const setMemberOnlyFilter = (membOnly: EventListSearch['memberOnly']) =>
+    updateSearchFilters('memberOnly', membOnly);
 
   const setTargetAudienceFilter = (newTargetAudience: string) =>
     updateSearchFilters('targetAudience', newTargetAudience);

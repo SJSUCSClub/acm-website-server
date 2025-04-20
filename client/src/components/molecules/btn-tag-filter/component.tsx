@@ -8,7 +8,8 @@ import { useQuery } from '@/hooks/useFetch';
 import { paths } from '@/types/schema.v1';
 import Btn from '@/components/atoms/btn';
 
-export type Tag = paths['/v1/events/{eventID}']['get']['responses']['200']['content']['application/json']['event']['tags'][number]
+export type Tag =
+  paths['/v1/events/{eventID}']['get']['responses']['200']['content']['application/json']['event']['tags'][number];
 export type EventCardProps = {
   selectedTags: Tag[];
   onSelectChange: (data: Tag[]) => void;

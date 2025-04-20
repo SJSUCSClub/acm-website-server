@@ -14,12 +14,7 @@ import {
 import Spinner from '@/components/atoms/spinner';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ChevronsUpDown, X } from 'lucide-react';
-import {
-  Command,
-  CommandInput,
-  CommandItem,
-  CommandList
-} from '@/components/ui/command';
+import { Command, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 
@@ -88,35 +83,35 @@ const CompanyMultiSelect: React.FC<ICompanyMultiselectProps> = ({
                 <Command>
                   <CommandInput />
                   <CommandList className="h-64 overflow-y-scroll">
-                      {companies?.companies
-                        .filter((company) => !currentCompanies.some((c) => c.id === company.id))
-                        .map((company) => (
-                          <CommandItem key={company.id}>
-                            <div className="flex items-center gap-2 p-3">
-                              <Checkbox
-                                checked={selectedCompanies.some((item) => item.id === company.id)}
-                                onCheckedChange={(checked) =>
-                                  handleCheckboxChange(company, checked as boolean)
-                                }
-                              />
-                              <Label className="flex items-center gap-3">
-                                <div className="relative h-10 w-10 rounded-full overflow-hidden bg-muted">
-                                  <img
-                                    src={company.logo || ''}
-                                    alt={company.name}
-                                    className="h-full w-full object-cover"
-                                  />
+                    {companies?.companies
+                      .filter((company) => !currentCompanies.some((c) => c.id === company.id))
+                      .map((company) => (
+                        <CommandItem key={company.id}>
+                          <div className="flex items-center gap-2 p-3">
+                            <Checkbox
+                              checked={selectedCompanies.some((item) => item.id === company.id)}
+                              onCheckedChange={(checked) =>
+                                handleCheckboxChange(company, checked as boolean)
+                              }
+                            />
+                            <Label className="flex items-center gap-3">
+                              <div className="relative h-10 w-10 rounded-full overflow-hidden bg-muted">
+                                <img
+                                  src={company.logo || ''}
+                                  alt={company.name}
+                                  className="h-full w-full object-cover"
+                                />
+                              </div>
+                              <div>
+                                <div className="font-medium">{company.name}</div>
+                                <div className="text-xs text-muted-foreground">
+                                  {company.industryId}
                                 </div>
-                                <div>
-                                  <div className="font-medium">{company.name}</div>
-                                  <div className="text-xs text-muted-foreground">
-                                    {company.industryId}
-                                  </div>
-                                </div>
-                              </Label>
-                            </div>
-                          </CommandItem>
-                        ))}
+                              </div>
+                            </Label>
+                          </div>
+                        </CommandItem>
+                      ))}
                   </CommandList>
                 </Command>
               )}

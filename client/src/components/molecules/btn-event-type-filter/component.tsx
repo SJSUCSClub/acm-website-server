@@ -7,7 +7,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { paths } from '@/types/schema.v1';
 import Btn from '@/components/atoms/btn';
 
-export type EventType = paths['/v1/events/{eventID}']['get']['responses']['200']['content']['application/json']['event']['eventType'];
+export type EventType =
+  paths['/v1/events/{eventID}']['get']['responses']['200']['content']['application/json']['event']['eventType'];
 export type EventTypeFilterProps = {
   selectedEventTypes: EventType[];
   onSelectChange: (data: EventType[]) => void;

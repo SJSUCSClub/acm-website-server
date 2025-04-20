@@ -8,442 +8,434 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router';
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as ProfileImport } from './routes/profile'
-import { Route as OnboardingImport } from './routes/onboarding'
-import { Route as LoginImport } from './routes/login'
-import { Route as DashboardImport } from './routes/dashboard'
-import { Route as AboutImport } from './routes/about'
-import { Route as IndexImport } from './routes/index'
-import { Route as ProjectsIndexImport } from './routes/projects/index'
-import { Route as EventsIndexImport } from './routes/events/index'
-import { Route as ProjectsProjectIdImport } from './routes/projects/$projectId'
-import { Route as EventsEventIdImport } from './routes/events/$eventId'
-import { Route as AdminLayoutImport } from './routes/admin/_layout'
-import { Route as AdminLayoutIndexImport } from './routes/admin/_layout/index'
-import { Route as AdminLayoutUsersImport } from './routes/admin/_layout/users'
-import { Route as AdminLayoutOfficersImport } from './routes/admin/_layout/officers'
-import { Route as AdminLayoutClubImport } from './routes/admin/_layout/club'
-import { Route as AdminLayoutProjectsIndexImport } from './routes/admin/_layout/projects/index'
-import { Route as AdminLayoutEventsIndexImport } from './routes/admin/_layout/events/index'
-import { Route as AdminLayoutCompaniesIndexImport } from './routes/admin/_layout/companies/index'
-import { Route as AdminLayoutProjectsCreateImport } from './routes/admin/_layout/projects/create'
-import { Route as AdminLayoutEventsCreateImport } from './routes/admin/_layout/events/create'
-import { Route as AdminLayoutCompaniesCreateImport } from './routes/admin/_layout/companies/create'
-import { Route as AdminLayoutProjectsProjectIdIndexImport } from './routes/admin/_layout/projects/$projectId/index'
-import { Route as AdminLayoutEventsEventIdIndexImport } from './routes/admin/_layout/events/$eventId/index'
-import { Route as AdminLayoutCompaniesCompanyIdIndexImport } from './routes/admin/_layout/companies/$companyId/index'
-import { Route as AdminLayoutProjectsProjectIdEditImport } from './routes/admin/_layout/projects/$projectId/edit'
-import { Route as AdminLayoutEventsEventIdEditImport } from './routes/admin/_layout/events/$eventId/edit'
-import { Route as AdminLayoutCompaniesCompanyIdEditImport } from './routes/admin/_layout/companies/$companyId/edit'
+import { Route as rootRoute } from './routes/__root';
+import { Route as ProfileImport } from './routes/profile';
+import { Route as OnboardingImport } from './routes/onboarding';
+import { Route as LoginImport } from './routes/login';
+import { Route as DashboardImport } from './routes/dashboard';
+import { Route as AboutImport } from './routes/about';
+import { Route as IndexImport } from './routes/index';
+import { Route as ProjectsIndexImport } from './routes/projects/index';
+import { Route as EventsIndexImport } from './routes/events/index';
+import { Route as ProjectsProjectIdImport } from './routes/projects/$projectId';
+import { Route as EventsEventIdImport } from './routes/events/$eventId';
+import { Route as AdminLayoutImport } from './routes/admin/_layout';
+import { Route as AdminLayoutIndexImport } from './routes/admin/_layout/index';
+import { Route as AdminLayoutUsersImport } from './routes/admin/_layout/users';
+import { Route as AdminLayoutOfficersImport } from './routes/admin/_layout/officers';
+import { Route as AdminLayoutClubImport } from './routes/admin/_layout/club';
+import { Route as AdminLayoutProjectsIndexImport } from './routes/admin/_layout/projects/index';
+import { Route as AdminLayoutEventsIndexImport } from './routes/admin/_layout/events/index';
+import { Route as AdminLayoutCompaniesIndexImport } from './routes/admin/_layout/companies/index';
+import { Route as AdminLayoutProjectsCreateImport } from './routes/admin/_layout/projects/create';
+import { Route as AdminLayoutEventsCreateImport } from './routes/admin/_layout/events/create';
+import { Route as AdminLayoutCompaniesCreateImport } from './routes/admin/_layout/companies/create';
+import { Route as AdminLayoutProjectsProjectIdIndexImport } from './routes/admin/_layout/projects/$projectId/index';
+import { Route as AdminLayoutEventsEventIdIndexImport } from './routes/admin/_layout/events/$eventId/index';
+import { Route as AdminLayoutCompaniesCompanyIdIndexImport } from './routes/admin/_layout/companies/$companyId/index';
+import { Route as AdminLayoutProjectsProjectIdEditImport } from './routes/admin/_layout/projects/$projectId/edit';
+import { Route as AdminLayoutEventsEventIdEditImport } from './routes/admin/_layout/events/$eventId/edit';
+import { Route as AdminLayoutCompaniesCompanyIdEditImport } from './routes/admin/_layout/companies/$companyId/edit';
 
 // Create Virtual Routes
 
-const AdminImport = createFileRoute('/admin')()
+const AdminImport = createFileRoute('/admin')();
 
 // Create/Update Routes
 
 const AdminRoute = AdminImport.update({
   id: '/admin',
   path: '/admin',
-  getParentRoute: () => rootRoute,
-} as any)
+  getParentRoute: () => rootRoute
+} as any);
 
 const ProfileRoute = ProfileImport.update({
   id: '/profile',
   path: '/profile',
-  getParentRoute: () => rootRoute,
-} as any)
+  getParentRoute: () => rootRoute
+} as any);
 
 const OnboardingRoute = OnboardingImport.update({
   id: '/onboarding',
   path: '/onboarding',
-  getParentRoute: () => rootRoute,
-} as any)
+  getParentRoute: () => rootRoute
+} as any);
 
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRoute,
-} as any)
+  getParentRoute: () => rootRoute
+} as any);
 
 const DashboardRoute = DashboardImport.update({
   id: '/dashboard',
   path: '/dashboard',
-  getParentRoute: () => rootRoute,
-} as any)
+  getParentRoute: () => rootRoute
+} as any);
 
 const AboutRoute = AboutImport.update({
   id: '/about',
   path: '/about',
-  getParentRoute: () => rootRoute,
-} as any)
+  getParentRoute: () => rootRoute
+} as any);
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
-} as any)
+  getParentRoute: () => rootRoute
+} as any);
 
 const ProjectsIndexRoute = ProjectsIndexImport.update({
   id: '/projects/',
   path: '/projects/',
-  getParentRoute: () => rootRoute,
-} as any)
+  getParentRoute: () => rootRoute
+} as any);
 
 const EventsIndexRoute = EventsIndexImport.update({
   id: '/events/',
   path: '/events/',
-  getParentRoute: () => rootRoute,
-} as any)
+  getParentRoute: () => rootRoute
+} as any);
 
 const ProjectsProjectIdRoute = ProjectsProjectIdImport.update({
   id: '/projects/$projectId',
   path: '/projects/$projectId',
-  getParentRoute: () => rootRoute,
-} as any)
+  getParentRoute: () => rootRoute
+} as any);
 
 const EventsEventIdRoute = EventsEventIdImport.update({
   id: '/events/$eventId',
   path: '/events/$eventId',
-  getParentRoute: () => rootRoute,
-} as any)
+  getParentRoute: () => rootRoute
+} as any);
 
 const AdminLayoutRoute = AdminLayoutImport.update({
   id: '/_layout',
-  getParentRoute: () => AdminRoute,
-} as any)
+  getParentRoute: () => AdminRoute
+} as any);
 
 const AdminLayoutIndexRoute = AdminLayoutIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AdminLayoutRoute,
-} as any)
+  getParentRoute: () => AdminLayoutRoute
+} as any);
 
 const AdminLayoutUsersRoute = AdminLayoutUsersImport.update({
   id: '/users',
   path: '/users',
-  getParentRoute: () => AdminLayoutRoute,
-} as any)
+  getParentRoute: () => AdminLayoutRoute
+} as any);
 
 const AdminLayoutOfficersRoute = AdminLayoutOfficersImport.update({
   id: '/officers',
   path: '/officers',
-  getParentRoute: () => AdminLayoutRoute,
-} as any)
+  getParentRoute: () => AdminLayoutRoute
+} as any);
 
 const AdminLayoutClubRoute = AdminLayoutClubImport.update({
   id: '/club',
   path: '/club',
-  getParentRoute: () => AdminLayoutRoute,
-} as any)
+  getParentRoute: () => AdminLayoutRoute
+} as any);
 
 const AdminLayoutProjectsIndexRoute = AdminLayoutProjectsIndexImport.update({
   id: '/projects/',
   path: '/projects/',
-  getParentRoute: () => AdminLayoutRoute,
-} as any)
+  getParentRoute: () => AdminLayoutRoute
+} as any);
 
 const AdminLayoutEventsIndexRoute = AdminLayoutEventsIndexImport.update({
   id: '/events/',
   path: '/events/',
-  getParentRoute: () => AdminLayoutRoute,
-} as any)
+  getParentRoute: () => AdminLayoutRoute
+} as any);
 
 const AdminLayoutCompaniesIndexRoute = AdminLayoutCompaniesIndexImport.update({
   id: '/companies/',
   path: '/companies/',
-  getParentRoute: () => AdminLayoutRoute,
-} as any)
+  getParentRoute: () => AdminLayoutRoute
+} as any);
 
 const AdminLayoutProjectsCreateRoute = AdminLayoutProjectsCreateImport.update({
   id: '/projects/create',
   path: '/projects/create',
-  getParentRoute: () => AdminLayoutRoute,
-} as any)
+  getParentRoute: () => AdminLayoutRoute
+} as any);
 
 const AdminLayoutEventsCreateRoute = AdminLayoutEventsCreateImport.update({
   id: '/events/create',
   path: '/events/create',
-  getParentRoute: () => AdminLayoutRoute,
-} as any)
+  getParentRoute: () => AdminLayoutRoute
+} as any);
 
-const AdminLayoutCompaniesCreateRoute = AdminLayoutCompaniesCreateImport.update(
-  {
-    id: '/companies/create',
-    path: '/companies/create',
-    getParentRoute: () => AdminLayoutRoute,
-  } as any,
-)
+const AdminLayoutCompaniesCreateRoute = AdminLayoutCompaniesCreateImport.update({
+  id: '/companies/create',
+  path: '/companies/create',
+  getParentRoute: () => AdminLayoutRoute
+} as any);
 
-const AdminLayoutProjectsProjectIdIndexRoute =
-  AdminLayoutProjectsProjectIdIndexImport.update({
-    id: '/projects/$projectId/',
-    path: '/projects/$projectId/',
-    getParentRoute: () => AdminLayoutRoute,
-  } as any)
+const AdminLayoutProjectsProjectIdIndexRoute = AdminLayoutProjectsProjectIdIndexImport.update({
+  id: '/projects/$projectId/',
+  path: '/projects/$projectId/',
+  getParentRoute: () => AdminLayoutRoute
+} as any);
 
-const AdminLayoutEventsEventIdIndexRoute =
-  AdminLayoutEventsEventIdIndexImport.update({
-    id: '/events/$eventId/',
-    path: '/events/$eventId/',
-    getParentRoute: () => AdminLayoutRoute,
-  } as any)
+const AdminLayoutEventsEventIdIndexRoute = AdminLayoutEventsEventIdIndexImport.update({
+  id: '/events/$eventId/',
+  path: '/events/$eventId/',
+  getParentRoute: () => AdminLayoutRoute
+} as any);
 
-const AdminLayoutCompaniesCompanyIdIndexRoute =
-  AdminLayoutCompaniesCompanyIdIndexImport.update({
-    id: '/companies/$companyId/',
-    path: '/companies/$companyId/',
-    getParentRoute: () => AdminLayoutRoute,
-  } as any)
+const AdminLayoutCompaniesCompanyIdIndexRoute = AdminLayoutCompaniesCompanyIdIndexImport.update({
+  id: '/companies/$companyId/',
+  path: '/companies/$companyId/',
+  getParentRoute: () => AdminLayoutRoute
+} as any);
 
-const AdminLayoutProjectsProjectIdEditRoute =
-  AdminLayoutProjectsProjectIdEditImport.update({
-    id: '/projects/$projectId/edit',
-    path: '/projects/$projectId/edit',
-    getParentRoute: () => AdminLayoutRoute,
-  } as any)
+const AdminLayoutProjectsProjectIdEditRoute = AdminLayoutProjectsProjectIdEditImport.update({
+  id: '/projects/$projectId/edit',
+  path: '/projects/$projectId/edit',
+  getParentRoute: () => AdminLayoutRoute
+} as any);
 
-const AdminLayoutEventsEventIdEditRoute =
-  AdminLayoutEventsEventIdEditImport.update({
-    id: '/events/$eventId/edit',
-    path: '/events/$eventId/edit',
-    getParentRoute: () => AdminLayoutRoute,
-  } as any)
+const AdminLayoutEventsEventIdEditRoute = AdminLayoutEventsEventIdEditImport.update({
+  id: '/events/$eventId/edit',
+  path: '/events/$eventId/edit',
+  getParentRoute: () => AdminLayoutRoute
+} as any);
 
-const AdminLayoutCompaniesCompanyIdEditRoute =
-  AdminLayoutCompaniesCompanyIdEditImport.update({
-    id: '/companies/$companyId/edit',
-    path: '/companies/$companyId/edit',
-    getParentRoute: () => AdminLayoutRoute,
-  } as any)
+const AdminLayoutCompaniesCompanyIdEditRoute = AdminLayoutCompaniesCompanyIdEditImport.update({
+  id: '/companies/$companyId/edit',
+  path: '/companies/$companyId/edit',
+  getParentRoute: () => AdminLayoutRoute
+} as any);
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/';
+      path: '/';
+      fullPath: '/';
+      preLoaderRoute: typeof IndexImport;
+      parentRoute: typeof rootRoute;
+    };
     '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/about';
+      path: '/about';
+      fullPath: '/about';
+      preLoaderRoute: typeof AboutImport;
+      parentRoute: typeof rootRoute;
+    };
     '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/dashboard';
+      path: '/dashboard';
+      fullPath: '/dashboard';
+      preLoaderRoute: typeof DashboardImport;
+      parentRoute: typeof rootRoute;
+    };
     '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/login';
+      path: '/login';
+      fullPath: '/login';
+      preLoaderRoute: typeof LoginImport;
+      parentRoute: typeof rootRoute;
+    };
     '/onboarding': {
-      id: '/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof OnboardingImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/onboarding';
+      path: '/onboarding';
+      fullPath: '/onboarding';
+      preLoaderRoute: typeof OnboardingImport;
+      parentRoute: typeof rootRoute;
+    };
     '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/profile';
+      path: '/profile';
+      fullPath: '/profile';
+      preLoaderRoute: typeof ProfileImport;
+      parentRoute: typeof rootRoute;
+    };
     '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/admin';
+      path: '/admin';
+      fullPath: '/admin';
+      preLoaderRoute: typeof AdminImport;
+      parentRoute: typeof rootRoute;
+    };
     '/admin/_layout': {
-      id: '/admin/_layout'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminLayoutImport
-      parentRoute: typeof AdminRoute
-    }
+      id: '/admin/_layout';
+      path: '/admin';
+      fullPath: '/admin';
+      preLoaderRoute: typeof AdminLayoutImport;
+      parentRoute: typeof AdminRoute;
+    };
     '/events/$eventId': {
-      id: '/events/$eventId'
-      path: '/events/$eventId'
-      fullPath: '/events/$eventId'
-      preLoaderRoute: typeof EventsEventIdImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/events/$eventId';
+      path: '/events/$eventId';
+      fullPath: '/events/$eventId';
+      preLoaderRoute: typeof EventsEventIdImport;
+      parentRoute: typeof rootRoute;
+    };
     '/projects/$projectId': {
-      id: '/projects/$projectId'
-      path: '/projects/$projectId'
-      fullPath: '/projects/$projectId'
-      preLoaderRoute: typeof ProjectsProjectIdImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/projects/$projectId';
+      path: '/projects/$projectId';
+      fullPath: '/projects/$projectId';
+      preLoaderRoute: typeof ProjectsProjectIdImport;
+      parentRoute: typeof rootRoute;
+    };
     '/events/': {
-      id: '/events/'
-      path: '/events'
-      fullPath: '/events'
-      preLoaderRoute: typeof EventsIndexImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/events/';
+      path: '/events';
+      fullPath: '/events';
+      preLoaderRoute: typeof EventsIndexImport;
+      parentRoute: typeof rootRoute;
+    };
     '/projects/': {
-      id: '/projects/'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsIndexImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/projects/';
+      path: '/projects';
+      fullPath: '/projects';
+      preLoaderRoute: typeof ProjectsIndexImport;
+      parentRoute: typeof rootRoute;
+    };
     '/admin/_layout/club': {
-      id: '/admin/_layout/club'
-      path: '/club'
-      fullPath: '/admin/club'
-      preLoaderRoute: typeof AdminLayoutClubImport
-      parentRoute: typeof AdminLayoutImport
-    }
+      id: '/admin/_layout/club';
+      path: '/club';
+      fullPath: '/admin/club';
+      preLoaderRoute: typeof AdminLayoutClubImport;
+      parentRoute: typeof AdminLayoutImport;
+    };
     '/admin/_layout/officers': {
-      id: '/admin/_layout/officers'
-      path: '/officers'
-      fullPath: '/admin/officers'
-      preLoaderRoute: typeof AdminLayoutOfficersImport
-      parentRoute: typeof AdminLayoutImport
-    }
+      id: '/admin/_layout/officers';
+      path: '/officers';
+      fullPath: '/admin/officers';
+      preLoaderRoute: typeof AdminLayoutOfficersImport;
+      parentRoute: typeof AdminLayoutImport;
+    };
     '/admin/_layout/users': {
-      id: '/admin/_layout/users'
-      path: '/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AdminLayoutUsersImport
-      parentRoute: typeof AdminLayoutImport
-    }
+      id: '/admin/_layout/users';
+      path: '/users';
+      fullPath: '/admin/users';
+      preLoaderRoute: typeof AdminLayoutUsersImport;
+      parentRoute: typeof AdminLayoutImport;
+    };
     '/admin/_layout/': {
-      id: '/admin/_layout/'
-      path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminLayoutIndexImport
-      parentRoute: typeof AdminLayoutImport
-    }
+      id: '/admin/_layout/';
+      path: '/';
+      fullPath: '/admin/';
+      preLoaderRoute: typeof AdminLayoutIndexImport;
+      parentRoute: typeof AdminLayoutImport;
+    };
     '/admin/_layout/companies/create': {
-      id: '/admin/_layout/companies/create'
-      path: '/companies/create'
-      fullPath: '/admin/companies/create'
-      preLoaderRoute: typeof AdminLayoutCompaniesCreateImport
-      parentRoute: typeof AdminLayoutImport
-    }
+      id: '/admin/_layout/companies/create';
+      path: '/companies/create';
+      fullPath: '/admin/companies/create';
+      preLoaderRoute: typeof AdminLayoutCompaniesCreateImport;
+      parentRoute: typeof AdminLayoutImport;
+    };
     '/admin/_layout/events/create': {
-      id: '/admin/_layout/events/create'
-      path: '/events/create'
-      fullPath: '/admin/events/create'
-      preLoaderRoute: typeof AdminLayoutEventsCreateImport
-      parentRoute: typeof AdminLayoutImport
-    }
+      id: '/admin/_layout/events/create';
+      path: '/events/create';
+      fullPath: '/admin/events/create';
+      preLoaderRoute: typeof AdminLayoutEventsCreateImport;
+      parentRoute: typeof AdminLayoutImport;
+    };
     '/admin/_layout/projects/create': {
-      id: '/admin/_layout/projects/create'
-      path: '/projects/create'
-      fullPath: '/admin/projects/create'
-      preLoaderRoute: typeof AdminLayoutProjectsCreateImport
-      parentRoute: typeof AdminLayoutImport
-    }
+      id: '/admin/_layout/projects/create';
+      path: '/projects/create';
+      fullPath: '/admin/projects/create';
+      preLoaderRoute: typeof AdminLayoutProjectsCreateImport;
+      parentRoute: typeof AdminLayoutImport;
+    };
     '/admin/_layout/companies/': {
-      id: '/admin/_layout/companies/'
-      path: '/companies'
-      fullPath: '/admin/companies'
-      preLoaderRoute: typeof AdminLayoutCompaniesIndexImport
-      parentRoute: typeof AdminLayoutImport
-    }
+      id: '/admin/_layout/companies/';
+      path: '/companies';
+      fullPath: '/admin/companies';
+      preLoaderRoute: typeof AdminLayoutCompaniesIndexImport;
+      parentRoute: typeof AdminLayoutImport;
+    };
     '/admin/_layout/events/': {
-      id: '/admin/_layout/events/'
-      path: '/events'
-      fullPath: '/admin/events'
-      preLoaderRoute: typeof AdminLayoutEventsIndexImport
-      parentRoute: typeof AdminLayoutImport
-    }
+      id: '/admin/_layout/events/';
+      path: '/events';
+      fullPath: '/admin/events';
+      preLoaderRoute: typeof AdminLayoutEventsIndexImport;
+      parentRoute: typeof AdminLayoutImport;
+    };
     '/admin/_layout/projects/': {
-      id: '/admin/_layout/projects/'
-      path: '/projects'
-      fullPath: '/admin/projects'
-      preLoaderRoute: typeof AdminLayoutProjectsIndexImport
-      parentRoute: typeof AdminLayoutImport
-    }
+      id: '/admin/_layout/projects/';
+      path: '/projects';
+      fullPath: '/admin/projects';
+      preLoaderRoute: typeof AdminLayoutProjectsIndexImport;
+      parentRoute: typeof AdminLayoutImport;
+    };
     '/admin/_layout/companies/$companyId/edit': {
-      id: '/admin/_layout/companies/$companyId/edit'
-      path: '/companies/$companyId/edit'
-      fullPath: '/admin/companies/$companyId/edit'
-      preLoaderRoute: typeof AdminLayoutCompaniesCompanyIdEditImport
-      parentRoute: typeof AdminLayoutImport
-    }
+      id: '/admin/_layout/companies/$companyId/edit';
+      path: '/companies/$companyId/edit';
+      fullPath: '/admin/companies/$companyId/edit';
+      preLoaderRoute: typeof AdminLayoutCompaniesCompanyIdEditImport;
+      parentRoute: typeof AdminLayoutImport;
+    };
     '/admin/_layout/events/$eventId/edit': {
-      id: '/admin/_layout/events/$eventId/edit'
-      path: '/events/$eventId/edit'
-      fullPath: '/admin/events/$eventId/edit'
-      preLoaderRoute: typeof AdminLayoutEventsEventIdEditImport
-      parentRoute: typeof AdminLayoutImport
-    }
+      id: '/admin/_layout/events/$eventId/edit';
+      path: '/events/$eventId/edit';
+      fullPath: '/admin/events/$eventId/edit';
+      preLoaderRoute: typeof AdminLayoutEventsEventIdEditImport;
+      parentRoute: typeof AdminLayoutImport;
+    };
     '/admin/_layout/projects/$projectId/edit': {
-      id: '/admin/_layout/projects/$projectId/edit'
-      path: '/projects/$projectId/edit'
-      fullPath: '/admin/projects/$projectId/edit'
-      preLoaderRoute: typeof AdminLayoutProjectsProjectIdEditImport
-      parentRoute: typeof AdminLayoutImport
-    }
+      id: '/admin/_layout/projects/$projectId/edit';
+      path: '/projects/$projectId/edit';
+      fullPath: '/admin/projects/$projectId/edit';
+      preLoaderRoute: typeof AdminLayoutProjectsProjectIdEditImport;
+      parentRoute: typeof AdminLayoutImport;
+    };
     '/admin/_layout/companies/$companyId/': {
-      id: '/admin/_layout/companies/$companyId/'
-      path: '/companies/$companyId'
-      fullPath: '/admin/companies/$companyId'
-      preLoaderRoute: typeof AdminLayoutCompaniesCompanyIdIndexImport
-      parentRoute: typeof AdminLayoutImport
-    }
+      id: '/admin/_layout/companies/$companyId/';
+      path: '/companies/$companyId';
+      fullPath: '/admin/companies/$companyId';
+      preLoaderRoute: typeof AdminLayoutCompaniesCompanyIdIndexImport;
+      parentRoute: typeof AdminLayoutImport;
+    };
     '/admin/_layout/events/$eventId/': {
-      id: '/admin/_layout/events/$eventId/'
-      path: '/events/$eventId'
-      fullPath: '/admin/events/$eventId'
-      preLoaderRoute: typeof AdminLayoutEventsEventIdIndexImport
-      parentRoute: typeof AdminLayoutImport
-    }
+      id: '/admin/_layout/events/$eventId/';
+      path: '/events/$eventId';
+      fullPath: '/admin/events/$eventId';
+      preLoaderRoute: typeof AdminLayoutEventsEventIdIndexImport;
+      parentRoute: typeof AdminLayoutImport;
+    };
     '/admin/_layout/projects/$projectId/': {
-      id: '/admin/_layout/projects/$projectId/'
-      path: '/projects/$projectId'
-      fullPath: '/admin/projects/$projectId'
-      preLoaderRoute: typeof AdminLayoutProjectsProjectIdIndexImport
-      parentRoute: typeof AdminLayoutImport
-    }
+      id: '/admin/_layout/projects/$projectId/';
+      path: '/projects/$projectId';
+      fullPath: '/admin/projects/$projectId';
+      preLoaderRoute: typeof AdminLayoutProjectsProjectIdIndexImport;
+      parentRoute: typeof AdminLayoutImport;
+    };
   }
 }
 
 // Create and export the route tree
 
 interface AdminLayoutRouteChildren {
-  AdminLayoutClubRoute: typeof AdminLayoutClubRoute
-  AdminLayoutOfficersRoute: typeof AdminLayoutOfficersRoute
-  AdminLayoutUsersRoute: typeof AdminLayoutUsersRoute
-  AdminLayoutIndexRoute: typeof AdminLayoutIndexRoute
-  AdminLayoutCompaniesCreateRoute: typeof AdminLayoutCompaniesCreateRoute
-  AdminLayoutEventsCreateRoute: typeof AdminLayoutEventsCreateRoute
-  AdminLayoutProjectsCreateRoute: typeof AdminLayoutProjectsCreateRoute
-  AdminLayoutCompaniesIndexRoute: typeof AdminLayoutCompaniesIndexRoute
-  AdminLayoutEventsIndexRoute: typeof AdminLayoutEventsIndexRoute
-  AdminLayoutProjectsIndexRoute: typeof AdminLayoutProjectsIndexRoute
-  AdminLayoutCompaniesCompanyIdEditRoute: typeof AdminLayoutCompaniesCompanyIdEditRoute
-  AdminLayoutEventsEventIdEditRoute: typeof AdminLayoutEventsEventIdEditRoute
-  AdminLayoutProjectsProjectIdEditRoute: typeof AdminLayoutProjectsProjectIdEditRoute
-  AdminLayoutCompaniesCompanyIdIndexRoute: typeof AdminLayoutCompaniesCompanyIdIndexRoute
-  AdminLayoutEventsEventIdIndexRoute: typeof AdminLayoutEventsEventIdIndexRoute
-  AdminLayoutProjectsProjectIdIndexRoute: typeof AdminLayoutProjectsProjectIdIndexRoute
+  AdminLayoutClubRoute: typeof AdminLayoutClubRoute;
+  AdminLayoutOfficersRoute: typeof AdminLayoutOfficersRoute;
+  AdminLayoutUsersRoute: typeof AdminLayoutUsersRoute;
+  AdminLayoutIndexRoute: typeof AdminLayoutIndexRoute;
+  AdminLayoutCompaniesCreateRoute: typeof AdminLayoutCompaniesCreateRoute;
+  AdminLayoutEventsCreateRoute: typeof AdminLayoutEventsCreateRoute;
+  AdminLayoutProjectsCreateRoute: typeof AdminLayoutProjectsCreateRoute;
+  AdminLayoutCompaniesIndexRoute: typeof AdminLayoutCompaniesIndexRoute;
+  AdminLayoutEventsIndexRoute: typeof AdminLayoutEventsIndexRoute;
+  AdminLayoutProjectsIndexRoute: typeof AdminLayoutProjectsIndexRoute;
+  AdminLayoutCompaniesCompanyIdEditRoute: typeof AdminLayoutCompaniesCompanyIdEditRoute;
+  AdminLayoutEventsEventIdEditRoute: typeof AdminLayoutEventsEventIdEditRoute;
+  AdminLayoutProjectsProjectIdEditRoute: typeof AdminLayoutProjectsProjectIdEditRoute;
+  AdminLayoutCompaniesCompanyIdIndexRoute: typeof AdminLayoutCompaniesCompanyIdIndexRoute;
+  AdminLayoutEventsEventIdIndexRoute: typeof AdminLayoutEventsEventIdIndexRoute;
+  AdminLayoutProjectsProjectIdIndexRoute: typeof AdminLayoutProjectsProjectIdIndexRoute;
 }
 
 const AdminLayoutRouteChildren: AdminLayoutRouteChildren = {
@@ -457,124 +449,119 @@ const AdminLayoutRouteChildren: AdminLayoutRouteChildren = {
   AdminLayoutCompaniesIndexRoute: AdminLayoutCompaniesIndexRoute,
   AdminLayoutEventsIndexRoute: AdminLayoutEventsIndexRoute,
   AdminLayoutProjectsIndexRoute: AdminLayoutProjectsIndexRoute,
-  AdminLayoutCompaniesCompanyIdEditRoute:
-    AdminLayoutCompaniesCompanyIdEditRoute,
+  AdminLayoutCompaniesCompanyIdEditRoute: AdminLayoutCompaniesCompanyIdEditRoute,
   AdminLayoutEventsEventIdEditRoute: AdminLayoutEventsEventIdEditRoute,
   AdminLayoutProjectsProjectIdEditRoute: AdminLayoutProjectsProjectIdEditRoute,
-  AdminLayoutCompaniesCompanyIdIndexRoute:
-    AdminLayoutCompaniesCompanyIdIndexRoute,
+  AdminLayoutCompaniesCompanyIdIndexRoute: AdminLayoutCompaniesCompanyIdIndexRoute,
   AdminLayoutEventsEventIdIndexRoute: AdminLayoutEventsEventIdIndexRoute,
-  AdminLayoutProjectsProjectIdIndexRoute:
-    AdminLayoutProjectsProjectIdIndexRoute,
-}
+  AdminLayoutProjectsProjectIdIndexRoute: AdminLayoutProjectsProjectIdIndexRoute
+};
 
-const AdminLayoutRouteWithChildren = AdminLayoutRoute._addFileChildren(
-  AdminLayoutRouteChildren,
-)
+const AdminLayoutRouteWithChildren = AdminLayoutRoute._addFileChildren(AdminLayoutRouteChildren);
 
 interface AdminRouteChildren {
-  AdminLayoutRoute: typeof AdminLayoutRouteWithChildren
+  AdminLayoutRoute: typeof AdminLayoutRouteWithChildren;
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
-  AdminLayoutRoute: AdminLayoutRouteWithChildren,
-}
+  AdminLayoutRoute: AdminLayoutRouteWithChildren
+};
 
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/onboarding': typeof OnboardingRoute
-  '/profile': typeof ProfileRoute
-  '/admin': typeof AdminLayoutRouteWithChildren
-  '/events/$eventId': typeof EventsEventIdRoute
-  '/projects/$projectId': typeof ProjectsProjectIdRoute
-  '/events': typeof EventsIndexRoute
-  '/projects': typeof ProjectsIndexRoute
-  '/admin/club': typeof AdminLayoutClubRoute
-  '/admin/officers': typeof AdminLayoutOfficersRoute
-  '/admin/users': typeof AdminLayoutUsersRoute
-  '/admin/': typeof AdminLayoutIndexRoute
-  '/admin/companies/create': typeof AdminLayoutCompaniesCreateRoute
-  '/admin/events/create': typeof AdminLayoutEventsCreateRoute
-  '/admin/projects/create': typeof AdminLayoutProjectsCreateRoute
-  '/admin/companies': typeof AdminLayoutCompaniesIndexRoute
-  '/admin/events': typeof AdminLayoutEventsIndexRoute
-  '/admin/projects': typeof AdminLayoutProjectsIndexRoute
-  '/admin/companies/$companyId/edit': typeof AdminLayoutCompaniesCompanyIdEditRoute
-  '/admin/events/$eventId/edit': typeof AdminLayoutEventsEventIdEditRoute
-  '/admin/projects/$projectId/edit': typeof AdminLayoutProjectsProjectIdEditRoute
-  '/admin/companies/$companyId': typeof AdminLayoutCompaniesCompanyIdIndexRoute
-  '/admin/events/$eventId': typeof AdminLayoutEventsEventIdIndexRoute
-  '/admin/projects/$projectId': typeof AdminLayoutProjectsProjectIdIndexRoute
+  '/': typeof IndexRoute;
+  '/about': typeof AboutRoute;
+  '/dashboard': typeof DashboardRoute;
+  '/login': typeof LoginRoute;
+  '/onboarding': typeof OnboardingRoute;
+  '/profile': typeof ProfileRoute;
+  '/admin': typeof AdminLayoutRouteWithChildren;
+  '/events/$eventId': typeof EventsEventIdRoute;
+  '/projects/$projectId': typeof ProjectsProjectIdRoute;
+  '/events': typeof EventsIndexRoute;
+  '/projects': typeof ProjectsIndexRoute;
+  '/admin/club': typeof AdminLayoutClubRoute;
+  '/admin/officers': typeof AdminLayoutOfficersRoute;
+  '/admin/users': typeof AdminLayoutUsersRoute;
+  '/admin/': typeof AdminLayoutIndexRoute;
+  '/admin/companies/create': typeof AdminLayoutCompaniesCreateRoute;
+  '/admin/events/create': typeof AdminLayoutEventsCreateRoute;
+  '/admin/projects/create': typeof AdminLayoutProjectsCreateRoute;
+  '/admin/companies': typeof AdminLayoutCompaniesIndexRoute;
+  '/admin/events': typeof AdminLayoutEventsIndexRoute;
+  '/admin/projects': typeof AdminLayoutProjectsIndexRoute;
+  '/admin/companies/$companyId/edit': typeof AdminLayoutCompaniesCompanyIdEditRoute;
+  '/admin/events/$eventId/edit': typeof AdminLayoutEventsEventIdEditRoute;
+  '/admin/projects/$projectId/edit': typeof AdminLayoutProjectsProjectIdEditRoute;
+  '/admin/companies/$companyId': typeof AdminLayoutCompaniesCompanyIdIndexRoute;
+  '/admin/events/$eventId': typeof AdminLayoutEventsEventIdIndexRoute;
+  '/admin/projects/$projectId': typeof AdminLayoutProjectsProjectIdIndexRoute;
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/onboarding': typeof OnboardingRoute
-  '/profile': typeof ProfileRoute
-  '/admin': typeof AdminLayoutIndexRoute
-  '/events/$eventId': typeof EventsEventIdRoute
-  '/projects/$projectId': typeof ProjectsProjectIdRoute
-  '/events': typeof EventsIndexRoute
-  '/projects': typeof ProjectsIndexRoute
-  '/admin/club': typeof AdminLayoutClubRoute
-  '/admin/officers': typeof AdminLayoutOfficersRoute
-  '/admin/users': typeof AdminLayoutUsersRoute
-  '/admin/companies/create': typeof AdminLayoutCompaniesCreateRoute
-  '/admin/events/create': typeof AdminLayoutEventsCreateRoute
-  '/admin/projects/create': typeof AdminLayoutProjectsCreateRoute
-  '/admin/companies': typeof AdminLayoutCompaniesIndexRoute
-  '/admin/events': typeof AdminLayoutEventsIndexRoute
-  '/admin/projects': typeof AdminLayoutProjectsIndexRoute
-  '/admin/companies/$companyId/edit': typeof AdminLayoutCompaniesCompanyIdEditRoute
-  '/admin/events/$eventId/edit': typeof AdminLayoutEventsEventIdEditRoute
-  '/admin/projects/$projectId/edit': typeof AdminLayoutProjectsProjectIdEditRoute
-  '/admin/companies/$companyId': typeof AdminLayoutCompaniesCompanyIdIndexRoute
-  '/admin/events/$eventId': typeof AdminLayoutEventsEventIdIndexRoute
-  '/admin/projects/$projectId': typeof AdminLayoutProjectsProjectIdIndexRoute
+  '/': typeof IndexRoute;
+  '/about': typeof AboutRoute;
+  '/dashboard': typeof DashboardRoute;
+  '/login': typeof LoginRoute;
+  '/onboarding': typeof OnboardingRoute;
+  '/profile': typeof ProfileRoute;
+  '/admin': typeof AdminLayoutIndexRoute;
+  '/events/$eventId': typeof EventsEventIdRoute;
+  '/projects/$projectId': typeof ProjectsProjectIdRoute;
+  '/events': typeof EventsIndexRoute;
+  '/projects': typeof ProjectsIndexRoute;
+  '/admin/club': typeof AdminLayoutClubRoute;
+  '/admin/officers': typeof AdminLayoutOfficersRoute;
+  '/admin/users': typeof AdminLayoutUsersRoute;
+  '/admin/companies/create': typeof AdminLayoutCompaniesCreateRoute;
+  '/admin/events/create': typeof AdminLayoutEventsCreateRoute;
+  '/admin/projects/create': typeof AdminLayoutProjectsCreateRoute;
+  '/admin/companies': typeof AdminLayoutCompaniesIndexRoute;
+  '/admin/events': typeof AdminLayoutEventsIndexRoute;
+  '/admin/projects': typeof AdminLayoutProjectsIndexRoute;
+  '/admin/companies/$companyId/edit': typeof AdminLayoutCompaniesCompanyIdEditRoute;
+  '/admin/events/$eventId/edit': typeof AdminLayoutEventsEventIdEditRoute;
+  '/admin/projects/$projectId/edit': typeof AdminLayoutProjectsProjectIdEditRoute;
+  '/admin/companies/$companyId': typeof AdminLayoutCompaniesCompanyIdIndexRoute;
+  '/admin/events/$eventId': typeof AdminLayoutEventsEventIdIndexRoute;
+  '/admin/projects/$projectId': typeof AdminLayoutProjectsProjectIdIndexRoute;
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/onboarding': typeof OnboardingRoute
-  '/profile': typeof ProfileRoute
-  '/admin': typeof AdminRouteWithChildren
-  '/admin/_layout': typeof AdminLayoutRouteWithChildren
-  '/events/$eventId': typeof EventsEventIdRoute
-  '/projects/$projectId': typeof ProjectsProjectIdRoute
-  '/events/': typeof EventsIndexRoute
-  '/projects/': typeof ProjectsIndexRoute
-  '/admin/_layout/club': typeof AdminLayoutClubRoute
-  '/admin/_layout/officers': typeof AdminLayoutOfficersRoute
-  '/admin/_layout/users': typeof AdminLayoutUsersRoute
-  '/admin/_layout/': typeof AdminLayoutIndexRoute
-  '/admin/_layout/companies/create': typeof AdminLayoutCompaniesCreateRoute
-  '/admin/_layout/events/create': typeof AdminLayoutEventsCreateRoute
-  '/admin/_layout/projects/create': typeof AdminLayoutProjectsCreateRoute
-  '/admin/_layout/companies/': typeof AdminLayoutCompaniesIndexRoute
-  '/admin/_layout/events/': typeof AdminLayoutEventsIndexRoute
-  '/admin/_layout/projects/': typeof AdminLayoutProjectsIndexRoute
-  '/admin/_layout/companies/$companyId/edit': typeof AdminLayoutCompaniesCompanyIdEditRoute
-  '/admin/_layout/events/$eventId/edit': typeof AdminLayoutEventsEventIdEditRoute
-  '/admin/_layout/projects/$projectId/edit': typeof AdminLayoutProjectsProjectIdEditRoute
-  '/admin/_layout/companies/$companyId/': typeof AdminLayoutCompaniesCompanyIdIndexRoute
-  '/admin/_layout/events/$eventId/': typeof AdminLayoutEventsEventIdIndexRoute
-  '/admin/_layout/projects/$projectId/': typeof AdminLayoutProjectsProjectIdIndexRoute
+  __root__: typeof rootRoute;
+  '/': typeof IndexRoute;
+  '/about': typeof AboutRoute;
+  '/dashboard': typeof DashboardRoute;
+  '/login': typeof LoginRoute;
+  '/onboarding': typeof OnboardingRoute;
+  '/profile': typeof ProfileRoute;
+  '/admin': typeof AdminRouteWithChildren;
+  '/admin/_layout': typeof AdminLayoutRouteWithChildren;
+  '/events/$eventId': typeof EventsEventIdRoute;
+  '/projects/$projectId': typeof ProjectsProjectIdRoute;
+  '/events/': typeof EventsIndexRoute;
+  '/projects/': typeof ProjectsIndexRoute;
+  '/admin/_layout/club': typeof AdminLayoutClubRoute;
+  '/admin/_layout/officers': typeof AdminLayoutOfficersRoute;
+  '/admin/_layout/users': typeof AdminLayoutUsersRoute;
+  '/admin/_layout/': typeof AdminLayoutIndexRoute;
+  '/admin/_layout/companies/create': typeof AdminLayoutCompaniesCreateRoute;
+  '/admin/_layout/events/create': typeof AdminLayoutEventsCreateRoute;
+  '/admin/_layout/projects/create': typeof AdminLayoutProjectsCreateRoute;
+  '/admin/_layout/companies/': typeof AdminLayoutCompaniesIndexRoute;
+  '/admin/_layout/events/': typeof AdminLayoutEventsIndexRoute;
+  '/admin/_layout/projects/': typeof AdminLayoutProjectsIndexRoute;
+  '/admin/_layout/companies/$companyId/edit': typeof AdminLayoutCompaniesCompanyIdEditRoute;
+  '/admin/_layout/events/$eventId/edit': typeof AdminLayoutEventsEventIdEditRoute;
+  '/admin/_layout/projects/$projectId/edit': typeof AdminLayoutProjectsProjectIdEditRoute;
+  '/admin/_layout/companies/$companyId/': typeof AdminLayoutCompaniesCompanyIdIndexRoute;
+  '/admin/_layout/events/$eventId/': typeof AdminLayoutEventsEventIdIndexRoute;
+  '/admin/_layout/projects/$projectId/': typeof AdminLayoutProjectsProjectIdIndexRoute;
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
     | '/'
     | '/about'
@@ -602,8 +589,8 @@ export interface FileRouteTypes {
     | '/admin/projects/$projectId/edit'
     | '/admin/companies/$companyId'
     | '/admin/events/$eventId'
-    | '/admin/projects/$projectId'
-  fileRoutesByTo: FileRoutesByTo
+    | '/admin/projects/$projectId';
+  fileRoutesByTo: FileRoutesByTo;
   to:
     | '/'
     | '/about'
@@ -630,7 +617,7 @@ export interface FileRouteTypes {
     | '/admin/projects/$projectId/edit'
     | '/admin/companies/$companyId'
     | '/admin/events/$eventId'
-    | '/admin/projects/$projectId'
+    | '/admin/projects/$projectId';
   id:
     | '__root__'
     | '/'
@@ -660,22 +647,22 @@ export interface FileRouteTypes {
     | '/admin/_layout/projects/$projectId/edit'
     | '/admin/_layout/companies/$companyId/'
     | '/admin/_layout/events/$eventId/'
-    | '/admin/_layout/projects/$projectId/'
-  fileRoutesById: FileRoutesById
+    | '/admin/_layout/projects/$projectId/';
+  fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  DashboardRoute: typeof DashboardRoute
-  LoginRoute: typeof LoginRoute
-  OnboardingRoute: typeof OnboardingRoute
-  ProfileRoute: typeof ProfileRoute
-  AdminRoute: typeof AdminRouteWithChildren
-  EventsEventIdRoute: typeof EventsEventIdRoute
-  ProjectsProjectIdRoute: typeof ProjectsProjectIdRoute
-  EventsIndexRoute: typeof EventsIndexRoute
-  ProjectsIndexRoute: typeof ProjectsIndexRoute
+  IndexRoute: typeof IndexRoute;
+  AboutRoute: typeof AboutRoute;
+  DashboardRoute: typeof DashboardRoute;
+  LoginRoute: typeof LoginRoute;
+  OnboardingRoute: typeof OnboardingRoute;
+  ProfileRoute: typeof ProfileRoute;
+  AdminRoute: typeof AdminRouteWithChildren;
+  EventsEventIdRoute: typeof EventsEventIdRoute;
+  ProjectsProjectIdRoute: typeof ProjectsProjectIdRoute;
+  EventsIndexRoute: typeof EventsIndexRoute;
+  ProjectsIndexRoute: typeof ProjectsIndexRoute;
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -689,12 +676,12 @@ const rootRouteChildren: RootRouteChildren = {
   EventsEventIdRoute: EventsEventIdRoute,
   ProjectsProjectIdRoute: ProjectsProjectIdRoute,
   EventsIndexRoute: EventsIndexRoute,
-  ProjectsIndexRoute: ProjectsIndexRoute,
-}
+  ProjectsIndexRoute: ProjectsIndexRoute
+};
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
 /* ROUTE_MANIFEST_START
 {
