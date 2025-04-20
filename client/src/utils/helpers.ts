@@ -5,6 +5,6 @@ export const capitalizeFirstLetter = (str: string): string => {
 
 export const isFull = (capacity: number | undefined | null, count: number | undefined): boolean => {
   if (capacity === null) return false;
-  if (!capacity || !count) return true;
-  return capacity === count;
+  if (capacity === undefined || count === undefined) return false;
+  return count >= capacity;
 };

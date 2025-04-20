@@ -33,7 +33,7 @@ import {
   ilike,
   sql,
 } from 'drizzle-orm';
-import type { User, Company, File, Event, Url } from '@/db/schema';
+import type { Company, File, Event, Url } from '@/db/schema';
 import {
   authMiddleWare,
   forbiddenRequest,
@@ -215,23 +215,36 @@ eventRouter.openapi(
         },
         description: 'Successful response',
       },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: 'Internal server error',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
     },
   }),
   async (c) => {
     const { eventID } = c.req.valid('param');
-    const eventSubscribers: User[] = await db
-      .select(getTableColumns(users))
-      .from(subscribedEvents)
-      .innerJoin(users, eq(users.id, subscribedEvents.userId))
-      .where(eq(subscribedEvents.eventId, parseInt(eventID)));
-    const formattedEventSubscribers = eventSubscribers.map((user) => ({
-      ...user,
-      createdAt: user.createdAt.toISOString(),
-    }));
-    return c.json(
-      { eventSubscribers: formattedEventSubscribers },
-      HttpStatusCodes.OK,
-    );
+
+    try {
+      const eventSubscribers = await db
+        .select(getTableColumns(users))
+        .from(subscribedEvents)
+        .innerJoin(users, eq(users.id, subscribedEvents.userId))
+        .where(eq(subscribedEvents.eventId, parseInt(eventID)));
+      return c.json(
+        { eventSubscribers },
+        HttpStatusCodes.OK,
+      );
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
   },
 );
 
@@ -966,24 +979,15 @@ eventRouter.openapi(
     },
   }),
   async (c) => {
+    const { eventID } = c.req.valid('param');
     try {
-      const user = c.get('user');
-      if (!user) {
-        return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-      }
-
-      const { eventID } = c.req.valid('param');
-      const eventAttendees: User[] = await db
+      const eventAttendees = await db
         .select(getTableColumns(users))
         .from(attendingEvents)
         .innerJoin(users, eq(users.id, attendingEvents.userId))
         .where(eq(attendingEvents.eventId, parseInt(eventID)));
-      const formattedEventAttendees = eventAttendees.map((user) => ({
-        ...user,
-        createdAt: user.createdAt.toISOString(),
-      }));
       return c.json(
-        { eventAttendees: formattedEventAttendees },
+        { eventAttendees },
         HttpStatusCodes.OK,
       );
     } catch (error) {
