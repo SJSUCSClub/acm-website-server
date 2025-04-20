@@ -10,17 +10,7 @@ import { ExternalLink, FileIcon, Trash } from 'lucide-react';
 import { paths } from '@/types/schema.v1';
 import { formatDate } from '@/utils/formatter';
 import Btn from '@/components/atoms/btn';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
-} from '@/components/ui/alert-dialog';
+import DeleteAlert from '@/components/molecules/delete-alert';
 
 export type File =
   paths['/v1/events/{eventID}/files']['get']['responses']['200']['content']['application/json']['eventFiles'][number];
@@ -65,20 +55,9 @@ function FilesTable({ files, admin = false, onFileDelete = () => {} }: IFilesTab
                   </TableCell>
                   {admin && (
                     <TableCell>
-                      <AlertDialog>
-                        <AlertDialogTrigger>
-                          <Btn variant="ghost" size="sm">
-                            <Trash className="h-4 w-4" />
-                            <span className="sr-only">Delete</span>
-                          </Btn>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              This action cannot be undone. This will permanently delete the file.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
+                      <DeleteAlert
+                        onDelete={() => onFileDelete(file)}
+                        body={
                           <div className="flex items-center justify-between text-sm p-3 bg-gray-100 rounded-md">
                             <div className="flex items-center gap-2 truncate">
                               <FileIcon className="h-4 w-4 text-gray-500" />
@@ -86,16 +65,13 @@ function FilesTable({ files, admin = false, onFileDelete = () => {} }: IFilesTab
                             </div>
                             <p>{formatDate(file.createdAt)}</p>
                           </div>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction asChild>
-                              <Btn className="bg-red-500" onClick={() => onFileDelete(file)}>
-                                Delete
-                              </Btn>
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                        }
+                      >
+                        <Btn variant="ghost" size="sm">
+                          <Trash className="h-4 w-4" />
+                          <span className="sr-only">Delete</span>
+                        </Btn>
+                      </DeleteAlert>
                     </TableCell>
                   )}
                 </TableRow>
