@@ -1,7 +1,12 @@
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
 import { z } from "zod";
 import * as HttpStatusCodes from "stoker/http-status-codes";
-import { errorSchema, newEventSchema, urlSchema } from "@/util/zod";
+import {
+  companyIDSchema,
+  errorSchema,
+  newEventSchema,
+  urlSchema,
+} from "@/util/zod";
 
 import type { Context } from "@/lib/context";
 import { db } from "@/db/db";
@@ -93,6 +98,99 @@ eventRouter.openapi(
     }));
 
     return c.json({ eventCompanies: mappedCompanies }, HttpStatusCodes.OK);
+  },
+);
+
+eventRouter.openapi(
+  createRoute({
+    method: "post",
+    path: "/{eventID}/companies/{companyID}",
+    tags: ["events"],
+    summary: "Add a company to an event",
+    middleware: [authMiddleWare("admin")],
+    request: {
+      params: z.object({
+        eventID: eventIDSchema.shape.eventID,
+        companyID: companyIDSchema.shape.companyID,
+      }),
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: "Successful response",
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: "Internal server error",
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const { eventID, companyID } = c.req.valid("param");
+
+    try {
+      await db
+        .insert(eventCompanies)
+        .values({ eventId: parseInt(eventID), companyId: parseInt(companyID) });
+      return c.text("", HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  },
+);
+
+eventRouter.openapi(
+  createRoute({
+    method: "delete",
+    path: "/{eventID}/companies/{companyID}",
+    tags: ["events"],
+    summary: "Delete a company from an event",
+    middleware: [authMiddleWare("admin")],
+    request: {
+      params: z.object({
+        eventID: eventIDSchema.shape.eventID,
+        companyID: companyIDSchema.shape.companyID,
+      }),
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: "Successful response",
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          "application/json": {
+            schema: errorSchema,
+          },
+        },
+        description: "Internal server error",
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const { eventID, companyID } = c.req.valid("param");
+
+    try {
+      await db
+        .delete(eventCompanies)
+        .where(
+          and(
+            eq(eventCompanies.eventId, parseInt(eventID)),
+            eq(eventCompanies.companyId, parseInt(companyID)),
+          ),
+        );
+      return c.text("", HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
   },
 );
 
