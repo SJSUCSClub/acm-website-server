@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Calendar, Clock, MapPin, Trash, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import FilesTable from '@/components/molecules/files-table';
-import CompanyDialog from '@/components/molecules/company-dialog';
 import SubscribeBtn from '@/components/molecules/subscribe-btn';
 import AttendBtn from '@/components/molecules/attend-btn';
 import BookmarkIcon from '@/components/molecules/bookmark-icon';
@@ -19,6 +18,7 @@ import FileUpload from '@/components/molecules/file-upload';
 import { presignedUrlFetch } from '@/utils/presignedUrlFetch';
 import { File as TableFile } from '@/components/molecules/files-table';
 import CompanyMultiSelect, { Company } from '@/components/molecules/company-multiselect';
+import { isFull } from '@/utils/helpers';
 
 interface IEventDetailsProps {
   eventId: string;
@@ -72,7 +72,10 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
   });
   const { mutate: deleteEvent } = useMutation('delete', '/v1/events/{eventID}');
   const { mutateAsync: uploadFile } = useMutation('post', '/v1/events/{eventID}/files/{filename}');
-  const { mutateAsync: deleteFile } = useMutation('delete', '/v1/events/{eventID}/files/{filename}');
+  const { mutateAsync: deleteFile } = useMutation(
+    'delete',
+    '/v1/events/{eventID}/files/{filename}'
+  );
   const { mutateAsync: addCompany } = useMutation(
     'post',
     '/v1/events/{eventID}/companies/{companyID}'
@@ -210,7 +213,7 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-1 space-y-8">
         <Loading isLoading={isLoadingEvent}>
-          <FetchError isError={!!errorEvent}>
+          <FetchError isError={!!errorEvent || !event}>
             <div className="relative rounded-xl overflow-hidden">
               <img
                 src={event?.event.image}
@@ -229,15 +232,12 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
           <SubscribeBtn source="event" id={event?.event.id.toString() || ''} />
           <AttendBtn
             id={event?.event.id.toString() || ''}
-            full={
-              event?.event.eventCapacity !== null &&
-              attendeeCount?.attendeesCount >= event?.event.eventCapacity
-            }
+            full={isFull(event?.event.eventCapacity, attendeeCount?.attendeesCount)}
           />
         </div>
 
         <Loading isLoading={isLoadingEventCompanies}>
-          <FetchError isError={!!errorEventCompanies}>
+          <FetchError isError={!!errorEventCompanies || !eventCompanies}>
             <div className="bg-muted p-6 rounded-xl">
               <h2 className="text-xl font-semibold mb-4">Participating Companies</h2>
               <div className="flex items-center justify-end">
@@ -285,7 +285,7 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
 
       <div className="space-y-8 lg:col-span-2">
         <Loading isLoading={isLoadingEvent}>
-          <FetchError isError={!!errorEvent}>
+          <FetchError isError={!!errorEvent || !event}>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold">{event?.event.name}</h1>
@@ -375,7 +375,7 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
         </Loading>
 
         <Loading isLoading={isLoadingEventFiles}>
-          <FetchError isError={!!errorEventFiles}>
+          <FetchError isError={!!errorEventFiles || !eventFiles}>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold mb-3">Files</h2>

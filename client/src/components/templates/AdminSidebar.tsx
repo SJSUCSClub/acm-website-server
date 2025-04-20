@@ -15,7 +15,6 @@ import clsx from 'clsx';
 import { Button } from '@/components/ui/button';
 import Page from '@/components/templates/Page';
 import { Link, LinkComponentProps } from '@tanstack/react-router';
-import { FileRouteTypes } from '@/routeTree.gen';
 import { DEFAULT_EVENT_FILTERS } from '@/utils/constants';
 
 interface IAdminSidebarProps {

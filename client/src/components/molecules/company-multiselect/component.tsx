@@ -16,7 +16,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { ChevronsUpDown, X } from 'lucide-react';
 import {
   Command,
-  CommandGroup,
   CommandInput,
   CommandItem,
   CommandList
