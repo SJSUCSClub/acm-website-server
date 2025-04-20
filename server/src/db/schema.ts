@@ -8,7 +8,6 @@ export const equipmentConditionEnum = pgEnum('equipment_condition_enum', ['Ready
 export const membershipTermEnum = pgEnum('membership_term_enum', ['Semester', 'Annual']);
 export const membershipRequestStatusEnum = pgEnum('membership_request_status_enum', ['Pending', 'Approved', 'Declined']);
 export const industryEnum = pgEnum('industry_enum', ['Banking and Finance', 'Aerospace', 'Healthcare', 'Automotive', 'Energy', 'Technology']);
-export const officerPositionEnum = pgEnum('officer_position_enum', ['President', 'Vice President', 'Dev Team Officer', 'Treasurer', 'Social Media Manager']);
 export const educationLevelEnum = pgEnum('education_level_enum', ['Undergraduate', 'Graduate']);
 export const projectStatusEnum = pgEnum('project_status_enum', ['Not Started', 'Looking for Members', 'In Progress', 'Completed']);
 export const userRoleEnum = pgEnum('user_role_enum', ['user', 'member', 'admin']);
@@ -195,10 +194,10 @@ export const interestedInProjects = pgTable('interested_in_projects', {
 
 export const officers = pgTable('officers', {
   id: serial('id').primaryKey(),
-  userId: text('user_id').notNull().references(() => users.id, { onUpdate: 'cascade', onDelete: 'cascade' }),
-  position: officerPositionEnum('position').notNull(),
+  name: text('name').notNull(),
+  position: text('position').notNull(),
   linkedin: text('linkedin'),
-  photo: text('photo').references(() => files.key, { onUpdate: 'cascade' }),
+  photo: text('photo').references(() => files.key, { onUpdate: 'cascade' }).notNull().default('default/image-placeholder.svg'),
 });
 
 export const sessions = pgTable('session', {
