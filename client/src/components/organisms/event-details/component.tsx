@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, MapPin, Users } from 'lucide-react';
+import { Calendar, Clock, MapPin, Trash, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import FilesTable from '@/components/molecules/files-table';
 import CompanyDialog from '@/components/molecules/company-dialog';
@@ -18,6 +18,7 @@ import { DEFAULT_EVENT_FILTERS } from '@/utils/constants';
 import FileUpload from '@/components/molecules/file-upload';
 import { presignedUrlFetch } from '@/utils/presignedUrlFetch';
 import { File as TableFile } from '@/components/molecules/files-table';
+import CompanyMultiSelect, { Company } from '@/components/molecules/company-multiselect';
 
 interface IEventDetailsProps {
   eventId: string;
@@ -41,7 +42,8 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
   const {
     data: eventCompanies,
     isLoading: isLoadingEventCompanies,
-    error: errorEventCompanies
+    error: errorEventCompanies,
+    refetch: refetchEventCompanies
   } = useQuery('get', '/v1/events/{eventID}/companies', {
     params: {
       path: {
@@ -70,7 +72,15 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
   });
   const { mutate: deleteEvent } = useMutation('delete', '/v1/events/{eventID}');
   const { mutateAsync: uploadFile } = useMutation('post', '/v1/events/{eventID}/files/{filename}');
-  const { mutate: deleteFile } = useMutation('delete', '/v1/events/{eventID}/files/{filename}');
+  const { mutateAsync: deleteFile } = useMutation('delete', '/v1/events/{eventID}/files/{filename}');
+  const { mutateAsync: addCompany } = useMutation(
+    'post',
+    '/v1/events/{eventID}/companies/{companyID}'
+  );
+  const { mutateAsync: deleteCompany } = useMutation(
+    'delete',
+    '/v1/events/{eventID}/companies/{companyID}'
+  );
 
   const handleEventDelete = () => {
     deleteEvent(
@@ -128,8 +138,32 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
     setIsOpen(false);
   };
 
+  const handleAddCompany = async (companies: Company[]) => {
+    for (const company of companies) {
+      await addCompany(
+        {
+          params: {
+            path: {
+              eventID: eventId.toString(),
+              companyID: company.id.toString()
+            }
+          }
+        },
+        {
+          onSuccess() {
+            toast.success(`${company.name} added to event`);
+          },
+          onError() {
+            toast.error(`Failed to add ${company.name} to event`);
+          }
+        }
+      );
+    }
+    refetchEventCompanies();
+  };
+
   const handleFileDelete = async (file: TableFile) => {
-    deleteFile(
+    await deleteFile(
       {
         params: {
           path: {
@@ -141,13 +175,35 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
       {
         onSuccess() {
           toast.success(`File deleted successfully: ${file.name}`);
-          refetchEventFiles();
         },
         onError() {
           toast.error(`Failed to delete file: ${file.name}`);
         }
       }
     );
+    refetchEventFiles();
+  };
+
+  const handleDeleteCompany = async (company: Company) => {
+    await deleteCompany(
+      {
+        params: {
+          path: {
+            eventID: eventId.toString(),
+            companyID: company.id.toString()
+          }
+        }
+      },
+      {
+        onSuccess() {
+          toast.success(`${company.name} removed from event`);
+        },
+        onError() {
+          toast.error(`Failed to remove ${company.name} from event`);
+        }
+      }
+    );
+    refetchEventCompanies();
   };
 
   return (
@@ -184,9 +240,42 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
           <FetchError isError={!!errorEventCompanies}>
             <div className="bg-muted p-6 rounded-xl">
               <h2 className="text-xl font-semibold mb-4">Participating Companies</h2>
+              <div className="flex items-center justify-end">
+                {admin && (
+                  <CompanyMultiSelect
+                    currentCompanies={eventCompanies?.eventCompanies || []}
+                    onSelectSubmit={handleAddCompany}
+                  >
+                    <Btn size="sm" variant="outline">
+                      Add Company
+                    </Btn>
+                  </CompanyMultiSelect>
+                )}
+              </div>
               <div className="space-y-4">
                 {eventCompanies?.eventCompanies.map((company) => (
-                  <CompanyDialog key={company.id} company={company} />
+                  <div className="w-full flex items-center justify-between p-3">
+                    <div className="flex items-center gap-3 text-left">
+                      <div className="relative h-10 w-10 rounded-full overflow-hidden bg-muted">
+                        <img
+                          src={company.logo || ''}
+                          alt={company.name}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <div className="font-medium">{company.name}</div>
+                        <div className="text-xs text-muted-foreground">{company.industryId}</div>
+                      </div>
+                    </div>
+                    {admin && (
+                      <DeleteAlert onDelete={() => handleDeleteCompany(company)}>
+                        <Btn variant="ghost" size="sm">
+                          <Trash className="h-4 w-4" />
+                        </Btn>
+                      </DeleteAlert>
+                    )}
+                  </div>
                 ))}
               </div>
             </div>
