@@ -14,7 +14,13 @@ import {
 import Spinner from '@/components/atoms/spinner';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ChevronsUpDown, X } from 'lucide-react';
-import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
+import {
+  Command,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from '@/components/ui/command';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 
@@ -76,13 +82,13 @@ const CompanyMultiSelect: React.FC<ICompanyMultiselectProps> = ({
             </Btn>
           </PopoverTrigger>
           <PopoverContent className="w-full p-0">
-            <Command>
-              <CommandList>
-                <Loading isLoading={isLoadingCompanies}>
-                  {error || companies?.companies.length === 0 ? (
-                    <div className="py-6 text-center text-sm text-gray-500">No Companies Found</div>
-                  ) : (
-                    <CommandGroup>
+            <Loading isLoading={isLoadingCompanies}>
+              {error || companies?.companies.length === 0 ? (
+                <div className="py-6 text-center text-sm text-gray-500">No Companies Found</div>
+              ) : (
+                <Command>
+                  <CommandInput />
+                  <CommandList className="h-64 overflow-y-scroll">
                       {companies?.companies
                         .filter((company) => !currentCompanies.some((c) => c.id === company.id))
                         .map((company) => (
@@ -112,16 +118,18 @@ const CompanyMultiSelect: React.FC<ICompanyMultiselectProps> = ({
                             </div>
                           </CommandItem>
                         ))}
-                    </CommandGroup>
-                  )}
-                </Loading>
-              </CommandList>
-            </Command>
+                  </CommandList>
+                </Command>
+              )}
+            </Loading>
           </PopoverContent>
         </Popover>
         <ul className="space-y-2">
           {selectedCompanies.map((company) => (
-            <li key={company.id} className="flex items-center justify-between bg-gray-100 p-3 rounded-md">
+            <li
+              key={company.id}
+              className="flex items-center justify-between bg-gray-100 p-3 rounded-md"
+            >
               <div className="flex items-center gap-3 text-left">
                 <div className="relative h-10 w-10 rounded-full overflow-hidden bg-muted">
                   <img
@@ -135,11 +143,7 @@ const CompanyMultiSelect: React.FC<ICompanyMultiselectProps> = ({
                   <div className="text-xs text-muted-foreground">{company.industryId}</div>
                 </div>
               </div>
-              <Btn
-                variant="ghost"
-                size="sm"
-                onClick={() => handleCheckboxChange(company, false)}
-              >
+              <Btn variant="ghost" size="sm" onClick={() => handleCheckboxChange(company, false)}>
                 <X className="h-4 w-4" />
               </Btn>
             </li>
