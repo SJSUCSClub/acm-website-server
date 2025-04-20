@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearch } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { X } from 'lucide-react';
 import { useQuery } from '@/hooks/useFetch';
 import EventCard from '@/components/molecules/event-card';
@@ -11,19 +11,50 @@ import BtnTargetAudienceFilter from '@/components/molecules/btn-target-audience-
 import BtnMemberOnlyFilter from '@/components/molecules/btn-member-only-filter';
 import Spinner from '@/components/atoms/spinner';
 import { paths } from '@/types/schema.v1';
-import { Route, EventsFilters } from '@/routes/admin/_layout/events';
 import { Button } from '@/components/ui/button';
 import { DEFAULT_EVENT_FILTERS } from '@/utils/constants';
 import { capitalizeFirstLetter as cfl } from '@/utils/helpers';
+import { z } from 'zod';
+import { FileRouteTypes } from '@/routeTree.gen';
+import Btn from '@/components/atoms/btn';
 
 type Events =
   paths['/v1/events']['get']['responses']['200']['content']['application/json']['foundEvents'];
 
-const EventsPage = () => {
-  const searchParams = useSearch({
-    from: '/admin/_layout/events'
-  });
-  const navigate = useNavigate({ from: Route.fullPath });
+export const eventsFilterSchema = z.object({
+  name: z.string().default(''),
+  timeframe: z.enum(['upcoming', 'past', 'today', 'all']).default('all'),
+  tags: z
+    .array(
+      z.enum([
+        'Web Development',
+        'Machine Learning',
+        'Cloud Computing',
+        'Artificial Intelligence',
+        'Networking',
+        'Cybersecurity',
+        'Mobile Development',
+        'Game Development',
+        'Data Science'
+      ])
+    )
+    .default([]),
+  eventTypes: z.array(
+    z.enum(['Workshop', 'Seminar', 'Hackathon', 'Conference', 'Meetup', 'Tech Talk', 'Other'])
+  ),
+  targetAudience: z.string().default('All'),
+  memberOnly: z.boolean().default(false)
+});
+export type EventListSearch = z.infer<typeof eventsFilterSchema>;
+
+export interface IEventListProps {
+  searchParams: EventListSearch;
+  fullPath: FileRouteTypes['fullPaths'];
+  admin?: boolean;
+}
+
+const EventList: React.FC<IEventListProps> = ({ searchParams, fullPath, admin = false }) => {
+  const navigate = useNavigate({ from: fullPath });
 
   const { name, timeframe, tags, eventTypes, targetAudience, memberOnly } = searchParams;
 
@@ -52,27 +83,28 @@ const EventsPage = () => {
     }
   }, [eventData]);
 
-  const updateSearchFilters = (field: keyof EventsFilters, value: unknown) => {
+  const updateSearchFilters = (field: keyof EventListSearch, value: unknown) => {
     navigate({ search: (prev) => ({ ...prev, [field]: value }), replace: true });
   };
 
-  const setNameFilter = (newName: string) => updateSearchFilters('name', newName);
+  const setNameFilter = (newName: EventListSearch['name']) => updateSearchFilters('name', newName);
 
-  const setDateFilter = (newDate: 'today' | 'past' | 'upcoming' | 'all') =>
+  const setDateFilter = (newDate: EventListSearch['timeframe']) =>
     updateSearchFilters('timeframe', newDate);
 
-  const setTagFilter = (newTags: string[]) => updateSearchFilters('tags', newTags);
+  const setTagFilter = (newTags: EventListSearch['tags']) => updateSearchFilters('tags', newTags);
 
-  const setEventTypesFilter = (newEventTypes: string[]) =>
+  const setEventTypesFilter = (newEventTypes: EventListSearch['eventTypes']) =>
     updateSearchFilters('eventTypes', newEventTypes);
 
-  const setMemberOnlyFilter = (membOnly: boolean) => updateSearchFilters('memberOnly', membOnly);
+  const setMemberOnlyFilter = (membOnly: EventListSearch['memberOnly']) =>
+    updateSearchFilters('memberOnly', membOnly);
 
   const setTargetAudienceFilter = (newTargetAudience: string) =>
     updateSearchFilters('targetAudience', newTargetAudience);
 
   const renderChip = (
-    key: keyof EventsFilters,
+    key: keyof EventListSearch,
     value: string,
     label: string,
     getUpdatedValue?: () => unknown
@@ -142,17 +174,14 @@ const EventsPage = () => {
 
   return (
     <div className="p-4">
-      <div className="intro space-y-4 mb-4">
-        <h1 className="text-2xl font-bold">Events</h1>
-        <p className="text-lg">
-          Our student group organizes a variety of events during each academic semester, including
-          workshops, informational sessions, community engagement activities, and much more!
-        </p>
-        <p>
-          These events are accessible to all those who are interested, irrespective of their major
-          or prior experience.
-        </p>
-      </div>
+      <h1 className="text-2xl font-bold">Events</h1>
+      {admin && (
+        <div className="flex items-center justify-end">
+          <Link to="/admin/events/create">
+            <Btn>Create Event</Btn>
+          </Link>
+        </div>
+      )}
 
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <div className="flex justify-between items-center mb-4">
@@ -225,4 +254,4 @@ const EventsPage = () => {
   );
 };
 
-export default EventsPage;
+export { EventList };

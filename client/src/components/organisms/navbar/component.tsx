@@ -15,6 +15,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
 import { SearchBar } from '@/components/molecules/search-bar';
+import { DEFAULT_EVENT_FILTERS } from '@/utils/constants';
 
 export const NavBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -59,9 +60,9 @@ export const NavBar: React.FC = () => {
 
         {/* Desktop Navigation - Only visible on screens >= 1024px (lg) */}
         <div className="hidden lg:flex items-center gap-2">
-          <LinkCard path="/about" pathName="About Us" />
-          <LinkCard path="/events" pathName="Events" />
-          <LinkCard path="/projects" pathName="Projects" />
+          <LinkCard to="/about" pathName="About Us" />
+          <LinkCard to="/events" search={DEFAULT_EVENT_FILTERS} pathName="Events" />
+          <LinkCard to="/projects" pathName="Projects" />
 
           {isLoggedIn && user ? (
             <DropdownMenu>
@@ -92,7 +93,7 @@ export const NavBar: React.FC = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <LinkCard path="/login" pathName="Log In" />
+            <LinkCard to="/login" pathName="Log In" />
           )}
         </div>
 
@@ -143,6 +144,7 @@ export const NavBar: React.FC = () => {
 
           <Link
             to="/events"
+            search={{ ...DEFAULT_EVENT_FILTERS }}
             className="flex items-center px-6 py-4 hover:bg-gray-100 transition-colors w-full"
             onClick={handleClick}
           >

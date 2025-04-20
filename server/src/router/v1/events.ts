@@ -1,7 +1,12 @@
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
 import { z } from 'zod';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
-import { urlSchema } from '@/util/zod';
+import {
+  companyIDSchema,
+  errorSchema,
+  newEventSchema,
+  urlSchema,
+} from '@/util/zod';
 
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
@@ -26,6 +31,7 @@ import {
   arrayContains,
   inArray,
   ilike,
+  sql,
 } from 'drizzle-orm';
 import type { User, Company, File, Event, Url } from '@/db/schema';
 import {
@@ -44,9 +50,17 @@ import {
   eventTypesEnumSchema,
   targetAudienceEnumSchema,
 } from '@/util/zod';
-import { generateObjectUrl } from '@/lib/aws/s3';
+import {
+  deleteFile,
+  generateObjectUrl,
+  getPresignedUrlPutObj,
+} from '@/lib/aws/s3';
 
 const eventRouter = new OpenAPIHono<Context>();
+
+const generateImageKey = (id: string | number): string => `events/${id}/image`;
+const generateFileKey = (id: string | number, filename: string): string =>
+  `events/${id}/files/${filename}`;
 
 eventRouter.openapi(
   createRoute({
@@ -84,6 +98,99 @@ eventRouter.openapi(
     }));
 
     return c.json({ eventCompanies: mappedCompanies }, HttpStatusCodes.OK);
+  },
+);
+
+eventRouter.openapi(
+  createRoute({
+    method: 'post',
+    path: '/{eventID}/companies/{companyID}',
+    tags: ['events'],
+    summary: 'Add a company to an event',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: z.object({
+        eventID: eventIDSchema.shape.eventID,
+        companyID: companyIDSchema.shape.companyID,
+      }),
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: 'Successful response',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: 'Internal server error',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const { eventID, companyID } = c.req.valid('param');
+
+    try {
+      await db
+        .insert(eventCompanies)
+        .values({ eventId: parseInt(eventID), companyId: parseInt(companyID) });
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  },
+);
+
+eventRouter.openapi(
+  createRoute({
+    method: 'delete',
+    path: '/{eventID}/companies/{companyID}',
+    tags: ['events'],
+    summary: 'Delete a company from an event',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: z.object({
+        eventID: eventIDSchema.shape.eventID,
+        companyID: companyIDSchema.shape.companyID,
+      }),
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: 'Successful response',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Internal server error',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const { eventID, companyID } = c.req.valid('param');
+
+    try {
+      await db
+        .delete(eventCompanies)
+        .where(
+          and(
+            eq(eventCompanies.eventId, parseInt(eventID)),
+            eq(eventCompanies.companyId, parseInt(companyID)),
+          ),
+        );
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
   },
 );
 
@@ -205,6 +312,125 @@ eventRouter.openapi(
 
 eventRouter.openapi(
   createRoute({
+    method: 'post',
+    path: '/{eventID}/files/{filename}',
+    tags: ['events'],
+    summary: 'Upload a file to an event',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: z.object({
+        eventID: eventIDSchema.shape.eventID,
+        filename: z.string(),
+      }),
+    },
+    responses: {
+      [HttpStatusCodes.OK]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              presigned_url: z.string(),
+            }),
+          },
+        },
+        description: 'Successful response',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Internal server error',
+      },
+      ...forbiddenRequest,
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const { eventID, filename } = c.req.valid('param');
+    const key = generateFileKey(eventID, filename);
+
+    try {
+      await db.insert(files).values({ key, name: filename });
+      await db
+        .insert(eventsFiles)
+        .values({ eventId: parseInt(eventID), fileKey: key });
+
+      const res = await getPresignedUrlPutObj(key);
+      if (!res) {
+        throw new Error('Failed to generate presigned url');
+      }
+      return c.json({ presigned_url: res }, HttpStatusCodes.OK);
+    } catch (error) {
+      console.log(error);
+      return c.json(
+        { error: `Failed to upload file: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
+  },
+);
+
+eventRouter.openapi(
+  createRoute({
+    method: 'delete',
+    path: '/{eventID}/files/{filename}',
+    tags: ['events'],
+    summary: 'Delete  file of an event',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: z.object({
+        eventID: eventIDSchema.shape.eventID,
+        filename: z.string(),
+      }),
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: 'Successful response',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Internal server error',
+      },
+      ...forbiddenRequest,
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const { eventID, filename } = c.req.valid('param');
+    const key = generateFileKey(eventID, filename);
+
+    try {
+      await db
+        .delete(eventsFiles)
+        .where(
+          and(
+            eq(eventsFiles.fileKey, key),
+            eq(eventsFiles.eventId, parseInt(eventID)),
+          ),
+        );
+      await db.delete(files).where(eq(files.key, key));
+      const res = await deleteFile(key);
+      if (!res) {
+        throw new Error('Failed to delete file');
+      }
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      console.log(error);
+      return c.json(
+        { error: `Failed to upload file: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
+  },
+);
+
+eventRouter.openapi(
+  createRoute({
     method: 'get',
     path: '/',
     tags: ['events'],
@@ -251,8 +477,8 @@ eventRouter.openapi(
         timeframe === 'upcoming'
           ? gt(events.startDate, today)
           : timeframe === 'past'
-          ? lt(events.startDate, today)
-          : eq(events.startDate, today),
+            ? lt(events.startDate, today)
+            : eq(events.startDate, today),
       );
     }
 
@@ -323,7 +549,7 @@ eventRouter.openapi(
       body: {
         content: {
           'application/json': {
-            schema: eventSchema.omit({ id: true, createdAt: true }),
+            schema: newEventSchema,
           },
         },
       },
@@ -339,47 +565,32 @@ eventRouter.openapi(
         },
         description: 'Successful response',
       },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: 'Failed to create event',
+      },
       ...unauthorizedRequest,
       ...forbiddenRequest,
     },
   }),
   async (c) => {
-    const {
-      name,
-      location,
-      startDate,
-      endDate,
-      description,
-      urls,
-      eventType,
-      eventCapacity,
-      image,
-      startTime,
-      endTime,
-      tags,
-      targetAudience,
-      shortenedEventUrl,
-    } = c.req.valid('json');
-    const newEvent = await db
-      .insert(events)
-      .values({
-        name,
-        location,
-        startDate,
-        endDate,
-        description,
-        urls,
-        eventType,
-        eventCapacity,
-        image,
-        startTime,
-        endTime,
-        tags,
-        targetAudience,
-        shortenedEventUrl,
-      })
-      .returning();
-    return c.json({ event: newEvent[0] }, HttpStatusCodes.CREATED);
+    const body = c.req.valid('json');
+
+    try {
+      const newEvent = await db.insert(events).values(body).returning();
+      if (newEvent.length === 0) {
+        throw new Error('Failed to create event');
+      }
+      return c.json({ event: newEvent[0] }, HttpStatusCodes.CREATED);
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
   },
 );
 
@@ -432,6 +643,257 @@ eventRouter.openapi(
     };
 
     return c.json({ event: mappedEvent }, HttpStatusCodes.OK);
+  },
+);
+
+eventRouter.openapi(
+  createRoute({
+    method: 'put',
+    path: '/{eventID}',
+    tags: ['events'],
+    summary: 'Update event information',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: eventIDSchema,
+      body: {
+        content: {
+          'application/json': {
+            schema: newEventSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: 'Successful response',
+      },
+      [HttpStatusCodes.NOT_FOUND]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Not Found',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Internal server error',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const { eventID } = c.req.valid('param');
+    const body = c.req.valid('json');
+    try {
+      const updatedEvent = await db
+        .update(events)
+        .set(body)
+        .where(eq(events.id, parseInt(eventID)))
+        .returning();
+
+      if (updatedEvent.length === 0) {
+        return c.json({ error: 'Event not found' }, HttpStatusCodes.NOT_FOUND);
+      }
+
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  },
+);
+
+eventRouter.openapi(
+  createRoute({
+    method: 'delete',
+    path: '/{eventID}',
+    tags: ['events'],
+    summary: 'Delete event',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: eventIDSchema,
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: 'Successful response',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Internal server error',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const { eventID } = c.req.valid('param');
+    try {
+      const key = generateImageKey(eventID);
+      await db.delete(events).where(eq(events.id, parseInt(eventID)));
+      await db.delete(files).where(eq(files.key, key));
+      await deleteFile(key);
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  },
+);
+
+eventRouter.openapi(
+  createRoute({
+    method: 'post',
+    path: '/{eventID}/image',
+    tags: ['events'],
+    summary: 'Upload event image',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: eventIDSchema,
+    },
+    responses: {
+      [HttpStatusCodes.CREATED]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              presigned_url: z.string(),
+            }),
+          },
+        },
+        description: 'Successful response',
+      },
+      [HttpStatusCodes.BAD_REQUEST]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: 'Bad request',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: 'Not Found',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const { eventID } = c.req.valid('param');
+    if (!eventID) {
+      return c.json(
+        { error: 'Event ID is required' },
+        HttpStatusCodes.BAD_REQUEST,
+      );
+    }
+
+    const key = generateImageKey(eventID);
+    try {
+      await db
+        .insert(files)
+        .values({ key, name: 'image' })
+        .onConflictDoNothing();
+      await db
+        .update(events)
+        .set({ image: key })
+        .where(eq(events.id, parseInt(eventID)));
+
+      const res = await getPresignedUrlPutObj(key);
+      if (!res) {
+        throw new Error('Failed to generate presigned url');
+      }
+      return c.json({ presigned_url: res }, HttpStatusCodes.CREATED);
+    } catch (error) {
+      return c.json(
+        { error: `Failed to upload image: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
+  },
+);
+
+eventRouter.openapi(
+  createRoute({
+    method: 'delete',
+    path: '/{eventID}/image',
+    tags: ['events'],
+    summary: 'Delete event image',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: eventIDSchema,
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: 'Successful response',
+      },
+      [HttpStatusCodes.BAD_REQUEST]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: 'Bad request',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: 'Not Found',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const { eventID } = c.req.valid('param');
+
+    if (!eventID) {
+      return c.json(
+        { error: 'Event ID is required' },
+        HttpStatusCodes.BAD_REQUEST,
+      );
+    }
+
+    const key = generateImageKey(eventID);
+    try {
+      await db
+        .update(events)
+        .set({ image: sql`DEFAULT` })
+        .where(eq(events.id, parseInt(eventID)));
+      await db.delete(files).where(eq(files.key, key));
+      const res = await deleteFile(key);
+      if (!res) {
+        throw new Error('Failed to delete file');
+      }
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      console.log(error);
+      return c.json(
+        { error: `Failed to upload image: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
   },
 );
 

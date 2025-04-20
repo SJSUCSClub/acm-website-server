@@ -1,20 +1,22 @@
 import { ChevronsUpDown } from 'lucide-react';
 import * as React from 'react';
-import { Checkbox } from '../../../components/ui/checkbox';
-import { Button } from '../../../components/ui/button';
-import { Command, CommandGroup, CommandItem, CommandList } from '../../../components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '../../../components/ui/popover';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useState } from 'react';
 import { useQuery } from '@/hooks/useFetch';
+import { paths } from '@/types/schema.v1';
+import Btn from '@/components/atoms/btn';
 
+export type Tag =
+  paths['/v1/events/{eventID}']['get']['responses']['200']['content']['application/json']['event']['tags'][number];
 export type EventCardProps = {
-  selectedTags: string[];
-  onSelectChange: (data: string[]) => void;
+  selectedTags: Tag[];
+  onSelectChange: (data: Tag[]) => void;
 };
 
 export const BtnTagFilter: React.FC<EventCardProps> = ({ selectedTags, onSelectChange }) => {
   const [open, setOpen] = useState(false);
-  const value = 'Tag Filter';
   const { data: tags, error } = useQuery('get', '/v1/enums/{enumType}', {
     params: {
       path: {
@@ -23,7 +25,7 @@ export const BtnTagFilter: React.FC<EventCardProps> = ({ selectedTags, onSelectC
     }
   });
 
-  const handleCheckboxChange = (tag: string, checked: boolean) => {
+  const handleCheckboxChange = (tag: Tag, checked: boolean) => {
     if (checked) {
       onSelectChange([...selectedTags, tag]);
     } else {
@@ -34,17 +36,17 @@ export const BtnTagFilter: React.FC<EventCardProps> = ({ selectedTags, onSelectC
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
+        <Btn
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-full justify-between"
         >
-          {value}
+          Tag Filter
           <ChevronsUpDown className="opacity-50" />
-        </Button>
+        </Btn>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-full p-0">
         <Command>
           <CommandList>
             {error || tags?.types.length === 0 ? (
@@ -56,9 +58,9 @@ export const BtnTagFilter: React.FC<EventCardProps> = ({ selectedTags, onSelectC
                     <div className="flex items-center space-x-2">
                       <Checkbox
                         id={option}
-                        checked={selectedTags.includes(option)}
+                        checked={selectedTags.includes(option as Tag)}
                         onCheckedChange={(checked) =>
-                          handleCheckboxChange(option, checked as boolean)
+                          handleCheckboxChange(option as Tag, checked as boolean)
                         }
                       />
                       <label htmlFor={option}>{option}</label>

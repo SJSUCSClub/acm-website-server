@@ -6,7 +6,6 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MapPin } from 'lucide-react';
 import { paths } from '@/types/schema.v1';
@@ -16,32 +15,15 @@ type Company =
 
 interface CompanyDialogProps {
   company: Company;
+  children?: React.ReactNode;
 }
 
-const CompanyDialog: React.FC<CompanyDialogProps> = ({ company }) => {
+const CompanyDialog: React.FC<CompanyDialogProps> = ({ company, children }) => {
   const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="ghost" className="w-full justify-start p-3 h-auto">
-          <div className="flex items-center gap-3 text-left">
-            <div className="relative h-10 w-10 rounded-full overflow-hidden bg-muted">
-              <img
-                src={company.logo || ''}
-                alt={company.name}
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <div>
-              <div className="font-medium">{company.name}</div>
-              <div className="text-xs text-muted-foreground">
-                {company.industryId.replace('_', ' ')}
-              </div>
-            </div>
-          </div>
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <div className="flex items-center gap-4">

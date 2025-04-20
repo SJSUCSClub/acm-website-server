@@ -14,19 +14,17 @@ import {
 import clsx from 'clsx';
 import { Button } from '@/components/ui/button';
 import Page from '@/components/templates/Page';
-import { Link } from '@tanstack/react-router';
-import { FileRouteTypes } from '@/routeTree.gen';
+import { Link, LinkComponentProps } from '@tanstack/react-router';
+import { DEFAULT_EVENT_FILTERS } from '@/utils/constants';
 
 interface IAdminSidebarProps {
   children: React.ReactNode;
 }
 
-type NavItem = {
+interface NavItem extends LinkComponentProps {
   title: string;
   icon: LucideIcon;
-  href: FileRouteTypes['to'];
-  params?: Record<string, string>;
-};
+}
 
 const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -34,38 +32,38 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
     {
       title: 'Home',
       icon: House,
-      href: '/admin'
+      to: '/admin'
     },
     {
       title: 'Club',
       icon: List,
-      href: '/admin/club'
+      to: '/admin/club'
     },
     {
       title: 'Users',
       icon: Users,
-      href: '/admin/users'
+      to: '/admin/users'
     },
     {
       title: 'Projects',
       icon: FolderOpenDot,
-      href: '/admin/projects'
+      to: '/admin/projects'
     },
     {
       title: 'Events',
       icon: Calendar,
-      href: '/admin/events',
-      params: {}
+      to: '/admin/events',
+      search: { ...DEFAULT_EVENT_FILTERS }
     },
     {
       title: 'Companies',
       icon: Building,
-      href: '/admin/companies'
+      to: '/admin/companies'
     },
     {
       title: 'Officers',
       icon: ShieldUser,
-      href: '/admin/officers'
+      to: '/admin/officers'
     }
   ];
 
@@ -95,14 +93,13 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
             {navItems.map((item) => (
               <Link
                 key={item.title}
-                to={item.href}
+                {...item}
                 className={clsx(
                   'flex items-center py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground',
                   'justify-center md:justify-center',
                   'md:h-12 md:px-3 md:rounded-md',
                   !collapsed && 'md:justify-start'
                 )}
-                search={item.params ?? {}}
               >
                 <div className={clsx('flex items-center', !collapsed && 'md:w-full')}>
                   <item.icon className="h-5 w-5 flex-shrink-0" />

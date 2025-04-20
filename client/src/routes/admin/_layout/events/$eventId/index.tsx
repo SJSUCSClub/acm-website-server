@@ -1,16 +1,11 @@
 import EventsDetails from '@/components/organisms/event-details';
-import Page from '@/components/templates/Page';
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/events/$eventId')({
+export const Route = createFileRoute('/admin/_layout/events/$eventId/')({
   component: RouteComponent
 });
 
 function RouteComponent() {
   const { eventId } = Route.useParams();
-  return (
-    <Page>
-      <EventsDetails eventId={eventId} />
-    </Page>
-  );
+  return <EventsDetails eventId={eventId} admin />;
 }

@@ -1,17 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router';
 import EventList, { EventListSearch, eventsFilterSchema } from '@/components/organisms/event-list';
-import Page from '@/components/templates/Page';
+import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/events/')({
+export const Route = createFileRoute('/admin/_layout/events/')({
   component: RouteComponent,
   validateSearch: (search: EventListSearch) => eventsFilterSchema.parse(search)
 });
 
 function RouteComponent() {
   const searchParams = Route.useSearch();
-  return (
-    <Page>
-      <EventList searchParams={searchParams} fullPath={Route.fullPath} />
-    </Page>
-  );
+  return <EventList searchParams={searchParams} fullPath={Route.fullPath} admin />;
 }

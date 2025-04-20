@@ -1,6 +1,6 @@
-import { type EventsFilters } from '@/routes/admin/_layout/events';
+import { type EventListSearch } from '@/components/organisms/event-list';
 
-export const DEFAULT_EVENT_FILTERS: EventsFilters = {
+export const DEFAULT_EVENT_FILTERS: EventListSearch = {
   name: '',
   timeframe: 'all',
   tags: [],

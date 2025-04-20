@@ -1,4 +1,3 @@
-import Btn from '@/components/atoms/btn';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,13 +16,15 @@ export interface IDeleteAlertProps {
   children: React.ReactNode;
   alertTitle?: string;
   alertDescription?: string;
+  body?: React.ReactNode;
 }
 
 const DeleteAlert: React.FC<IDeleteAlertProps> = ({
   onDelete,
   children,
   alertTitle = 'Are you absolutely sure?',
-  alertDescription = 'This action cannot be undone.'
+  alertDescription = 'This action cannot be undone.',
+  body = null
 }) => {
   return (
     <AlertDialog>
@@ -33,12 +34,11 @@ const DeleteAlert: React.FC<IDeleteAlertProps> = ({
           <AlertDialogTitle>{alertTitle}</AlertDialogTitle>
           <AlertDialogDescription>{alertDescription}</AlertDialogDescription>
         </AlertDialogHeader>
+        {body}
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction asChild>
-            <Btn className="bg-red-500" onClick={onDelete}>
-              Delete
-            </Btn>
+          <AlertDialogAction className="bg-red-500" onClick={onDelete}>
+            Delete
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
