@@ -19,6 +19,7 @@ import { presignedUrlFetch } from '@/utils/presignedUrlFetch';
 import { File as TableFile } from '@/components/molecules/files-table';
 import CompanyMultiSelect, { Company } from '@/components/molecules/company-multiselect';
 import { isFull } from '@/utils/helpers';
+import UsersTable from '@/components/molecules/users-table';
 
 interface IEventDetailsProps {
   eventId: string;
@@ -63,6 +64,42 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
       }
     }
   });
+  const {
+    data: eventSubscribers,
+    isLoading: isLoadingEventSubscribers,
+    error: errorEventSubscribers
+  } = useQuery(
+    'get',
+    '/v1/events/{eventID}/subscribers',
+    {
+      params: {
+        path: {
+          eventID: eventId
+        }
+      }
+    },
+    {
+      enabled: admin
+    }
+  );
+  const {
+    data: eventAttendees,
+    isLoading: isLoadingEventAttendees,
+    error: errorEventAttendees
+  } = useQuery(
+    'get',
+    '/v1/events/{eventID}/attendance',
+    {
+      params: {
+        path: {
+          eventID: eventId
+        }
+      }
+    },
+    {
+      enabled: admin
+    }
+  );
   const { data: attendeeCount } = useQuery('get', '/v1/events/{eventID}/attendance/count', {
     params: {
       path: {
@@ -254,7 +291,7 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
               </div>
               <div className="space-y-4">
                 {eventCompanies?.eventCompanies.map((company) => (
-                  <div className="w-full flex items-center justify-between p-3">
+                  <div key={company.id} className="w-full flex items-center justify-between p-3">
                     <div className="flex items-center gap-3 text-left">
                       <div className="relative h-10 w-10 rounded-full overflow-hidden bg-muted">
                         <img
@@ -393,6 +430,27 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
             </div>
           </FetchError>
         </Loading>
+
+        {admin && (
+          <Loading isLoading={isLoadingEventSubscribers}>
+            <FetchError isError={!!errorEventSubscribers || !eventSubscribers}>
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold mb-3">Subscribed Users</h2>
+                <UsersTable users={eventSubscribers?.eventSubscribers || []} />
+              </div>
+            </FetchError>
+          </Loading>
+        )}
+        {admin && (
+          <Loading isLoading={isLoadingEventAttendees}>
+            <FetchError isError={!!errorEventAttendees || !eventAttendees}>
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold mb-3">Attending Users</h2>
+                <UsersTable users={eventAttendees?.eventAttendees || []} />
+              </div>
+            </FetchError>
+          </Loading>
+        )}
       </div>
     </div>
   );

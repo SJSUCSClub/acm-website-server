@@ -40,6 +40,8 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
         projectID: projectId
       }
     }
+  }, {
+    enabled: admin
   });
   const { mutateAsync: uploadFile } = useMutation(
     'post',
