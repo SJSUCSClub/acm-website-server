@@ -10,10 +10,13 @@ import { paths } from '@/types/schema.v1';
 
 type Result =
   paths['/v1/search']['get']['responses']['200']['content']['application/json']['results'][number];
-const typeRoutes: Record<Result['type'], FileRouteTypes['to'] | null> = {
-  event: '/events/$eventId',
-  project: '/projects/$projectId',
-  company: null
+const typeRoutes: Record<
+  Result['type'],
+  { to: FileRouteTypes['to']; param: 'eventId' | 'projectId' | 'companyId' }
+> = {
+  event: { to: '/events/$eventId', param: 'eventId' },
+  project: { to: '/projects/$projectId', param: 'projectId' },
+  company: { to: '/companies/$companyId', param: 'companyId' }
 };
 
 const SearchBar = () => {
@@ -74,10 +77,8 @@ const SearchBar = () => {
 
   const handleNavigate = (item: Result) => {
     const route = typeRoutes[item.type];
-    const param = item.type === 'event' ? 'eventId' : 'projectId';
-    if (route) {
-      navigate({ to: route, params: { [param]: item.id } });
-    }
+    const param = route['param'];
+    navigate({ to: route.to, params: { [param]: item.id } });
   };
 
   return (
