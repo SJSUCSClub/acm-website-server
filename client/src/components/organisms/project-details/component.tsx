@@ -34,15 +34,20 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
       }
     }
   });
-  const { data: interestedUsers } = useQuery('get', '/v1/projects/{projectID}/interested', {
-    params: {
-      path: {
-        projectID: projectId
+  const { data: interestedUsers } = useQuery(
+    'get',
+    '/v1/projects/{projectID}/interested',
+    {
+      params: {
+        path: {
+          projectID: projectId
+        }
       }
+    },
+    {
+      enabled: admin
     }
-  }, {
-    enabled: admin
-  });
+  );
   const { mutateAsync: uploadFile } = useMutation(
     'post',
     '/v1/projects/{projectID}/files/{filename}'
