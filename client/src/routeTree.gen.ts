@@ -21,8 +21,10 @@ import { Route as AboutImport } from './routes/about';
 import { Route as IndexImport } from './routes/index';
 import { Route as ProjectsIndexImport } from './routes/projects/index';
 import { Route as EventsIndexImport } from './routes/events/index';
+import { Route as CompaniesIndexImport } from './routes/companies/index';
 import { Route as ProjectsProjectIdImport } from './routes/projects/$projectId';
 import { Route as EventsEventIdImport } from './routes/events/$eventId';
+import { Route as CompaniesCompanyIdImport } from './routes/companies/$companyId';
 import { Route as AdminLayoutImport } from './routes/admin/_layout';
 import { Route as AdminLayoutIndexImport } from './routes/admin/_layout/index';
 import { Route as AdminLayoutUsersImport } from './routes/admin/_layout/users';
@@ -101,6 +103,12 @@ const EventsIndexRoute = EventsIndexImport.update({
   getParentRoute: () => rootRoute
 } as any);
 
+const CompaniesIndexRoute = CompaniesIndexImport.update({
+  id: '/companies/',
+  path: '/companies/',
+  getParentRoute: () => rootRoute
+} as any);
+
 const ProjectsProjectIdRoute = ProjectsProjectIdImport.update({
   id: '/projects/$projectId',
   path: '/projects/$projectId',
@@ -110,6 +118,12 @@ const ProjectsProjectIdRoute = ProjectsProjectIdImport.update({
 const EventsEventIdRoute = EventsEventIdImport.update({
   id: '/events/$eventId',
   path: '/events/$eventId',
+  getParentRoute: () => rootRoute
+} as any);
+
+const CompaniesCompanyIdRoute = CompaniesCompanyIdImport.update({
+  id: '/companies/$companyId',
+  path: '/companies/$companyId',
   getParentRoute: () => rootRoute
 } as any);
 
@@ -274,6 +288,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLayoutImport;
       parentRoute: typeof AdminRoute;
     };
+    '/companies/$companyId': {
+      id: '/companies/$companyId';
+      path: '/companies/$companyId';
+      fullPath: '/companies/$companyId';
+      preLoaderRoute: typeof CompaniesCompanyIdImport;
+      parentRoute: typeof rootRoute;
+    };
     '/events/$eventId': {
       id: '/events/$eventId';
       path: '/events/$eventId';
@@ -286,6 +307,13 @@ declare module '@tanstack/react-router' {
       path: '/projects/$projectId';
       fullPath: '/projects/$projectId';
       preLoaderRoute: typeof ProjectsProjectIdImport;
+      parentRoute: typeof rootRoute;
+    };
+    '/companies/': {
+      id: '/companies/';
+      path: '/companies';
+      fullPath: '/companies';
+      preLoaderRoute: typeof CompaniesIndexImport;
       parentRoute: typeof rootRoute;
     };
     '/events/': {
@@ -477,8 +505,10 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute;
   '/profile': typeof ProfileRoute;
   '/admin': typeof AdminLayoutRouteWithChildren;
+  '/companies/$companyId': typeof CompaniesCompanyIdRoute;
   '/events/$eventId': typeof EventsEventIdRoute;
   '/projects/$projectId': typeof ProjectsProjectIdRoute;
+  '/companies': typeof CompaniesIndexRoute;
   '/events': typeof EventsIndexRoute;
   '/projects': typeof ProjectsIndexRoute;
   '/admin/club': typeof AdminLayoutClubRoute;
@@ -507,8 +537,10 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute;
   '/profile': typeof ProfileRoute;
   '/admin': typeof AdminLayoutIndexRoute;
+  '/companies/$companyId': typeof CompaniesCompanyIdRoute;
   '/events/$eventId': typeof EventsEventIdRoute;
   '/projects/$projectId': typeof ProjectsProjectIdRoute;
+  '/companies': typeof CompaniesIndexRoute;
   '/events': typeof EventsIndexRoute;
   '/projects': typeof ProjectsIndexRoute;
   '/admin/club': typeof AdminLayoutClubRoute;
@@ -538,8 +570,10 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute;
   '/admin': typeof AdminRouteWithChildren;
   '/admin/_layout': typeof AdminLayoutRouteWithChildren;
+  '/companies/$companyId': typeof CompaniesCompanyIdRoute;
   '/events/$eventId': typeof EventsEventIdRoute;
   '/projects/$projectId': typeof ProjectsProjectIdRoute;
+  '/companies/': typeof CompaniesIndexRoute;
   '/events/': typeof EventsIndexRoute;
   '/projects/': typeof ProjectsIndexRoute;
   '/admin/_layout/club': typeof AdminLayoutClubRoute;
@@ -570,8 +604,10 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/profile'
     | '/admin'
+    | '/companies/$companyId'
     | '/events/$eventId'
     | '/projects/$projectId'
+    | '/companies'
     | '/events'
     | '/projects'
     | '/admin/club'
@@ -599,8 +635,10 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/profile'
     | '/admin'
+    | '/companies/$companyId'
     | '/events/$eventId'
     | '/projects/$projectId'
+    | '/companies'
     | '/events'
     | '/projects'
     | '/admin/club'
@@ -628,8 +666,10 @@ export interface FileRouteTypes {
     | '/profile'
     | '/admin'
     | '/admin/_layout'
+    | '/companies/$companyId'
     | '/events/$eventId'
     | '/projects/$projectId'
+    | '/companies/'
     | '/events/'
     | '/projects/'
     | '/admin/_layout/club'
@@ -659,8 +699,10 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute;
   ProfileRoute: typeof ProfileRoute;
   AdminRoute: typeof AdminRouteWithChildren;
+  CompaniesCompanyIdRoute: typeof CompaniesCompanyIdRoute;
   EventsEventIdRoute: typeof EventsEventIdRoute;
   ProjectsProjectIdRoute: typeof ProjectsProjectIdRoute;
+  CompaniesIndexRoute: typeof CompaniesIndexRoute;
   EventsIndexRoute: typeof EventsIndexRoute;
   ProjectsIndexRoute: typeof ProjectsIndexRoute;
 }
@@ -673,8 +715,10 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   ProfileRoute: ProfileRoute,
   AdminRoute: AdminRouteWithChildren,
+  CompaniesCompanyIdRoute: CompaniesCompanyIdRoute,
   EventsEventIdRoute: EventsEventIdRoute,
   ProjectsProjectIdRoute: ProjectsProjectIdRoute,
+  CompaniesIndexRoute: CompaniesIndexRoute,
   EventsIndexRoute: EventsIndexRoute,
   ProjectsIndexRoute: ProjectsIndexRoute
 };
@@ -696,8 +740,10 @@ export const routeTree = rootRoute
         "/onboarding",
         "/profile",
         "/admin",
+        "/companies/$companyId",
         "/events/$eventId",
         "/projects/$projectId",
+        "/companies/",
         "/events/",
         "/projects/"
       ]
@@ -748,11 +794,17 @@ export const routeTree = rootRoute
         "/admin/_layout/projects/$projectId/"
       ]
     },
+    "/companies/$companyId": {
+      "filePath": "companies/$companyId.tsx"
+    },
     "/events/$eventId": {
       "filePath": "events/$eventId.tsx"
     },
     "/projects/$projectId": {
       "filePath": "projects/$projectId.tsx"
+    },
+    "/companies/": {
+      "filePath": "companies/index.tsx"
     },
     "/events/": {
       "filePath": "events/index.tsx"

@@ -1,7 +1,7 @@
 import Card, { CardContent, CardHeader, CardTitle } from '@/components/atoms/card';
 import { Badge } from '@/components/ui/badge';
 import { paths } from '@/types/schema.v1';
-import { Link } from '@tanstack/react-router';
+import { Link, useRouterState } from '@tanstack/react-router';
 import { MapPin } from 'lucide-react';
 import React from 'react';
 
@@ -13,6 +13,7 @@ export interface ICompanyCardProps {
 }
 
 const CompanyCard: React.FC<ICompanyCardProps> = ({ company }) => {
+  const state = useRouterState();
   return (
     <Card>
       <CardHeader>
@@ -25,7 +26,14 @@ const CompanyCard: React.FC<ICompanyCardProps> = ({ company }) => {
             />
           </div>
           <div>
-            <Link to="/admin/companies/$companyId" params={{ companyId: company.id.toString() }}>
+            <Link
+              to={
+                state.location.pathname.includes('/admin')
+                  ? '/admin/companies/$companyId'
+                  : '/companies/$companyId'
+              }
+              params={{ companyId: company.id.toString() }}
+            >
               <CardTitle className="text-xl">{company.name}</CardTitle>
             </Link>
             <Badge variant="outline" className="mt-1">
