@@ -107,7 +107,11 @@ export const equipmentTypeIdSchema = z.object({
     },
   }),
 });
+export const officerIDSchema = z.object({
+  officerID: z.string(),
+});
 export const officerSchema = createSelectSchema(officers);
+export const newOfficerSchema = createInsertSchema(officers);
 export const newBlacklistSchema = createInsertSchema(blacklist);
 export const blacklistSchema = createSelectSchema(blacklist);
 export const clubLinkSchema = createSelectSchema(clubLinks);
