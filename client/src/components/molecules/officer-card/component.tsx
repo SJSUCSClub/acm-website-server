@@ -1,10 +1,8 @@
-import Card, { CardContent, CardFooter, CardHeader } from '@/components/atoms/card';
+import Card, { CardContent, CardHeader } from '@/components/atoms/card';
 import React from 'react';
 import LinkedinBtn from '../linkedin-btn';
 import { paths } from '@/types/schema.v1';
-import { EllipsisVertical, Pencil, Trash } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+import { Pencil, Trash } from 'lucide-react';
 import { DeleteAlert } from '@/components/molecules/delete-alert';
 import { Link } from '@tanstack/react-router';
 import Btn from '@/components/atoms/btn';

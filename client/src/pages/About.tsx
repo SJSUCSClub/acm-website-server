@@ -4,57 +4,6 @@ import TextWithImage from '../components/atoms/text-with-image';
 import { MemberBtn } from '../components/molecules/member-btn';
 import Page from '../components/templates/Page';
 
-const developers = [
-  {
-    pfp: '/pfps/anishka.png',
-    name: 'Anishka Chauhan',
-    position: null,
-    linkedin: 'https://www.linkedin.com/in/anishka-chauhan/'
-  },
-  {
-    pfp: '/pfps/dylan.jpg',
-    name: 'Dylan Huang',
-    position: null,
-    linkedin: 'https://www.linkedin.com/in/huang-dylan/'
-  },
-  {
-    pfp: '/pfps/justin.JPG',
-    name: 'Justin Lee',
-    position: null,
-    linkedin: 'https://www.linkedin.com/in/justin-lee-a670531ab'
-  },
-  {
-    pfp: '/pfps/kevin.jpg',
-    name: 'Kevin Tsoi',
-    position: null,
-    linkedin: 'https://www.linkedin.com/in/kevin-tsoi/'
-  },
-  {
-    pfp: '/pfps/kiet.jpg',
-    name: 'Kiet Quan',
-    position: null,
-    linkedin: 'https://www.linkedin.com/in/kiet-quan-software-engineer/'
-  },
-  {
-    pfp: '/pfps/marvin.jpg',
-    name: 'Marvin Zhai',
-    position: null,
-    linkedin: 'https://www.linkedin.com/in/marvin-zhai-739144278/'
-  },
-  {
-    pfp: '/pfps/ronald.jpg',
-    name: 'Ronald Li',
-    position: null,
-    linkedin: 'https://www.linkedin.com/in/ronaldli666/'
-  },
-  {
-    pfp: '/pfps/agamjot.png',
-    name: 'Agamjot Singh',
-    position: null,
-    linkedin: 'www.linkedin.com/in/agamjotsingh05'
-  }
-];
-
 const page = () => {
   return (
     <Page>
@@ -172,25 +121,6 @@ const page = () => {
 
           <div className="flex gap-4 items-center justify-center">
             <MemberBtn variant="primary" />
-          </div>
-        </div>
-
-        <hr className="border-neutral my-10"></hr>
-
-        <div className="devteam">
-          <h1 className="text-4xl text-center font-bold my-8">Development Team</h1>
-          <div className="flex flex-col items-center justify-center gap-16 sm:gap-8 mx-[-10%]">
-            <div className="sm:flex sm:flex-wrap gap-x-10 items-center justify-center">
-              {developers.map((developer, index) => (
-                <OfficerCard
-                  key={index}
-                  name={developer.name}
-                  position={developer?.position || ''}
-                  photo={developer.pfp}
-                  linkedin={developer.linkedin}
-                />
-              ))}
-            </div>
           </div>
         </div>
       </div>

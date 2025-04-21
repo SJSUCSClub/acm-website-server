@@ -6,7 +6,6 @@ import Loading from '@/components/molecules/loading';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useMutation, useQuery } from '@/hooks/useFetch';
-import { paths } from '@/types/schema.v1';
 import { presignedUrlFetch } from '@/utils/presignedUrlFetch';
 import { AnyFieldApi, useForm } from '@tanstack/react-form';
 import { useNavigate } from '@tanstack/react-router';
@@ -31,7 +30,7 @@ const OfficerForm: React.FC<IOfficerFormProps> = ({ officerId }) => {
   const {
     data: officerData,
     isLoading: isLoadingOfficer,
-    error: errorOfficer,
+    error: errorOfficer
   } = useQuery(
     'get',
     '/v1/officers/{officerID}',
