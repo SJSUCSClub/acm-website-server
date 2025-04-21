@@ -231,8 +231,10 @@ create table if not exists officers(
    position text not null,
    linkedin text,
    photo text not null default 'default/image-placeholder.svg',
+   order_index INT NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(photo) REFERENCES files(key) on update cascade
+   FOREIGN KEY(photo) REFERENCES files(key) on update cascade,
+   constraint order_index_unique unique (order_index) deferrable initially deferred
 );
 
 create table if not exists sponsors(

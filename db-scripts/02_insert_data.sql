@@ -334,15 +334,15 @@ INSERT INTO landing_questions(question, answer) VALUES
 ($$Is there a membership fee for the club?$$, $$Yes. It's $20 for 1 semester or $30 for 2 semesters$$),
 ($$What do I get for a paid membership?$$, $$Paid members are invited to attend exclusive networking sessions, tech talks, and company events. We collaborate with many industry leaders, including Google, Tesla, and Nvidia, so don''t miss out!$$);
 
-INSERT INTO officers(name, position, linkedin, photo) VALUES
-('Karthik Manishankar', 'President', 'https://www.linkedin.com/in/karthikmanishankar/', 'officers/1/pfp.png'),
-('Shirley Li', 'Vice President', 'https://www.linkedin.com/in/shirley-shuhua-li', 'officers/2/pfp.png'),
-('Angela Huang', 'Secretary', 'https://www.linkedin.com/in/angela-huang-725a25169/', 'officers/3/pfp.png'),
-('Bineet Anand', 'Social Media Manager', 'https://www.linkedin.com/in/bineet-anand/', 'officers/4/pfp.png'),
-('Anne Mai', 'Event Chair', 'https://www.linkedin.com/in/annepmai/', 'officers/5/pfp.png'),
-('Timothy Kim', 'Treasurer', 'https://www.linkedin.com/in/timothy-kim712/', 'officers/6/pfp.png'),
-('Trique Nguyen', 'Dev Team Officer', 'https://www.linkedin.com/in/trique-nguyen/', 'officers/7/pfp.png'),
-('Galit Bolotin', 'Event Chair', 'https://www.linkedin.com/in/gbolotin/', 'officers/8/pfp.png');
+INSERT INTO officers(name, position, linkedin, photo, order_index) VALUES
+('Karthik Manishankar', 'President', 'https://www.linkedin.com/in/karthikmanishankar/', 'officers/1/pfp.png', 1),
+('Shirley Li', 'Vice President', 'https://www.linkedin.com/in/shirley-shuhua-li', 'officers/2/pfp.png', 2),
+('Angela Huang', 'Secretary', 'https://www.linkedin.com/in/angela-huang-725a25169/', 'officers/3/pfp.png', 3),
+('Bineet Anand', 'Social Media Manager', 'https://www.linkedin.com/in/bineet-anand/', 'officers/4/pfp.png', 4),
+('Anne Mai', 'Event Chair', 'https://www.linkedin.com/in/annepmai/', 'officers/5/pfp.png', 5),
+('Timothy Kim', 'Treasurer', 'https://www.linkedin.com/in/timothy-kim712/', 'officers/6/pfp.png', 6),
+('Trique Nguyen', 'Dev Team Officer', 'https://www.linkedin.com/in/trique-nguyen/', 'officers/7/pfp.png', 7),
+('Galit Bolotin', 'Event Chair', 'https://www.linkedin.com/in/gbolotin/', 'officers/8/pfp.png', 8);
 
 
 

@@ -198,6 +198,7 @@ export const officers = pgTable('officers', {
   position: text('position').notNull(),
   linkedin: text('linkedin'),
   photo: text('photo').references(() => files.key, { onUpdate: 'cascade' }).notNull().default('default/image-placeholder.svg'),
+  order_index: integer('order_index').notNull(),
 });
 
 export const sessions = pgTable('session', {
@@ -212,7 +213,7 @@ export const sessions = pgTable('session', {
 });
 
 export const sponsors = pgTable('sponsors', {
-  name: varchar('name',{ length: 100 }).primaryKey(),
+  name: varchar('name', { length: 100 }).primaryKey(),
   logoKey: text('logo_key').notNull(),
 });
 
