@@ -1,4 +1,4 @@
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import {
   educationLevelEnum,
   projects,
@@ -27,9 +27,9 @@ import {
   eventsEnum,
   targetAudienceEnum,
   userRoleEnum,
-} from '@/db/schema';
+} from "@/db/schema";
 
-import { z } from 'zod';
+import { z } from "zod";
 
 export const companySchema = createSelectSchema(companies);
 export const newCompanySchema = createInsertSchema(companies);
@@ -46,7 +46,7 @@ export const newEventSchema = createInsertSchema(events).extend({
   urls: z.array(z.string()).optional(),
 });
 export const csFieldsEnumSchema = z.enum(csFieldsEnum.enumValues);
-export const timestampEnumSchema = z.enum(['upcoming', 'today', 'past', 'all']);
+export const timestampEnumSchema = z.enum(["upcoming", "today", "past", "all"]);
 export const eventTypesEnumSchema = z.enum(eventsEnum.enumValues);
 export const targetAudienceEnumSchema = z.enum(targetAudienceEnum.enumValues);
 export const userSchema = createSelectSchema(users).extend({
@@ -102,8 +102,8 @@ export const sponsorSchema = createSelectSchema(sponsors);
 export const equipmentTypeIdSchema = z.object({
   equipmentTypeId: z.string().openapi({
     param: {
-      name: 'equipmentTypeId',
-      in: 'path',
+      name: "equipmentTypeId",
+      in: "path",
     },
   }),
 });
@@ -111,7 +111,17 @@ export const officerIDSchema = z.object({
   officerID: z.string(),
 });
 export const officerSchema = createSelectSchema(officers);
-export const newOfficerSchema = createInsertSchema(officers);
+export const newOfficerSchema = createInsertSchema(officers).extend({
+  order_index: z.number().optional(),
+});
+export const officerReorderSchema = z.object({
+  reorder: z.array(
+    z.object({
+      id: z.number(),
+      order_index: z.number(),
+    }),
+  ),
+});
 export const newBlacklistSchema = createInsertSchema(blacklist);
 export const blacklistSchema = createSelectSchema(blacklist);
 export const clubLinkSchema = createSelectSchema(clubLinks);
@@ -135,8 +145,8 @@ export const updatePaymentLinkSchema = z.object({
 export const paymentIdSchema = z.object({
   paymentId: z.string().openapi({
     param: {
-      name: 'paymentId',
-      in: 'path',
+      name: "paymentId",
+      in: "path",
     },
   }),
 });
@@ -158,7 +168,7 @@ export const userFilterSchema = z.object({
   per_page: z.string().optional(),
 });
 
-export const searchTypeEnum = z.enum(['event', 'project', 'company']);
+export const searchTypeEnum = z.enum(["event", "project", "company"]);
 export const searchResultSchema = z.object({
   id: z.number(),
   name: z.string(),

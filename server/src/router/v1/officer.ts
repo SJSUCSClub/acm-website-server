@@ -10,6 +10,7 @@ import {
   errorSchema,
   newOfficerSchema,
   officerIDSchema,
+  officerReorderSchema,
   officerSchema,
 } from "@/util/zod";
 import {
@@ -22,12 +23,64 @@ import {
   forbiddenRequest,
   unauthorizedRequest,
 } from "@/middlewares/auth-middleware";
-import { eq, sql } from "drizzle-orm";
+import { count, eq, sql } from "drizzle-orm";
 
 const officerRouter = new OpenAPIHono<Context>();
 
 const generatePhotoKey = (id: string | number): string =>
   `officers/${id}/photo`;
+
+type OfficerReorder = z.infer<typeof officerReorderSchema>;
+officerRouter.openapi(
+  createRoute({
+    method: "put",
+    path: "/reorder",
+    tags: ["officers"],
+    summary: "Reorder officers",
+    middleware: [authMiddleWare("admin")],
+    request: {
+      body: {
+        content: {
+          "application/json": {
+            schema: officerReorderSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: "Successful response",
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          "application/json": {
+            schema: errorSchema,
+          },
+        },
+        description: "Failed to create officer",
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const body: OfficerReorder = await c.req.json();
+    try {
+      await db.transaction(async (tx) => {
+        for (const officer of body.reorder) {
+          await tx
+            .update(officers)
+            .set({ order_index: officer.order_index })
+            .where(eq(officers.id, officer.id));
+        }
+      });
+
+      return c.text("", HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  },
+);
 
 officerRouter.openapi(
   createRoute({
@@ -49,7 +102,10 @@ officerRouter.openapi(
     },
   }),
   async (c) => {
-    const foundOfficers: Officer[] = await db.select().from(officers);
+    const foundOfficers: Officer[] = await db
+      .select()
+      .from(officers)
+      .orderBy(officers.order_index);
     const officersWithUrls = foundOfficers.map((officer) => ({
       ...officer,
       photo: generateObjectUrl(officer.photo),
@@ -164,9 +220,19 @@ officerRouter.openapi(
     },
   }),
   async (c) => {
-    const body = c.req.valid("json");
+    const body: z.infer<typeof newOfficerSchema> = c.req.valid("json");
     try {
-      const newOfficer = await db.insert(officers).values(body).returning();
+      const officerCount = await db.select({ count: count() }).from(officers);
+      if (officerCount.length === 0) {
+        throw new Error("Query error");
+      }
+      const newOfficer = await db
+        .insert(officers)
+        .values({
+          ...body,
+          order_index: officerCount[0].count + 1,
+        })
+        .returning();
       return c.json({ officer: newOfficer[0] }, HttpStatusCodes.OK);
     } catch (error) {
       return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
@@ -313,7 +379,6 @@ officerRouter.openapi(
   async (c) => {
     const { officerID } = c.req.valid("param");
     const key = generatePhotoKey(officerID);
-    console.log('************', key);
     try {
       await db
         .insert(files)
