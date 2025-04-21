@@ -107,7 +107,21 @@ export const equipmentTypeIdSchema = z.object({
     },
   }),
 });
+export const officerIDSchema = z.object({
+  officerID: z.string(),
+});
 export const officerSchema = createSelectSchema(officers);
+export const newOfficerSchema = createInsertSchema(officers).extend({
+  order_index: z.number().optional(),
+});
+export const officerReorderSchema = z.object({
+  reorder: z.array(
+    z.object({
+      id: z.number(),
+      order_index: z.number(),
+    }),
+  ),
+});
 export const newBlacklistSchema = createInsertSchema(blacklist);
 export const blacklistSchema = createSelectSchema(blacklist);
 export const clubLinkSchema = createSelectSchema(clubLinks);

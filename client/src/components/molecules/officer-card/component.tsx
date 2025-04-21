@@ -1,32 +1,79 @@
-import Card from '../../atoms/card';
+import Card, { CardContent, CardHeader } from '@/components/atoms/card';
 import React from 'react';
 import LinkedinBtn from '../linkedin-btn';
+import { paths } from '@/types/schema.v1';
+import { Pencil, Trash } from 'lucide-react';
+import { DeleteAlert } from '@/components/molecules/delete-alert';
+import { Link } from '@tanstack/react-router';
+import Btn from '@/components/atoms/btn';
+import { useMutation } from '@/hooks/useFetch';
+import { toast } from 'sonner';
 
+type Officer =
+  paths['/v1/officers']['get']['responses']['200']['content']['application/json']['officers'][number];
 export interface IOfficerCardProps {
-  photo: string;
-  name: string;
-  position: string;
-  linkedin: string;
+  officer: Officer;
+  admin?: boolean;
+  onOfficerDelete?: () => void;
 }
 
-export const OfficerCard: React.FC<IOfficerCardProps> = ({ photo, name, position, linkedin }) => (
-  <Card className="transition duration-100 ease-in-out hover:shadow-2xl justify-center items-center w-[19rem] h-[rem] border-[2px] gap-2px py-2 text-[16px] sm:text-sm rounded-xl shadow-lg mb-10">
-    <img
-      src={photo}
-      alt="Officers"
-      width={700}
-      height={1440}
-      className="object-cover items-center justify-center h-60 w-60 m-7 rounded-2xl drop-shadow-lg"
-    />
-    {position && (
-      <h1 className="font-semibold gap-2 px-7 ">
-        <span className="text-xs text-neutral">{position}</span>{' '}
-      </h1>
-    )}
-    <h1 className="font-bold text-lg px-7">{name}</h1>
-
-    <div className="flex justify-start items-center w-full px-2 py-3">
-      <LinkedinBtn href={linkedin} />
-    </div>
-  </Card>
-);
+export const OfficerCard: React.FC<IOfficerCardProps> = ({
+  officer,
+  admin = false,
+  onOfficerDelete = () => {}
+}) => {
+  const { mutateAsync: deleteOfficer } = useMutation('delete', '/v1/officers/{officerID}');
+  const handleOfficerDelete = async () => {
+    await deleteOfficer(
+      {
+        params: {
+          path: {
+            officerID: officer.id.toString()
+          }
+        }
+      },
+      {
+        onSuccess() {
+          toast.success('Officer deleted successfully');
+        },
+        onError() {
+          toast.error('Failed to delete officer');
+        }
+      }
+    );
+    onOfficerDelete();
+  };
+  return (
+    <Card>
+      <CardHeader>
+        <div className="relative w-full h-60 bg-muted m-auto rounded-lg overflow-hidden">
+          <img src={officer.photo || ''} alt="Photo" className="object-cover w-full h-full" />
+          {admin && (
+            <div className="flex flex-col gap-2 absolute top-2 right-2">
+              <Link
+                to={'/admin/officers/$officerId/edit'}
+                params={{ officerId: officer.id.toString() }}
+              >
+                <Btn size="icon" className="rounded-full bg-blue-500">
+                  <Pencil />
+                </Btn>
+              </Link>
+              <DeleteAlert onDelete={handleOfficerDelete}>
+                <Btn size="icon" className="rounded-full bg-blue-500">
+                  <Trash />
+                </Btn>
+              </DeleteAlert>
+            </div>
+          )}
+        </div>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm font-semibold text-neutral">{officer.position}</p>{' '}
+        <h1 className="font-bold text-lg">{officer.name}</h1>
+        <div className="flex justify-start items-center w-full">
+          {officer.linkedin && <LinkedinBtn href={officer.linkedin} />}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
