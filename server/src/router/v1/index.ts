@@ -15,6 +15,8 @@ import blacklistRouter from '@/router/v1/blacklist';
 import clubRouter from '@/router/v1/club';
 import paymentRouter from '@/router/v1/payments';
 import searchRouter from './search';
+import emailRouter from '@/router/v1/email';
+
 const v1App = new OpenAPIHono<Context>();
 
 v1App.route('/auth', authRouter);
@@ -31,5 +33,6 @@ v1App.route('/blacklist', blacklistRouter);
 v1App.route('/club', clubRouter);
 v1App.route('/payments', paymentRouter);
 v1App.route('/search', searchRouter);
+v1App.route('/emails', emailRouter);
 
 export default v1App;

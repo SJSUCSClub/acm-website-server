@@ -177,3 +177,23 @@ export const searchResultSchema = z.object({
   type: searchTypeEnum,
   similarity: z.number(),
 });
+export const templateMetadataSchema = z.object({
+  name: z.string().optional(),
+  createdTimestamp: z.date().optional(),
+});
+export const templateSchema = z.object({
+  name: z.string(),
+  html: z.string().optional(),
+  subject: z.string().optional(),
+  text: z.string().optional(),
+});
+export const templateNameSchema = z.object({
+  templateName: z
+    .string()
+    .openapi({
+      param: {
+        name: 'templateName',
+        in: 'path',
+      },
+    }),
+});

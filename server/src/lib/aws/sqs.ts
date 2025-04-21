@@ -26,18 +26,19 @@ const getSQSClient = async (): Promise<SQSClient | null> => {
     return sqsClient;
 };
 
-// Temporary interface for email notification messages
 /**
  * Interface for email notification messages
  */
 export interface EmailNotification {
     sender: string;
-    recipient: string;
-    subject: string;
-    body: string; // TODO: Add unsubscribe button to body.
+    recipient: string[];
+    subject?: string;
+    body?: string;
     template_name?: string;
-    // template_data?: Record<string, any>;
-    application?: string;
+    template_data?: {
+        [key: string]: string | number | boolean | Array<Record<string, string | number | boolean>> | Record<string, string | number | boolean>;
+    }
+    application: string;   // application identifier e.g. 'acm-website', 'course-scheduler', etc...
 }
 
 /**
