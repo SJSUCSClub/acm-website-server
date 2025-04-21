@@ -2,7 +2,7 @@ import Card, { CardContent, CardFooter, CardHeader } from '@/components/atoms/ca
 import React from 'react';
 import LinkedinBtn from '../linkedin-btn';
 import { paths } from '@/types/schema.v1';
-import { EllipsisVertical } from 'lucide-react';
+import { EllipsisVertical, Pencil, Trash } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { DeleteAlert } from '@/components/molecules/delete-alert';
@@ -51,29 +51,20 @@ export const OfficerCard: React.FC<IOfficerCardProps> = ({
         <div className="relative w-full h-60 bg-muted m-auto rounded-lg overflow-hidden">
           <img src={officer.photo || ''} alt="Photo" className="object-cover w-full h-full" />
           {admin && (
-            <div className="absolute top-2 right-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Btn
-                    variant="secondary"
-                    size="icon"
-                    className="rounded-full bg-white/80 backdrop-blur-lg hover:bg-white/90"
-                  >
-                    <EllipsisVertical />
-                  </Btn>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <Link
-                    to="/admin/officers/$officerId/edit"
-                    params={{ officerId: officer.id.toString() }}
-                  >
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                  </Link>
-                  <DropdownMenuItem asChild>
-                    <DeleteAlert onDelete={handleOfficerDelete}>Delete</DeleteAlert>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+            <div className="flex flex-col gap-2 absolute top-2 right-2">
+              <Link
+                to={'/admin/officers/$officerId/edit'}
+                params={{ officerId: officer.id.toString() }}
+              >
+                <Btn size="icon" className="rounded-full bg-blue-500">
+                  <Pencil />
+                </Btn>
+              </Link>
+              <DeleteAlert onDelete={handleOfficerDelete}>
+                <Btn size="icon" className="rounded-full bg-blue-500">
+                  <Trash />
+                </Btn>
+              </DeleteAlert>
             </div>
           )}
         </div>
