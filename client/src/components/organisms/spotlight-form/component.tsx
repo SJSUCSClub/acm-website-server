@@ -4,7 +4,6 @@ import EventCombobox from '@/components/molecules/event-combobox';
 import FetchError from '@/components/molecules/fetch-error';
 import FileUpload from '@/components/molecules/file-upload';
 import Loading from '@/components/molecules/loading';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useMutation, useQuery } from '@/hooks/useFetch';
