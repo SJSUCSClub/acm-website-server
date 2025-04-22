@@ -1,10 +1,11 @@
 import Btn from '@/components/atoms/btn';
 import FieldErrorMessage from '@/components/atoms/field-error-message';
+import EventCombobox from '@/components/molecules/event-combobox';
 import FetchError from '@/components/molecules/fetch-error';
 import FileUpload from '@/components/molecules/file-upload';
 import Loading from '@/components/molecules/loading';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { useMutation, useQuery } from '@/hooks/useFetch';
 import { presignedUrlFetch } from '@/utils/presignedUrlFetch';
 import { AnyFieldApi, useForm } from '@tanstack/react-form';
@@ -14,133 +15,134 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 const formSchema = z.object({
-  name: z.string().min(1, { message: 'Name is required' }),
-  position: z.string().min(1, { message: 'Position is required' }),
-  linkedin: z.string().url().or(z.literal('')),
-  photo: z.instanceof(File).or(z.string()).nullable()
+  description: z.string().min(1, { message: 'Description is required' }),
+  eventId: z.number().int().positive(),
+  image: z.instanceof(File).or(z.string()).nullable()
 });
 type FormValues = z.infer<typeof formSchema>;
-export interface IOfficerFormProps {
-  officerId?: string;
+export interface ISpotlightFormProps {
+  spotlightId?: string;
 }
 
-const OfficerForm: React.FC<IOfficerFormProps> = ({ officerId }) => {
+const SpotlightForm: React.FC<ISpotlightFormProps> = ({ spotlightId }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const {
-    data: officerData,
-    isLoading: isLoadingOfficer,
-    error: errorOfficer
+    data: spotlightData,
+    isLoading: isLoadingSpotlight,
+    error: errorSpotlight
   } = useQuery(
     'get',
-    '/v1/officers/{officerID}',
+    '/v1/club/spotlights/{spotlightID}',
     {
       params: {
         path: {
-          officerID: officerId || ''
+          spotlightID: spotlightId || ''
         }
       }
     },
     {
-      enabled: !!officerId
+      enabled: !!spotlightId
     }
   );
-  const { mutateAsync: updateOfficer } = useMutation('put', '/v1/officers/{officerID}');
-  const { mutateAsync: createOfficer } = useMutation('post', '/v1/officers');
-  const { mutateAsync: createPhoto } = useMutation('post', '/v1/officers/{officerID}/photo');
-  const { mutate: deletePhoto } = useMutation('delete', '/v1/officers/{officerID}/photo');
+  const { mutateAsync: updateSpotlight } = useMutation('put', '/v1/club/spotlights/{spotlightID}');
+  const { mutateAsync: createSpotlight } = useMutation('post', '/v1/club/spotlights');
+  const { mutateAsync: createImage } = useMutation(
+    'post',
+    '/v1/club/spotlights/{spotlightID}/image'
+  );
+  const { mutate: deleteImage } = useMutation('delete', '/v1/club/spotlights/{spotlightID}/image');
 
   const form = useForm({
     defaultValues: {
-      name: officerData?.officer.name || '',
-      position: officerData?.officer.position || '',
-      linkedin: officerData?.officer.linkedin || '',
-      photo: officerData?.officer.photo || null
+      description: spotlightData?.spotlight.description || '',
+      eventId: spotlightData?.spotlight.eventId || null,
+      image: spotlightData?.spotlight.image || null
     } as FormValues,
     validators: {
       onSubmit: formSchema
     },
     onSubmit: async ({ value }) => {
-      if (!officerId) {
+      if (!spotlightId) {
         try {
-          const data = await createOfficer({
+          const data = await createSpotlight({
             body: {
               ...value,
-              photo: undefined
+              imageKey: undefined
             }
           });
 
-          const officerId = data.officer.id.toString();
-          if (typeof value.photo !== 'string') {
-            await handlePhotoUpload(officerId, value.photo);
+          const spotlightId = data.spotlight.id.toString();
+          if (typeof value.image !== 'string') {
+            await handleImageUpload(spotlightId, value.image);
           }
-          toast.success(`Officer created successfully`);
+          toast.success('Spotlight created successfully');
           navigate({
-            to: '/admin/officers'
+            to: '/admin/club'
           });
         } catch (e) {
           console.log(e);
-          toast.error('Failed to create officer');
+          toast.error('Failed to create spotlight');
         }
       } else {
         try {
-          await updateOfficer({
+          await updateSpotlight({
             params: {
               path: {
-                officerID: officerId
+                spotlightID: spotlightId
               }
             },
             body: {
               ...value,
-              photo: undefined
+              imageKey: undefined
             }
           });
-          if (typeof value.photo !== 'string') {
-            await handlePhotoUpload(officerId, value.photo);
+          if (typeof value.image !== 'string') {
+            await handleImageUpload(spotlightId, value.image);
           }
-          toast.success(`Officer updated successfully`);
+          toast.success('Spotlight updated successfully');
           navigate({
-            to: '/admin/officers'
+            to: '/admin/club'
           });
         } catch (e) {
           console.log(e);
-          toast.error('Failed to update officer');
+          toast.error('Failed to update spotlight');
         }
       }
     }
   });
 
-  const handlePhotoUpload = async (officerId: string, photo: File | null) => {
-    if (photo) {
+  const handleImageUpload = async (spotlightId: string, image: File | null) => {
+    if (image) {
       try {
-        const data = await createPhoto({
+        const data = await createImage({
           params: {
             path: {
-              officerID: officerId
+              spotlightID: spotlightId
             }
           }
         });
-        await presignedUrlFetch(data.presigned_url, photo);
-        toast.success('Photo uploaded successfully');
+        await presignedUrlFetch(data.presigned_url, image);
+        toast.success('Image uploaded successfully');
       } catch (e) {
         console.log(e);
-        toast.error('Failed to upload photo');
+        toast.error('Failed to upload Image');
       }
     } else {
-      deletePhoto(
+      deleteImage(
         {
           params: {
             path: {
-              officerID: officerId
+              spotlightID: spotlightId
             }
           }
         },
         {
           onSuccess() {
-            toast.success('Photo deleted successfully');
+            toast.success('Image deleted successfully');
           },
           onError() {
-            toast.error('Failed to delete photo');
+            toast.error('Failed to delete image');
           }
         }
       );
@@ -154,11 +156,13 @@ const OfficerForm: React.FC<IOfficerFormProps> = ({ officerId }) => {
 
   return (
     <div>
-      <h1 className="text-4xl font-bold mb-5">{officerId ? 'Edit Officer' : 'Create Officer'}</h1>
-      <Loading isLoading={isLoadingOfficer}>
-        <FetchError isError={!!errorOfficer}>
+      <h1 className="text-4xl font-bold mb-5">
+        {spotlightId ? 'Edit Spotlight' : 'Create Spotlight'}
+      </h1>
+      <Loading isLoading={isLoadingSpotlight}>
+        <FetchError isError={!!errorSpotlight}>
           <form
-            className="grid grid-cols-4 gap-8"
+            className="grid grid-cols-1 lg:grid-cols-3 gap-8"
             onSubmit={(e) => {
               e.preventDefault();
               form.handleSubmit();
@@ -166,10 +170,10 @@ const OfficerForm: React.FC<IOfficerFormProps> = ({ officerId }) => {
           >
             <div className="space-y-8">
               <form.Field
-                name="photo"
+                name="image"
                 children={(field) => (
                   <div>
-                    <div className="relative h-60 w-60 rounded-lg overflow-hidden m-auto">
+                    <div className="relative w-full aspect-[3/2] rounded-lg overflow-hidden m-auto">
                       {field.state.value ? (
                         <img
                           src={
@@ -204,55 +208,35 @@ const OfficerForm: React.FC<IOfficerFormProps> = ({ officerId }) => {
                 )}
               />
             </div>
-            <div className="lg:col-span-3 space-y-5">
+            <div className="lg:col-span-2 space-y-5">
               <form.Field
-                name="name"
+                name="eventId"
                 children={(field) => (
                   <div>
                     <Label htmlFor={field.name} className="text-lg">
-                      Name
+                      Event
                     </Label>
-                    <Input
-                      name={field.name}
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      type="text"
-                      className="w-full"
-                    />
+                    <div>
+                      <EventCombobox
+                        selectedId={field.state.value}
+                        onSelectChange={field.handleChange}
+                      />
+                    </div>
                     <FieldErrorMessage field={field} />
                   </div>
                 )}
               />
               <form.Field
-                name="position"
+                name="description"
                 children={(field) => (
                   <div>
                     <Label htmlFor={field.name} className="text-lg">
-                      Position
+                      Description
                     </Label>
-                    <Input
+                    <Textarea
                       name={field.name}
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      type="text"
-                      className="w-full"
-                    />
-                    <FieldErrorMessage field={field} />
-                  </div>
-                )}
-              />
-              <form.Field
-                name="linkedin"
-                children={(field) => (
-                  <div>
-                    <Label htmlFor={field.name} className="text-lg">
-                      Linkedin
-                    </Label>
-                    <Input
-                      name={field.name}
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      type="text"
                       className="w-full"
                     />
                     <FieldErrorMessage field={field} />
@@ -260,7 +244,7 @@ const OfficerForm: React.FC<IOfficerFormProps> = ({ officerId }) => {
                 )}
               />
               <Btn type="submit" variant="outline">
-                {officerId ? 'Update' : 'Create'}
+                {spotlightId ? 'Update' : 'Create'}
               </Btn>
             </div>
           </form>
@@ -270,4 +254,4 @@ const OfficerForm: React.FC<IOfficerFormProps> = ({ officerId }) => {
   );
 };
 
-export { OfficerForm };
+export { SpotlightForm };

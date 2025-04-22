@@ -1,4 +1,3 @@
-import Spinner from '@/components/atoms/spinner';
 import { useMutation, useQuery } from '@/hooks/useFetch';
 import React, { useEffect, useState } from 'react';
 import PaymentLink from '@/components/molecules/payment-link';
@@ -15,6 +14,8 @@ import Btn from '@/components/atoms/btn';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from '@tanstack/react-form';
+import FetchError from '@/components/molecules/fetch-error';
+import Loading from '@/components/molecules/loading';
 
 interface ICreatePaymentLinksProps {
   handleCreate: (payment: PaymentLink) => void;
@@ -72,25 +73,20 @@ const PaymentLinks = () => {
   };
 
   return (
-    <div>
-      {isLoading ? (
-        <Spinner />
-      ) : !data || error ? (
-        <p>Error loading payment links</p>
-      ) : payments.length === 0 ? (
-        <p className="text-center">No payment links</p>
-      ) : (
-        <div className="space-y-2">
-          <div className="flex justify-end">
-            <CreatePaymentLink handleCreate={handleCreate} />
-          </div>
+    <div className="space-y-2">
+      <h3 className="font-bold text-lg">Payment Links</h3>
+      <div className="flex justify-end">
+        <CreatePaymentLink handleCreate={handleCreate} />
+      </div>
+      <Loading isLoading={isLoading}>
+        <FetchError isError={!!error || !data}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {payments.map((payment) => (
               <PaymentLink payment={payment} handleDelete={handleDelete} />
             ))}
           </div>
-        </div>
-      )}
+        </FetchError>
+      </Loading>
     </div>
   );
 };

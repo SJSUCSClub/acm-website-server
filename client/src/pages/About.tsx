@@ -1,5 +1,4 @@
 import React from 'react';
-import OfficerCard from '../components/molecules/officer-card';
 import TextWithImage from '../components/atoms/text-with-image';
 import { MemberBtn } from '../components/molecules/member-btn';
 import Page from '../components/templates/Page';

@@ -152,11 +152,13 @@ export const paymentIdSchema = z.object({
 });
 export const spotlightSchema = z.object({
   id: z.number(),
+  eventId: z.number(),
   type: z.enum(eventsEnum.enumValues),
   image: z.string(),
   name: z.string(),
   description: z.string(),
 });
+export const newSpotlightSchema = createInsertSchema(landingSpotlights);
 
 export const userFilterSchema = z.object({
   name: z.string().optional(),

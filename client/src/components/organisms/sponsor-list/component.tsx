@@ -6,7 +6,8 @@ import React from 'react';
 const SponsorList = () => {
   const { data, error, isLoading } = useQuery('get', '/v1/sponsors');
   return (
-    <div>
+    <div className="space-y-2">
+      <h3 className="font-bold text-lg">Sponsors</h3>
       {isLoading ? (
         <Spinner />
       ) : error ? (

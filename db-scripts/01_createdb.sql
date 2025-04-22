@@ -255,7 +255,8 @@ create table if not exists club_links(
 create table if not exists landing_spotlights(
   id serial,
   event_id integer not null,
-  image_key text not null,
+  image_key text not null default 'default/image-placeholder.svg',
+  description text not null,
   primary key(id),
   foreign key(event_id) references events(id) on update cascade,
   foreign key(image_key) references files(key) on update cascade
