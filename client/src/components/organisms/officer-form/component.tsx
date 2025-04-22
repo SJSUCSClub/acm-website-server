@@ -154,7 +154,7 @@ const OfficerForm: React.FC<IOfficerFormProps> = ({ officerId }) => {
 
   return (
     <div>
-      <h1 className="text-4xl font-bold mb-5">Create Officer</h1>
+      <h1 className="text-4xl font-bold mb-5">{officerId ? 'Edit Officer' : 'Create Officer'}</h1>
       <Loading isLoading={isLoadingOfficer}>
         <FetchError isError={!!errorOfficer}>
           <form
@@ -260,7 +260,7 @@ const OfficerForm: React.FC<IOfficerFormProps> = ({ officerId }) => {
                 )}
               />
               <Btn type="submit" variant="outline">
-                Submit
+                {officerId ? 'Update' : 'Create'}
               </Btn>
             </div>
           </form>

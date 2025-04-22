@@ -6,7 +6,8 @@ import ClubLink from '@/components/molecules/club-link';
 const ClubLinks = () => {
   const { data, error, isLoading } = useQuery('get', '/v1/club/links');
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
+      <h3 className="font-bold text-lg">Club Links</h3>
       {isLoading ? (
         <Spinner />
       ) : !data || error ? (
