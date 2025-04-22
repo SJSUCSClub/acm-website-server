@@ -5955,6 +5955,7 @@ export interface paths {
                         "application/json": {
                             spotlights: {
                                 id: number;
+                                eventId: number;
                                 /** @enum {string} */
                                 type: "Workshop" | "Seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
                                 image: string;
@@ -5978,8 +5979,10 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
+                        id?: number;
                         eventId: number;
-                        imageKey: string;
+                        imageKey?: string;
+                        description: string;
                     };
                 };
             };
@@ -5995,6 +5998,7 @@ export interface paths {
                                 id: number;
                                 eventId: number;
                                 imageKey: string;
+                                description: string;
                             };
                         };
                     };
@@ -6021,8 +6025,8 @@ export interface paths {
                         };
                     };
                 };
-                /** @description Conflict */
-                409: {
+                /** @description Internal server error */
+                500: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -6047,7 +6051,61 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Get a spotlight by ID */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    spotlightID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            spotlight: {
+                                id: number;
+                                eventId: number;
+                                /** @enum {string} */
+                                type: "Workshop" | "Seminar" | "Hackathon" | "Conference" | "Meetup" | "Tech Talk" | "Other";
+                                image: string;
+                                name: string;
+                                description: string;
+                            };
+                        };
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
         /** Update club spotlight */
         put: {
             parameters: {
@@ -6061,8 +6119,10 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
+                        id?: number;
                         eventId: number;
-                        imageKey: string;
+                        imageKey?: string;
+                        description: string;
                     };
                 };
             };
@@ -6096,8 +6156,19 @@ export interface paths {
                         };
                     };
                 };
-                /** @description Conflict */
-                409: {
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Internal server error */
+                500: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -6110,7 +6181,186 @@ export interface paths {
             };
         };
         post?: never;
-        delete?: never;
+        /** Delete club spotlight */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    spotlightID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description No content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/club/spotlights/{spotlightID}/image": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Upload club spotlight image */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    spotlightID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            presigned_url: string;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        /** Delete club spotlight image */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    spotlightID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;
