@@ -8,13 +8,15 @@ import { useQuery } from '@/hooks/useFetch';
 import Faq from '@/components/organisms/faq';
 import SponsorList from '@/components/organisms/sponsor-list';
 import SpotlightList from '@/components/organisms/spotlight-list';
+import OfficerList from '@/components/organisms/officer-list';
+import { Separator } from '@/components/ui/separator';
 
 const Hero = () => {
   const { data: links } = useQuery('get', '/v1/club/links');
 
   return (
     <Page>
-      <div className="text-center flex-col items-center justify-between">
+      <div className="text-center flex-col items-center justify-between space-y-10">
         <div className="min-h-screen">
           <div className="flex place-content-center md:scale-100">
             <ACMCSHero />
@@ -84,12 +86,16 @@ const Hero = () => {
           />
         </div>
 
-        <div className="border-y-2 space-y-5 py-12">
+        <Separator />
+
+        <div className="space-y-5">
           <h1 className="text-4xl font-bold">Sponsors</h1>
           <SponsorList />
         </div>
 
-        <div className="border-y-2 place-items-center py-5">
+        <Separator />
+
+        <div className="space-y-2 place-items-center">
           <h1 className="!mt-10 text-4xl font-bold">Teams</h1>
           <h2 className="text-1xl font-bold mb-2 pt-3 text-gray-400">
             We have a place for everyone.
@@ -130,18 +136,27 @@ const Hero = () => {
           </div>
         </div>
 
-        <div className="p-50 pt-16 border-y-2 pb-5">
+        <Separator />
+
+        <div className="space-y-2">
           <h1 className="text-4xl font-bold">Spotlights</h1>
           <h2 className="text-1xl font-bold pb-10 pt-3 text-gray-400">Our past events.</h2>
           <SpotlightList />
         </div>
 
-        <div className="flex justify-center items-center py-12 border-y-2">
+        <Separator />
+
+        <OfficerList />
+
+        <Separator />
+
+        <div className="flex justify-center items-center">
           <GetInvolvedBtn />
         </div>
-        <div className="mt-5">
-          <Faq />
-        </div>
+
+        <Separator />
+
+        <Faq />
       </div>
     </Page>
   );
