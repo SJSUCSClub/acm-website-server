@@ -6,12 +6,13 @@ import UsersTable from '@/components/molecules/users-table';
 import { Badge } from '@/components/ui/badge';
 import { useMutation, useQuery } from '@/hooks/useFetch';
 import { getProjectStatusColor } from '@/utils/colors';
-import { Link } from '@tanstack/react-router';
+import { Link, redirect } from '@tanstack/react-router';
 import React, { useState } from 'react';
 import { RxGithubLogo } from 'react-icons/rx';
 import { toast } from 'sonner';
 import { File as TableFile } from '@/components/molecules/files-table';
 import { presignedUrlFetch } from '@/utils/presignedUrlFetch';
+import DeleteAlert from '@/components/molecules/delete-alert';
 
 export interface IProjectDetailsProps {
   projectId: string;
@@ -53,6 +54,37 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
     '/v1/projects/{projectID}/files/{filename}'
   );
   const { mutate: deleteFile } = useMutation('delete', '/v1/projects/{projectID}/files/{fileName}');
+  const { mutate: deleteProject } = useMutation('delete', '/v1/projects/{projectID}');
+  
+  const handleDelete = async () => {
+    await deleteProject(
+      {
+        params: {
+          path: {
+            projectID: projectId.toString(),
+          }
+        }
+      },
+      {
+        onSuccess: async () => {
+          try {
+            toast.success(`Project deleted successfully`);
+            redirect({to: '/admin/projects',})
+
+          } catch (e) {
+            console.log(e);
+            toast.error(`Failed to delete project`);
+          }
+        },
+        onError() {
+          toast.error(`Failed to delete project`);
+        }
+      }
+    )
+    
+
+    }
+  
 
   const handleUpload = async (files: File[]) => {
     for (const file of files) {
@@ -120,12 +152,18 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
                 </Badge>
               </div>
               {admin && (
-                <Link
-                  to={'/admin/projects/$projectId/edit'}
-                  params={{ projectId: project.project.id.toString() }}
-                >
-                  <Btn>Edit</Btn>
-                </Link>
+                <div className="flex items-center space-x-2">
+                  <Link
+                    to={'/admin/projects/$projectId/edit'}
+                    params={{ projectId: project.project.id.toString() }}
+                  >
+                    <Btn>Edit</Btn>
+                  </Link>
+
+                  <DeleteAlert onDelete={handleDelete} >
+                    <Btn variant="destructive">Delete</Btn>
+                  </DeleteAlert>
+                </div>
               )}
             </div>
 

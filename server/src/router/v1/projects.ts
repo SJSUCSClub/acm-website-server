@@ -475,4 +475,43 @@ projectRouter.openapi(
   },
 );
 
+projectRouter.openapi(
+  createRoute({
+    method: 'delete',
+    path: '/{projectID}',
+    tags: ['projects'],
+    summary: 'Delete project',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: projectIDSchema,
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: 'Successful response',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Failed to delete project',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const { projectID } = c.req.valid('param');
+    try {
+      await db.delete(projects).where(eq(projects.id, parseInt(projectID)));
+      await db.delete(projectsFiles).where(eq(projectsFiles.projectId, parseInt(projectID)));
+      await db.delete(interestedInProjects).where(eq(interestedInProjects.projectId, parseInt(projectID)));
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json({ error: `Failed to delete project: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  },
+);
+
 export default projectRouter;
