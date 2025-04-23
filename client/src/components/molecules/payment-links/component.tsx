@@ -73,6 +73,9 @@ const PaymentLinks = () => {
       </div>
       <Loading isLoading={isLoading}>
         <FetchError isError={!!error || !payments}>
+          {payments?.paymentLinks.length === 0 && (
+            <div className="text-center text-lg">No payment links found</div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {payments?.paymentLinks.map((payment) => (
               <PaymentLink key={payment.id} payment={payment} handleDelete={handleDelete} />

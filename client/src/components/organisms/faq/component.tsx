@@ -12,7 +12,7 @@ export const Faq: React.FC = () => {
 
   return (
     <div className="space-y-5">
-      <h1 className="text-4xl font-bold">Questions? We Got Answers. </h1>
+      <h1 className="text-4xl font-bold">Questions? We Got Answers.</h1>
       <div>
         <Accordion type="single" collapsible className="w-full">
           {data?.questions.map((item) => (

@@ -17,6 +17,7 @@ import {
   errorSchema,
   landingQuestionSchema,
   landingSpotlightSchema,
+  newLandingQuestionSchema,
   newSpotlightSchema,
   spotlightSchema,
   updateClubLinkSchema,
@@ -606,6 +607,66 @@ clubRouter.openapi(
 clubRouter.openapi(
   createRoute({
     method: 'put',
+    path: '/questions',
+    tags: ['club'],
+    summary: 'Create club question',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: newLandingQuestionSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      [HttpStatusCodes.CREATED]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              question: landingQuestionSchema,
+            }),
+          },
+        },
+        description: 'Successful response',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Internal server error',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const body = c.req.valid('json');
+
+    try {
+      const newQuestion = await db
+        .insert(landingQuestions)
+        .values(body)
+        .returning();
+      if (newQuestion.length === 0) {
+        throw new Error('Failed to create question');
+      }
+      return c.json({ question: newQuestion[0] }, HttpStatusCodes.CREATED);
+    } catch (error) {
+      return c.json(
+        { error: `Failed to create question: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
+  },
+);
+
+clubRouter.openapi(
+  createRoute({
+    method: 'put',
     path: '/questions/{questionID}',
     tags: ['club'],
     summary: 'Update club question',
@@ -617,7 +678,7 @@ clubRouter.openapi(
       body: {
         content: {
           'application/json': {
-            schema: landingQuestionSchema.omit({ id: true }),
+            schema: newLandingQuestionSchema,
           },
         },
       },
@@ -626,15 +687,21 @@ clubRouter.openapi(
       [HttpStatusCodes.NO_CONTENT]: {
         description: 'No content',
       },
-      [HttpStatusCodes.CONFLICT]: {
+      [HttpStatusCodes.NOT_FOUND]: {
         content: {
           'application/json': {
-            schema: z.object({
-              error: z.string(),
-            }),
+            schema: errorSchema,
           },
         },
-        description: 'Conflict',
+        description: 'Not found',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Internal server error',
       },
       ...unauthorizedRequest,
       ...forbiddenRequest,
@@ -644,18 +711,70 @@ clubRouter.openapi(
     const { questionID } = c.req.valid('param');
     const body = c.req.valid('json');
 
-    const newQuestion = await db
-      .update(landingQuestions)
-      .set(body)
-      .where(eq(landingQuestions.id, parseInt(questionID)))
-      .returning();
-    if (newQuestion.length === 0) {
+    try {
+      const newQuestion = await db
+        .update(landingQuestions)
+        .set(body)
+        .where(eq(landingQuestions.id, parseInt(questionID)))
+        .returning();
+      if (newQuestion.length === 0) {
+        return c.json(
+          { error: 'Question not found' },
+          HttpStatusCodes.NOT_FOUND,
+        );
+      }
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
       return c.json(
-        { error: 'Question not updated' },
-        HttpStatusCodes.CONFLICT,
+        { error: `Failed to update question: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
       );
     }
-    return c.text('', HttpStatusCodes.NO_CONTENT);
+  },
+);
+
+clubRouter.openapi(
+  createRoute({
+    method: 'delete',
+    path: '/questions/{questionID}',
+    tags: ['club'],
+    summary: 'Update club question',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: z.object({
+        questionID: z.string(),
+      }),
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: 'No content',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+        description: 'Internal server error',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const { questionID } = c.req.valid('param');
+
+    try {
+      await db
+        .delete(landingQuestions)
+        .where(eq(landingQuestions.id, parseInt(questionID)));
+      return c.text('', HttpStatusCodes.NO_CONTENT);
+    } catch (error) {
+      return c.json(
+        { error: `Failed to update question: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
   },
 );
 

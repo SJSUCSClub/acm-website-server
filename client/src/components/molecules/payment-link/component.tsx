@@ -31,7 +31,7 @@ const PaymentLink: React.FC<IPaymentLinkProps> = ({ payment: paymentProp, handle
   const [payment, setPayment] = useState(paymentProp);
 
   return (
-    <Card key={payment.id} className="overflow-hidden">
+    <Card className="overflow-hidden">
       {edit ? (
         <EditLink payment={payment} setEdit={setEdit} setPayment={setPayment} />
       ) : (
