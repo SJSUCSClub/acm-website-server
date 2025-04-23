@@ -133,6 +133,7 @@ export const updateClubLinkSchema = z.object({
 });
 export const landingSpotlightSchema = createSelectSchema(landingSpotlights);
 export const landingQuestionSchema = createSelectSchema(landingQuestions);
+export const newLandingQuestionSchema = createInsertSchema(landingQuestions);
 export const errorSchema = z.object({
   error: z.string(),
 });
