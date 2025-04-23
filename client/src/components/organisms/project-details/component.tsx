@@ -55,13 +55,13 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
   );
   const { mutate: deleteFile } = useMutation('delete', '/v1/projects/{projectID}/files/{fileName}');
   const { mutate: deleteProject } = useMutation('delete', '/v1/projects/{projectID}');
-  
+
   const handleDelete = async () => {
     await deleteProject(
       {
         params: {
           path: {
-            projectID: projectId.toString(),
+            projectID: projectId.toString()
           }
         }
       },
@@ -69,8 +69,7 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
         onSuccess: async () => {
           try {
             toast.success(`Project deleted successfully`);
-            redirect({to: '/admin/projects',})
-
+            redirect({ to: '/admin/projects' });
           } catch (e) {
             console.log(e);
             toast.error(`Failed to delete project`);
@@ -80,11 +79,8 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
           toast.error(`Failed to delete project`);
         }
       }
-    )
-    
-
-    }
-  
+    );
+  };
 
   const handleUpload = async (files: File[]) => {
     for (const file of files) {
@@ -160,7 +156,7 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
                     <Btn>Edit</Btn>
                   </Link>
 
-                  <DeleteAlert onDelete={handleDelete} >
+                  <DeleteAlert onDelete={handleDelete}>
                     <Btn variant="destructive">Delete</Btn>
                   </DeleteAlert>
                 </div>
