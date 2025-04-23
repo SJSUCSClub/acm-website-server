@@ -18,7 +18,6 @@ import type { User } from '@/db/schema';
 import { env } from '@/env';
 import { authMiddleWare } from '@/middlewares/auth-middleware';
 import { sendEmailNotification } from '@/lib/aws/sqs';
-import { sendEmailNotification } from '@/lib/aws/sqs';
 
 const authRouter = new OpenAPIHono<Context>();
 
