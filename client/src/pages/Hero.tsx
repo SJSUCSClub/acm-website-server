@@ -92,7 +92,7 @@ const Hero = () => {
           <h1 className="text-4xl font-bold">Sponsors</h1>
           <SponsorList />
         </div>
-        
+
         <Separator />
 
         <div className="space-y-2 place-items-center">
@@ -143,17 +143,17 @@ const Hero = () => {
           <h2 className="text-1xl font-bold pb-10 pt-3 text-gray-400">Our past events.</h2>
           <SpotlightList />
         </div>
-        
+
         <Separator />
 
         <OfficerList />
-        
+
         <Separator />
 
         <div className="flex justify-center items-center">
           <GetInvolvedBtn />
         </div>
-        
+
         <Separator />
 
         <Faq />
