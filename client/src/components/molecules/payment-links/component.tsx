@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@/hooks/useFetch';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PaymentLink from '@/components/molecules/payment-link';
 import { toast } from 'sonner';
 import {
