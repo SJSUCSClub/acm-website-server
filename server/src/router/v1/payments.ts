@@ -5,7 +5,6 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
 import { paymentLinks } from '@/db/schema';
-import type { PaymentLink } from '@/db/schema';
 import {
   paymentIdSchema,
   paymentLinkSchema,
@@ -50,7 +49,7 @@ paymentRouter.openapi(
   }),
   async (c) => {
     try {
-      const payments: PaymentLink[] = await db.select().from(paymentLinks);
+      const payments = await db.select().from(paymentLinks);
       return c.json({ paymentLinks: payments }, HttpStatusCodes.OK);
     } catch (error) {
       return c.json(
