@@ -3,7 +3,7 @@ import { paths } from '@/types/schema.v1';
 import React, { useState } from 'react';
 import DeleteAlert from '@/components/molecules/delete-alert';
 import Btn from '@/components/atoms/btn';
-import { Check, CircleHelp, Pencil, Trash, X } from 'lucide-react';
+import { Check, Pencil, Trash, X } from 'lucide-react';
 import { useMutation } from '@/hooks/useFetch';
 import { toast } from 'sonner';
 import { useForm } from '@tanstack/react-form';

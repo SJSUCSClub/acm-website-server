@@ -14,8 +14,10 @@ import { paths } from '@/types/schema.v1';
 import { useForm } from '@tanstack/react-form';
 import React, { useState } from 'react';
 
-export type QuestionBody =
-  Omit<paths['/v1/club/questions']['get']['responses']['200']['content']['application/json']['questions'][number], 'id'>
+export type QuestionBody = Omit<
+  paths['/v1/club/questions']['get']['responses']['200']['content']['application/json']['questions'][number],
+  'id'
+>;
 interface IQuestionFormProps {
   handleCreate: (question: QuestionBody) => void;
 }
