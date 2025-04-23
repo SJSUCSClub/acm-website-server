@@ -21,7 +21,7 @@ const OfficerList: React.FC<IOfficerListProps> = ({ admin = false }) => {
   };
   return (
     <div className="space-y-5">
-      <h1 className="text-4xl font-bold">Officers</h1>
+      <h1 className="text-4xl font-bold">Meet our Officers</h1>
       {admin && (
         <div className="flex items-center justify-end gap-2">
           <OfficerReorder

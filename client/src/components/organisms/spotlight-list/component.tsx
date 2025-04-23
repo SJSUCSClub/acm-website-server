@@ -21,7 +21,6 @@ const SpotlightList: React.FC<ISpotlightListProps> = ({ admin = false }) => {
   const { data, error, isLoading, refetch } = useQuery('get', '/v1/club/spotlights');
   return (
     <div className="space-y-2">
-      <h3 className="font-bold text-lg">Payment Links</h3>
       {admin && (
         <div className="flex items-center justify-end">
           <Link to="/admin/club/spotlights/create">

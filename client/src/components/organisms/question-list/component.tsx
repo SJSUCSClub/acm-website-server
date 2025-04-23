@@ -52,7 +52,6 @@ export const QuestionList: React.FC = () => {
 
   return (
     <div className="space-y-2">
-      <h1 className="text-lg font-bold">Questions</h1>
       <div className="flex justify-end">
         <QuestionForm handleCreate={handleCreate} />
       </div>

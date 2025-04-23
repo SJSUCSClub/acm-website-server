@@ -457,8 +457,8 @@ const Users = () => {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-semibold mb-4">Users Management</h1>
+    <div className="space-y-5">
+      <h1 className="text-4xl font-bold">Users Management</h1>
 
       <div className="mb-6 p-4 border rounded shadow-sm">
         <div className="flex justify-between items-center mb-3">

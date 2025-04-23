@@ -173,8 +173,8 @@ const EventList: React.FC<IEventListProps> = ({ searchParams, fullPath, admin = 
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold">Events</h1>
+    <div className="space-y-5">
+      <h1 className="text-4xl font-bold">Events</h1>
       {admin && (
         <div className="flex items-center justify-end">
           <Link to="/admin/events/create">

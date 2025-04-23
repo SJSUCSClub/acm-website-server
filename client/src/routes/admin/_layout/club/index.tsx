@@ -16,9 +16,18 @@ function RouteComponent() {
       <div className="space-y-10">
         <ClubLinks />
         <PaymentLinks />
-        <SpotlightList admin />
-        <QuestionList />
-        <SponsorList />
+        <div className="space-y-2">
+          <h3 className="font-bold text-lg">Spotlights</h3>
+          <SpotlightList admin />
+        </div>
+        <div className="space-y-2">
+          <h3 className="text-lg font-bold">Questions</h3>
+          <QuestionList />
+        </div>
+        <div className="space-y-2">
+          <h3 className="text-lg font-bold">Sponsors</h3>
+          <SponsorList />
+        </div>
       </div>
     </div>
   );
