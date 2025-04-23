@@ -67,8 +67,8 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
       },
       {
         onSuccess: () => {
-            toast.success(`Project deleted successfully`);
-            redirect({ to: '/admin/projects' });
+          toast.success(`Project deleted successfully`);
+          redirect({ to: '/admin/projects' });
         },
         onError() {
           toast.error(`Failed to delete project`);
