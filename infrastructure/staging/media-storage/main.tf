@@ -37,4 +37,13 @@ module "media_storage" {
       }
     ]
   })
+
+  cors_rule = [
+    {
+      allowed_headers = ["*"]
+      allowed_methods = ["PUT", "GET"]
+      allowed_origins = ["http://localhost"]
+      expose_headers  = []
+    }
+  ]
 }
