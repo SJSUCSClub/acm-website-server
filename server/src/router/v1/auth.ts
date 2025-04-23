@@ -184,13 +184,21 @@ authRouter.openapi(
 					.returning();
 
 				user = newUser[0];
-				// Placeholder for new user onboard email
+
 				try {
+					// Placeholder for new user onboard email
+
+					const { SENDER: sender, APPLICATION: application } = env;
+
 					await sendEmailNotification({
-						recipient: user.email,
-						sender: 'no-reply@acmsjsu.org',
-						subject: 'Welcome to ACM SJSU',
-						body: `Welcome to ACM SJSU! ${user.name}`,
+						recipient: [user.email],
+						sender,
+						template_name: 'onboarding',
+						template_data: {
+							name: user.name,
+							email: user.email,
+						},
+						application,
 					});
 				} catch (emailError) {
 					// Log the error but don't fail the registration

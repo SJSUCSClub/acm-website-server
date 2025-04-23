@@ -21,6 +21,8 @@ const EnvSchema = z.object({
   SQS_QUEUE_URL: z.string().default(''),
   REGION: z.string().default('us-west-2'),
   ROLE_ARN: z.string().default(''),
+  SENDER: z.string().default(''),
+  APPLICATION: z.string().default(''),
 });
 
 export type Env = z.infer<typeof EnvSchema>;
