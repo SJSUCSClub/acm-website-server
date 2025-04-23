@@ -7,6 +7,7 @@ import { useForm } from '@tanstack/react-form';
 import { Check, CreditCard, ExternalLink, Link, Pencil, Trash, X } from 'lucide-react';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
+import DeleteAlert from '@/components/molecules/delete-alert';
 
 type PaymentLink =
   paths['/v1/payments']['get']['responses']['200']['content']['application/json']['paymentLinks'][number];
@@ -58,9 +59,11 @@ const ReadLink: React.FC<IReadLinkProps> = ({ payment, setEdit, handleDelete }) 
             <Btn variant="ghost" onClick={() => setEdit(true)}>
               <Pencil className="h-4 w-4" />
             </Btn>
-            <Btn variant="ghost" onClick={() => handleDelete(payment.id)}>
-              <Trash className="h-4 w-4" />
-            </Btn>
+            <DeleteAlert onDelete={() => handleDelete(payment.id)}>
+              <Btn variant="ghost">
+                <Trash className="h-4 w-4" />
+              </Btn>
+            </DeleteAlert>
           </div>
         </div>
         <div className="flex items-center">

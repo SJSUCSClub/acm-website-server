@@ -50,7 +50,7 @@ paymentRouter.openapi(
   }),
   async (c) => {
     try {
-      const payments: PaymentLink[] = await db.select().from(paymentLinks);
+      const payments = await db.select().from(paymentLinks);
       return c.json({ paymentLinks: payments }, HttpStatusCodes.OK);
     } catch (error) {
       return c.json(

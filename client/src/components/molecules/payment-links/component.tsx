@@ -22,16 +22,9 @@ interface ICreatePaymentLinksProps {
 }
 
 const PaymentLinks = () => {
-  const { data, error, isLoading } = useQuery('get', '/v1/payments');
+  const { data: payments, error, isLoading, refetch } = useQuery('get', '/v1/payments');
   const { mutate: deletePayment } = useMutation('delete', '/v1/payments/{paymentId}');
   const { mutate: createPayment } = useMutation('post', '/v1/payments');
-  const [payments, setPayments] = useState<PaymentLink[]>([]);
-
-  useEffect(() => {
-    if (data) {
-      setPayments(data.paymentLinks);
-    }
-  }, [data]);
 
   const handleDelete = (paymentId: number) => {
     deletePayment(
@@ -44,7 +37,7 @@ const PaymentLinks = () => {
       },
       {
         onSuccess: () => {
-          setPayments(payments.filter((payment) => payment.id !== paymentId));
+          refetch();
         },
         onError: () => {
           toast.error('Failed to delete payment link');
@@ -63,7 +56,7 @@ const PaymentLinks = () => {
       },
       {
         onSuccess: () => {
-          setPayments([...payments, payment]);
+          refetch();
         },
         onError: () => {
           toast.error('Failed to create payment link');
@@ -79,10 +72,10 @@ const PaymentLinks = () => {
         <CreatePaymentLink handleCreate={handleCreate} />
       </div>
       <Loading isLoading={isLoading}>
-        <FetchError isError={!!error || !data}>
+        <FetchError isError={!!error || !payments}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {payments.map((payment) => (
-              <PaymentLink payment={payment} handleDelete={handleDelete} />
+            {payments?.paymentLinks.map((payment) => (
+              <PaymentLink key={payment.id} payment={payment} handleDelete={handleDelete} />
             ))}
           </div>
         </FetchError>

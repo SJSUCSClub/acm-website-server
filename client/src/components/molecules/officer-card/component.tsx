@@ -54,12 +54,12 @@ export const OfficerCard: React.FC<IOfficerCardProps> = ({
                 to={'/admin/officers/$officerId/edit'}
                 params={{ officerId: officer.id.toString() }}
               >
-                <Btn size="icon" className="rounded-full bg-blue-500">
+                <Btn variant="outline" size="icon" className="bg-white text-black">
                   <Pencil />
                 </Btn>
               </Link>
               <DeleteAlert onDelete={handleOfficerDelete}>
-                <Btn size="icon" className="rounded-full bg-blue-500">
+                <Btn variant="outline" size="icon" className="bg-white text-black">
                   <Trash />
                 </Btn>
               </DeleteAlert>
