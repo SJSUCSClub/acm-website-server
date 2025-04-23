@@ -1,5 +1,6 @@
 import ClubLinks from '@/components/molecules/club-links';
 import PaymentLinks from '@/components/molecules/payment-links';
+import QuestionList from '@/components/organisms/question-list';
 import SponsorList from '@/components/organisms/sponsor-list';
 import SpotlightList from '@/components/organisms/spotlight-list';
 import { createFileRoute } from '@tanstack/react-router';
@@ -16,6 +17,7 @@ function RouteComponent() {
         <ClubLinks />
         <PaymentLinks />
         <SpotlightList admin />
+        <QuestionList />
         <SponsorList />
       </div>
     </div>
