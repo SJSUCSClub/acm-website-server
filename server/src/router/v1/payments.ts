@@ -5,7 +5,6 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
 import { paymentLinks } from '@/db/schema';
-import type { PaymentLink } from '@/db/schema';
 import {
   paymentIdSchema,
   paymentLinkSchema,
