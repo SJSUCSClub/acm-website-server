@@ -239,7 +239,7 @@ create table if not exists officers(
 
 create table if not exists sponsors(
    name varchar(100),
-   logo_key text not null,
+   logo_key text not null default 'default/image-placeholder.svg',
    primary key(name)
 );
 

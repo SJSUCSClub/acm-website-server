@@ -26,7 +26,7 @@ function RouteComponent() {
         </div>
         <div className="space-y-2">
           <h3 className="text-lg font-bold">Sponsors</h3>
-          <SponsorList />
+          <SponsorList admin />
         </div>
       </div>
     </div>

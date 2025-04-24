@@ -10,7 +10,7 @@ import { useMutation, useQuery } from '@/hooks/useFetch';
 import { presignedUrlFetch } from '@/utils/presignedUrlFetch';
 import { AnyFieldApi, useForm } from '@tanstack/react-form';
 import { useNavigate } from '@tanstack/react-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -26,7 +26,6 @@ export interface ISpotlightFormProps {
 
 const SpotlightForm: React.FC<ISpotlightFormProps> = ({ spotlightId }) => {
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
   const {
     data: spotlightData,
     isLoading: isLoadingSpotlight,
@@ -151,7 +150,6 @@ const SpotlightForm: React.FC<ISpotlightFormProps> = ({ spotlightId }) => {
 
   const handleLogoUpload = (files: File[], field: AnyFieldApi) => {
     field.handleChange(files[0]);
-    setIsOpen(false);
   };
 
   return (
@@ -191,8 +189,6 @@ const SpotlightForm: React.FC<ISpotlightFormProps> = ({ spotlightId }) => {
                     <div className="flex items-center justify-center gap-2 mt-2">
                       <FileUpload
                         onUpload={(files: File[]) => handleLogoUpload(files, field)}
-                        open={isOpen}
-                        onOpenChange={setIsOpen}
                         maxFiles={1}
                       >
                         <p className="underline underline-offset-4 text-blue-500">Upload</p>

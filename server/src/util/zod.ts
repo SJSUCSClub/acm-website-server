@@ -99,6 +99,7 @@ export const userIdSchema = z.object({
   userId: z.string(),
 });
 export const sponsorSchema = createSelectSchema(sponsors);
+export const newSponsorSchema = createInsertSchema(sponsors);
 export const equipmentTypeIdSchema = z.object({
   equipmentTypeId: z.string().openapi({
     param: {
