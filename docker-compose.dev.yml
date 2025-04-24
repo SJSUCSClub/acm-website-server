@@ -1,6 +1,6 @@
 services:
   nginx:
-    image: nginx:latest
+    image: nginx:1.27
     ports:
       - "80:80"
     volumes:
@@ -62,7 +62,7 @@ services:
       timeout: 5s
 
   db:
-    image: postgres:latest
+    image: postgres:17
     ports:
       - "5432:5432"
     env_file:
