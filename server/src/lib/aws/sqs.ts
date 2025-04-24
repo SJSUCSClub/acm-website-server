@@ -23,7 +23,7 @@ const getSQSClient = async (): Promise<SQSClient | null> => {
       accessKeyId: <string>credentials.AccessKeyId,
       secretAccessKey: <string>credentials.SecretAccessKey,
       sessionToken: <string>credentials.SessionToken,
-    }
+    },
   });
   return sqsClient;
 };

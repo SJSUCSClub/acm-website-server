@@ -5,11 +5,11 @@ import {
   S3ClientResolvedConfig,
   ServiceInputTypes,
   ServiceOutputTypes,
-} from "@aws-sdk/client-s3";
-import type { Client } from "@smithy/types";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { getCredentials } from "./iam";
-import { env } from "@/env";
+} from '@aws-sdk/client-s3';
+import type { Client } from '@smithy/types';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { getCredentials } from './iam';
+import { env } from '@/env';
 
 let s3client: S3Client | null = null;
 
@@ -33,7 +33,7 @@ const getS3Client = async (): Promise<S3Client | null> => {
 const uploadFile = async (file: File, key: string): Promise<void> => {
   const s3client: S3Client | null = await getS3Client();
   if (s3client === null) {
-    throw new Error("S3 client not found");
+    throw new Error('S3 client not found');
   } else {
     try {
       const { S3_BUCKET_NAME: bucket_name } = env;
@@ -45,7 +45,7 @@ const uploadFile = async (file: File, key: string): Promise<void> => {
       });
       await (<S3Client>s3client).send(uploadObjectCommand);
     } catch {
-      throw new Error("Failed to upload file");
+      throw new Error('Failed to upload file');
     }
   }
 };
@@ -53,7 +53,7 @@ const uploadFile = async (file: File, key: string): Promise<void> => {
 const deleteFile = async (key: string): Promise<void> => {
   const s3client: S3Client | null = await getS3Client();
   if (s3client === null) {
-    throw new Error("S3 client not found");
+    throw new Error('S3 client not found');
   } else {
     try {
       const { S3_BUCKET_NAME: bucket_name } = env;
@@ -63,7 +63,7 @@ const deleteFile = async (key: string): Promise<void> => {
       });
       await (<S3Client>s3client).send(deleteObjectCommand);
     } catch {
-      throw new Error("Failed to delete file");
+      throw new Error('Failed to delete file');
     }
   }
 };
@@ -71,7 +71,7 @@ const deleteFile = async (key: string): Promise<void> => {
 const getPresignedUrlPutObj = async (key: string): Promise<string> => {
   const s3client: S3Client | null = await getS3Client();
   if (s3client === null) {
-    throw new Error("S3 client not found");
+    throw new Error('S3 client not found');
   } else {
     try {
       const { S3_BUCKET_NAME: bucket_name } = env;
@@ -88,7 +88,7 @@ const getPresignedUrlPutObj = async (key: string): Promise<string> => {
       );
       return url;
     } catch {
-      throw new Error("Failed to generate presigned url");
+      throw new Error('Failed to generate presigned url');
     }
   }
 };
