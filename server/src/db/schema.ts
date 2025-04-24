@@ -392,7 +392,7 @@ export const sessions = pgTable('session', {
 
 export const sponsors = pgTable('sponsors', {
   name: varchar('name', { length: 100 }).primaryKey(),
-  logoKey: text('logo_key').notNull(),
+  logoKey: text('logo_key').notNull().default('default/image-placeholder.svg'),
 });
 
 export const clubLinks = pgTable('club_links', {
