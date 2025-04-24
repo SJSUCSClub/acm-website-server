@@ -454,9 +454,6 @@ clubRouter.openapi(
         .where(eq(landingSpotlights.id, parseInt(spotlightID)))
         .returning();
       const res = await getPresignedUrlPutObj(key);
-      if (!res) {
-        throw new Error('Failed to generate presigned url');
-      }
       return c.json({ presigned_url: res }, HttpStatusCodes.CREATED);
     } catch (error) {
       return c.json(
@@ -505,10 +502,7 @@ clubRouter.openapi(
         .set({ imageKey: sql`DEFAULT` })
         .where(eq(landingSpotlights.id, parseInt(spotlightID)));
       await db.delete(files).where(eq(files.key, key));
-      const res = await deleteFile(key);
-      if (!res) {
-        throw new Error('Failed to delete file');
-      }
+      await deleteFile(key);
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
       return c.json(

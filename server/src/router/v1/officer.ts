@@ -390,9 +390,6 @@ officerRouter.openapi(
         .where(eq(officers.id, parseInt(officerID)));
 
       const res = await getPresignedUrlPutObj(key);
-      if (!res) {
-        throw new Error('Failed to generate presigned url');
-      }
       return c.json({ presigned_url: res }, HttpStatusCodes.CREATED);
     } catch (error) {
       return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
@@ -435,10 +432,7 @@ officerRouter.openapi(
         .set({ photo: sql`DEFAULT` })
         .where(eq(officers.id, parseInt(officerID)));
       await db.delete(files).where(eq(files.key, key));
-      const res = await deleteFile(key);
-      if (!res) {
-        throw new Error('Failed to delete file');
-      }
+      await deleteFile(key);
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
       return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);

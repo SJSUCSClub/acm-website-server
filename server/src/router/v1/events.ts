@@ -238,10 +238,7 @@ eventRouter.openapi(
         .from(subscribedEvents)
         .innerJoin(users, eq(users.id, subscribedEvents.userId))
         .where(eq(subscribedEvents.eventId, parseInt(eventID)));
-      return c.json(
-        { eventSubscribers },
-        HttpStatusCodes.OK,
-      );
+      return c.json({ eventSubscribers }, HttpStatusCodes.OK);
     } catch (error) {
       return c.json({ error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
@@ -370,9 +367,6 @@ eventRouter.openapi(
         .values({ eventId: parseInt(eventID), fileKey: key });
 
       const res = await getPresignedUrlPutObj(key);
-      if (!res) {
-        throw new Error('Failed to generate presigned url');
-      }
       return c.json({ presigned_url: res }, HttpStatusCodes.OK);
     } catch (error) {
       console.log(error);
@@ -427,10 +421,7 @@ eventRouter.openapi(
           ),
         );
       await db.delete(files).where(eq(files.key, key));
-      const res = await deleteFile(key);
-      if (!res) {
-        throw new Error('Failed to delete file');
-      }
+      await deleteFile(key);
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
       console.log(error);
@@ -827,9 +818,6 @@ eventRouter.openapi(
         .where(eq(events.id, parseInt(eventID)));
 
       const res = await getPresignedUrlPutObj(key);
-      if (!res) {
-        throw new Error('Failed to generate presigned url');
-      }
       return c.json({ presigned_url: res }, HttpStatusCodes.CREATED);
     } catch (error) {
       return c.json(
@@ -895,10 +883,7 @@ eventRouter.openapi(
         .set({ image: sql`DEFAULT` })
         .where(eq(events.id, parseInt(eventID)));
       await db.delete(files).where(eq(files.key, key));
-      const res = await deleteFile(key);
-      if (!res) {
-        throw new Error('Failed to delete file');
-      }
+      await deleteFile(key);
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
       console.log(error);
@@ -986,10 +971,7 @@ eventRouter.openapi(
         .from(attendingEvents)
         .innerJoin(users, eq(users.id, attendingEvents.userId))
         .where(eq(attendingEvents.eventId, parseInt(eventID)));
-      return c.json(
-        { eventAttendees },
-        HttpStatusCodes.OK,
-      );
+      return c.json({ eventAttendees }, HttpStatusCodes.OK);
     } catch (error) {
       return c.json(
         { error: `Internal server error: ${error}` },

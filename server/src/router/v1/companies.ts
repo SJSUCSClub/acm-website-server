@@ -415,9 +415,6 @@ companyRouter.openapi(
         .where(eq(companies.id, parseInt(companyId)));
 
       const res = await getPresignedUrlPutObj(key);
-      if (!res) {
-        throw new Error('Failed to generate presigned url');
-      }
       return c.json({ presigned_url: res }, HttpStatusCodes.CREATED);
     } catch (error) {
       console.log(error);
@@ -480,10 +477,7 @@ companyRouter.openapi(
         .set({ logo: sql`DEFAULT` })
         .where(eq(companies.id, parseInt(companyId)));
       await db.delete(files).where(eq(files.key, key));
-      const res = await deleteFile(key);
-      if (!res) {
-        throw new Error('Failed to delete file');
-      }
+      await deleteFile(key);
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
       console.log(error);

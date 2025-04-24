@@ -102,9 +102,6 @@ projectRouter.openapi(
         .values({ projectId: parseInt(projectId), fileKey: key });
 
       const res = await getPresignedUrlPutObj(key);
-      if (!res) {
-        throw new Error('Failed to generate presigned url');
-      }
       return c.json({ presigned_url: res }, HttpStatusCodes.OK);
     } catch (error) {
       console.log(error);
@@ -175,10 +172,7 @@ projectRouter.openapi(
           ),
         );
       await db.delete(files).where(eq(files.key, fileKey));
-      const res = await deleteFile(fileKey);
-      if (!res) {
-        throw new Error('Failed to delete file');
-      }
+      await deleteFile(fileKey);
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
       return c.json(
