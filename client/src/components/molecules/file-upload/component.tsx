@@ -15,8 +15,8 @@ import { toast } from 'sonner';
 
 export interface IFileUploadProps {
   onUpload: (files: File[]) => void;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   children: React.ReactNode;
   maxFiles?: number;
 }
@@ -30,6 +30,7 @@ const FileUpload: React.FC<IFileUploadProps> = ({
 }) => {
   const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setOpen] = useState(false);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -63,6 +64,7 @@ const FileUpload: React.FC<IFileUploadProps> = ({
     onUpload(files);
     setFiles([]);
     setIsLoading(false);
+    setOpen(false);
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -71,7 +73,7 @@ const FileUpload: React.FC<IFileUploadProps> = ({
   });
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
