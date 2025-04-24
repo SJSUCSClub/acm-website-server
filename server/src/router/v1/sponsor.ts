@@ -138,10 +138,7 @@ sponsorRouter.openapi(
     const sponsorKey = generateSponsorLogoKey(sponsorName);
     try {
       await db.delete(sponsors).where(eq(sponsors.name, sponsorName));
-      const res = await deleteFile(sponsorKey);
-      if (!res) {
-        throw new Error('Failed to delete file');
-      }
+      await deleteFile(sponsorKey);
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
       return c.json(
@@ -197,9 +194,6 @@ sponsorRouter.openapi(
         .where(eq(sponsors.name, sponsorName))
         .returning();
       const res = await getPresignedUrlPutObj(sponsorKey);
-      if (!res) {
-        throw new Error('Failed to generate presigned url');
-      }
       return c.json({ presigned_url: res }, HttpStatusCodes.CREATED);
     } catch (error) {
       return c.json(
