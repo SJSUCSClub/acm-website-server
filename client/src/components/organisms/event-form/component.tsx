@@ -70,7 +70,6 @@ export interface IEventFormProps {
 
 const EventForm: React.FC<IEventFormProps> = ({ eventId }) => {
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
   const [newUrl, setNewUrl] = useState('');
   const {
     data: eventTypeData,
@@ -244,7 +243,6 @@ const EventForm: React.FC<IEventFormProps> = ({ eventId }) => {
 
   const handleLogoUpload = (files: File[], field: AnyFieldApi) => {
     field.handleChange(files[0]);
-    setIsOpen(false);
   };
 
   return (
@@ -282,8 +280,6 @@ const EventForm: React.FC<IEventFormProps> = ({ eventId }) => {
                     <div className="flex items-center justify-center gap-2 mt-2">
                       <FileUpload
                         onUpload={(files: File[]) => handleLogoUpload(files, field)}
-                        open={isOpen}
-                        onOpenChange={setIsOpen}
                         maxFiles={1}
                       >
                         <p className="underline underline-offset-4 text-blue-500">Upload</p>

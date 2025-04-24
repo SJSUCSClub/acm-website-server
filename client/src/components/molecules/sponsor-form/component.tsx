@@ -27,7 +27,7 @@ export interface ISponsorFormProps {
   onCreateComplete?: () => void;
 }
 
-const SponsorForm: React.FC<ISponsorFormProps> = ({ onCreateComplete = () => { } }) => {
+const SponsorForm: React.FC<ISponsorFormProps> = ({ onCreateComplete = () => {} }) => {
   const [open, setOpen] = useState(false);
   const { mutateAsync: createSponsor } = useMutation('post', '/v1/sponsors');
   const { mutateAsync: createLogo } = useMutation('post', '/v1/sponsors/{sponsorName}/logo');

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Calendar, Clock, MapPin, Trash, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import FilesTable from '@/components/molecules/files-table';
@@ -27,7 +27,6 @@ interface IEventDetailsProps {
 }
 
 const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const {
     data: event,
@@ -175,7 +174,6 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
       );
     }
     refetchEventFiles();
-    setIsOpen(false);
   };
 
   const handleAddCompany = async (companies: Company[]) => {
@@ -417,7 +415,7 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold mb-3">Files</h2>
                 {admin && (
-                  <FileUpload onUpload={handleUpload} open={isOpen} onOpenChange={setIsOpen}>
+                  <FileUpload onUpload={handleUpload}>
                     <Btn size="sm">Upload File</Btn>
                   </FileUpload>
                 )}

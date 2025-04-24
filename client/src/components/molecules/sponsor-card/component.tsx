@@ -18,7 +18,7 @@ export interface ISponsorCardProps {
 const SponsorCard: React.FC<ISponsorCardProps> = ({
   sponsor,
   admin = false,
-  onSponsorDelete = () => { }
+  onSponsorDelete = () => {}
 }) => {
   const { mutateAsync: deleteSponsor } = useMutation('delete', '/v1/sponsors/{sponsorName}');
 

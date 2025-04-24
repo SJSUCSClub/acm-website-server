@@ -18,7 +18,7 @@ import { paths } from '@/types/schema.v1';
 import { presignedUrlFetch } from '@/utils/presignedUrlFetch';
 import { AnyFieldApi, useForm } from '@tanstack/react-form';
 import { useNavigate } from '@tanstack/react-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -46,7 +46,6 @@ export interface ICompanyForm {
 
 const CompanyForm: React.FC<ICompanyForm> = ({ companyId }) => {
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
   const {
     data: industryData,
     isLoading,
@@ -183,7 +182,6 @@ const CompanyForm: React.FC<ICompanyForm> = ({ companyId }) => {
 
   const handleLogoUpload = (files: File[], field: AnyFieldApi) => {
     field.handleChange(files[0]);
-    setIsOpen(false);
   };
 
   return (
@@ -221,8 +219,6 @@ const CompanyForm: React.FC<ICompanyForm> = ({ companyId }) => {
                     <div>
                       <FileUpload
                         onUpload={(files: File[]) => handleLogoUpload(files, field)}
-                        open={isOpen}
-                        onOpenChange={setIsOpen}
                         maxFiles={1}
                       >
                         <Btn type="button" variant="outline">

@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { useMutation, useQuery } from '@/hooks/useFetch';
 import { getProjectStatusColor } from '@/utils/colors';
 import { Link, redirect } from '@tanstack/react-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { RxGithubLogo } from 'react-icons/rx';
 import { toast } from 'sonner';
 import { File as TableFile } from '@/components/molecules/files-table';
@@ -20,7 +20,6 @@ export interface IProjectDetailsProps {
 }
 
 const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = false }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const { data: project } = useQuery('get', '/v1/projects/{projectID}', {
     params: {
       path: {
@@ -57,7 +56,7 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
   const { mutate: deleteProject } = useMutation('delete', '/v1/projects/{projectID}');
 
   const handleDelete = async () => {
-    await deleteProject(
+    deleteProject(
       {
         params: {
           path: {
@@ -105,7 +104,6 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
       );
     }
     refetchFiles();
-    setIsOpen(false);
   };
 
   const handleFileDelete = async (file: TableFile) => {
@@ -173,7 +171,7 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold mb-3">Files</h2>
               {admin && (
-                <FileUpload onUpload={handleUpload} open={isOpen} onOpenChange={setIsOpen}>
+                <FileUpload onUpload={handleUpload}>
                   <Btn size="sm">Upload File</Btn>
                 </FileUpload>
               )}

@@ -15,19 +15,11 @@ import { toast } from 'sonner';
 
 export interface IFileUploadProps {
   onUpload: (files: File[]) => void;
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
   children: React.ReactNode;
   maxFiles?: number;
 }
 
-const FileUpload: React.FC<IFileUploadProps> = ({
-  onUpload,
-  open,
-  onOpenChange,
-  children,
-  maxFiles
-}) => {
+const FileUpload: React.FC<IFileUploadProps> = ({ onUpload, children, maxFiles }) => {
   const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setOpen] = useState(false);
