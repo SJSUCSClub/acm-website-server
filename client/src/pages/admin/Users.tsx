@@ -134,7 +134,12 @@ const Users = () => {
   };
 
   // Use the useQuery hook with type-safe parameters
-  const { data, isLoading, error } = useQuery('get', '/v1/users', {
+  const {
+    data,
+    isLoading,
+    error,
+    refetch: refetchUsers
+  } = useQuery('get', '/v1/users', {
     params: {
       query: {
         ...queryParams,
@@ -456,6 +461,10 @@ const Users = () => {
     ) : null;
   };
 
+  const handleUserUpdated = () => {
+    refetchUsers();
+  };
+
   return (
     <div className="space-y-5">
       <h1 className="text-4xl font-bold">Users Management</h1>
@@ -530,7 +539,12 @@ const Users = () => {
         <div className="text-red-500 p-4">Error loading users data</div>
       ) : users.length > 0 ? (
         <>
-          <UsersTable users={users} roles={roleOptions} memberships={membershipTermData?.types} />
+          <UsersTable
+            users={users}
+            roles={roleOptions as UserFilter['role']}
+            memberships={membershipTermData?.types as UserFilter['paid']}
+            onUserUpdated={handleUserUpdated}
+          />
           <DataTablePagination
             currentPage={currentPage}
             totalPages={totalPages}
