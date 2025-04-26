@@ -1,5 +1,9 @@
-import Avatar, { AvatarFallback, AvatarImage } from '@/components/atoms/avatar';
+import React, { useState } from 'react';
 import { Pencil } from 'lucide-react';
+import { toast } from 'sonner';
+import { useAuth } from '@/hooks/useAuth';
+import { useMutation } from '@/hooks/useFetch';
+import { paths } from '@/types/schema.v1';
 import {
   Table,
   TableBody,
@@ -8,23 +12,81 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { paths } from '@/types/schema.v1';
-import React from 'react';
+import Avatar, { AvatarFallback, AvatarImage } from '@/components/atoms/avatar';
 import UserDialog from '@/components/molecules/user-dialog';
 import Btn from '@/components/atoms/btn';
-import { useAuth } from '@/hooks/useAuth';
+import PopoverDropdown from '@/components/atoms/popover';
 
 type User =
   paths['/v1/users']['get']['responses']['200']['content']['application/json']['users'][number];
 
 export interface IUsersTableProps {
   users: User[];
-  roles?: string[];
-  memberships?: string[];
+  roles?: User['role'][];
+  memberships?: User['paid'][];
+  onUserUpdated?: () => void;
 }
 
-const UsersTable: React.FC<IUsersTableProps> = ({ users, roles, memberships }) => {
+const UsersTable: React.FC<IUsersTableProps> = ({ users, roles, memberships, onUserUpdated }) => {
   const { isAdmin } = useAuth();
+  const { mutateAsync: updateUser } = useMutation('put', '/v1/users/{userId}');
+
+  const [updatedUser, setUpdatedUser] = useState<User | null>(null);
+  const [openRoles, setOpenRoles] = useState<boolean>(false);
+  const [openMemberships, setOpenMemberships] = useState<boolean>(false);
+
+  const handleUpdateUser = async () => {
+    if (!updatedUser) return;
+
+    try {
+      await updateUser({ body: { ...updatedUser }, params: { path: { userId: updatedUser.id } } });
+      toast.success('User updated successfully');
+      onUserUpdated?.();
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to update user.');
+    }
+  };
+
+  const handleRoleChange = (role: string) => {
+    if (!updatedUser) return;
+
+    if (role === updatedUser.role) return;
+
+    let membership = updatedUser.paid;
+
+    if (role === 'member' && !updatedUser.paid) {
+      // also change membership/paid if role is being set to member
+      membership = 'Semester';
+    } else if (role === 'user' && updatedUser.paid) {
+      // set membership/paid to null if role being changed to user
+      membership = null;
+    }
+
+    setUpdatedUser({ ...updatedUser, role: role as User['role'], paid: membership });
+  };
+
+  const handleMembershipChange = (membership: string) => {
+    if (!updatedUser) return;
+
+    if (membership === updatedUser.paid) return;
+
+    let role = updatedUser.role;
+
+    if (membership !== 'None' && updatedUser.role === 'user') {
+      // if membership is no longer null, also change user role to 'member'
+      role = 'member';
+    } else if (membership === 'None' && updatedUser.role === 'member') {
+      // change user role to null if membership is being set to null
+      role = 'user';
+    }
+
+    setUpdatedUser({
+      ...updatedUser,
+      paid: membership === 'None' ? null : (membership as User['paid']),
+      role
+    });
+  };
 
   return (
     <div>
@@ -60,26 +122,63 @@ const UsersTable: React.FC<IUsersTableProps> = ({ users, roles, memberships }) =
                   <div>{user.major}</div>
                   <div className="text-xs text-muted-foreground">{user.education_level}</div>
                 </TableCell>
-                <TableCell>{user.role.toUpperCase()}</TableCell>
                 <TableCell>
-                  {user.paid ? (
+                  {updatedUser?.id === user.id ? (
+                    <PopoverDropdown
+                      open={openRoles}
+                      setOpen={setOpenRoles}
+                      value={updatedUser.role.toLocaleUpperCase()}
+                      options={roles ?? []}
+                      onChange={handleRoleChange}
+                      width={125}
+                    />
+                  ) : (
+                    user.role.toUpperCase()
+                  )}
+                </TableCell>
+                <TableCell>
+                  {updatedUser?.id === user.id ? (
+                    <PopoverDropdown
+                      open={openMemberships}
+                      setOpen={setOpenMemberships}
+                      value={updatedUser.paid ?? 'None'}
+                      options={['None', ...(memberships?.filter((mem) => mem !== null) ?? [])]}
+                      onChange={handleMembershipChange}
+                      width={125}
+                    />
+                  ) : user.paid ? (
                     <div className="text-green-500">{user.paid}</div>
                   ) : (
                     <div className="text-red-500">None</div>
                   )}
                 </TableCell>
                 <TableCell>
-                  <UserDialog user={user} roles={roles} memberships={memberships}>
+                  <UserDialog user={user}>
                     <Btn variant="outline">Open</Btn>
                   </UserDialog>
                 </TableCell>
-                {/* {isAdmin && (
+                {isAdmin && (
                   <TableCell>
-                    <Btn variant="ghost" onClick={() => setUpdatingUser(user)}>
-                      <Pencil className="h-4 w-4" />
-                    </Btn>
+                    {updatedUser?.id === user.id ? (
+                      <Btn
+                        variant="outline"
+                        onClick={() => {
+                          // update user if a change was made
+                          if (JSON.stringify(user) !== JSON.stringify(updatedUser))
+                            handleUpdateUser();
+
+                          setUpdatedUser(null);
+                        }}
+                      >
+                        Save
+                      </Btn>
+                    ) : (
+                      <Btn variant="ghost" onClick={() => setUpdatedUser(user)}>
+                        <Pencil className="h-4 w-4" />
+                      </Btn>
+                    )}
                   </TableCell>
-                )} */}
+                )}
               </TableRow>
             ))}
           </TableBody>

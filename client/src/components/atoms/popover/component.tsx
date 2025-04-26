@@ -1,8 +1,9 @@
+import * as React from 'react';
+import { ChevronsUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { ChevronsUpDown } from 'lucide-react';
-import * as React from 'react';
+import { capitalizeFirstLetter as cfl } from '@/utils/helpers';
 
 type PopoverProps = {
   open: boolean;
@@ -50,7 +51,7 @@ export const PopoverDropdown = ({
                     setOpen(false);
                   }}
                 >
-                  {option}
+                  {cfl(option)}
                 </CommandItem>
               ))}
             </CommandGroup>
