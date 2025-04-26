@@ -530,7 +530,7 @@ const Users = () => {
         <div className="text-red-500 p-4">Error loading users data</div>
       ) : users.length > 0 ? (
         <>
-          <UsersTable users={users} />
+          <UsersTable users={users} roles={roleOptions} memberships={membershipTermData?.types} />
           <DataTablePagination
             currentPage={currentPage}
             totalPages={totalPages}

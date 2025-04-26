@@ -6,7 +6,7 @@ import { cn } from '../../../utils/cn';
 import { Btn } from '../../atoms/btn';
 import { Calendar } from '../../molecules/calendar';
 
-import { Popover, PopoverContent, PopoverTrigger } from '../../atoms/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
 
 interface DatePickerProps {
   label: string;

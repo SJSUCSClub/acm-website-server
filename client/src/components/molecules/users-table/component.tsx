@@ -1,4 +1,5 @@
 import Avatar, { AvatarFallback, AvatarImage } from '@/components/atoms/avatar';
+import { Pencil } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -11,15 +12,20 @@ import { paths } from '@/types/schema.v1';
 import React from 'react';
 import UserDialog from '@/components/molecules/user-dialog';
 import Btn from '@/components/atoms/btn';
+import { useAuth } from '@/hooks/useAuth';
 
 type User =
   paths['/v1/users']['get']['responses']['200']['content']['application/json']['users'][number];
 
 export interface IUsersTableProps {
   users: User[];
+  roles?: string[];
+  memberships?: string[];
 }
 
-const UsersTable: React.FC<IUsersTableProps> = ({ users }) => {
+const UsersTable: React.FC<IUsersTableProps> = ({ users, roles, memberships }) => {
+  const { isAdmin } = useAuth();
+
   return (
     <div>
       {users.length === 0 ? (
@@ -33,6 +39,7 @@ const UsersTable: React.FC<IUsersTableProps> = ({ users }) => {
               <TableHead className="w-[400px]">Major</TableHead>
               <TableHead>Role</TableHead>
               <TableHead>Membership</TableHead>
+              <TableHead className="w-[20px]"></TableHead>
               <TableHead className="w-[20px]"></TableHead>
             </TableRow>
           </TableHeader>
@@ -62,10 +69,17 @@ const UsersTable: React.FC<IUsersTableProps> = ({ users }) => {
                   )}
                 </TableCell>
                 <TableCell>
-                  <UserDialog user={user}>
+                  <UserDialog user={user} roles={roles} memberships={memberships}>
                     <Btn variant="outline">Open</Btn>
                   </UserDialog>
                 </TableCell>
+                {/* {isAdmin && (
+                  <TableCell>
+                    <Btn variant="ghost" onClick={() => setUpdatingUser(user)}>
+                      <Pencil className="h-4 w-4" />
+                    </Btn>
+                  </TableCell>
+                )} */}
               </TableRow>
             ))}
           </TableBody>
