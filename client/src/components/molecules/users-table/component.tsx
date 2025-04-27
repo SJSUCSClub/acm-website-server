@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Pencil } from 'lucide-react';
+import { Check, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { useMutation } from '@/hooks/useFetch';
@@ -51,6 +51,7 @@ const UsersTable: React.FC<IUsersTableProps> = ({ users, roles, memberships, onU
   const handleRoleChange = (role: string) => {
     if (!updatedUser) return;
 
+    // no change
     if (role === updatedUser.role) return;
 
     let membership = updatedUser.paid;
@@ -69,12 +70,13 @@ const UsersTable: React.FC<IUsersTableProps> = ({ users, roles, memberships, onU
   const handleMembershipChange = (membership: string) => {
     if (!updatedUser) return;
 
+    // no change
     if (membership === updatedUser.paid) return;
 
     let role = updatedUser.role;
 
     if (membership !== 'None' && updatedUser.role === 'user') {
-      // if membership is no longer null, also change user role to 'member'
+      // if membership is no longer null, change user role to 'member'
       role = 'member';
     } else if (membership === 'None' && updatedUser.role === 'member') {
       // change user role to null if membership is being set to null
@@ -130,7 +132,7 @@ const UsersTable: React.FC<IUsersTableProps> = ({ users, roles, memberships, onU
                       value={updatedUser.role.toLocaleUpperCase()}
                       options={roles ?? []}
                       onChange={handleRoleChange}
-                      width={125}
+                      width={110}
                     />
                   ) : (
                     user.role.toUpperCase()
@@ -144,7 +146,7 @@ const UsersTable: React.FC<IUsersTableProps> = ({ users, roles, memberships, onU
                       value={updatedUser.paid ?? 'None'}
                       options={['None', ...(memberships?.filter((mem) => mem !== null) ?? [])]}
                       onChange={handleMembershipChange}
-                      width={125}
+                      width={110}
                     />
                   ) : user.paid ? (
                     <div className="text-green-500">{user.paid}</div>
@@ -170,7 +172,7 @@ const UsersTable: React.FC<IUsersTableProps> = ({ users, roles, memberships, onU
                           setUpdatedUser(null);
                         }}
                       >
-                        Save
+                        <Check />
                       </Btn>
                     ) : (
                       <Btn variant="ghost" onClick={() => setUpdatedUser(user)}>
