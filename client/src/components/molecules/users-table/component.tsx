@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Check, Pencil } from 'lucide-react';
+import { Check, Pencil, X } from 'lucide-react';
 import { toast } from 'sonner';
-import { useAuth } from '@/hooks/useAuth';
 import { useMutation } from '@/hooks/useFetch';
 import { paths } from '@/types/schema.v1';
 import {
@@ -25,10 +24,16 @@ export interface IUsersTableProps {
   roles?: User['role'][];
   memberships?: User['paid'][];
   onUserUpdated?: () => void;
+  canEdit?: boolean;
 }
 
-const UsersTable: React.FC<IUsersTableProps> = ({ users, roles, memberships, onUserUpdated }) => {
-  const { isAdmin } = useAuth();
+const UsersTable: React.FC<IUsersTableProps> = ({
+  users,
+  roles,
+  memberships,
+  onUserUpdated,
+  canEdit = false
+}) => {
   const { mutateAsync: updateUser } = useMutation('put', '/v1/users/{userId}');
 
   const [updatedUser, setUpdatedUser] = useState<User | null>(null);
@@ -155,20 +160,23 @@ const UsersTable: React.FC<IUsersTableProps> = ({ users, roles, memberships, onU
                   )}
                 </TableCell>
                 <TableCell>
-                  <UserDialog user={user}>
-                    <Btn variant="outline">Open</Btn>
-                  </UserDialog>
+                  {updatedUser?.id === user.id ? (
+                    <Btn variant="outline" onClick={() => setUpdatedUser(null)}>
+                      <X className="h-4 w-4" />
+                    </Btn>
+                  ) : (
+                    <UserDialog user={user}>
+                      <Btn variant="outline">Open</Btn>
+                    </UserDialog>
+                  )}
                 </TableCell>
-                {isAdmin && (
+                {canEdit && (
                   <TableCell>
                     {updatedUser?.id === user.id ? (
                       <Btn
                         variant="outline"
                         onClick={() => {
-                          // update user if a change was made
-                          if (JSON.stringify(user) !== JSON.stringify(updatedUser))
-                            handleUpdateUser();
-
+                          handleUpdateUser();
                           setUpdatedUser(null);
                         }}
                       >

@@ -544,6 +544,7 @@ const Users = () => {
             roles={roleOptions as UserFilter['role']}
             memberships={membershipTermData?.types as UserFilter['paid']}
             onUserUpdated={handleUserUpdated}
+            canEdit
           />
           <DataTablePagination
             currentPage={currentPage}
