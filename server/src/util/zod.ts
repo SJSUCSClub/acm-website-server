@@ -199,3 +199,4 @@ export const templateNameSchema = z.object({
       },
     }),
 });
+export const eventRecipientGroupSchema = z.array(z.enum(['subscribers', 'attendees']));

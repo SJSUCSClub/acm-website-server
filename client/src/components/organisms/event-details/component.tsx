@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Clock, MapPin, Trash, Users } from 'lucide-react';
+import { Calendar, Clock, Mail, MapPin, Trash, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import FilesTable from '@/components/molecules/files-table';
 import SubscribeBtn from '@/components/molecules/subscribe-btn';
@@ -20,6 +20,7 @@ import { File as TableFile } from '@/components/molecules/files-table';
 import CompanyMultiSelect, { Company } from '@/components/molecules/company-multiselect';
 import { isFull } from '@/utils/helpers';
 import UsersTable from '@/components/molecules/users-table';
+import EventBasedEmailPopup from '@/components/molecules/event-based-email-popup';
 
 interface IEventDetailsProps {
   eventId: string;
@@ -326,6 +327,14 @@ const EventDetails: React.FC<IEventDetailsProps> = ({ eventId, admin = false }) 
                 <h1 className="text-3xl font-bold">{event?.event.name}</h1>
                 {admin && (
                   <div className="flex items-center gap-2 text-muted-foreground">
+                    {event && (
+                      <EventBasedEmailPopup event={event.event}>
+                        <Btn variant="outline">
+                          <Mail className="h-5 w-5" />
+                          <span>Email</span>
+                        </Btn>
+                      </EventBasedEmailPopup>
+                    )}
                     <Link to={'/admin/events/$eventId/edit'} params={{ eventId }}>
                       <Btn>Edit</Btn>
                     </Link>

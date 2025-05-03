@@ -4,6 +4,7 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 import {
   companyIDSchema,
   errorSchema,
+  eventRecipientGroupSchema,
   newEventSchema,
   urlSchema,
 } from '@/util/zod';
@@ -1024,6 +1025,113 @@ eventRouter.openapi(
         .where(eq(attendingEvents.eventId, parseInt(eventID)));
       return c.json(
         { attendeesCount: attendeesCount[0].count },
+        HttpStatusCodes.OK,
+      );
+    } catch (error) {
+      return c.json(
+        { error: `Internal server error: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
+  },
+);
+
+eventRouter.openapi(
+  createRoute({
+    method: 'get',
+    path: '/{eventID}/email-recipients',
+    tags: ['events'],
+    summary: 'Get the emails of recipients for an event',
+    middleware: [authMiddleWare('admin')],
+    request: {
+      params: eventIDSchema,
+      query: z.object({
+        recipientGroup: z.string().optional(),
+      }),
+    },
+    responses: {
+      [HttpStatusCodes.OK]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              recipients: z.array(z.string()),
+            }),
+          },
+        },
+        description: 'Successful response',
+      },
+      [HttpStatusCodes.BAD_REQUEST]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: 'Bad request',
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              error: z.string(),
+            }),
+          },
+        },
+        description: 'Internal Server Error',
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    const { eventID } = c.req.valid('param');
+    const recipientGroupQuery = c.req.query('recipientGroup');
+
+    let recipientGroups: z.infer<typeof eventRecipientGroupSchema>;
+    try {
+      recipientGroups = eventRecipientGroupSchema.parse(
+        recipientGroupQuery?.split(',') || [],
+      );
+    } catch (error) {
+      return c.json(
+        { error: `Invalid recipient group: ${error}` },
+        HttpStatusCodes.BAD_REQUEST,
+      );
+    }
+
+    let recipients: string[] = [];
+    try {
+      if (recipientGroups.length === 0) {
+        return c.json({ recipients }, HttpStatusCodes.OK);
+      }
+
+      if (recipientGroups.includes('subscribers')) {
+        const res = await db
+          .select({
+            email: users.email,
+          })
+          .from(subscribedEvents)
+          .innerJoin(users, eq(users.id, subscribedEvents.userId))
+          .where(eq(subscribedEvents.eventId, parseInt(eventID)));
+
+        recipients = recipients.concat(res.map((email) => email.email));
+      }
+
+      if (recipientGroups.includes('attendees')) {
+        const res = await db
+          .select({
+            email: users.email,
+          })
+          .from(attendingEvents)
+          .innerJoin(users, eq(users.id, attendingEvents.userId))
+          .where(eq(attendingEvents.eventId, parseInt(eventID)));
+
+        recipients = recipients.concat(res.map((email) => email.email));
+      }
+
+      return c.json(
+        { recipients: Array.from(new Set(recipients)) },
         HttpStatusCodes.OK,
       );
     } catch (error) {
