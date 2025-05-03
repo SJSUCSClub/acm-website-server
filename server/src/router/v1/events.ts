@@ -1131,7 +1131,7 @@ eventRouter.openapi(
       }
 
       return c.json(
-        { recipients: [...new Set(recipients)] },
+        { recipients: Array.from(new Set(recipients)) },
         HttpStatusCodes.OK,
       );
     } catch (error) {
