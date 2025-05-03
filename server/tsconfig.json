@@ -3,9 +3,11 @@
     "strict": true,
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
-	"baseUrl": "./",
-	"paths": {
-		"@/*": ["src/*"]
-	}
-  }
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "target": "es2015",
+  "downlevelIteration": true
 }

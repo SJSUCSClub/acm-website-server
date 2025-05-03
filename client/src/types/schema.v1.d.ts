@@ -3596,6 +3596,92 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/events/{eventID}/email-recipients": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the emails of recipients for an event */
+        get: {
+            parameters: {
+                query?: {
+                    recipientGroup?: string;
+                };
+                header?: never;
+                path: {
+                    eventID: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            recipients: string[];
+                        };
+                    };
+                };
+                /** @description Bad request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/companies": {
         parameters: {
             query?: never;
@@ -7204,7 +7290,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/emails": {
+    "/v1/emails/template": {
         parameters: {
             query?: never;
             header?: never;
@@ -7331,7 +7417,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/emails/{templateName}": {
+    "/v1/emails/template/{templateName}": {
         parameters: {
             query?: never;
             header?: never;
