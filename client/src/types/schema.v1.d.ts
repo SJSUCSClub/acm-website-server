@@ -7290,7 +7290,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/emails/template": {
+    "/v1/emails": {
         parameters: {
             query?: never;
             header?: never;
@@ -7417,7 +7417,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/emails/template/{templateName}": {
+    "/v1/emails/{templateName}": {
         parameters: {
             query?: never;
             header?: never;
