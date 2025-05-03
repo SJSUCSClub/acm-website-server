@@ -10,7 +10,7 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { useQuery, api } from '@/hooks/useFetch';
+import { api } from '@/hooks/useFetch';
 import { paths } from '@/types/schema.v1';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
