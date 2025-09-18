@@ -1,3 +1,5 @@
+\c acm_website
+
 insert into majors(name) values
 ('Undeclared'),
 ('Advertising, BS'),
