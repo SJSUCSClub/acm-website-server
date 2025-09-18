@@ -82,12 +82,12 @@ const SponsorForm: React.FC<ISponsorFormProps> = ({ onCreateComplete = () => {} 
     <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger asChild>
         <Btn variant="outline" onClick={() => setOpen(true)}>
-          Create Payment Link
+          Add Sponsor
         </Btn>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Payment Link</DialogTitle>
+          <DialogTitle>Sponsor</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e) => {
@@ -108,7 +108,7 @@ const SponsorForm: React.FC<ISponsorFormProps> = ({ onCreateComplete = () => {} 
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-muted"></div>
+                      <div className="w-full h-full bg-gray-400"></div>
                     )}
                   </div>
                   <div className="flex items-center justify-center gap-2 mt-2">
@@ -141,7 +141,7 @@ const SponsorForm: React.FC<ISponsorFormProps> = ({ onCreateComplete = () => {} 
           </div>
           <DialogFooter>
             <Btn variant="outline" type="submit">
-              Create
+              Add
             </Btn>
           </DialogFooter>
         </form>

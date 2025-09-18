@@ -212,7 +212,7 @@ const CompanyForm: React.FC<ICompanyForm> = ({ companyId }) => {
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-muted"></div>
+                      <div className="w-full h-full bg-gray-400"></div>
                     )}
                   </div>
                   <div className="space-y-2">
