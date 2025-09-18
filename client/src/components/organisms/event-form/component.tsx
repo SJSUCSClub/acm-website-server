@@ -274,7 +274,7 @@ const EventForm: React.FC<IEventFormProps> = ({ eventId }) => {
                           className="w-full h-full aspect-[2/3] object-cover"
                         />
                       ) : (
-                        <div className="w-full h-[36rem] bg-muted"></div>
+                        <div className="w-full h-[36rem] bg-gray-400"></div>
                       )}
                     </div>
                     <div className="flex items-center justify-center gap-2 mt-2">

@@ -183,7 +183,7 @@ const SpotlightForm: React.FC<ISpotlightFormProps> = ({ spotlightId }) => {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full bg-muted"></div>
+                        <div className="w-full h-full bg-gray-400"></div>
                       )}
                     </div>
                     <div className="flex items-center justify-center gap-2 mt-2">
