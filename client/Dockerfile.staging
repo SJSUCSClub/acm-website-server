@@ -1,0 +1,7 @@
+FROM oven/bun:1.2-alpine
+
+COPY package.json bun.lockb ./
+RUN bun install --frozen-lockfile
+
+COPY . .
+RUN bun run build

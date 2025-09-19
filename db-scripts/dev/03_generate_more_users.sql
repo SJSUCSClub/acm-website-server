@@ -1,3 +1,5 @@
+\c acm_website
+
 WITH user_data AS (
 	SELECT 'test_user_' || i::text as id,
 		'Test User ' || i::text as name,
