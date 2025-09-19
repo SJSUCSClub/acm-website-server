@@ -1,0 +1,17 @@
+FROM oven/bun:1.2-alpine AS build
+WORKDIR /app
+
+FROM base as install
+COPY package.json bun.lockb ./
+RUN bun install --frozen-lockfile
+
+COPY . .
+RUN bun run build --compile --minify --sourcemap ./src --outfile server-app
+
+FROM alpine:3.22 AS runner
+WORKDIR /app
+
+COPY --from=build /app/server-app .
+
+ENTRYPOINT ["./server-app"]
+
