@@ -135,7 +135,7 @@ const EventForm: React.FC<IEventFormProps> = ({ eventId }) => {
       shortenedEventUrl: eventData?.event.shortenedEventUrl || null
     } as FormValues,
     validators: {
-      onSubmit: formSchema
+      onSubmit: formSchema as any
     },
     onSubmit: async ({ value }) => {
       if (!eventId) {

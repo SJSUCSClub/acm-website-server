@@ -57,7 +57,7 @@ const OfficerForm: React.FC<IOfficerFormProps> = ({ officerId }) => {
       photo: officerData?.officer.photo || null
     } as FormValues,
     validators: {
-      onSubmit: formSchema
+      onSubmit: formSchema as any
     },
     onSubmit: async ({ value }) => {
       if (!officerId) {

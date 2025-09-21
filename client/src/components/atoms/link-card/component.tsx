@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from '@tanstack/react-router';
-import type { LinkComponentProps } from '@tanstack/react-router';
+import type { LinkProps} from '@tanstack/react-router';
 
-export interface ILinkBtnProps extends LinkComponentProps {
+export interface ILinkBtnProps extends LinkProps {
   pathName: string;
 }
 
