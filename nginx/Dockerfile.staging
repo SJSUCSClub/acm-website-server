@@ -1,0 +1,12 @@
+FROM oven/bun:1.2.20 as base
+
+FROM base as builder
+WORKDIR /app
+COPY client/package.json client/bun.lock ./
+RUN bun install
+COPY client .
+RUN bun run build
+
+FROM nginx:1.29-alpine as runner
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx/staging.conf /etc/nginx/nginx.conf

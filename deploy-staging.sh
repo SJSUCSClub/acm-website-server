@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-NGINX_CONTAINER_NAME=nginx
+NGINX_CONTAINER_NAME=acm-website-server-db-1
 MAX_WAIT=60
 SLEEP_INTERVAL=5
 
