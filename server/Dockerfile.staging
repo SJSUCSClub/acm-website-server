@@ -1,17 +1,22 @@
-FROM oven/bun:1.2-alpine AS build
+FROM oven/bun:1.2-alpine AS base
+
+FROM base AS builder
+
+RUN apk add --no-cache curl
 WORKDIR /app
 
-FROM base as install
-COPY package.json bun.lockb ./
-RUN bun install --frozen-lockfile
+COPY package.json bun.lockb tsconfig.json* ./
+RUN bun install --frozen-lockfile --production
 
-COPY . .
-RUN bun run build --compile --minify --sourcemap ./src --outfile server-app
+COPY src ./src
+RUN bun build ./src/index.ts --outdir ./dist --minify --sourcemap --target bun
 
-FROM alpine:3.22 AS runner
+FROM base AS runner
+RUN apk add --no-cache curl
 WORKDIR /app
 
-COPY --from=build /app/server-app .
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/package.json /app/package.json
 
-ENTRYPOINT ["./server-app"]
+CMD ["bun", "/app/dist/index.js"]
 

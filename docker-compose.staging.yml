@@ -7,12 +7,14 @@ services:
       - ./nginx/staging.conf:/etc/nginx/nginx.conf
       - ./certbot/www/:/var/www/certbot:ro
       - ./certbot/conf/:/etc/letsencrypt:ro
-      - ./client/dist:/usr/share/nginx/html:ro
+      - client_dist:/usr/share/nginx/html:ro
 
   client:
     build:
       context: ./client
       dockerfile: Dockerfile.staging
+    volumes:
+      - client_dist:/app/dist
 
   server:
     build:
@@ -24,9 +26,5 @@ services:
       - acm_website_db_data:/var/lib/postgresql/data
       - ./db-scripts/staging:/docker-entrypoint-initdb.d/
 
-  certbot:
-    image: certbot/certbot:v5.0.0
-    volumes:
-      - ./certbot/www/:/var/www/certbot:rw
-      - ./certbot/conf/:/etc/letsencrypt:rw
-    entrypoint: 
+volumes:
+  client_dist:

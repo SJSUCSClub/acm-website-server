@@ -64,7 +64,7 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ projectId = null }) => {
       status: projectData?.project.status || 'Not Started'
     },
     validators: {
-      onChange: formSchema
+      onChange: formSchema as any
     },
     onSubmit: ({ value }) => {
       if (projectId) {

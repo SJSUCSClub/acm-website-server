@@ -37,7 +37,7 @@ const SponsorForm: React.FC<ISponsorFormProps> = ({ onCreateComplete = () => {} 
       logo: null
     } as FormValues,
     validators: {
-      onSubmit: formSchema
+      onSubmit: formSchema as any
     },
     onSubmit: async ({ value }) => {
       try {

@@ -8,4 +8,5 @@ node_modules/
 **/.terraform/
 **/.terragrunt-cache/
 
-dist/
+**/dist/
+

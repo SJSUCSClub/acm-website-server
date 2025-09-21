@@ -89,7 +89,7 @@ const CompanyForm: React.FC<ICompanyForm> = ({ companyId }) => {
       logo: companyData?.company.logo || null
     } as FormValues,
     validators: {
-      onSubmit: formSchema
+      onSubmit: formSchema as any
     },
     onSubmit: async ({ value }) => {
       if (!companyId) {
