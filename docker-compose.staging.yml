@@ -9,7 +9,6 @@ services:
     volumes:
       - ./certbot/www/:/var/www/certbot:ro
       - ./certbot/conf/:/etc/letsencrypt:ro
-      - client_dist:/usr/share/nginx/html:ro
     depends_on:
       server:
         condition: service_healthy
@@ -72,4 +71,3 @@ services:
 
 volumes:
   acm_website_db_data:
-  client_dist:
