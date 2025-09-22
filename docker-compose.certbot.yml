@@ -1,7 +1,27 @@
 services:
+  nginx:
+    image: nginx:1.29-alpine
+    container_name: acm-certbot-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./certbot/www/:/var/www/certbot:ro
+      - ./nginx/certbot.conf:/etc/nginx/nginx.conf:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:80/healthcheck.txt"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
   certbot:
     image: certbot/certbot:v5.0.0
+    container_name: acm-certbot
     volumes:
       - ./certbot/www/:/var/www/certbot:rw
       - ./certbot/conf/:/etc/letsencrypt:rw
-    entrypoint: tail -f /dev/null
+    command: tail -f /dev/null
+    depends_on:
+      nginx:
+        condition: service_healthy
+        restart: true
