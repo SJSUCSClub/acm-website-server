@@ -47,7 +47,6 @@ const SearchBar = () => {
     if (!isFocused || !query || data?.results.length === 0) return;
 
     if (data) {
-      console.log(e.key);
       switch (e.key) {
         case 'ArrowDown':
           e.preventDefault();

@@ -35,7 +35,7 @@ export const authMiddleWare = (role: 'user' | 'member' | 'admin'): MiddlewareHan
 	if (role === 'admin' && user.role !== 'admin') {
 		return c.json({ error: 'Forbidden' }, FORBIDDEN);
 	}
-	if (role === 'member' && user.role === 'user') {
+	if (role === 'user' && user.role === 'member') {
 			return c.json({ error: 'Forbidden' }, FORBIDDEN);
 	}
 
