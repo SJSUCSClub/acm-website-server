@@ -17,11 +17,15 @@ import { useForm } from '@tanstack/react-form';
 import FetchError from '@/components/molecules/fetch-error';
 import Loading from '@/components/molecules/loading';
 
+export interface IPaymentLinksProps {
+  admin?: boolean;
+}
+
 interface ICreatePaymentLinksProps {
   handleCreate: (payment: PaymentLink) => void;
 }
 
-const PaymentLinks = () => {
+const PaymentLinks: React.FC<IPaymentLinksProps> = ({ admin = false }) => {
   const { data: payments, error, isLoading, refetch } = useQuery('get', '/v1/payments');
   const { mutate: deletePayment } = useMutation('delete', '/v1/payments/{paymentId}');
   const { mutate: createPayment } = useMutation('post', '/v1/payments');
@@ -67,10 +71,11 @@ const PaymentLinks = () => {
 
   return (
     <div className="space-y-2">
-      <h3 className="font-bold text-lg">Payment Links</h3>
-      <div className="flex justify-end">
-        <CreatePaymentLink handleCreate={handleCreate} />
-      </div>
+      {admin && (
+        <div className="flex justify-end">
+          <CreatePaymentLink handleCreate={handleCreate} />
+        </div>
+      )}
       <Loading isLoading={isLoading}>
         <FetchError isError={!!error || !payments}>
           {payments?.paymentLinks.length === 0 && (
@@ -78,7 +83,12 @@ const PaymentLinks = () => {
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {payments?.paymentLinks.map((payment) => (
-              <PaymentLink key={payment.id} payment={payment} handleDelete={handleDelete} />
+              <PaymentLink
+                key={payment.id}
+                payment={payment}
+                handleDelete={handleDelete}
+                admin={admin}
+              />
             ))}
           </div>
         </FetchError>
