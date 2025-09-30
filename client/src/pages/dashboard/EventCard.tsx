@@ -21,10 +21,14 @@ type BookmarkedEvent =
   paths['/v1/users/my/bookmarks']['get']['responses']['200']['content']['application/json']['bookmarks'][number];
 type SubscribedEvent =
   paths['/v1/users/my/subscribed-events']['get']['responses']['200']['content']['application/json']['events'][number];
-export type Event = BookmarkedEvent & SubscribedEvent;
+type AttendedEvent =
+  paths['/v1/users/my/attending-events']['get']['responses']['200']['content']['application/json']['events'][number];
+export type Event = BookmarkedEvent & SubscribedEvent & AttendedEvent;
 
 const EventCard: React.FC<IEventCardProps> = ({ event, onRemove }) => {
-  const date = new Date(event.bookmarkedDate || event.subscribedDate).toISOString().slice(0, 10);
+  const date = new Date(event.bookmarkedDate || event.subscribedDate || event.attendingDate)
+    .toISOString()
+    .slice(0, 10);
   return (
     <Card>
       <CardHeader className="space-y-3">
