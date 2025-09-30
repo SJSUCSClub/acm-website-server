@@ -494,7 +494,7 @@ const Users = () => {
             <label className="block text-sm mb-1">Name</label>
             <input
               type="text"
-              className="w-full p-2 border rounded"
+              className="w-full p-1 border border-input rounded"
               value={nameSearch}
               onChange={handleNameSearchChange}
               placeholder="Search by name"

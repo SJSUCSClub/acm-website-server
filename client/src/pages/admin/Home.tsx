@@ -2,6 +2,8 @@ import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Link } from '@tanstack/react-router';
 import { DEFAULT_EVENT_FILTERS } from '@/utils/constants';
+import Card, { CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/atoms/card';
+import Btn from '@/components/atoms/btn';
 
 const AdminHome = () => {
   const { user } = useAuth();
@@ -19,85 +21,72 @@ const AdminHome = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow h-full flex flex-col">
-          <h2 className="text-lg font-semibold mb-2">Club Management</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">
-            Manage club links and payment methods
-          </p>
-          <Link to="/admin/club">
-            <button className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded w-full mt-auto">
-              Manage Club
-            </button>
-          </Link>
-        </div>
-
-        <div className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow h-full flex flex-col">
-          <h2 className="text-lg font-semibold mb-2">User Management</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">
-            Manage users and their permissions
-          </p>
-          <Link to="/admin/users">
-            <button className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded w-full mt-auto">
-              Manage Users
-            </button>
-          </Link>
-        </div>
-
-        <div className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow h-full flex flex-col">
-          <h2 className="text-lg font-semibold mb-2">Event Management</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">
-            Create and manage events
-          </p>
-          <Link to="/admin/events" search={DEFAULT_EVENT_FILTERS}>
-            <button className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded w-full mt-auto">
-              Manage Events
-            </button>
-          </Link>
-        </div>
-
-        <div className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow h-full flex flex-col">
-          <h2 className="text-lg font-semibold mb-2">Event Companies</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">
-            Create and manage companies we work with
-          </p>
-          <Link to="/admin/companies">
-            <button className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded w-full mt-auto">
-              Manage Companies
-            </button>
-          </Link>
-        </div>
-
-        <div className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow h-full flex flex-col">
-          <h2 className="text-lg font-semibold mb-2">Project Management</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">
-            Manage Dev Team Projects
-          </p>
-          <Link to="/admin/projects">
-            <button className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded w-full mt-auto">
-              Manage Projects
-            </button>
-          </Link>
-        </div>
-
-        <div className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow h-full flex flex-col">
-          <h2 className="text-lg font-semibold mb-2">Officer Management</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">Manage Club Officers</p>
-          <Link to="/admin/officers">
-            <button className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded w-full mt-auto">
-              Manage Officers
-            </button>
-          </Link>
-        </div>
-
-        <div className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow h-full flex flex-col">
-          <h2 className="text-lg font-semibold mb-2">Content Management</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">
-            Manage website content and resources
-          </p>
-          <button className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded w-full mt-auto">
-            Manage Content
-          </button>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Club Management</CardTitle>
+            <CardDescription>Manage club links and payment methods</CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <Link to="/admin/club" className="w-full">
+              <Btn className="w-full">Manage Club</Btn>
+            </Link>
+          </CardFooter>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>User Management</CardTitle>
+            <CardDescription>Manage users and their permissions</CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <Link to="/admin/users" className="w-full">
+              <Btn className="w-full">Manage Users</Btn>
+            </Link>
+          </CardFooter>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Event Management</CardTitle>
+            <CardDescription>Create and manage events</CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <Link to="/admin/events" search={DEFAULT_EVENT_FILTERS} className="w-full">
+              <Btn className="w-full">Manage Events</Btn>
+            </Link>
+          </CardFooter>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Company Management</CardTitle>
+            <CardDescription>Create and manage companies we work with</CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <Link to="/admin/companies" className="w-full">
+              <Btn className="w-full">Manage Companies</Btn>
+            </Link>
+          </CardFooter>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Project Management</CardTitle>
+            <CardDescription>Manage Dev Team Projects</CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <Link to="/admin/projects" className="w-full">
+              <Btn className="w-full">Manage Projects</Btn>
+            </Link>
+          </CardFooter>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Officer Management</CardTitle>
+            <CardDescription>Manage Club Officers</CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <Link to="/admin/officers" className="w-full">
+              <Btn className="w-full">Manage Officers</Btn>
+            </Link>
+          </CardFooter>
+        </Card>
       </div>
     </div>
   );

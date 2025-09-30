@@ -580,7 +580,7 @@ const EventForm: React.FC<IEventFormProps> = ({ eventId }) => {
                       <Label htmlFor={field.name} className="text-lg">
                         Urls
                       </Label>
-                      <div className="flex items-center gap-2 text-sm border border-gray-300 rounded-md mb-2">
+                      <div className="flex items-center gap-2 text-sm border border-input rounded-md mb-2">
                         <Input
                           placeholder="https://example.com"
                           name={field.name}

@@ -44,7 +44,7 @@ const QuestionForm: React.FC<IQuestionFormProps> = ({ handleCreate }) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Payment Link</DialogTitle>
+          <DialogTitle>Create Question</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e) => {
@@ -58,7 +58,7 @@ const QuestionForm: React.FC<IQuestionFormProps> = ({ handleCreate }) => {
               children={(field) => (
                 <div>
                   <Label htmlFor={field.name} className="text-muted-foreground text-xs font-bold">
-                    Name
+                    Question
                   </Label>
                   <Input
                     id={field.name}
@@ -74,7 +74,7 @@ const QuestionForm: React.FC<IQuestionFormProps> = ({ handleCreate }) => {
               children={(field) => (
                 <div>
                   <Label htmlFor={field.name} className="text-muted-foreground text-xs font-bold">
-                    Link
+                    Answer
                   </Label>
                   <Textarea
                     id={field.name}

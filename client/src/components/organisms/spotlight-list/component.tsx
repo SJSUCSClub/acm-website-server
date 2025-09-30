@@ -24,7 +24,7 @@ const SpotlightList: React.FC<ISpotlightListProps> = ({ admin = false }) => {
       {admin && (
         <div className="flex items-center justify-end">
           <Link to="/admin/club/spotlights/create">
-            <Btn>Create Spotlight</Btn>
+            <Btn variant="outline">Create Spotlight</Btn>
           </Link>
         </div>
       )}
