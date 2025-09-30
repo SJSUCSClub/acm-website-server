@@ -15,7 +15,10 @@ function RouteComponent() {
       <h1 className="text-4xl font-bold">Manage Club</h1>
       <div className="space-y-10">
         <ClubLinks />
-        <PaymentLinks />
+        <div className="space-y-2">
+          <h3 className="font-bold text-lg">Payment Methods</h3>
+          <PaymentLinks admin />
+        </div>
         <div className="space-y-2">
           <h3 className="font-bold text-lg">Spotlights</h3>
           <SpotlightList admin />

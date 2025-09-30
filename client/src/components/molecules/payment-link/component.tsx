@@ -15,18 +15,23 @@ type PaymentLink =
 export interface IPaymentLinkProps {
   payment: PaymentLink;
   handleDelete: (paymentId: number) => void;
+  admin?: boolean;
 }
 
 export interface IReadLinkProps extends IPaymentLinkProps {
   setEdit: (edit: boolean) => void;
 }
 
-export interface IEditLinkProps extends Omit<IPaymentLinkProps, 'handleDelete'> {
+export interface IEditLinkProps extends Omit<IPaymentLinkProps, 'handleDelete' | 'admin'> {
   setEdit: (edit: boolean) => void;
   setPayment: (payment: PaymentLink) => void;
 }
 
-const PaymentLink: React.FC<IPaymentLinkProps> = ({ payment: paymentProp, handleDelete }) => {
+const PaymentLink: React.FC<IPaymentLinkProps> = ({
+  payment: paymentProp,
+  handleDelete,
+  admin = false
+}) => {
   const [edit, setEdit] = useState(false);
   const [payment, setPayment] = useState(paymentProp);
 
@@ -35,13 +40,13 @@ const PaymentLink: React.FC<IPaymentLinkProps> = ({ payment: paymentProp, handle
       {edit ? (
         <EditLink payment={payment} setEdit={setEdit} setPayment={setPayment} />
       ) : (
-        <ReadLink payment={payment} setEdit={setEdit} handleDelete={handleDelete} />
+        <ReadLink payment={payment} setEdit={setEdit} handleDelete={handleDelete} admin={admin} />
       )}
     </Card>
   );
 };
 
-const ReadLink: React.FC<IReadLinkProps> = ({ payment, setEdit, handleDelete }) => {
+const ReadLink: React.FC<IReadLinkProps> = ({ payment, setEdit, handleDelete, admin }) => {
   return (
     <CardContent className="p-0">
       <div className="p-4">
@@ -56,14 +61,18 @@ const ReadLink: React.FC<IReadLinkProps> = ({ payment, setEdit, handleDelete }) 
                 <ExternalLink className="h-4 w-4" />
               </a>
             </Btn>
-            <Btn variant="ghost" onClick={() => setEdit(true)}>
-              <Pencil className="h-4 w-4" />
-            </Btn>
-            <DeleteAlert onDelete={() => handleDelete(payment.id)}>
-              <Btn variant="ghost">
-                <Trash className="h-4 w-4" />
-              </Btn>
-            </DeleteAlert>
+            {admin && (
+              <>
+                <Btn variant="ghost" onClick={() => setEdit(true)}>
+                  <Pencil className="h-4 w-4" />
+                </Btn>
+                <DeleteAlert onDelete={() => handleDelete(payment.id)}>
+                  <Btn variant="ghost">
+                    <Trash className="h-4 w-4" />
+                  </Btn>
+                </DeleteAlert>
+              </>
+            )}
           </div>
         </div>
         <div className="flex items-center">

@@ -10,6 +10,7 @@ import SponsorList from '@/components/organisms/sponsor-list';
 import SpotlightList from '@/components/organisms/spotlight-list';
 import OfficerList from '@/components/organisms/officer-list';
 import { Separator } from '@/components/ui/separator';
+import PaymentLinks from '@/components/molecules/payment-links';
 
 const Hero = () => {
   const { data: links } = useQuery('get', '/v1/club/links');
@@ -149,6 +150,11 @@ const Hero = () => {
         <OfficerList />
 
         <Separator />
+
+        <div className="space-y-2">
+          <h1 className="text-4xl font-bold">Payment Methods</h1>
+          <PaymentLinks />
+        </div>
 
         <div className="flex justify-center items-center">
           <GetInvolvedBtn />
