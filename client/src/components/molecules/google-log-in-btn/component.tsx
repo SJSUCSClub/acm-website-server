@@ -8,15 +8,9 @@ export const GoogleLogInBtn: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center mt-4">
-      <Btn
-        variant="ghost"
-        onClick={handleGoogleLogin}
-        className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 shadow-md transition-all duration-200 ease-in-out"
-      >
-        <img src={GoogleLogo} alt="google logo" className="w-6 h-6" />
-        Log in with Google
-      </Btn>
-    </div>
+    <Btn variant="outline" onClick={handleGoogleLogin} className="w-full p-4">
+      <img src={GoogleLogo} alt="google logo" className="w-6 h-6" />
+      Log in with Google
+    </Btn>
   );
 };

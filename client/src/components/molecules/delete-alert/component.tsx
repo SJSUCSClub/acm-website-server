@@ -1,3 +1,4 @@
+import Btn from '@/components/atoms/btn';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,9 +38,9 @@ const DeleteAlert: React.FC<IDeleteAlertProps> = ({
         {body}
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction className="bg-red-500" onClick={onDelete}>
+          <Btn variant="destructive" onClick={onDelete}>
             Delete
-          </AlertDialogAction>
+          </Btn>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

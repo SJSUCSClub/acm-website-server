@@ -36,7 +36,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       <label className="block text-sm mb-1">{label}</label>
       <input
         type="text"
-        className="w-full p-2 border rounded text-sm"
+        className="w-full p-2 border border-input rounded text-sm"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={placeholder}
