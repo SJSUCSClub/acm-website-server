@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import { File as TableFile } from '@/components/molecules/files-table';
 import { presignedUrlFetch } from '@/utils/presignedUrlFetch';
 import DeleteAlert from '@/components/molecules/delete-alert';
+import InterestBtn from '@/components/molecules/interest-btn';
 
 export interface IProjectDetailsProps {
   projectId: string;
@@ -158,14 +159,17 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
 
             <p className="text-muted-foreground mb-4">{project.project.description}</p>
 
-            {project.project.githubLink && (
-              <Btn variant="outline" size="sm" asChild>
-                <a href={project.project.githubLink} target="_blank" rel="noopener noreferrer">
-                  <RxGithubLogo className="mr-2 h-4 w-4" />
-                  View on GitHub
-                </a>
-              </Btn>
-            )}
+            <div className="flex space-x-2 items-center">
+              <InterestBtn id={project.project.id.toString()} />
+              {project.project.githubLink && (
+                <Btn variant="outline" size="sm" asChild>
+                  <a href={project.project.githubLink} target="_blank" rel="noopener noreferrer">
+                    <RxGithubLogo className="mr-2 h-4 w-4" />
+                    View on GitHub
+                  </a>
+                </Btn>
+              )}
+            </div>
           </div>
           <div className="space-y-4">
             <div className="flex items-center justify-between">

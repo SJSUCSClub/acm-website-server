@@ -2,6 +2,7 @@ import Btn from '@/components/atoms/btn';
 import { useMutation, useQuery } from '@/hooks/useFetch';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { Check } from 'lucide-react';
 
 export interface IInterestBtnProps {
   id: string;
@@ -83,11 +84,15 @@ const InterestBtn: React.FC<IInterestBtnProps> = ({ id }) => {
 
   return (
     <Btn size="sm" disabled={isLoading || isError} onClick={handleInterest}>
-      {isLoading || isError
-        ? 'Login to Show Interest'
-        : interested
-          ? 'Remove Interest'
-          : 'Interested'}
+      {isLoading || isError ? (
+        'Login to Show Interest'
+      ) : interested ? (
+        <>
+          <Check /> Shown Interest
+        </>
+      ) : (
+        'Interested in Joining'
+      )}
     </Btn>
   );
 };
