@@ -14,6 +14,7 @@ import { File as TableFile } from '@/components/molecules/files-table';
 import { presignedUrlFetch } from '@/utils/presignedUrlFetch';
 import DeleteAlert from '@/components/molecules/delete-alert';
 import InterestBtn from '@/components/molecules/interest-btn';
+import ProjectEmailBtn from '@/components/molecules/project-email-btn';
 
 export interface IProjectDetailsProps {
   projectId: string;
@@ -143,6 +144,7 @@ const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, admin = fal
               </div>
               {admin && (
                 <div className="flex items-center space-x-2">
+                  <ProjectEmailBtn projectId={project.project.id.toString()} />
                   <Link
                     to={'/admin/projects/$projectId/edit'}
                     params={{ projectId: project.project.id.toString() }}
