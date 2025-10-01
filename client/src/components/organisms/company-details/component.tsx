@@ -3,6 +3,7 @@ import DeleteAlert from '@/components/molecules/delete-alert';
 import EventsTable from '@/components/molecules/events-table';
 import FetchError from '@/components/molecules/fetch-error';
 import Loading from '@/components/molecules/loading';
+import SubscribeBtn from '@/components/molecules/subscribe-btn';
 import UsersTable from '@/components/molecules/users-table';
 import { Badge } from '@/components/ui/badge';
 import { useMutation, useQuery } from '@/hooks/useFetch';
@@ -89,7 +90,7 @@ const CompanyDetails: React.FC<ICompanyDetailsProps> = ({ companyId, admin = fal
       <Loading isLoading={isLoadingCompany}>
         <FetchError isError={!!errorCompany || !company}>
           <div className="space-y-4">
-            <div className="flex items-start justify-between">
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 {' '}
                 <div className="relative h-24 w-24 rounded-lg overflow-hidden bg-muted">
@@ -106,16 +107,19 @@ const CompanyDetails: React.FC<ICompanyDetailsProps> = ({ companyId, admin = fal
                   </Badge>
                 </div>
               </div>
-              {admin && (
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Link to={'/admin/companies/$companyId/edit'} params={{ companyId }}>
-                    <Btn>Edit</Btn>
-                  </Link>
-                  <DeleteAlert onDelete={handleCompanyDelete}>
-                    <Btn className="bg-red-500">Delete</Btn>
-                  </DeleteAlert>
-                </div>
-              )}
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <SubscribeBtn source="company" id={company?.company.id.toString() || ''} />
+                {admin && (
+                  <>
+                    <Link to={'/admin/companies/$companyId/edit'} params={{ companyId }}>
+                      <Btn>Edit</Btn>
+                    </Link>
+                    <DeleteAlert onDelete={handleCompanyDelete}>
+                      <Btn className="bg-red-500">Delete</Btn>
+                    </DeleteAlert>
+                  </>
+                )}
+              </div>
             </div>
             <div>
               {company?.company.location && (

@@ -1,9 +1,10 @@
-import Card, { CardContent, CardHeader, CardTitle } from '@/components/atoms/card';
+import Card, { CardContent, CardFooter, CardHeader, CardTitle } from '@/components/atoms/card';
 import { Badge } from '@/components/ui/badge';
 import { paths } from '@/types/schema.v1';
 import { Link, useRouterState } from '@tanstack/react-router';
 import { MapPin } from 'lucide-react';
 import React from 'react';
+import SubscribeBtn from '@/components/molecules/subscribe-btn';
 
 type Company =
   paths['/v1/companies']['get']['responses']['200']['content']['application/json']['companies'][number];
@@ -15,7 +16,7 @@ export interface ICompanyCardProps {
 const CompanyCard: React.FC<ICompanyCardProps> = ({ company }) => {
   const state = useRouterState();
   return (
-    <Card>
+    <Card className="flex flex-col">
       <CardHeader>
         <div className="flex items-center gap-4">
           <div className="relative h-16 w-16 rounded-lg overflow-hidden bg-muted">
@@ -54,6 +55,9 @@ const CompanyCard: React.FC<ICompanyCardProps> = ({ company }) => {
           <p className="text-muted-foreground">{company.description}</p>
         </div>
       </CardContent>
+      <CardFooter className="mt-auto">
+        <SubscribeBtn source="company" id={company.id.toString() || ''} />
+      </CardFooter>
     </Card>
   );
 };
