@@ -54,7 +54,7 @@ export const NavBar: React.FC = () => {
           <img src={Logo} alt="Logo" className="sm:h-auto max-w-[100px] h-auto" />
         </Link>
 
-        <div className="sm:w-[400px] sm:block hidden xl:w-[600px]">
+        <div className="sm:w-[400px] sm:block hidden xl:w-[500px]">
           <SearchBar />
         </div>
 
@@ -62,6 +62,7 @@ export const NavBar: React.FC = () => {
         <div className="hidden lg:flex items-center gap-2">
           <LinkCard to="/about" pathName="About Us" />
           <LinkCard to="/events" search={DEFAULT_EVENT_FILTERS} pathName="Events" />
+          <LinkCard to="/companies" pathName="Companies" />
           <LinkCard to="/projects" pathName="Projects" />
 
           {isLoggedIn && user ? (
@@ -149,6 +150,14 @@ export const NavBar: React.FC = () => {
             onClick={handleClick}
           >
             <span className="text-[#196096] font-semibold">Events</span>
+          </Link>
+
+          <Link
+            to="/companies"
+            className="flex items-center px-6 py-4 hover:bg-gray-100 transition-colors w-full"
+            onClick={handleClick}
+          >
+            <span className="text-[#196096] font-semibold">Companies</span>
           </Link>
 
           <Link
