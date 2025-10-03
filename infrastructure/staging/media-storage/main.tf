@@ -1,4 +1,4 @@
-module "media_storage" {
+module "acm_website_media_storage_staging_440744215929_us_west_2" {
   source  = "terraform-aws-modules/s3-bucket/aws"
   version = "4.5.0"
   bucket  = "acm-website-media-storage-staging-440744215929-us-west-2"
@@ -26,14 +26,14 @@ module "media_storage" {
           AWS = var.acm_application_server_role_arn
         }
         Action   = ["s3:PutObject", "s3:DeleteObject"]
-        Resource = ["${module.media_storage.s3_bucket_arn}/*", "${module.media_storage.s3_bucket_arn}"]
+        Resource = ["${module.acm_website_media_storage_staging_440744215929_us_west_2.s3_bucket_arn}/*", "${module.acm_website_media_storage_staging_440744215929_us_west_2.s3_bucket_arn}"]
       },
       {
         Sid       = "All Read Access"
         Effect    = "Allow"
         Principal = "*"
         Action    = "s3:GetObject"
-        Resource  = "${module.media_storage.s3_bucket_arn}/*"
+        Resource  = "${module.acm_website_media_storage_staging_440744215929_us_west_2.s3_bucket_arn}/*"
       }
     ]
   })
@@ -42,7 +42,7 @@ module "media_storage" {
     {
       allowed_headers = ["*"]
       allowed_methods = ["PUT", "GET"]
-      allowed_origins = ["http://localhost"]
+      allowed_origins = ["https://staging.acmsjsu.org"]
       expose_headers  = []
     }
   ]
