@@ -40,7 +40,7 @@ app.use(
 );
 
 app.use(csrf({
-	origin: env.CORS_ORIGINS.split(',')
+	origin: env.CORS_ORIGINS.split(','),
 }));
 
 app.get('/', (c) =>
