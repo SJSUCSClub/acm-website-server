@@ -6,5 +6,6 @@ terraform {
     use_lockfile = true
     key          = "service/acm-website/staging/terraform.tfstate"
     region       = "us-west-2"
+    profile      = "AcmApplicationTerraformRoleForStagingEnvironment"
   }
 }
