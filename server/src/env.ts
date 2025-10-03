@@ -4,6 +4,7 @@ const EnvSchema = z.object({
   NODE_ENV: z
     .enum(['development', 'production', 'test'])
     .default('development'),
+  CORS_ORIGINS: z.string().default('*'),
   PORT: z.string().default('5001'),
   POSTGRES_HOST: z.string().default('localhost'),
   POSTGRES_PORT: z.string().transform(Number).default('5432'),

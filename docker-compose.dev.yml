@@ -65,6 +65,7 @@ services:
       - ROLE_ARN=${AWS_ROLE_ARN?REQUIRED}
       - SENDER=${EMAIL_SENDER?REQUIRED}
       - APPLICATION=${APPLICATION?REQUIRED}
+      - CORS_ORIGINS=${CORS_ORIGINS?REQUIRED}
     depends_on:
       db:
         condition: service_healthy

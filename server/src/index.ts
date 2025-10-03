@@ -20,7 +20,17 @@ if (env.NODE_ENV === 'development') {
 app.use(
   '/*',
   cors({
-    origin: '*',
+    origin: (origin) => {
+      if (!origin) { return '*'; } // allow curl/postman requests
+
+      if (env.NODE_ENV === 'production') {
+        // Only allow origins in the list
+        return env.CORS_ORIGINS.includes(origin) ? origin : null;
+      } else {
+        // Non-production: allow any origin, fallback to first in list if not in array
+        return env.CORS_ORIGINS.includes(origin) ? origin : env.CORS_ORIGINS[0];
+      }
+    },
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type'],
     exposeHeaders: ['Content-Length'],
@@ -29,14 +39,9 @@ app.use(
   }),
 );
 
-if (env.NODE_ENV === 'production') {
-  app.use('/*', async (c, next) => {
-    if (c.req.method !== 'OPTIONS') {
-      return csrf()(c, next);
-    }
-    return next();
-  });
-}
+app.use(csrf({
+	origin: env.CORS_ORIGINS.split(',')
+}));
 
 app.get('/', (c) =>
   c.json(
