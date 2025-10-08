@@ -9,6 +9,7 @@ import Card, {
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { paths } from '@/types/schema.v1';
+import { Link } from '@tanstack/react-router';
 import { CiLocationOn } from 'react-icons/ci';
 
 type SubscribedCompany =
@@ -25,7 +26,9 @@ const CompanyCard: React.FC<ICompanyCardProps> = ({ company, onRemove }) => {
     <Card>
       <CardHeader className="space-y-3">
         <CardTitle className="flex justify-between items-center space-x-2">
-          <p>{company.name}</p>
+          <Link to="/companies/$companyId" params={{ companyId: company.id.toString() }}>
+            <p>{company.name}</p>
+          </Link>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>

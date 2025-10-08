@@ -12,6 +12,7 @@ import { RxGithubLogo } from 'react-icons/rx';
 import InterestBtn from '@/components/molecules/interest-btn';
 import { Link, useRouterState } from '@tanstack/react-router';
 import { getProjectStatusColor } from '@/utils/colors';
+import clsx from 'clsx';
 
 type Project =
   paths['/v1/projects']['get']['responses']['200']['content']['application/json']['projects'][number];
@@ -36,7 +37,7 @@ const ProjectCard: React.FC<IProjectCardProps> = ({ project }) => {
           <CardTitle>{project.name}</CardTitle>
         </Link>
         <CardDescription>
-          <Badge className={getProjectStatusColor(project.status)}>{project.status}</Badge>
+          <Badge className={clsx(getProjectStatusColor(project.status))}>{project.status}</Badge>
         </CardDescription>
       </CardHeader>
       <CardContent>{project.description}</CardContent>

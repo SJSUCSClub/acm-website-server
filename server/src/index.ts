@@ -39,9 +39,11 @@ app.use(
   }),
 );
 
-app.use(csrf({
-	origin: env.CORS_ORIGINS.split(','),
-}));
+if (env.NODE_ENV !== 'development') {
+  app.use(csrf({
+    origin: env.CORS_ORIGINS.split(','),
+  }));
+}
 
 app.get('/', (c) =>
   c.json(
