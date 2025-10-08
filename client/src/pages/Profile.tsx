@@ -1,5 +1,5 @@
 import Dropdown from '../components/atoms/dropdown';
-import { Avatar, AvatarFallback, AvatarImage } from '../components/atoms/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Btn } from '../components/atoms/btn';
 import { Card, CardContent } from '../components/atoms/card';
 import { Input } from '../components/atoms/input';

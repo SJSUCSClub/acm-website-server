@@ -77,7 +77,9 @@ export const NavBar: React.FC = () => {
                 <DropdownMenuItem onClick={() => handleNavigation('/dashboard')}>
                   Dashboard
                 </DropdownMenuItem>
-
+                <DropdownMenuItem onClick={() => handleNavigation('/profile')}>
+                  Profile
+                </DropdownMenuItem>
                 {isAdmin && (
                   <>
                     <DropdownMenuSeparator />
@@ -176,6 +178,13 @@ export const NavBar: React.FC = () => {
                 onClick={handleClick}
               >
                 <span className="text-[#196096] font-semibold">Dashboard</span>
+              </Link>
+              <Link
+                to="/profile"
+                className="flex items-center px-6 py-4 hover:bg-gray-100 transition-colors w-full"
+                onClick={handleClick}
+              >
+                <span className="text-[#196096] font-semibold">Profile</span>
               </Link>
 
               {isAdmin && (
