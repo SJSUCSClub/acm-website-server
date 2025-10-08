@@ -1,36 +1,28 @@
-# acm-website-server
+# ACM@SJSU Website
 
-## Development
+This is the official website for ACM@SJSU. It serves as the hub for showcasing our events, projects, and members.
 
-Copy .env.example to .env and set the correct environment variables.
+##  Tech Stack
+- **Frontend**: Vite + React + Typescript + Tailwind CSS
+- **Backend**: Hono.js
+- **Database**: PostgreSQL
+- **Deployment**: Docker + Nginx + AWS
 
+## Getting Started
+
+### Clone the Repository
 ```sh
-cp .env.example .env
+git clone https://github.com/SJSUCSClub/acm-website-server.git
+cd acm-website-server
 ```
 
-Start the development server with:
-
+### Setup the Environment
 ```sh
-docker compose -f docker-compose.dev.yml up --build
+cp .env.example .env.local
 ```
 
-Open http://localhost:5001
-
-To shutdown the server and remove associated volume, run:
-
+### Start the Development Server
 ```sh
-docker compose -f docker-compose.dev.yml down -v
+docker compose -f docker-compose.dev.yml --env-file .env.local up --build
 ```
-
-## Documentation
-
-Generate the documentation with:
-
-```sh
-bun run docs
-```
-
-Show Docs
-```sh
-bun run docs:serve
-```
+Open http://localhost
