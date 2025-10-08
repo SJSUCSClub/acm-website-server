@@ -9,6 +9,9 @@ import Card, {
 import { Badge } from '@/components/ui/badge';
 import { useQuery, useMutation } from '@/hooks/useFetch';
 import { paths } from '@/types/schema.v1';
+import { getProjectStatusColor } from '@/utils/colors';
+import { Link } from '@tanstack/react-router';
+import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { RxGithubLogo } from 'react-icons/rx';
 
@@ -53,9 +56,13 @@ const ProjectsInInterest = () => {
           {projectsInInterest.map((project) => (
             <Card key={project.id}>
               <CardHeader>
-                <CardTitle>{project.name}</CardTitle>
+                <Link to="/projects/$projectId" params={{ projectId: project.id.toString() }}>
+                  <CardTitle>{project.name}</CardTitle>
+                </Link>
                 <CardDescription>
-                  <Badge variant="outline">{project.status}</Badge>
+                  <Badge className={clsx(getProjectStatusColor(project.status))}>
+                    {project.status}
+                  </Badge>
                 </CardDescription>
               </CardHeader>
               <CardContent>{project.description}</CardContent>
