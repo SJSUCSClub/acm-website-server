@@ -20,7 +20,7 @@ fi
 docker stop $CERTBOT_NGINX_NAME
 
 echo "Starting core infra..."
-docker compose -f docker-compose.staging.yml --env-file env/staging.env up --build -d
+docker compose -f docker-compose.staging.yml --env-file .env.staging up --build -d
 
 echo "Deployment finished"
 
