@@ -327,3 +327,12 @@ INSERT INTO landing_questions(question, answer) VALUES
 ($$What are the rules of the club?$$, $$Be respectful, keep the clubroom clean, and have fun!$$),
 ($$Is there a membership fee for the club?$$, $$Yes. It's $20 for 1 semester or $30 for 2 semesters$$),
 ($$What do I get for a paid membership?$$, $$Paid members are invited to attend exclusive networking sessions, tech talks, and company events. We collaborate with many industry leaders, including Google, Tesla, and Nvidia, so don''t miss out!$$);
+
+INSERT INTO system_notifications(name, description, type, enabled_by_default) VALUES
+('New Event', 'Receive notification when a new events is published.', 'Events', true);
+
+INSERT INTO user_system_notification_preferences(user_id, system_notification_id)
+select u.id, sn.id
+from users u
+cross join system_notifications sn
+on conflict do nothing;

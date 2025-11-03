@@ -37,8 +37,9 @@ CASE
 	ELSE 'user'::user_role_enum
 END AS role
 FROM generate_series(1, 50) i
-)
-INSERT INTO users (
+),
+inserted_users AS (
+  INSERT INTO users (
 		id,
 		name,
 		email,
@@ -53,26 +54,33 @@ INSERT INTO users (
 		role,
 		paid
 	)
-SELECT id,
-	name,
-	email,
-	major,
-	education_level,
-	grad_date,
-	interests,
-	profile_pic,
-	linkedin,
-	github,
-	website,
-	role,
-	CASE
-		WHEN role = 'member'
-		OR role = 'admin' THEN (ARRAY ['Semester', 'Annual']) [floor(random() * 2 + 1)]::membership_term_enum
-		ELSE NULL
-	END AS paid
-FROM user_data
-WHERE NOT EXISTS (
-		SELECT 1
-		FROM users
-		WHERE id = user_data.id
-	);
+  SELECT id,
+    name,
+    email,
+    major,
+    education_level,
+    grad_date,
+    interests,
+    profile_pic,
+    linkedin,
+    github,
+    website,
+    role,
+    CASE
+      WHEN role = 'member'
+      OR role = 'admin' THEN (ARRAY ['Semester', 'Annual']) [floor(random() * 2 + 1)]::membership_term_enum
+      ELSE NULL
+    END AS paid
+  FROM user_data
+  WHERE NOT EXISTS (
+      SELECT 1
+      FROM users
+      WHERE id = user_data.id
+    )
+  RETURNING id
+)
+INSERT INTO user_system_notification_preferences(user_id, system_notification_id)
+SELECT u.id, sn.id
+FROM inserted_users u
+CROSS JOIN system_notifications sn
+ON CONFLICT DO NOTHING;
