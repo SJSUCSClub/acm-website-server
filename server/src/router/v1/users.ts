@@ -1740,7 +1740,7 @@ userRouter.openapi(
         description: 'Successful response',
         content: {
           'application/json': {
-            schema: z.array(userSystemNotificationPreferenceSchema)
+            schema: z.array(userSystemNotificationPreferenceSchema),
           },
         },
       },

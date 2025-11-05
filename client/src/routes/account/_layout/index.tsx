@@ -6,7 +6,7 @@ export const Route = createFileRoute('/account/_layout/')({
   beforeLoad: () => {
     throw redirect({
       to: '/account/dashboard',
-      replace: true,
-    })
-  },
+      replace: true
+    });
+  }
 });

@@ -211,5 +211,5 @@ export const userSystemNotificationPreferenceBodySchema = z.object({
   enabled: z.boolean(),
 });
 export const userSystemNotificationPreferenceSchema = systemNotificationSchema.pick({
-  id: true, name: true, type: true, description: true
+  id: true, name: true, type: true, description: true,
 }).extend({ enabled: z.boolean() });
