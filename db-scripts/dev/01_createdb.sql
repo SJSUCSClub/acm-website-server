@@ -17,6 +17,7 @@ create type industry_enum as enum ('Banking and Finance', 'Aerospace', 'Healthca
 create type user_role_enum as enum ('user', 'member', 'admin');
 create type year_enum as enum ('Freshman', 'Sophomore', 'Junior', 'Senior', 'Alumni');
 create type project_status_enum as enum ('Not Started', 'Looking for Members', 'In Progress', 'Completed');
+create type system_notification_type_enum as enum ('Events');
 
 create table if not exists majors(
    name text not null,
@@ -276,11 +277,32 @@ create table if not exists payment_links(
    PRIMARY KEY(id)
 );
 
+create table if not exists system_notifications(
+  id SERIAL,
+  created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+  key TEXT NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL,
+  type system_notification_type_enum not null,
+  enabled_by_default BOOLEAN NOT NULL DEFAULT TRUE,
+  PRIMARY KEY(id)
+);
+
+create table if not exists user_system_notification_preferences(
+  user_id text not null,
+  system_notification_id integer not null,
+  PRIMARY KEY(user_id, system_notification_id),
+  FOREIGN KEY(user_id) REFERENCES users(id) on delete cascade,
+  FOREIGN KEY(system_notification_id) REFERENCES system_notifications(id) on delete cascade
+);
+
+-- Indexes
 create index projects_name_trgm_idx on projects using gist (name gist_trgm_ops);
 create index companies_name_trgm_idx on companies using gist (name gist_trgm_ops);
 create index events_name_trgm_idx on events using gist (name gist_trgm_ops);
 create index equipment_type_trgm_idx on equipment_rental_type using gist (name gist_trgm_ops);
 
+-- Functions
 create or replace function get_event_attendance(current_event_id integer)
 RETURNS integer AS $$
 BEGIN
@@ -425,3 +447,39 @@ begin
    return array[]::text[];
 end;
 $$;
+
+create or replace function insert_user_system_notification_preferences()
+returns trigger as $$
+begin
+  insert into user_system_notification_preferences(user_id, system_notification_id)
+  select NEW.id, sn.id
+  from system_notifications sn
+  where sn.enabled_by_default = false
+  on conflict do nothing;
+  return NEW;
+end;
+$$ language plpgsql;
+
+create or replace function insert_system_notification_preferences_for_all_users()
+returns trigger as $$
+begin
+  if NEW.enabled_by_default = false then
+    insert into user_system_notification_preferences(user_id, system_notification_id)
+    select u.id, NEW.id
+    from users u
+    on conflict do nothing;
+  end if;
+  return NEW;
+end;
+$$ language plpgsql;
+
+-- Triggers
+create trigger trg_insert_user_system_notification_preferences
+after insert on users
+for each row
+execute function insert_user_system_notification_preferences();
+
+create trigger trg_insert_system_notification_preferences_for_all_users
+after insert on system_notifications
+for each row
+execute function insert_system_notification_preferences_for_all_users();

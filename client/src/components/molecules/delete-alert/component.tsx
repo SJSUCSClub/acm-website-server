@@ -1,7 +1,6 @@
 import Btn from '@/components/atoms/btn';
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,

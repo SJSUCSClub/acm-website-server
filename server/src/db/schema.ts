@@ -78,6 +78,9 @@ export const yearEnum = pgEnum('year_enum', [
   'Senior',
   'Alumni',
 ]);
+export const systemNotificationTypeEnum = pgEnum('system_notification_type_enum', [
+  'Events',
+]);
 
 // Tables
 export const majors = pgTable('majors', {
@@ -428,6 +431,30 @@ export const paymentLinks = pgTable('payment_links', {
   link: text('link').notNull(),
 });
 
+export const systemNotifications = pgTable('system_notifications', {
+  id: serial('id').primaryKey(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  name: text('name').notNull(),
+  description: text('description').notNull(),
+  type: systemNotificationTypeEnum('type').notNull(),
+  enabledByDefault: boolean('enabled_by_default').notNull().default(true),
+});
+
+export const userSystemNotificationPreferences = pgTable(
+  'user_system_notification_preferences',
+  {
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    systemNotificationId: integer('system_notification_id')
+      .notNull()
+      .references(() => systemNotifications.id, { onDelete: 'cascade' }),
+  },
+  (table) => ({
+    primaryKey: [table.userId, table.systemNotificationId],
+  }),
+);
+
 // Update types
 export type UserKey = typeof userKey.$inferSelect;
 export type NewUserKey = typeof userKey.$inferInsert;
@@ -484,3 +511,7 @@ export type LandingQuestion = typeof landingQuestions.$inferSelect;
 export type NewLandingQuestion = typeof landingQuestions.$inferInsert;
 export type PaymentLink = typeof paymentLinks.$inferSelect;
 export type NewPaymentLink = typeof paymentLinks.$inferInsert;
+export type SystemNotification = typeof systemNotifications.$inferSelect;
+export type NewSystemNotification = typeof systemNotifications.$inferInsert;
+export type UserSystemNotificationPreference = typeof userSystemNotificationPreferences.$inferSelect;
+export type NewUserSystemNotificationPreference = typeof userSystemNotificationPreferences.$inferInsert;

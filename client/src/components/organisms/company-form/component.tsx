@@ -89,7 +89,7 @@ const CompanyForm: React.FC<ICompanyForm> = ({ companyId }) => {
       logo: companyData?.company.logo || null
     } as FormValues,
     validators: {
-      onSubmit: formSchema as any
+      onSubmit: formSchema as any // eslint-disable-line @typescript-eslint/no-explicit-any
     },
     onSubmit: async ({ value }) => {
       if (!companyId) {

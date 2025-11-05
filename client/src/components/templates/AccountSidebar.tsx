@@ -2,22 +2,16 @@ import React, { useState } from 'react';
 import {
   PanelLeftClose,
   PanelLeftOpen,
-  House,
-  Users,
-  FolderOpenDot,
-  Calendar,
-  ShieldUser,
-  Building,
-  List,
-  LucideIcon
+  LucideIcon,
+  LayoutDashboard,
+  UserRoundPen,
+  Bell
 } from 'lucide-react';
 import clsx from 'clsx';
 import { Button } from '@/components/ui/button';
-import Page from '@/components/templates/Page';
 import { Link, LinkProps, useLocation } from '@tanstack/react-router';
-import { DEFAULT_EVENT_FILTERS } from '@/utils/constants';
 
-interface IAdminSidebarProps {
+interface IAccountSidebarProps {
   children: React.ReactNode;
 }
 
@@ -26,46 +20,25 @@ interface NavItem extends LinkProps {
   icon: LucideIcon;
 }
 
-const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
+const AccountSidebar: React.FC<IAccountSidebarProps> = ({ children }) => {
   const location = useLocation();
   const [activeSection, setActiveSection] = useState(location.pathname);
   const [collapsed, setCollapsed] = useState(false);
   const navItems: NavItem[] = [
     {
-      title: 'Home',
-      icon: House,
-      to: '/admin'
+      title: 'Dashboard',
+      icon: LayoutDashboard,
+      to: '/account/dashboard'
     },
     {
-      title: 'Club',
-      icon: List,
-      to: '/admin/club'
+      title: 'Profile',
+      icon: UserRoundPen,
+      to: '/account/profile'
     },
     {
-      title: 'Users',
-      icon: Users,
-      to: '/admin/users'
-    },
-    {
-      title: 'Projects',
-      icon: FolderOpenDot,
-      to: '/admin/projects'
-    },
-    {
-      title: 'Events',
-      icon: Calendar,
-      to: '/admin/events',
-      search: { ...DEFAULT_EVENT_FILTERS }
-    },
-    {
-      title: 'Companies',
-      icon: Building,
-      to: '/admin/companies'
-    },
-    {
-      title: 'Officers',
-      icon: ShieldUser,
-      to: '/admin/officers'
+      title: 'Notifications',
+      icon: Bell,
+      to: '/account/notification-preferences'
     }
   ];
 
@@ -78,7 +51,6 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
         )}
       >
         <div className="hidden md:flex items-center border-r md:border-r-0 md:border-b px-2 md:px-4 h-12 md:h-14">
-          {!collapsed && <h2 className="hidden md:block">Admin</h2>}
           <Button
             variant="ghost"
             size="icon"
@@ -114,11 +86,9 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
           </nav>
         </div>
       </div>
-      <div className="flex-grow w-full overflow-auto">
-        <Page>{children}</Page>
-      </div>
+      <div className="flex-grow w-full overflow-auto px-10">{children}</div>
     </div>
   );
 };
 
-export default AdminSidebar;
+export default AccountSidebar;

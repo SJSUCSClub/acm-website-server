@@ -19,6 +19,8 @@ import {
   attendingEvents,
   educationLevelEnum,
   membershipTermEnum,
+  userSystemNotificationPreferences,
+  systemNotifications,
 } from '@/db/schema';
 import { db } from '@/db/db';
 import { eq, count, getTableColumns, and, or, sql } from 'drizzle-orm';
@@ -43,6 +45,9 @@ import {
   bookmarkedEventSchema,
   userFilterSchema,
   projectIDSchema,
+  systemNotificationIDSchema,
+  userSystemNotificationPreferenceBodySchema,
+  userSystemNotificationPreferenceSchema,
 } from '@/util/zod';
 
 const userRouter = new OpenAPIHono<Context>();
@@ -983,81 +988,81 @@ userRouter.openapi(
 );
 
 userRouter.openapi(
-	createRoute({
-		method: 'get',
-		path: '/my/subscribed-companies/{companyID}',
-		tags: ['users'],
-		summary: 'Check if current user has subscribed to a company',
-		middleware: [authMiddleWare('user')],
+  createRoute({
+    method: 'get',
+    path: '/my/subscribed-companies/{companyID}',
+    tags: ['users'],
+    summary: 'Check if current user has subscribed to a company',
+    middleware: [authMiddleWare('user')],
     request: {
       params: companyIDSchema,
     },
-		responses: {
-			[HttpStatusCodes.OK]: {
-				description: 'Successful response',
-				content: {
-					'application/json': {
-						schema: z.object({
-							subscribed: z.boolean(),
-						}),
-					},
-				},
-			},
-			...unauthorizedRequest,
-		},
-	}),
-	async (c) => {
-		const session = c.get('session');
-		if (!session) {
-			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-		}
+    responses: {
+      [HttpStatusCodes.OK]: {
+        description: 'Successful response',
+        content: {
+          'application/json': {
+            schema: z.object({
+              subscribed: z.boolean(),
+            }),
+          },
+        },
+      },
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const session = c.get('session');
+    if (!session) {
+      return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+    }
     const { companyID } = c.req.valid('param');
-		const sub = await db
-			.select()
-			.from(subscribedCompanies)
-			.where(and(eq(subscribedCompanies.userId, session.userId), eq(subscribedCompanies.companyId, parseInt(companyID))));
+    const sub = await db
+      .select()
+      .from(subscribedCompanies)
+      .where(and(eq(subscribedCompanies.userId, session.userId), eq(subscribedCompanies.companyId, parseInt(companyID))));
 
-		return c.json({ subscribed: sub.length > 0 }, HttpStatusCodes.OK);
-	},
+    return c.json({ subscribed: sub.length > 0 }, HttpStatusCodes.OK);
+  },
 );
 
 userRouter.openapi(
-	createRoute({
-		method: 'get',
-		path: '/my/subscribed-companies/{companyID}',
-		tags: ['users'],
-		summary: 'Check if current user has subscribed to a company',
-		middleware: [authMiddleWare('user')],
+  createRoute({
+    method: 'get',
+    path: '/my/subscribed-companies/{companyID}',
+    tags: ['users'],
+    summary: 'Check if current user has subscribed to a company',
+    middleware: [authMiddleWare('user')],
     request: {
       params: companyIDSchema,
     },
-		responses: {
-			[HttpStatusCodes.OK]: {
-				description: 'Successful response',
-				content: {
-					'application/json': {
-						schema: z.object({
-							subscribed: z.boolean(),
-						}),
-					},
-				},
-			},
-			...unauthorizedRequest,
-		},
-	}),
-	async (c) => {
-		const session = c.get('session');
-		if (!session) {
-			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-		}
+    responses: {
+      [HttpStatusCodes.OK]: {
+        description: 'Successful response',
+        content: {
+          'application/json': {
+            schema: z.object({
+              subscribed: z.boolean(),
+            }),
+          },
+        },
+      },
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const session = c.get('session');
+    if (!session) {
+      return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+    }
     const { companyID } = c.req.valid('param');
-		const sub = await db
-			.select()
-			.from(subscribedCompanies)
-			.where(and(eq(subscribedCompanies.userId, session.userId), eq(subscribedCompanies.companyId, parseInt(companyID))));
+    const sub = await db
+      .select()
+      .from(subscribedCompanies)
+      .where(and(eq(subscribedCompanies.userId, session.userId), eq(subscribedCompanies.companyId, parseInt(companyID))));
 
-		return c.json({ subscribed: sub.length > 0 }, HttpStatusCodes.OK);
-	},
+    return c.json({ subscribed: sub.length > 0 }, HttpStatusCodes.OK);
+  },
 );
 
 userRouter.openapi(
@@ -1284,42 +1289,42 @@ userRouter.openapi(
 );
 
 userRouter.openapi(
-	createRoute({
-		method: 'get',
-		path: '/my/projects-interest/{projectID}',
-		tags: ['users'],
-		summary: 'Check if current user has shown interest in a project',
-		middleware: [authMiddleWare('user')],
+  createRoute({
+    method: 'get',
+    path: '/my/projects-interest/{projectID}',
+    tags: ['users'],
+    summary: 'Check if current user has shown interest in a project',
+    middleware: [authMiddleWare('user')],
     request: {
       params: projectIDSchema,
     },
-		responses: {
-			[HttpStatusCodes.OK]: {
-				description: 'Successful response',
-				content: {
-					'application/json': {
-						schema: z.object({
-							interested: z.boolean(),
-						}),
-					},
-				},
-			},
-			...unauthorizedRequest,
-		},
-	}),
-	async (c) => {
-		const session = c.get('session');
-		if (!session) {
-			return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
-		}
+    responses: {
+      [HttpStatusCodes.OK]: {
+        description: 'Successful response',
+        content: {
+          'application/json': {
+            schema: z.object({
+              interested: z.boolean(),
+            }),
+          },
+        },
+      },
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const session = c.get('session');
+    if (!session) {
+      return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+    }
     const { projectID } = c.req.valid('param');
-		const interest = await db
-			.select()
-			.from(interestedInProjects)
-			.where(and(eq(interestedInProjects.userId, session.userId), eq(interestedInProjects.projectId, parseInt(projectID))));
+    const interest = await db
+      .select()
+      .from(interestedInProjects)
+      .where(and(eq(interestedInProjects.userId, session.userId), eq(interestedInProjects.projectId, parseInt(projectID))));
 
-		return c.json({ interested: interest.length > 0 }, HttpStatusCodes.OK);
-	},
+    return c.json({ interested: interest.length > 0 }, HttpStatusCodes.OK);
+  },
 );
 
 userRouter.openapi(
@@ -1468,7 +1473,7 @@ userRouter.openapi(
 
       return c.json({ events: foundAttendingEvents }, HttpStatusCodes.OK);
     } catch (error) {
-      return c.json({ error: `Internal server error: ${ error }` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json({ error: `Internal server error: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
   },
 );
@@ -1720,6 +1725,118 @@ userRouter.openapi(
         HttpStatusCodes.INTERNAL_SERVER_ERROR,
       );
     }
+  },
+);
+
+userRouter.openapi(
+  createRoute({
+    method: 'get',
+    path: '/my/notification-preferences',
+    tags: ['users'],
+    summary: 'Get user notification preferences',
+    middleware: [authMiddleWare('user')],
+    responses: {
+      [HttpStatusCodes.OK]: {
+        description: 'Successful response',
+        content: {
+          'application/json': {
+            schema: z.array(userSystemNotificationPreferenceSchema),
+          },
+        },
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        description: 'Internal server error',
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+      },
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    try {
+      const session = c.get('session');
+      if (!session) {
+        return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+      }
+      const preferences = await db
+        .select({
+          id: systemNotifications.id,
+          name: systemNotifications.name,
+          description: systemNotifications.description,
+          type: systemNotifications.type,
+          enabled: (sql<boolean>`(${userSystemNotificationPreferences.systemNotificationId} IS NULL)`).as('enabled'),
+        })
+        .from(systemNotifications)
+        .leftJoin(userSystemNotificationPreferences, and(eq(systemNotifications.id, userSystemNotificationPreferences.systemNotificationId), eq(userSystemNotificationPreferences.userId, session.userId)));
+
+      return c.json(preferences, HttpStatusCodes.OK);
+    } catch (error) {
+      return c.json({ error: `Internal server error: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  },
+);
+
+userRouter.openapi(
+  createRoute({
+    method: 'patch',
+    path: '/my/notification-preferences/{systemNotificationID}',
+    tags: ['users'],
+    summary: 'Update user notification preferences',
+    middleware: [authMiddleWare('user')],
+    request: {
+      params: systemNotificationIDSchema,
+      body: {
+        content: {
+          'application/json': {
+            schema: userSystemNotificationPreferenceBodySchema,
+          },
+        },
+      },
+    },
+    responses: {
+      [HttpStatusCodes.NO_CONTENT]: {
+        description: 'No content',
+      },
+      [HttpStatusCodes.BAD_REQUEST]: {
+        description: 'Bad request',
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+      },
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const { systemNotificationID } = c.req.valid('param');
+    const session = c.get('session');
+    const body = await c.req.json();
+    const preference = userSystemNotificationPreferenceBodySchema.parse(body);
+    if (!session) {
+      return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+    }
+    if (!systemNotificationID) {
+      return c.json({ error: 'systemNotificationID not provided' }, HttpStatusCodes.BAD_REQUEST);
+    }
+
+    if (preference.enabled) {
+      await db.delete(userSystemNotificationPreferences).where(and(
+        eq(userSystemNotificationPreferences.userId, session?.userId),
+        eq(userSystemNotificationPreferences.systemNotificationId, parseInt(systemNotificationID)),
+      ),
+      );
+    } else {
+      await db.insert(userSystemNotificationPreferences).values({
+        userId: session.userId,
+        systemNotificationId: parseInt(systemNotificationID),
+      });
+    }
+
+    return c.text('', HttpStatusCodes.NO_CONTENT);
   },
 );
 

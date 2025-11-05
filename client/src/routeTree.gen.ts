@@ -24,8 +24,13 @@ import { Route as ProjectsProjectIdRouteImport } from './routes/projects/$projec
 import { Route as EventsEventIdRouteImport } from './routes/events/$eventId';
 import { Route as CompaniesCompanyIdRouteImport } from './routes/companies/$companyId';
 import { Route as AdminLayoutRouteImport } from './routes/admin/_layout';
+import { Route as AccountLayoutRouteImport } from './routes/account/_layout';
 import { Route as AdminLayoutIndexRouteImport } from './routes/admin/_layout/index';
+import { Route as AccountLayoutIndexRouteImport } from './routes/account/_layout/index';
 import { Route as AdminLayoutUsersRouteImport } from './routes/admin/_layout/users';
+import { Route as AccountLayoutProfileRouteImport } from './routes/account/_layout/profile';
+import { Route as AccountLayoutNotificationPreferencesRouteImport } from './routes/account/_layout/notification-preferences';
+import { Route as AccountLayoutDashboardRouteImport } from './routes/account/_layout/dashboard';
 import { Route as AdminLayoutProjectsIndexRouteImport } from './routes/admin/_layout/projects/index';
 import { Route as AdminLayoutOfficersIndexRouteImport } from './routes/admin/_layout/officers/index';
 import { Route as AdminLayoutEventsIndexRouteImport } from './routes/admin/_layout/events/index';
@@ -46,10 +51,16 @@ import { Route as AdminLayoutClubSpotlightsCreateRouteImport } from './routes/ad
 import { Route as AdminLayoutClubSpotlightsSpotlightIdEditRouteImport } from './routes/admin/_layout/club/spotlights/$spotlightId/edit';
 
 const AdminRouteImport = createFileRoute('/admin')();
+const AccountRouteImport = createFileRoute('/account')();
 
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport
+} as any);
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => rootRouteImport
 } as any);
 const ProfileRoute = ProfileRouteImport.update({
@@ -116,15 +127,40 @@ const AdminLayoutRoute = AdminLayoutRouteImport.update({
   id: '/_layout',
   getParentRoute: () => AdminRoute
 } as any);
+const AccountLayoutRoute = AccountLayoutRouteImport.update({
+  id: '/_layout',
+  getParentRoute: () => AccountRoute
+} as any);
 const AdminLayoutIndexRoute = AdminLayoutIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminLayoutRoute
 } as any);
+const AccountLayoutIndexRoute = AccountLayoutIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AccountLayoutRoute
+} as any);
 const AdminLayoutUsersRoute = AdminLayoutUsersRouteImport.update({
   id: '/users',
   path: '/users',
   getParentRoute: () => AdminLayoutRoute
+} as any);
+const AccountLayoutProfileRoute = AccountLayoutProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AccountLayoutRoute
+} as any);
+const AccountLayoutNotificationPreferencesRoute =
+  AccountLayoutNotificationPreferencesRouteImport.update({
+    id: '/notification-preferences',
+    path: '/notification-preferences',
+    getParentRoute: () => AccountLayoutRoute
+  } as any);
+const AccountLayoutDashboardRoute = AccountLayoutDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AccountLayoutRoute
 } as any);
 const AdminLayoutProjectsIndexRoute = AdminLayoutProjectsIndexRouteImport.update({
   id: '/projects/',
@@ -226,6 +262,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute;
   '/onboarding': typeof OnboardingRoute;
   '/profile': typeof ProfileRoute;
+  '/account': typeof AccountLayoutRouteWithChildren;
   '/admin': typeof AdminLayoutRouteWithChildren;
   '/companies/$companyId': typeof CompaniesCompanyIdRoute;
   '/events/$eventId': typeof EventsEventIdRoute;
@@ -233,7 +270,11 @@ export interface FileRoutesByFullPath {
   '/companies': typeof CompaniesIndexRoute;
   '/events': typeof EventsIndexRoute;
   '/projects': typeof ProjectsIndexRoute;
+  '/account/dashboard': typeof AccountLayoutDashboardRoute;
+  '/account/notification-preferences': typeof AccountLayoutNotificationPreferencesRoute;
+  '/account/profile': typeof AccountLayoutProfileRoute;
   '/admin/users': typeof AdminLayoutUsersRoute;
+  '/account/': typeof AccountLayoutIndexRoute;
   '/admin/': typeof AdminLayoutIndexRoute;
   '/admin/companies/create': typeof AdminLayoutCompaniesCreateRoute;
   '/admin/events/create': typeof AdminLayoutEventsCreateRoute;
@@ -261,6 +302,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute;
   '/onboarding': typeof OnboardingRoute;
   '/profile': typeof ProfileRoute;
+  '/account': typeof AccountLayoutIndexRoute;
   '/admin': typeof AdminLayoutIndexRoute;
   '/companies/$companyId': typeof CompaniesCompanyIdRoute;
   '/events/$eventId': typeof EventsEventIdRoute;
@@ -268,6 +310,9 @@ export interface FileRoutesByTo {
   '/companies': typeof CompaniesIndexRoute;
   '/events': typeof EventsIndexRoute;
   '/projects': typeof ProjectsIndexRoute;
+  '/account/dashboard': typeof AccountLayoutDashboardRoute;
+  '/account/notification-preferences': typeof AccountLayoutNotificationPreferencesRoute;
+  '/account/profile': typeof AccountLayoutProfileRoute;
   '/admin/users': typeof AdminLayoutUsersRoute;
   '/admin/companies/create': typeof AdminLayoutCompaniesCreateRoute;
   '/admin/events/create': typeof AdminLayoutEventsCreateRoute;
@@ -296,6 +341,8 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute;
   '/onboarding': typeof OnboardingRoute;
   '/profile': typeof ProfileRoute;
+  '/account': typeof AccountRouteWithChildren;
+  '/account/_layout': typeof AccountLayoutRouteWithChildren;
   '/admin': typeof AdminRouteWithChildren;
   '/admin/_layout': typeof AdminLayoutRouteWithChildren;
   '/companies/$companyId': typeof CompaniesCompanyIdRoute;
@@ -304,7 +351,11 @@ export interface FileRoutesById {
   '/companies/': typeof CompaniesIndexRoute;
   '/events/': typeof EventsIndexRoute;
   '/projects/': typeof ProjectsIndexRoute;
+  '/account/_layout/dashboard': typeof AccountLayoutDashboardRoute;
+  '/account/_layout/notification-preferences': typeof AccountLayoutNotificationPreferencesRoute;
+  '/account/_layout/profile': typeof AccountLayoutProfileRoute;
   '/admin/_layout/users': typeof AdminLayoutUsersRoute;
+  '/account/_layout/': typeof AccountLayoutIndexRoute;
   '/admin/_layout/': typeof AdminLayoutIndexRoute;
   '/admin/_layout/companies/create': typeof AdminLayoutCompaniesCreateRoute;
   '/admin/_layout/events/create': typeof AdminLayoutEventsCreateRoute;
@@ -334,6 +385,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/profile'
+    | '/account'
     | '/admin'
     | '/companies/$companyId'
     | '/events/$eventId'
@@ -341,7 +393,11 @@ export interface FileRouteTypes {
     | '/companies'
     | '/events'
     | '/projects'
+    | '/account/dashboard'
+    | '/account/notification-preferences'
+    | '/account/profile'
     | '/admin/users'
+    | '/account/'
     | '/admin/'
     | '/admin/companies/create'
     | '/admin/events/create'
@@ -369,6 +425,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/profile'
+    | '/account'
     | '/admin'
     | '/companies/$companyId'
     | '/events/$eventId'
@@ -376,6 +433,9 @@ export interface FileRouteTypes {
     | '/companies'
     | '/events'
     | '/projects'
+    | '/account/dashboard'
+    | '/account/notification-preferences'
+    | '/account/profile'
     | '/admin/users'
     | '/admin/companies/create'
     | '/admin/events/create'
@@ -403,6 +463,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/profile'
+    | '/account'
+    | '/account/_layout'
     | '/admin'
     | '/admin/_layout'
     | '/companies/$companyId'
@@ -411,7 +473,11 @@ export interface FileRouteTypes {
     | '/companies/'
     | '/events/'
     | '/projects/'
+    | '/account/_layout/dashboard'
+    | '/account/_layout/notification-preferences'
+    | '/account/_layout/profile'
     | '/admin/_layout/users'
+    | '/account/_layout/'
     | '/admin/_layout/'
     | '/admin/_layout/companies/create'
     | '/admin/_layout/events/create'
@@ -440,6 +506,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute;
   OnboardingRoute: typeof OnboardingRoute;
   ProfileRoute: typeof ProfileRoute;
+  AccountRoute: typeof AccountRouteWithChildren;
   AdminRoute: typeof AdminRouteWithChildren;
   CompaniesCompanyIdRoute: typeof CompaniesCompanyIdRoute;
   EventsEventIdRoute: typeof EventsEventIdRoute;
@@ -456,6 +523,13 @@ declare module '@tanstack/react-router' {
       path: '/admin';
       fullPath: '/admin';
       preLoaderRoute: typeof AdminRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    '/account': {
+      id: '/account';
+      path: '/account';
+      fullPath: '/account';
+      preLoaderRoute: typeof AccountRouteImport;
       parentRoute: typeof rootRouteImport;
     };
     '/profile': {
@@ -549,6 +623,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLayoutRouteImport;
       parentRoute: typeof AdminRoute;
     };
+    '/account/_layout': {
+      id: '/account/_layout';
+      path: '/account';
+      fullPath: '/account';
+      preLoaderRoute: typeof AccountLayoutRouteImport;
+      parentRoute: typeof AccountRoute;
+    };
     '/admin/_layout/': {
       id: '/admin/_layout/';
       path: '/';
@@ -556,12 +637,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLayoutIndexRouteImport;
       parentRoute: typeof AdminLayoutRoute;
     };
+    '/account/_layout/': {
+      id: '/account/_layout/';
+      path: '/';
+      fullPath: '/account/';
+      preLoaderRoute: typeof AccountLayoutIndexRouteImport;
+      parentRoute: typeof AccountLayoutRoute;
+    };
     '/admin/_layout/users': {
       id: '/admin/_layout/users';
       path: '/users';
       fullPath: '/admin/users';
       preLoaderRoute: typeof AdminLayoutUsersRouteImport;
       parentRoute: typeof AdminLayoutRoute;
+    };
+    '/account/_layout/profile': {
+      id: '/account/_layout/profile';
+      path: '/profile';
+      fullPath: '/account/profile';
+      preLoaderRoute: typeof AccountLayoutProfileRouteImport;
+      parentRoute: typeof AccountLayoutRoute;
+    };
+    '/account/_layout/notification-preferences': {
+      id: '/account/_layout/notification-preferences';
+      path: '/notification-preferences';
+      fullPath: '/account/notification-preferences';
+      preLoaderRoute: typeof AccountLayoutNotificationPreferencesRouteImport;
+      parentRoute: typeof AccountLayoutRoute;
+    };
+    '/account/_layout/dashboard': {
+      id: '/account/_layout/dashboard';
+      path: '/dashboard';
+      fullPath: '/account/dashboard';
+      preLoaderRoute: typeof AccountLayoutDashboardRouteImport;
+      parentRoute: typeof AccountLayoutRoute;
     };
     '/admin/_layout/projects/': {
       id: '/admin/_layout/projects/';
@@ -692,6 +801,34 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AccountLayoutRouteChildren {
+  AccountLayoutDashboardRoute: typeof AccountLayoutDashboardRoute;
+  AccountLayoutNotificationPreferencesRoute: typeof AccountLayoutNotificationPreferencesRoute;
+  AccountLayoutProfileRoute: typeof AccountLayoutProfileRoute;
+  AccountLayoutIndexRoute: typeof AccountLayoutIndexRoute;
+}
+
+const AccountLayoutRouteChildren: AccountLayoutRouteChildren = {
+  AccountLayoutDashboardRoute: AccountLayoutDashboardRoute,
+  AccountLayoutNotificationPreferencesRoute: AccountLayoutNotificationPreferencesRoute,
+  AccountLayoutProfileRoute: AccountLayoutProfileRoute,
+  AccountLayoutIndexRoute: AccountLayoutIndexRoute
+};
+
+const AccountLayoutRouteWithChildren = AccountLayoutRoute._addFileChildren(
+  AccountLayoutRouteChildren
+);
+
+interface AccountRouteChildren {
+  AccountLayoutRoute: typeof AccountLayoutRouteWithChildren;
+}
+
+const AccountRouteChildren: AccountRouteChildren = {
+  AccountLayoutRoute: AccountLayoutRouteWithChildren
+};
+
+const AccountRouteWithChildren = AccountRoute._addFileChildren(AccountRouteChildren);
+
 interface AdminLayoutRouteChildren {
   AdminLayoutUsersRoute: typeof AdminLayoutUsersRoute;
   AdminLayoutIndexRoute: typeof AdminLayoutIndexRoute;
@@ -757,6 +894,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
   ProfileRoute: ProfileRoute,
+  AccountRoute: AccountRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
   CompaniesCompanyIdRoute: CompaniesCompanyIdRoute,
   EventsEventIdRoute: EventsEventIdRoute,

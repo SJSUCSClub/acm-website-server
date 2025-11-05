@@ -37,7 +37,7 @@ const SponsorForm: React.FC<ISponsorFormProps> = ({ onCreateComplete = () => {} 
       logo: null
     } as FormValues,
     validators: {
-      onSubmit: formSchema as any
+      onSubmit: formSchema as any // eslint-disable-line @typescript-eslint/no-explicit-any
     },
     onSubmit: async ({ value }) => {
       try {

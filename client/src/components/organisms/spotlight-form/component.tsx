@@ -59,7 +59,7 @@ const SpotlightForm: React.FC<ISpotlightFormProps> = ({ spotlightId }) => {
       image: spotlightData?.spotlight.image || null
     } as FormValues,
     validators: {
-      onSubmit: formSchema as any
+      onSubmit: formSchema as any // eslint-disable-line @typescript-eslint/no-explicit-any
     },
     onSubmit: async ({ value }) => {
       if (!spotlightId) {
