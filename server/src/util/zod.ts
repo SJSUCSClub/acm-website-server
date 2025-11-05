@@ -27,6 +27,7 @@ import {
   eventsEnum,
   targetAudienceEnum,
   userRoleEnum,
+  systemNotifications,
 } from '@/db/schema';
 
 import { z } from 'zod';
@@ -200,3 +201,15 @@ export const templateNameSchema = z.object({
     }),
 });
 export const eventRecipientGroupSchema = z.array(z.enum(['subscribers', 'attendees']));
+export const systemNotificationTypeEnumSchema = z.enum(['Events']);
+export const systemNotificationSchema = createSelectSchema(systemNotifications);
+export const newSystemNotificationSchema = createInsertSchema(systemNotifications);
+export const systemNotificationIDSchema = z.object({
+  systemNotificationID: z.string(),
+});
+export const userSystemNotificationPreferenceBodySchema = z.object({
+  enabled: z.boolean(),
+});
+export const userSystemNotificationPreferenceSchema = systemNotificationSchema.pick({
+  id: true, name: true, type: true, description: true
+}).extend({ enabled: z.boolean() });
