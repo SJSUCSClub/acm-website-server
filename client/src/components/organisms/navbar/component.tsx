@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { Link, LinkProps, useNavigate } from '@tanstack/react-router';
 
 import Logo from '../../../Logo.png';
 
@@ -43,7 +43,7 @@ export const NavBar: React.FC = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleNavigation = (path: string) => {
+  const handleNavigation = (path: LinkProps['to']) => {
     navigate({ to: path });
   };
 
@@ -74,11 +74,8 @@ export const NavBar: React.FC = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem onClick={() => handleNavigation('/dashboard')}>
-                  Dashboard
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleNavigation('/profile')}>
-                  Profile
+                <DropdownMenuItem onClick={() => handleNavigation('/account')}>
+                  Account
                 </DropdownMenuItem>
                 {isAdmin && (
                   <>
@@ -173,20 +170,12 @@ export const NavBar: React.FC = () => {
           {isLoggedIn ? (
             <>
               <Link
-                to="/dashboard"
+                to="/account"
                 className="flex items-center px-6 py-4 hover:bg-gray-100 transition-colors w-full"
                 onClick={handleClick}
               >
-                <span className="text-[#196096] font-semibold">Dashboard</span>
+                <span className="text-[#196096] font-semibold">Account</span>
               </Link>
-              <Link
-                to="/profile"
-                className="flex items-center px-6 py-4 hover:bg-gray-100 transition-colors w-full"
-                onClick={handleClick}
-              >
-                <span className="text-[#196096] font-semibold">Profile</span>
-              </Link>
-
               {isAdmin && (
                 <Link
                   to="/admin"
