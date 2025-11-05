@@ -280,6 +280,7 @@ create table if not exists payment_links(
 create table if not exists system_notifications(
   id SERIAL,
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+  key TEXT NOT NULL,
   name TEXT NOT NULL,
   description TEXT NOT NULL,
   type system_notification_type_enum not null,
