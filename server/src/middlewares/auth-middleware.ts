@@ -32,11 +32,9 @@ export const authMiddleWare = (role: 'user' | 'member' | 'admin'): MiddlewareHan
 	if (blacklistedUser) {
 		return c.json({ error: 'Blacklisted', message: blacklistedUser.reason }, FORBIDDEN);
 	}
-	if (role === 'admin' && user.role !== 'admin') {
+	const roleRank = { user: 0, member: 1, admin: 2 } as const;
+	if (roleRank[user.role] < roleRank[role]) {
 		return c.json({ error: 'Forbidden' }, FORBIDDEN);
-	}
-	if (role === 'user' && user.role === 'member') {
-			return c.json({ error: 'Forbidden' }, FORBIDDEN);
 	}
 
 	if (session && session.fresh) {
