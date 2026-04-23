@@ -10,11 +10,10 @@ create type events_enum as enum ('Workshop', 'Seminar', 'Hackathon', 'Conference
 create type cs_fields_enum as enum ('Web Development', 'Machine Learning', 'Cloud Computing', 'Artificial Intelligence', 'Networking', 'Cybersecurity', 'Mobile Development', 'Game Development', 'Data Science');
 create type target_audience_enum as enum ('Students');
 create type equipment_condition_enum as enum ('Ready', 'Broken', 'In Maintenance');
-create type membership_term_enum as enum ('Semester', 'Annual');
 create type education_level_enum as enum('Undergraduate', 'Graduate');
 create type membership_request_status_enum as enum ('Pending', 'Approved', 'Declined');
 create type industry_enum as enum ('Banking and Finance', 'Aerospace', 'Healthcare', 'Automotive', 'Energy', 'Technology');
-create type user_role_enum as enum ('user', 'member', 'admin');
+create type user_role_enum as enum ('user', 'admin');
 create type year_enum as enum ('Freshman', 'Sophomore', 'Junior', 'Senior', 'Alumni');
 create type project_status_enum as enum ('Not Started', 'Looking for Members', 'In Progress', 'Completed');
 create type system_notification_type_enum as enum ('Events');
@@ -34,15 +33,13 @@ create table if not exists users(
    education_level education_level_enum not null,
    grad_date Date not null,
    interests cs_fields_enum[] not null default '{}'::cs_fields_enum[],
-   paid membership_term_enum,
    profile_pic text not null,
    discord text,
    linkedin text,
    github text,
    website text,
    PRIMARY KEY(id),
-   foreign key(major) references majors(name) on update cascade,
-   constraint check_paid_role check ((paid IS NULL AND role IN ('user', 'admin')) OR (paid IS NOT NULL AND role IN ('member', 'admin')))
+   foreign key(major) references majors(name) on update cascade
 );
 
 create table if not exists session(
@@ -483,3 +480,12 @@ create trigger trg_insert_system_notification_preferences_for_all_users
 after insert on system_notifications
 for each row
 execute function insert_system_notification_preferences_for_all_users();
+
+create table if not exists membership_config(
+   id integer primary key default 1,
+   sheet_id text not null default '',
+   email_column text not null default 'C',
+   constraint membership_config_singleton check (id = 1)
+);
+
+insert into membership_config(id) values (1) on conflict do nothing;

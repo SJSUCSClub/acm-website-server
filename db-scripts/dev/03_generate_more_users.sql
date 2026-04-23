@@ -33,7 +33,6 @@ WITH user_data AS (
 NULL::text as website,
 CASE
 	WHEN random() < 0.2 THEN 'admin'::user_role_enum
-	WHEN random() < 0.5 THEN 'member'::user_role_enum
 	ELSE 'user'::user_role_enum
 END AS role
 FROM generate_series(1, 50) i
@@ -51,8 +50,7 @@ inserted_users AS (
 		linkedin,
 		github,
 		website,
-		role,
-		paid
+		role
 	)
   SELECT id,
     name,
@@ -65,12 +63,7 @@ inserted_users AS (
     linkedin,
     github,
     website,
-    role,
-    CASE
-      WHEN role = 'member'
-      OR role = 'admin' THEN (ARRAY ['Semester', 'Annual']) [floor(random() * 2 + 1)]::membership_term_enum
-      ELSE NULL
-    END AS paid
+    role
   FROM user_data
   WHERE NOT EXISTS (
       SELECT 1

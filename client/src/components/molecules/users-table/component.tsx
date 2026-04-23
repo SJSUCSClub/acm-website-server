@@ -22,7 +22,6 @@ type User =
 export interface IUsersTableProps {
   users: User[];
   roles?: User['role'][];
-  memberships?: User['paid'][];
   onUserUpdated?: () => void;
   canEdit?: boolean;
 }
@@ -30,7 +29,6 @@ export interface IUsersTableProps {
 const UsersTable: React.FC<IUsersTableProps> = ({
   users,
   roles,
-  memberships,
   onUserUpdated,
   canEdit = false
 }) => {
@@ -38,7 +36,6 @@ const UsersTable: React.FC<IUsersTableProps> = ({
 
   const [updatedUser, setUpdatedUser] = useState<User | null>(null);
   const [openRoles, setOpenRoles] = useState<boolean>(false);
-  const [openMemberships, setOpenMemberships] = useState<boolean>(false);
 
   const handleUpdateUser = async () => {
     if (!updatedUser) return;
@@ -55,44 +52,8 @@ const UsersTable: React.FC<IUsersTableProps> = ({
 
   const handleRoleChange = (role: string) => {
     if (!updatedUser) return;
-
-    // no change
     if (role === updatedUser.role) return;
-
-    let membership = updatedUser.paid;
-
-    if (role === 'member' && !updatedUser.paid) {
-      // also change membership/paid if role is being set to member
-      membership = 'Semester';
-    } else if (role === 'user' && updatedUser.paid) {
-      // set membership/paid to null if role being changed to user
-      membership = null;
-    }
-
-    setUpdatedUser({ ...updatedUser, role: role as User['role'], paid: membership });
-  };
-
-  const handleMembershipChange = (membership: string) => {
-    if (!updatedUser) return;
-
-    // no change
-    if (membership === updatedUser.paid) return;
-
-    let role = updatedUser.role;
-
-    if (membership !== 'None' && updatedUser.role === 'user') {
-      // if membership is no longer null, change user role to 'member'
-      role = 'member';
-    } else if (membership === 'None' && updatedUser.role === 'member') {
-      // change user role to null if membership is being set to null
-      role = 'user';
-    }
-
-    setUpdatedUser({
-      ...updatedUser,
-      paid: membership === 'None' ? null : (membership as User['paid']),
-      role
-    });
+    setUpdatedUser({ ...updatedUser, role: role as User['role'] });
   };
 
   return (
@@ -107,7 +68,6 @@ const UsersTable: React.FC<IUsersTableProps> = ({
               <TableHead>Email</TableHead>
               <TableHead className="w-[400px]">Major</TableHead>
               <TableHead>Role</TableHead>
-              <TableHead>Membership</TableHead>
               <TableHead className="w-[20px]"></TableHead>
               <TableHead className="w-[20px]"></TableHead>
             </TableRow>
@@ -141,22 +101,6 @@ const UsersTable: React.FC<IUsersTableProps> = ({
                     />
                   ) : (
                     user.role.toUpperCase()
-                  )}
-                </TableCell>
-                <TableCell>
-                  {updatedUser?.id === user.id ? (
-                    <PopoverDropdown
-                      open={openMemberships}
-                      setOpen={setOpenMemberships}
-                      value={updatedUser.paid ?? 'None'}
-                      options={['None', ...(memberships?.filter((mem) => mem !== null) ?? [])]}
-                      onChange={handleMembershipChange}
-                      width={110}
-                    />
-                  ) : user.paid ? (
-                    <div className="text-green-500">{user.paid}</div>
-                  ) : (
-                    <div className="text-red-500">None</div>
                   )}
                 </TableCell>
                 <TableCell>

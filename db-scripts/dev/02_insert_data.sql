@@ -156,18 +156,18 @@ insert into majors(name) values
 ('Women, Gender, and Sexuality Studies, BA');
 
 INSERT INTO users (
-    id, name, email, major, education_level, grad_date, interests, profile_pic, linkedin, github, website, role, paid 
-) VALUES 
-('user1', 'Alice Smith', 'alice.smith@example.com', 'Aerospace Engineering, BS', 'Undergraduate', '2025-05-15', 
-  '{"Web Development", "Machine Learning"}', 'default.png', 'https://linkedin.com', 'https://github.com', NULL, 'user', NULL),
-('user2', 'Bob Johnson', 'bob.johnson@example.com', 'Chemistry, BA', 'Graduate', '2022-12-10', 
-  '{"Networking", "Cybersecurity"}', 'default.png', 'https://linkedin.com', 'https://github.com', NULL, 'user', NULL),
-('user3', 'Charlie Brown', 'charlie.brown@example.com', 'History, BA', 'Undergraduate', '2026-08-30', 
-  '{"Mobile Development", "Game Development"}', 'default.png', 'https://www.linkedin.com', NULL, 'https://www.bing.com/', 'user', NULL),
-('user4', 'Diana Evans', 'diana.evans@example.com', 'Computer Science, BS', 'Graduate', '2023-11-01', 
-  '{"Artificial Intelligence"}', 'default.png', 'https://linkedin.com', 'https://github.com', NULL, 'user', NULL),
-('user5', 'Evan Wright', 'evan.wright@example.com', 'Philosophy, BA', 'Undergraduate', '2025-04-20', 
-  '{"Data Science", "Cloud Computing"}', 'default.png', NULL, 'https://github.com', 'https://www.google.com/', 'user', NULL);
+    id, name, email, major, education_level, grad_date, interests, profile_pic, linkedin, github, website, role
+) VALUES
+('user1', 'Alice Smith', 'alice.smith@example.com', 'Aerospace Engineering, BS', 'Undergraduate', '2025-05-15',
+  '{"Web Development", "Machine Learning"}', 'default.png', 'https://linkedin.com', 'https://github.com', NULL, 'user'),
+('user2', 'Bob Johnson', 'bob.johnson@example.com', 'Chemistry, BA', 'Graduate', '2022-12-10',
+  '{"Networking", "Cybersecurity"}', 'default.png', 'https://linkedin.com', 'https://github.com', NULL, 'user'),
+('user3', 'Charlie Brown', 'charlie.brown@example.com', 'History, BA', 'Undergraduate', '2026-08-30',
+  '{"Mobile Development", "Game Development"}', 'default.png', 'https://www.linkedin.com', NULL, 'https://www.bing.com/', 'user'),
+('user4', 'Diana Evans', 'diana.evans@example.com', 'Computer Science, BS', 'Graduate', '2023-11-01',
+  '{"Artificial Intelligence"}', 'default.png', 'https://linkedin.com', 'https://github.com', NULL, 'user'),
+('user5', 'Evan Wright', 'evan.wright@example.com', 'Philosophy, BA', 'Undergraduate', '2025-04-20',
+  '{"Data Science", "Cloud Computing"}', 'default.png', NULL, 'https://github.com', 'https://www.google.com/', 'user');
 
 insert into files(key, name) values
 ('default/image-placeholder.svg', 'Default Image'),

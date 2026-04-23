@@ -7,7 +7,6 @@ interface ProtectedRouteProps {
   children: ReactNode;
   requireNoAuth?: boolean;
   requireAdmin?: boolean;
-  requireMember?: boolean;
   showNotFoundOnUnauthorized?: boolean;
 }
 
@@ -15,10 +14,9 @@ export function ProtectedRoute({
   children,
   requireNoAuth = false,
   requireAdmin = false,
-  requireMember = false,
   showNotFoundOnUnauthorized = false
 }: ProtectedRouteProps) {
-  const { isLoggedIn, isLoading, isAdmin, isMember } = useAuth();
+  const { isLoggedIn, isLoading, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,8 +25,6 @@ export function ProtectedRoute({
         if (!requireNoAuth) {
           navigate({ to: '/login' });
         } else if (requireAdmin && !isAdmin) {
-          navigate({ to: '/dashboard' });
-        } else if (requireMember && !isMember) {
           navigate({ to: '/dashboard' });
         }
       } else if (requireNoAuth) {
@@ -39,9 +35,7 @@ export function ProtectedRoute({
     isLoggedIn,
     isLoading,
     isAdmin,
-    isMember,
     requireAdmin,
-    requireMember,
     navigate,
     showNotFoundOnUnauthorized,
     requireNoAuth
@@ -55,7 +49,6 @@ export function ProtectedRoute({
     showNotFoundOnUnauthorized &&
     ((!requireNoAuth && !isLoggedIn) ||
       (requireAdmin && !isAdmin) ||
-      (requireMember && !isMember) ||
       (isLoggedIn && requireNoAuth))
   ) {
     return <NotFoundPage />;
@@ -64,7 +57,6 @@ export function ProtectedRoute({
   if (
     (!requireNoAuth && !isLoggedIn) ||
     (requireAdmin && !isAdmin) ||
-    (requireMember && !isMember) ||
     (isLoggedIn && requireNoAuth)
   ) {
     return null;

@@ -12,7 +12,7 @@ import { blacklist } from '@/db/schema';
 import type { Blacklist } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
-export const authMiddleWare = (role: 'user' | 'member' | 'admin'): MiddlewareHandler => createMiddleware<Context>(async (c, next) => {
+export const authMiddleWare = (role: 'user' | 'admin'): MiddlewareHandler => createMiddleware<Context>(async (c, next) => {
 	const sessionId = getCookie(c, lucia.sessionCookieName) ?? null;
 	if (!sessionId) {
 		c.set('user', null);
@@ -28,15 +28,12 @@ export const authMiddleWare = (role: 'user' | 'member' | 'admin'): MiddlewareHan
 		.from(blacklist)
 		.where(eq(blacklist.userId, user.id))
 		.then((res) => res[0]);
-	
+
 	if (blacklistedUser) {
 		return c.json({ error: 'Blacklisted', message: blacklistedUser.reason }, FORBIDDEN);
 	}
 	if (role === 'admin' && user.role !== 'admin') {
 		return c.json({ error: 'Forbidden' }, FORBIDDEN);
-	}
-	if (role === 'user' && user.role === 'member') {
-			return c.json({ error: 'Forbidden' }, FORBIDDEN);
 	}
 
 	if (session && session.fresh) {

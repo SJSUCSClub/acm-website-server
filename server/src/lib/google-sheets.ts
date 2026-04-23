@@ -1,42 +1,73 @@
-import { env } from "@/env";
+import { env } from '@/env';
+import { db } from '@/db/db';
+import { membershipConfig } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 
-const SCOPE = "https://www.googleapis.com/auth/spreadsheets.readonly";
-const TOKEN_URL = "https://oauth2.googleapis.com/token";
+const SCOPE = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+const TOKEN_URL = 'https://oauth2.googleapis.com/token';
 const MEMBER_CACHE_TTL_MS = 5 * 60 * 1000;
 
 let cachedToken: { token: string; expiresAt: number } | null = null;
-let cachedMembers: { emails: Set<string>; expiresAt: number } | null = null;
+let cachedMembers: {
+  emails: Set<string>;
+  expiresAt: number;
+  sheetId: string;
+  emailColumn: string;
+} | null = null;
+
+export function invalidateMembershipCache(): void {
+  cachedMembers = null;
+}
+
+async function getMembershipConfig(): Promise<{
+  sheetId: string;
+  emailColumn: string;
+}> {
+  const rows = await db
+    .select()
+    .from(membershipConfig)
+    .where(eq(membershipConfig.id, 1));
+  if (rows.length === 0 || !rows[0].sheetId) {
+    throw new Error(
+      'Membership config not set. An admin must configure the sheet ID.',
+    );
+  }
+  return { sheetId: rows[0].sheetId, emailColumn: rows[0].emailColumn };
+}
 
 function base64UrlEncode(input: string | Uint8Array): string {
   let binary: string;
-  if (typeof input === "string") {
+  if (typeof input === 'string') {
     binary = input;
   } else {
-    binary = "";
-    for (let i = 0; i < input.length; i++)
+    binary = '';
+    for (let i = 0; i < input.length; i++) {
       binary += String.fromCharCode(input[i]);
+    }
   }
   return btoa(binary)
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
 }
 
 function pemToPkcs8(pem: string): ArrayBuffer {
   const body = pem
-    .replace(/-----BEGIN PRIVATE KEY-----/, "")
-    .replace(/-----END PRIVATE KEY-----/, "")
-    .replace(/\s+/g, "");
+    .replace(/-----BEGIN PRIVATE KEY-----/, '')
+    .replace(/-----END PRIVATE KEY-----/, '')
+    .replace(/\s+/g, '');
   const binary = atob(body);
   const buffer = new ArrayBuffer(binary.length);
   const bytes = new Uint8Array(buffer);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
   return buffer;
 }
 
 async function signJwt(): Promise<string> {
   const now = Math.floor(Date.now() / 1000);
-  const header = base64UrlEncode(JSON.stringify({ alg: "RS256", typ: "JWT" }));
+  const header = base64UrlEncode(JSON.stringify({ alg: 'RS256', typ: 'JWT' }));
   const claims = base64UrlEncode(
     JSON.stringify({
       iss: env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
@@ -49,16 +80,16 @@ async function signJwt(): Promise<string> {
   const signingInput = `${header}.${claims}`;
 
   // Private keys in env files are typically stored with literal \n escapes
-  const pem = env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY.replace(/\\n/g, "\n");
+  const pem = env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY.replace(/\\n/g, '\n');
   const key = await crypto.subtle.importKey(
-    "pkcs8",
+    'pkcs8',
     pemToPkcs8(pem),
-    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
     false,
-    ["sign"],
+    ['sign'],
   );
   const signature = await crypto.subtle.sign(
-    "RSASSA-PKCS1-v1_5",
+    'RSASSA-PKCS1-v1_5',
     key,
     new TextEncoder().encode(signingInput),
   );
@@ -71,10 +102,10 @@ async function getAccessToken(): Promise<string> {
   }
   const assertion = await signJwt();
   const res = await fetch(TOKEN_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
-      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
       assertion,
     }),
   });
@@ -95,12 +126,20 @@ async function getAccessToken(): Promise<string> {
 }
 
 async function fetchMemberEmails(): Promise<Set<string>> {
-  if (cachedMembers && cachedMembers.expiresAt > Date.now()) {
+  const { sheetId, emailColumn } = await getMembershipConfig();
+
+  if (
+    cachedMembers
+    && cachedMembers.expiresAt > Date.now()
+    && cachedMembers.sheetId === sheetId
+    && cachedMembers.emailColumn === emailColumn
+  ) {
     return cachedMembers.emails;
   }
+
   const token = await getAccessToken();
-  const range = encodeURIComponent("C2:C");
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${env.GOOGLE_SHEETS_MEMBERS_ID}/values/${range}`;
+  const range = encodeURIComponent(`${emailColumn}2:${emailColumn}`);
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}`;
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -113,9 +152,16 @@ async function fetchMemberEmails(): Promise<Set<string>> {
   const emails = new Set<string>();
   for (const row of data.values ?? []) {
     const value = row[0]?.trim().toLowerCase();
-    if (value) emails.add(value);
+    if (value) {
+      emails.add(value);
+    }
   }
-  cachedMembers = { emails, expiresAt: Date.now() + MEMBER_CACHE_TTL_MS };
+  cachedMembers = {
+    emails,
+    expiresAt: Date.now() + MEMBER_CACHE_TTL_MS,
+    sheetId,
+    emailColumn,
+  };
   return emails;
 }
 

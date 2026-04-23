@@ -12,7 +12,6 @@ export function useAuth() {
     logout,
     clearError,
     isLoggedIn: isAuthenticated && user !== null,
-    isAdmin: isAuthenticated && user?.role === 'admin',
-    isMember: isAuthenticated && (user?.role === 'member' || user?.role === 'admin')
+    isAdmin: isAuthenticated && user?.role === 'admin'
   };
 }

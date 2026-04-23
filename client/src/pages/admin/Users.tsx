@@ -22,8 +22,7 @@ interface UserFilter {
   name: string;
   education_level: ('Undergraduate' | 'Graduate')[];
   major: string[];
-  role: ('user' | 'member' | 'admin')[];
-  paid: ('Semester' | 'Annual')[];
+  role: ('user' | 'admin')[];
 }
 
 const Users = () => {
@@ -31,8 +30,7 @@ const Users = () => {
     name: '',
     education_level: [],
     major: [],
-    role: [],
-    paid: []
+    role: []
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(20);
@@ -95,26 +93,10 @@ const Users = () => {
     }
   });
 
-  const { data: membershipTermData } = useQuery('get', '/v1/enums/{enumType}', {
-    params: {
-      path: {
-        enumType: 'membership_term_enum'
-      }
-    },
-    options: {
-      refetchOnWindowFocus: false,
-      refetchOnMount: true,
-      refetchOnReconnect: false,
-      retry: 1,
-      staleTime: 30000
-    }
-  });
-
   // Extract options from API responses with type assertions
   const majorOptions = (majorsData as MajorsResponse)?.majors.map((major) => major.name) || [];
   const educationLevelOptions = (educationLevelData as EnumResponse)?.types || [];
   const roleOptions = (roleData as EnumResponse)?.types || [];
-  const paidOptions = (membershipTermData as EnumResponse)?.types || [];
 
   // Reset to first page when filters change
   useEffect(() => {
@@ -145,8 +127,7 @@ const Users = () => {
         ...queryParams,
         'education_level[]': createArrayParam(filters.education_level),
         'major[]': createArrayParam(filters.major),
-        'role[]': createArrayParam(filters.role),
-        'paid[]': createArrayParam(filters.paid)
+        'role[]': createArrayParam(filters.role)
       }
     },
     options: {
@@ -210,8 +191,7 @@ const Users = () => {
       name: '',
       education_level: [],
       major: [],
-      role: [],
-      paid: []
+      role: []
     });
     setNameSearch('');
     setCurrentPage(1); // Reset to first page when clearing filters
@@ -437,25 +417,6 @@ const Users = () => {
       );
     });
 
-    filters.paid.forEach((term) => {
-      activeFilters.push(
-        <div
-          key={`paid-${term}`}
-          className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-900"
-        >
-          <span>Membership: {term}</span>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="ml-2 -mr-1 rounded-full p-1 hover:bg-gray-200"
-            onClick={() => removeFilter('paid', term)}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-      );
-    });
-
     return activeFilters.length > 0 ? (
       <div className="flex flex-wrap gap-2 mt-4">{activeFilters}</div>
     ) : null;
@@ -480,8 +441,7 @@ const Users = () => {
               !filters.name &&
               !filters.education_level.length &&
               !filters.major.length &&
-              !filters.role.length &&
-              !filters.paid.length
+              !filters.role.length
             }
           >
             <X className="h-4 w-4" />
@@ -489,7 +449,7 @@ const Users = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
             <label className="block text-sm mb-1">Name</label>
             <input
@@ -521,13 +481,6 @@ const Users = () => {
             value={filters.role}
             onChange={(values) => handleFilterChange('role', values)}
           />
-
-          <FilterDropdown
-            label="Membership Term"
-            options={paidOptions}
-            value={filters.paid}
-            onChange={(values) => handleFilterChange('paid', values)}
-          />
         </div>
 
         {renderFilterChips()}
@@ -542,7 +495,6 @@ const Users = () => {
           <UsersTable
             users={users}
             roles={roleOptions as UserFilter['role']}
-            memberships={membershipTermData?.types as UserFilter['paid']}
             onUserUpdated={handleUserUpdated}
             canEdit
           />

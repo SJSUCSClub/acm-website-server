@@ -18,7 +18,6 @@ import {
   clubLinks,
   landingQuestions,
   landingSpotlights,
-  membershipTermEnum,
   bookmarkedEvents,
   subscribedEvents,
   attendingEvents,
@@ -90,7 +89,6 @@ export const updateUserSchema = z.object({
   gradDate: z.coerce.date().optional(),
   interests: z.array(z.enum(csFieldsEnum.enumValues)).optional(),
   education_level: z.enum(educationLevelEnum.enumValues).optional(),
-  paid: z.enum(membershipTermEnum.enumValues).nullable().optional(),
   discord: z.string().nullable().optional(),
   linkedin: z.string().nullable().optional(),
   github: z.string().nullable().optional(),
@@ -133,6 +131,11 @@ export const updateClubLinkSchema = z.object({
   discord: clubLinkSchema.shape.discord.optional(),
   memberApplication: clubLinkSchema.shape.memberApplication.optional(),
 });
+export const membershipConfigSchema = z.object({
+  sheetId: z.string(),
+  emailColumn: z.string().regex(/^[A-Z]{1,3}$/, 'Must be uppercase letters (e.g., C)'),
+});
+export const updateMembershipConfigSchema = membershipConfigSchema.partial();
 export const landingSpotlightSchema = createSelectSchema(landingSpotlights);
 export const landingQuestionSchema = createSelectSchema(landingQuestions);
 export const newLandingQuestionSchema = createInsertSchema(landingQuestions);
@@ -168,7 +171,6 @@ export const userFilterSchema = z.object({
   education_level: z.array(z.enum(educationLevelEnum.enumValues)).optional(),
   major: z.array(z.string()).optional(),
   role: z.array(z.enum(userRoleEnum.enumValues)).optional(),
-  paid: z.array(z.enum(membershipTermEnum.enumValues)).optional(),
   page: z.string().optional(),
   per_page: z.string().optional(),
 });

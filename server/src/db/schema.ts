@@ -40,10 +40,6 @@ export const equipmentConditionEnum = pgEnum('equipment_condition_enum', [
   'Broken',
   'In Maintenance',
 ]);
-export const membershipTermEnum = pgEnum('membership_term_enum', [
-  'Semester',
-  'Annual',
-]);
 export const membershipRequestStatusEnum = pgEnum(
   'membership_request_status_enum',
   ['Pending', 'Approved', 'Declined'],
@@ -68,7 +64,6 @@ export const projectStatusEnum = pgEnum('project_status_enum', [
 ]);
 export const userRoleEnum = pgEnum('user_role_enum', [
   'user',
-  'member',
   'admin',
 ]);
 export const yearEnum = pgEnum('year_enum', [
@@ -99,7 +94,6 @@ export const users = pgTable('users', {
   interests: csFieldsEnum('interests').array().notNull().default([]),
   profilePic: text('profile_pic').notNull(),
   role: userRoleEnum('role').notNull().default('user'),
-  paid: membershipTermEnum('paid'),
   education_level: educationLevelEnum('education_level').notNull(),
   discord: text('discord'),
   linkedin: text('linkedin'),
@@ -438,6 +432,12 @@ export const systemNotifications = pgTable('system_notifications', {
   description: text('description').notNull(),
   type: systemNotificationTypeEnum('type').notNull(),
   enabledByDefault: boolean('enabled_by_default').notNull().default(true),
+});
+
+export const membershipConfig = pgTable('membership_config', {
+  id: integer('id').primaryKey().default(1),
+  sheetId: text('sheet_id').notNull().default(''),
+  emailColumn: text('email_column').notNull().default('C'),
 });
 
 export const userSystemNotificationPreferences = pgTable(

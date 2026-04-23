@@ -17,6 +17,7 @@ import paymentRouter from '@/router/v1/payments';
 import searchRouter from '@/router/v1/search';
 import emailRouter from '@/router/v1/email';
 import systemNotificationsRouter from '@/router/v1/system-notifications';
+import membershipConfigRouter from '@/router/v1/membership-config';
 
 const v1App = new OpenAPIHono<Context>();
 
@@ -36,5 +37,6 @@ v1App.route('/payments', paymentRouter);
 v1App.route('/search', searchRouter);
 v1App.route('/emails', emailRouter);
 v1App.route('/system-notifications', systemNotificationsRouter);
+v1App.route('/membership-config', membershipConfigRouter);
 
 export default v1App;

@@ -18,7 +18,6 @@ import {
   interestedInProjects,
   attendingEvents,
   educationLevelEnum,
-  membershipTermEnum,
   userSystemNotificationPreferences,
   systemNotifications,
 } from '@/db/schema';
@@ -99,7 +98,6 @@ userRouter.openapi(
       education_level: getArrayParam('education_level'),
       major: getArrayParam('major'),
       role: getArrayParam('role'),
-      paid: getArrayParam('paid'),
       page: parseInt(queryParams.get('page') || '1'),
       per_page: parseInt(queryParams.get('per_page') || '20'),
     };
@@ -125,12 +123,6 @@ userRouter.openapi(
     if (query.role.length > 0) {
       whereConditions.push(
         or(...query.role.map(role => eq(users.role, role as typeof userRoleEnum.enumValues[number]))),
-      );
-    }
-
-    if (query.paid.length > 0) {
-      whereConditions.push(
-        or(...query.paid.map(term => eq(users.paid, term as typeof membershipTermEnum.enumValues[number]))),
       );
     }
 

@@ -48,10 +48,6 @@ const UserDialog: React.FC<IUserDialogProps> = ({ user, children }) => {
             <div>{user.role.toUpperCase()}</div>
           </div>
           <div>
-            <div className="text-sm font-medium text-slate-500">Membership</div>
-            <div>{user.paid ? user.paid : 'None'}</div>
-          </div>
-          <div>
             <div className="text-sm font-medium text-slate-500">Major</div>
             <div>{user.major}</div>
           </div>
