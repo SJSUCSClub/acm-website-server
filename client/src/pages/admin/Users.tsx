@@ -1,11 +1,6 @@
-import { useState, useEffect, useMemo } from 'react';
-import { toast } from 'sonner';
-import { useQuery } from '@/hooks/useFetch';
-import { paths } from '@/types/schema.v1';
-import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
-import { Checkbox } from '@/components/ui/checkbox';
+import Spinner from '@/components/atoms/spinner';
+import DataTablePagination from '@/components/molecules/data-table-pagination';
+import UsersTable from '@/components/molecules/users-table';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,10 +12,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { useQuery } from '@/hooks/useFetch';
+import { paths } from '@/types/schema.v1';
 import { ChevronsUpDown, X } from 'lucide-react';
-import Spinner from '@/components/atoms/spinner';
-import UsersTable from '@/components/molecules/users-table';
-import DataTablePagination from '@/components/molecules/data-table-pagination';
+import { useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 type MajorsResponse = paths['/v1/majors']['get']['responses']['200']['content']['application/json'];
 type EnumResponse =
