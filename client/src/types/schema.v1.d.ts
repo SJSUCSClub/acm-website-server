@@ -186,8 +186,7 @@ export interface paths {
                     name?: string;
                     education_level?: ("Undergraduate" | "Graduate")[];
                     major?: string[];
-                    role?: ("user" | "member" | "admin")[];
-                    paid?: ("Semester" | "Annual")[];
+                    role?: ("user" | "admin")[];
                     page?: string;
                     per_page?: string;
                 };
@@ -214,9 +213,7 @@ export interface paths {
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 profilePic: string;
                                 /** @enum {string} */
-                                role: "user" | "member" | "admin";
-                                /** @enum {string|null} */
-                                paid: "Semester" | "Annual" | null;
+                                role: "user" | "admin";
                                 /** @enum {string} */
                                 education_level: "Undergraduate" | "Graduate";
                                 discord: string | null;
@@ -271,9 +268,7 @@ export interface paths {
                             interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                             profilePic: string;
                             /** @enum {string} */
-                            role: "user" | "member" | "admin";
-                            /** @enum {string|null} */
-                            paid: "Semester" | "Annual" | null;
+                            role: "user" | "admin";
                             /** @enum {string} */
                             education_level: "Undergraduate" | "Graduate";
                             discord: string | null;
@@ -312,8 +307,6 @@ export interface paths {
                         interests?: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                         /** @enum {string} */
                         education_level?: "Undergraduate" | "Graduate";
-                        /** @enum {string|null} */
-                        paid?: "Semester" | "Annual" | null;
                         discord?: string | null;
                         linkedin?: string | null;
                         github?: string | null;
@@ -338,9 +331,7 @@ export interface paths {
                             interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                             profilePic: string;
                             /** @enum {string} */
-                            role: "user" | "member" | "admin";
-                            /** @enum {string|null} */
-                            paid: "Semester" | "Annual" | null;
+                            role: "user" | "admin";
                             /** @enum {string} */
                             education_level: "Undergraduate" | "Graduate";
                             discord: string | null;
@@ -1207,9 +1198,7 @@ export interface paths {
                             interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                             profilePic: string;
                             /** @enum {string} */
-                            role: "user" | "member" | "admin";
-                            /** @enum {string|null} */
-                            paid: "Semester" | "Annual" | null;
+                            role: "user" | "admin";
                             /** @enum {string} */
                             education_level: "Undergraduate" | "Graduate";
                             discord: string | null;
@@ -1261,14 +1250,12 @@ export interface paths {
                         interests?: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                         /** @enum {string} */
                         education_level?: "Undergraduate" | "Graduate";
-                        /** @enum {string|null} */
-                        paid?: "Semester" | "Annual" | null;
                         discord?: string | null;
                         linkedin?: string | null;
                         github?: string | null;
                         website?: string | null;
                         /** @enum {string} */
-                        role?: "user" | "member" | "admin";
+                        role?: "user" | "admin";
                     };
                 };
             };
@@ -1289,9 +1276,7 @@ export interface paths {
                             interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                             profilePic: string;
                             /** @enum {string} */
-                            role: "user" | "member" | "admin";
-                            /** @enum {string|null} */
-                            paid: "Semester" | "Annual" | null;
+                            role: "user" | "admin";
                             /** @enum {string} */
                             education_level: "Undergraduate" | "Graduate";
                             discord: string | null;
@@ -2505,9 +2490,7 @@ export interface paths {
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 profilePic: string;
                                 /** @enum {string} */
-                                role: "user" | "member" | "admin";
-                                /** @enum {string|null} */
-                                paid: "Semester" | "Annual" | null;
+                                role: "user" | "admin";
                                 /** @enum {string} */
                                 education_level: "Undergraduate" | "Graduate";
                                 discord: string | null;
@@ -2782,9 +2765,7 @@ export interface paths {
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 profilePic: string;
                                 /** @enum {string} */
-                                role: "user" | "member" | "admin";
-                                /** @enum {string|null} */
-                                paid: "Semester" | "Annual" | null;
+                                role: "user" | "admin";
                                 /** @enum {string} */
                                 education_level: "Undergraduate" | "Graduate";
                                 discord: string | null;
@@ -3656,9 +3637,7 @@ export interface paths {
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 profilePic: string;
                                 /** @enum {string} */
-                                role: "user" | "member" | "admin";
-                                /** @enum {string|null} */
-                                paid: "Semester" | "Annual" | null;
+                                role: "user" | "admin";
                                 /** @enum {string} */
                                 education_level: "Undergraduate" | "Graduate";
                                 discord: string | null;
@@ -4480,9 +4459,7 @@ export interface paths {
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 profilePic: string;
                                 /** @enum {string} */
-                                role: "user" | "member" | "admin";
-                                /** @enum {string|null} */
-                                paid: "Semester" | "Annual" | null;
+                                role: "user" | "admin";
                                 /** @enum {string} */
                                 education_level: "Undergraduate" | "Graduate";
                                 discord: string | null;
@@ -5405,9 +5382,7 @@ export interface paths {
                                 interests: ("Web Development" | "Machine Learning" | "Cloud Computing" | "Artificial Intelligence" | "Networking" | "Cybersecurity" | "Mobile Development" | "Game Development" | "Data Science")[];
                                 profilePic: string;
                                 /** @enum {string} */
-                                role: "user" | "member" | "admin";
-                                /** @enum {string|null} */
-                                paid: "Semester" | "Annual" | null;
+                                role: "user" | "admin";
                                 /** @enum {string} */
                                 education_level: "Undergraduate" | "Graduate";
                                 discord: string | null;
@@ -7811,6 +7786,119 @@ export interface paths {
             };
         };
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/membership-config": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the current membership sheet configuration */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            sheetId: string;
+                            emailColumn: string;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
+        /** Update the membership sheet configuration */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        sheetId?: string;
+                        emailColumn?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Successfully updated config */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            sheetId: string;
+                            emailColumn: string;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                        };
+                    };
+                };
+            };
+        };
         post?: never;
         delete?: never;
         options?: never;
