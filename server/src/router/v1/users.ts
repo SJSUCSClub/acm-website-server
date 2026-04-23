@@ -181,6 +181,61 @@ userRouter.openapi(
 
 userRouter.openapi(
   createRoute({
+    method: 'post',
+    path: '/advance-semester',
+    tags: ['users'],
+    summary: 'Admin: advance the semester — annual memberships become semester, semester memberships expire',
+    middleware: [authMiddleWare('admin')],
+    responses: {
+      [HttpStatusCodes.OK]: {
+        description: 'Successfully advanced semester',
+        content: {
+          'application/json': {
+            schema: z.object({
+              annualToSemester: z.number(),
+              semesterToUser: z.number(),
+            }),
+          },
+        },
+      },
+      ...unauthorizedRequest,
+      ...forbiddenRequest,
+    },
+  }),
+  async (c) => {
+    // Order matters: demote semester rows FIRST, then demote annual → semester.
+    // Otherwise the annual rows would get demoted twice in the same call.
+    const result = await db.transaction(async (tx) => {
+      const semesterMembersDemoted = await tx
+        .update(users)
+        .set({ paid: null, role: 'user' })
+        .where(and(eq(users.paid, 'Semester'), eq(users.role, 'member')))
+        .returning({ id: users.id });
+
+      const semesterAdminsDemoted = await tx
+        .update(users)
+        .set({ paid: null })
+        .where(and(eq(users.paid, 'Semester'), eq(users.role, 'admin')))
+        .returning({ id: users.id });
+
+      const annualDowngraded = await tx
+        .update(users)
+        .set({ paid: 'Semester' })
+        .where(eq(users.paid, 'Annual'))
+        .returning({ id: users.id });
+
+      return {
+        annualToSemester: annualDowngraded.length,
+        semesterToUser: semesterMembersDemoted.length + semesterAdminsDemoted.length,
+      };
+    });
+
+    return c.json(result, HttpStatusCodes.OK);
+  },
+);
+
+userRouter.openapi(
+  createRoute({
     method: 'get',
     path: '/my',
     tags: ['users'],

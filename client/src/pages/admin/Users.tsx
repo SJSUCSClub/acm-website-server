@@ -1,10 +1,22 @@
 import { useState, useEffect, useMemo } from 'react';
+import { toast } from 'sonner';
 import { useQuery } from '@/hooks/useFetch';
 import { paths } from '@/types/schema.v1';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
 import { ChevronsUpDown, X } from 'lucide-react';
 import Spinner from '@/components/atoms/spinner';
 import UsersTable from '@/components/molecules/users-table';
@@ -465,9 +477,59 @@ const Users = () => {
     refetchUsers();
   };
 
+  const [isAdvancing, setIsAdvancing] = useState(false);
+
+  const handleAdvanceSemester = async () => {
+    setIsAdvancing(true);
+    try {
+      const response = await fetch('/api/v1/users/advance-semester', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const result = (await response.json()) as {
+        annualToSemester: number;
+        semesterToUser: number;
+      };
+      toast.success(
+        `Semester advanced: ${result.annualToSemester} annual → semester, ${result.semesterToUser} semester → expired`
+      );
+      refetchUsers();
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to advance semester.');
+    } finally {
+      setIsAdvancing(false);
+    }
+  };
+
   return (
     <div className="space-y-5">
-      <h1 className="text-4xl font-bold">Users Management</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-4xl font-bold">Users Management</h1>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="outline" disabled={isAdvancing}>
+              {isAdvancing ? 'Advancing...' : 'Advance Semester'}
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Advance semester?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Annual memberships will become semester memberships. Semester memberships will
+                expire (members become users). This cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleAdvanceSemester}>Advance</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
 
       <div className="mb-6 p-4 border rounded shadow-sm">
         <div className="flex justify-between items-center mb-3">
