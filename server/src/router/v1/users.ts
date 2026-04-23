@@ -27,6 +27,7 @@ import { eq, count, getTableColumns, and, or, sql } from 'drizzle-orm';
 import { unauthorizedRequest } from '@/middlewares/auth-middleware';
 import type { User, Event, NewAttendingEvent } from '@/db/schema';
 import type { Context } from '@/lib/context';
+import { isClubMember } from '@/lib/google-sheets';
 import {
   userSchema,
   updateUserSchema,
@@ -208,6 +209,52 @@ userRouter.openapi(
       },
       HttpStatusCodes.OK,
     );
+  },
+);
+
+userRouter.openapi(
+  createRoute({
+    method: 'get',
+    path: '/my/membership-status',
+    tags: ['users'],
+    summary: 'Check if current user is a paid club member (via Google Sheets roster)',
+    middleware: [authMiddleWare('user')],
+    responses: {
+      [HttpStatusCodes.OK]: {
+        description: 'Successful response',
+        content: {
+          'application/json': {
+            schema: z.object({
+              isMember: z.boolean(),
+            }),
+          },
+        },
+      },
+      [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+        description: 'Internal server error',
+        content: {
+          'application/json': {
+            schema: errorSchema,
+          },
+        },
+      },
+      ...unauthorizedRequest,
+    },
+  }),
+  async (c) => {
+    const user = c.get('user');
+    if (!user) {
+      return c.json({ error: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+    }
+    try {
+      const isMember = await isClubMember(user.email);
+      return c.json({ isMember }, HttpStatusCodes.OK);
+    } catch (error) {
+      return c.json(
+        { error: `Failed to check membership: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
   },
 );
 

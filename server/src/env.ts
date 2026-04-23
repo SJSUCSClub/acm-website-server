@@ -24,6 +24,9 @@ const EnvSchema = z.object({
   ROLE_ARN: z.string().default(''),
   SENDER: z.string().default(''),
   APPLICATION: z.string().default(''),
+  GOOGLE_SERVICE_ACCOUNT_EMAIL: z.string().default(''),
+  GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: z.string().default(''),
+  GOOGLE_SHEETS_MEMBERS_ID: z.string().default(''),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

@@ -65,6 +65,9 @@ services:
       - ROLE_ARN=${AWS_ROLE_ARN?REQUIRED}
       - SENDER=${EMAIL_SENDER?REQUIRED}
       - APPLICATION=${APPLICATION?REQUIRED}
+      - GOOGLE_SERVICE_ACCOUNT_EMAIL=${GOOGLE_SERVICE_ACCOUNT_EMAIL?REQUIRED}
+      - GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY=${GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY?REQUIRED}
+      - GOOGLE_SHEETS_MEMBERS_ID=${GOOGLE_SHEETS_MEMBERS_ID?REQUIRED}
     depends_on:
       db:
         condition: service_healthy
@@ -77,7 +80,7 @@ services:
       timeout: 5s
 
   db:
-    image: postgres:17
+    image: postgres:17-alpine
     ports:
       - "5432:5432"
     environment:

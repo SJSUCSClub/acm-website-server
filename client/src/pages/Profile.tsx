@@ -65,6 +65,7 @@ export default function Profile() {
 
   const [githubError, setGithubError] = useState<string | null>(null);
   const [linkedinError, setLinkedinError] = useState<string | null>(null);
+  const [isMember, setIsMember] = useState<boolean | null>(null);
 
   //fetch education levels
   useEffect(() => {
@@ -152,6 +153,28 @@ export default function Profile() {
     };
 
     fetchData();
+  }, []);
+
+  // fetch membership status from Google Sheets roster
+  useEffect(() => {
+    const fetchMembership = async () => {
+      try {
+        const response = await fetch('/api/v1/users/my/membership-status', {
+          method: 'GET',
+          credentials: 'include'
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setIsMember(data.isMember);
+      } catch (error) {
+        console.error('Failed to fetch membership status:', error);
+        setIsMember(false);
+      }
+    };
+
+    fetchMembership();
   }, []);
 
   // update and save profile
@@ -246,6 +269,24 @@ export default function Profile() {
                     {userData.email}
                   </div>
                 </div>
+
+                <div className="space-y-2">
+                  <p className="text-neutral font-semibold mb-2">Membership</p>
+                  {isMember === null ? (
+                    <div className="rounded-xl bg-border text-gray-500 px-4 py-2 w-full border-border-hovered border-2">
+                      Checking membership...
+                    </div>
+                  ) : isMember ? (
+                    <div className="rounded-xl bg-green-100 text-green-800 px-4 py-2 w-full border-green-300 border-2 font-medium">
+                      Active member
+                    </div>
+                  ) : (
+                    <div className="rounded-xl bg-yellow-100 text-yellow-800 px-4 py-2 w-full border-yellow-300 border-2">
+                      Not a member. Visit an ACM officer to sign up!
+                    </div>
+                  )}
+                </div>
+
                 <div className="space-y-2">
                   <Input
                     label="Discord"
