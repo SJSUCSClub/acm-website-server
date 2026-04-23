@@ -1,7 +1,7 @@
-import { ReactNode, useEffect } from 'react';
-import { useNavigate } from '@tanstack/react-router';
-import { useAuth } from '@/hooks/useAuth';
 import NotFoundPage from '@/components/organisms/not-found-page';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from '@tanstack/react-router';
+import { ReactNode, useEffect } from 'react';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -27,12 +27,12 @@ export function ProtectedRoute({
         if (!requireNoAuth) {
           navigate({ to: '/login' });
         } else if (requireAdmin && !isAdmin) {
-          navigate({ to: '/dashboard' });
+          navigate({ to: '/account/dashboard' });
         } else if (requireMember && !isMember) {
-          navigate({ to: '/dashboard' });
+          navigate({ to: '/account/dashboard' });
         }
       } else if (requireNoAuth) {
-        navigate({ to: '/dashboard' });
+        navigate({ to: '/account/dashboard' });
       }
     }
   }, [

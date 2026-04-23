@@ -6,6 +6,8 @@
 		"dev": "NODE_ENV=development bun run --watch src/index.ts",
 		"test": "bun test src/tests",
 		"lint": "eslint .",
+		"format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"",
+		"format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"",
 		"typecheck": "tsc --noEmit --skipLibCheck",
 		"build": "bun build ./src/index.ts --outdir ./dist",
 		"precommit": "bun lint && bun typecheck && bun test"
@@ -40,6 +42,7 @@
 		"drizzle-kit": "^0.24.2",
 		"eslint": "^9.13.0",
 		"eslint-plugin-drizzle": "0.2.3",
+		"prettier": "^3.2.5",
 		"typescript": "5.5.3",
 		"typescript-eslint": "^8.11.0"
 	}

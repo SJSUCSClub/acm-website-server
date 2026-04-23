@@ -84,7 +84,7 @@ userRouter.openapi(
     const getArrayParam = (param: string): string[] => {
       const values: string[] = [];
       // Get all instances of the parameter from the URL
-      queryParams.getAll(`${param}[]`).forEach(value => {
+      queryParams.getAll(`${param}[]`).forEach((value) => {
         if (!values.includes(value)) {
           values.push(value);
         }
@@ -111,25 +111,35 @@ userRouter.openapi(
 
     if (query.education_level.length > 0) {
       whereConditions.push(
-        or(...query.education_level.map(level => eq(users.education_level, level as typeof educationLevelEnum.enumValues[number]))),
+        or(
+          ...query.education_level.map((level) =>
+            eq(users.education_level, level as (typeof educationLevelEnum.enumValues)[number]),
+          ),
+        ),
       );
     }
 
     if (query.major.length > 0) {
-      whereConditions.push(
-        or(...query.major.map(major => eq(users.major, major))),
-      );
+      whereConditions.push(or(...query.major.map((major) => eq(users.major, major))));
     }
 
     if (query.role.length > 0) {
       whereConditions.push(
-        or(...query.role.map(role => eq(users.role, role as typeof userRoleEnum.enumValues[number]))),
+        or(
+          ...query.role.map((role) =>
+            eq(users.role, role as (typeof userRoleEnum.enumValues)[number]),
+          ),
+        ),
       );
     }
 
     if (query.paid.length > 0) {
       whereConditions.push(
-        or(...query.paid.map(term => eq(users.paid, term as typeof membershipTermEnum.enumValues[number]))),
+        or(
+          ...query.paid.map((term) =>
+            eq(users.paid, term as (typeof membershipTermEnum.enumValues)[number]),
+          ),
+        ),
       );
     }
 
@@ -138,7 +148,7 @@ userRouter.openapi(
       .select({ count: count() })
       .from(users)
       .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
-      .then(result => result[0].count);
+      .then((result) => result[0].count);
 
     // Get paginated users
     const offset = (query.page - 1) * query.per_page;
@@ -151,11 +161,7 @@ userRouter.openapi(
         .limit(query.per_page)
         .offset(offset);
     } else {
-      foundUsers = await db
-        .select()
-        .from(users)
-        .limit(query.per_page)
-        .offset(offset);
+      foundUsers = await db.select().from(users).limit(query.per_page).offset(offset);
     }
 
     const formattedUsers = foundUsers.map((user) => ({
@@ -163,10 +169,13 @@ userRouter.openapi(
       createdAt: user.createdAt.toISOString(),
     }));
 
-    return c.json({
-      users: formattedUsers,
-      total: totalCount,
-    }, HttpStatusCodes.OK);
+    return c.json(
+      {
+        users: formattedUsers,
+        total: totalCount,
+      },
+      HttpStatusCodes.OK,
+    );
   },
 );
 
@@ -321,10 +330,7 @@ userRouter.openapi(
       })
       .from(equipmentRentals)
       .innerJoin(equipmentItem, eq(equipmentRentals.itemId, equipmentItem.id))
-      .innerJoin(
-        equipmentRentalType,
-        eq(equipmentItem.equipmentType, equipmentRentalType.id),
-      )
+      .innerJoin(equipmentRentalType, eq(equipmentItem.equipmentType, equipmentRentalType.id))
       .where(eq(equipmentRentals.userId, session.userId));
     return c.json(
       {
@@ -470,10 +476,7 @@ userRouter.openapi(
       .returning();
 
     if (newBookmark.length === 0) {
-      return c.json(
-        { error: 'Bookmark already exists' },
-        HttpStatusCodes.CONFLICT,
-      );
+      return c.json({ error: 'Bookmark already exists' }, HttpStatusCodes.CONFLICT);
     }
 
     return c.json({ newBookmark: newBookmark[0] }, HttpStatusCodes.OK);
@@ -522,10 +525,7 @@ userRouter.openapi(
 
       const eventID = c.req.param('eventID');
       if (!eventID) {
-        return c.json(
-          { error: 'Event ID not provided' },
-          HttpStatusCodes.BAD_REQUEST,
-        );
+        return c.json({ error: 'Event ID not provided' }, HttpStatusCodes.BAD_REQUEST);
       }
 
       await db
@@ -539,7 +539,10 @@ userRouter.openapi(
 
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
-      return c.json({ error: `Failed to delete bookmarked event: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json(
+        { error: `Failed to delete bookmarked event: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
     }
   },
 );
@@ -701,10 +704,7 @@ userRouter.openapi(
       .returning();
 
     if (newSubscription.length === 0) {
-      return c.json(
-        { error: 'Subscription already exists' },
-        HttpStatusCodes.CONFLICT,
-      );
+      return c.json({ error: 'Subscription already exists' }, HttpStatusCodes.CONFLICT);
     }
 
     return c.json({ newSubscription: newSubscription[0] }, HttpStatusCodes.OK);
@@ -752,10 +752,7 @@ userRouter.openapi(
       }
       const eventID = c.req.param('eventID');
       if (!eventID) {
-        return c.json(
-          { error: 'Event ID not provided' },
-          HttpStatusCodes.BAD_REQUEST,
-        );
+        return c.json({ error: 'Event ID not provided' }, HttpStatusCodes.BAD_REQUEST);
       }
 
       await db
@@ -769,7 +766,10 @@ userRouter.openapi(
 
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
-      return c.json({ error: `Failed to delete subscribed event: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json(
+        { error: `Failed to delete subscribed event: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
     }
   },
 );
@@ -916,10 +916,7 @@ userRouter.openapi(
     if (newSubscription.length === 0) {
       return c.json({ error: 'Already subscribed' }, HttpStatusCodes.CONFLICT);
     }
-    return c.json(
-      { subscription: newSubscription[0] },
-      HttpStatusCodes.CREATED,
-    );
+    return c.json({ subscription: newSubscription[0] }, HttpStatusCodes.CREATED);
   },
 );
 
@@ -965,10 +962,7 @@ userRouter.openapi(
 
       const companyID = c.req.param('companyID');
       if (!companyID) {
-        return c.json(
-          { error: 'Company ID not provided' },
-          HttpStatusCodes.BAD_REQUEST,
-        );
+        return c.json({ error: 'Company ID not provided' }, HttpStatusCodes.BAD_REQUEST);
       }
 
       await db
@@ -982,7 +976,10 @@ userRouter.openapi(
 
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
-      return c.json({ error: `Failed to delete subscribed company: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json(
+        { error: `Failed to delete subscribed company: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
     }
   },
 );
@@ -1020,7 +1017,12 @@ userRouter.openapi(
     const sub = await db
       .select()
       .from(subscribedCompanies)
-      .where(and(eq(subscribedCompanies.userId, session.userId), eq(subscribedCompanies.companyId, parseInt(companyID))));
+      .where(
+        and(
+          eq(subscribedCompanies.userId, session.userId),
+          eq(subscribedCompanies.companyId, parseInt(companyID)),
+        ),
+      );
 
     return c.json({ subscribed: sub.length > 0 }, HttpStatusCodes.OK);
   },
@@ -1059,7 +1061,12 @@ userRouter.openapi(
     const sub = await db
       .select()
       .from(subscribedCompanies)
-      .where(and(eq(subscribedCompanies.userId, session.userId), eq(subscribedCompanies.companyId, parseInt(companyID))));
+      .where(
+        and(
+          eq(subscribedCompanies.userId, session.userId),
+          eq(subscribedCompanies.companyId, parseInt(companyID)),
+        ),
+      );
 
     return c.json({ subscribed: sub.length > 0 }, HttpStatusCodes.OK);
   },
@@ -1321,7 +1328,12 @@ userRouter.openapi(
     const interest = await db
       .select()
       .from(interestedInProjects)
-      .where(and(eq(interestedInProjects.userId, session.userId), eq(interestedInProjects.projectId, parseInt(projectID))));
+      .where(
+        and(
+          eq(interestedInProjects.userId, session.userId),
+          eq(interestedInProjects.projectId, parseInt(projectID)),
+        ),
+      );
 
     return c.json({ interested: interest.length > 0 }, HttpStatusCodes.OK);
   },
@@ -1370,7 +1382,10 @@ userRouter.openapi(
 
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
-      return c.json({ error: `Failed to show project interest: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json(
+        { error: `Failed to show project interest: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
     }
   },
 );
@@ -1420,7 +1435,10 @@ userRouter.openapi(
 
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
-      return c.json({ error: `Failed to delete project interest: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json(
+        { error: `Failed to delete project interest: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
     }
   },
 );
@@ -1473,7 +1491,10 @@ userRouter.openapi(
 
       return c.json({ events: foundAttendingEvents }, HttpStatusCodes.OK);
     } catch (error) {
-      return c.json({ error: `Internal server error: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json(
+        { error: `Internal server error: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
     }
   },
 );
@@ -1529,7 +1550,10 @@ userRouter.openapi(
 
       return c.json({ attending: attendance.length > 0 }, HttpStatusCodes.OK);
     } catch (error) {
-      return c.json({ error: `Failed to check event attendance: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json(
+        { error: `Failed to check event attendance: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
     }
   },
 );
@@ -1606,10 +1630,7 @@ userRouter.openapi(
       }
 
       if (event.memberOnly && user?.role === 'user') {
-        return c.json(
-          { error: 'Member only event' },
-          HttpStatusCodes.FORBIDDEN,
-        );
+        return c.json({ error: 'Member only event' }, HttpStatusCodes.FORBIDDEN);
       }
 
       if (event.eventCapacity !== null && event.eventCapacity > 0) {
@@ -1619,10 +1640,7 @@ userRouter.openapi(
           .where(eq(attendingEvents.eventId, parseInt(eventID)));
 
         if (attendeesCount[0].count >= event.eventCapacity) {
-          return c.json(
-            { error: 'Event capacity reached' },
-            HttpStatusCodes.FORBIDDEN,
-          );
+          return c.json({ error: 'Event capacity reached' }, HttpStatusCodes.FORBIDDEN);
         }
       }
 
@@ -1636,17 +1654,12 @@ userRouter.openapi(
         .returning();
 
       if (newAttendance.length === 0) {
-        return c.json(
-          { error: 'Attendance already marked' },
-          HttpStatusCodes.CONFLICT,
-        );
+        return c.json({ error: 'Attendance already marked' }, HttpStatusCodes.CONFLICT);
       }
 
       const formattedAttendance = {
         ...newAttendance[0],
-        attendingDate:
-          newAttendance[0].attendingDate?.toISOString() ||
-          new Date().toISOString(),
+        attendingDate: newAttendance[0].attendingDate?.toISOString() || new Date().toISOString(),
       };
 
       return c.json({ newAttendance: formattedAttendance }, HttpStatusCodes.OK);
@@ -1705,18 +1718,12 @@ userRouter.openapi(
       const deletedAttendance = await db
         .delete(attendingEvents)
         .where(
-          and(
-            eq(attendingEvents.userId, user!.id),
-            eq(attendingEvents.eventId, parseInt(eventID)),
-          ),
+          and(eq(attendingEvents.userId, user!.id), eq(attendingEvents.eventId, parseInt(eventID))),
         )
         .returning();
 
       if (deletedAttendance.length === 0) {
-        return c.json(
-          { error: 'Failed to delete attendance' },
-          HttpStatusCodes.NOT_FOUND,
-        );
+        return c.json({ error: 'Failed to delete attendance' }, HttpStatusCodes.NOT_FOUND);
       }
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
@@ -1767,14 +1774,26 @@ userRouter.openapi(
           name: systemNotifications.name,
           description: systemNotifications.description,
           type: systemNotifications.type,
-          enabled: (sql<boolean>`(${userSystemNotificationPreferences.systemNotificationId} IS NULL)`).as('enabled'),
+          enabled:
+            sql<boolean>`(${userSystemNotificationPreferences.systemNotificationId} IS NULL)`.as(
+              'enabled',
+            ),
         })
         .from(systemNotifications)
-        .leftJoin(userSystemNotificationPreferences, and(eq(systemNotifications.id, userSystemNotificationPreferences.systemNotificationId), eq(userSystemNotificationPreferences.userId, session.userId)));
+        .leftJoin(
+          userSystemNotificationPreferences,
+          and(
+            eq(systemNotifications.id, userSystemNotificationPreferences.systemNotificationId),
+            eq(userSystemNotificationPreferences.userId, session.userId),
+          ),
+        );
 
       return c.json(preferences, HttpStatusCodes.OK);
     } catch (error) {
-      return c.json({ error: `Internal server error: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json(
+        { error: `Internal server error: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
     }
   },
 );
@@ -1824,11 +1843,17 @@ userRouter.openapi(
     }
 
     if (preference.enabled) {
-      await db.delete(userSystemNotificationPreferences).where(and(
-        eq(userSystemNotificationPreferences.userId, session?.userId),
-        eq(userSystemNotificationPreferences.systemNotificationId, parseInt(systemNotificationID)),
-      ),
-      );
+      await db
+        .delete(userSystemNotificationPreferences)
+        .where(
+          and(
+            eq(userSystemNotificationPreferences.userId, session?.userId),
+            eq(
+              userSystemNotificationPreferences.systemNotificationId,
+              parseInt(systemNotificationID),
+            ),
+          ),
+        );
     } else {
       await db.insert(userSystemNotificationPreferences).values({
         userId: session.userId,

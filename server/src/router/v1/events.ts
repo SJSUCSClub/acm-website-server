@@ -51,11 +51,7 @@ import {
   eventTypesEnumSchema,
   targetAudienceEnumSchema,
 } from '@/util/zod';
-import {
-  deleteFile,
-  generateObjectUrl,
-  getPresignedUrlPutObj,
-} from '@/lib/aws/s3';
+import { deleteFile, generateObjectUrl, getPresignedUrlPutObj } from '@/lib/aws/s3';
 
 const eventRouter = new OpenAPIHono<Context>();
 
@@ -275,10 +271,7 @@ eventRouter.openapi(
       .select({ count: count() })
       .from(subscribedEvents)
       .where(eq(subscribedEvents.eventId, parseInt(eventID)));
-    return c.json(
-      { subscribersCount: subscribersCount[0].count },
-      HttpStatusCodes.OK,
-    );
+    return c.json({ subscribersCount: subscribersCount[0].count }, HttpStatusCodes.OK);
   },
 );
 
@@ -363,9 +356,7 @@ eventRouter.openapi(
 
     try {
       await db.insert(files).values({ key, name: filename });
-      await db
-        .insert(eventsFiles)
-        .values({ eventId: parseInt(eventID), fileKey: key });
+      await db.insert(eventsFiles).values({ eventId: parseInt(eventID), fileKey: key });
 
       const res = await getPresignedUrlPutObj(key);
       return c.json({ presigned_url: res }, HttpStatusCodes.OK);
@@ -415,12 +406,7 @@ eventRouter.openapi(
     try {
       await db
         .delete(eventsFiles)
-        .where(
-          and(
-            eq(eventsFiles.fileKey, key),
-            eq(eventsFiles.eventId, parseInt(eventID)),
-          ),
-        );
+        .where(and(eq(eventsFiles.fileKey, key), eq(eventsFiles.eventId, parseInt(eventID))));
       await db.delete(files).where(eq(files.key, key));
       await deleteFile(key);
       return c.text('', HttpStatusCodes.NO_CONTENT);
@@ -490,9 +476,7 @@ eventRouter.openapi(
     const validTags = tags
       .split(',')
       .filter((tag) =>
-        csFieldsEnumSchema._def.values.includes(
-          tag as z.infer<typeof csFieldsEnumSchema>,
-        ),
+        csFieldsEnumSchema._def.values.includes(tag as z.infer<typeof csFieldsEnumSchema>),
       )
       .map((tag) => tag as z.infer<typeof csFieldsEnumSchema>);
 
@@ -520,10 +504,7 @@ eventRouter.openapi(
       )
     ) {
       conditions.push(
-        eq(
-          events.targetAudience,
-          targetAudience as z.infer<typeof targetAudienceEnumSchema>,
-        ),
+        eq(events.targetAudience, targetAudience as z.infer<typeof targetAudienceEnumSchema>),
       );
     }
 
@@ -801,18 +782,12 @@ eventRouter.openapi(
   async (c) => {
     const { eventID } = c.req.valid('param');
     if (!eventID) {
-      return c.json(
-        { error: 'Event ID is required' },
-        HttpStatusCodes.BAD_REQUEST,
-      );
+      return c.json({ error: 'Event ID is required' }, HttpStatusCodes.BAD_REQUEST);
     }
 
     const key = generateImageKey(eventID);
     try {
-      await db
-        .insert(files)
-        .values({ key, name: 'image' })
-        .onConflictDoNothing();
+      await db.insert(files).values({ key, name: 'image' }).onConflictDoNothing();
       await db
         .update(events)
         .set({ image: key })
@@ -871,10 +846,7 @@ eventRouter.openapi(
     const { eventID } = c.req.valid('param');
 
     if (!eventID) {
-      return c.json(
-        { error: 'Event ID is required' },
-        HttpStatusCodes.BAD_REQUEST,
-      );
+      return c.json({ error: 'Event ID is required' }, HttpStatusCodes.BAD_REQUEST);
     }
 
     const key = generateImageKey(eventID);
@@ -1023,10 +995,7 @@ eventRouter.openapi(
         .select({ count: count() })
         .from(attendingEvents)
         .where(eq(attendingEvents.eventId, parseInt(eventID)));
-      return c.json(
-        { attendeesCount: attendeesCount[0].count },
-        HttpStatusCodes.OK,
-      );
+      return c.json({ attendeesCount: attendeesCount[0].count }, HttpStatusCodes.OK);
     } catch (error) {
       return c.json(
         { error: `Internal server error: ${error}` },
@@ -1090,14 +1059,9 @@ eventRouter.openapi(
 
     let recipientGroups: z.infer<typeof eventRecipientGroupSchema>;
     try {
-      recipientGroups = eventRecipientGroupSchema.parse(
-        recipientGroupQuery?.split(',') || [],
-      );
+      recipientGroups = eventRecipientGroupSchema.parse(recipientGroupQuery?.split(',') || []);
     } catch (error) {
-      return c.json(
-        { error: `Invalid recipient group: ${error}` },
-        HttpStatusCodes.BAD_REQUEST,
-      );
+      return c.json({ error: `Invalid recipient group: ${error}` }, HttpStatusCodes.BAD_REQUEST);
     }
 
     let recipients: string[] = [];
@@ -1130,10 +1094,7 @@ eventRouter.openapi(
         recipients = recipients.concat(res.map((email) => email.email));
       }
 
-      return c.json(
-        { recipients: Array.from(new Set(recipients)) },
-        HttpStatusCodes.OK,
-      );
+      return c.json({ recipients: Array.from(new Set(recipients)) }, HttpStatusCodes.OK);
     } catch (error) {
       return c.json(
         { error: `Internal server error: ${error}` },

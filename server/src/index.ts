@@ -21,7 +21,9 @@ app.use(
   '/*',
   cors({
     origin: (origin) => {
-      if (!origin) { return '*'; } // allow curl/postman requests
+      if (!origin) {
+        return '*';
+      } // allow curl/postman requests
 
       if (env.NODE_ENV === 'production') {
         // Only allow origins in the list
@@ -40,9 +42,11 @@ app.use(
 );
 
 if (env.NODE_ENV !== 'development') {
-  app.use(csrf({
-    origin: env.CORS_ORIGINS.split(','),
-  }));
+  app.use(
+    csrf({
+      origin: env.CORS_ORIGINS.split(','),
+    }),
+  );
 }
 
 app.get('/', (c) =>

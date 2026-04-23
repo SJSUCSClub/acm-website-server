@@ -53,8 +53,7 @@ export const targetAudienceEnumSchema = z.enum(targetAudienceEnum.enumValues);
 export const userSchema = createSelectSchema(users).extend({
   interests: z.array(z.enum(csFieldsEnum.enumValues)),
 });
-export const equipmentRentalTypeSchema =
-  createSelectSchema(equipmentRentalType);
+export const equipmentRentalTypeSchema = createSelectSchema(equipmentRentalType);
 export const equipmentItemSchema = createSelectSchema(equipmentItem);
 export const equipmentRentalSchema = createSelectSchema(equipmentRentals);
 export const eventIDSchema = z.object({
@@ -191,14 +190,12 @@ export const templateSchema = z.object({
   text: z.string().optional(),
 });
 export const templateNameSchema = z.object({
-  templateName: z
-    .string()
-    .openapi({
-      param: {
-        name: 'templateName',
-        in: 'path',
-      },
-    }),
+  templateName: z.string().openapi({
+    param: {
+      name: 'templateName',
+      in: 'path',
+    },
+  }),
 });
 export const eventRecipientGroupSchema = z.array(z.enum(['subscribers', 'attendees']));
 export const systemNotificationTypeEnumSchema = z.enum(['Events']);
@@ -210,6 +207,11 @@ export const systemNotificationIDSchema = z.object({
 export const userSystemNotificationPreferenceBodySchema = z.object({
   enabled: z.boolean(),
 });
-export const userSystemNotificationPreferenceSchema = systemNotificationSchema.pick({
-  id: true, name: true, type: true, description: true,
-}).extend({ enabled: z.boolean() });
+export const userSystemNotificationPreferenceSchema = systemNotificationSchema
+  .pick({
+    id: true,
+    name: true,
+    type: true,
+    description: true,
+  })
+  .extend({ enabled: z.boolean() });

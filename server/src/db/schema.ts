@@ -40,14 +40,12 @@ export const equipmentConditionEnum = pgEnum('equipment_condition_enum', [
   'Broken',
   'In Maintenance',
 ]);
-export const membershipTermEnum = pgEnum('membership_term_enum', [
-  'Semester',
-  'Annual',
+export const membershipTermEnum = pgEnum('membership_term_enum', ['Semester', 'Annual']);
+export const membershipRequestStatusEnum = pgEnum('membership_request_status_enum', [
+  'Pending',
+  'Approved',
+  'Declined',
 ]);
-export const membershipRequestStatusEnum = pgEnum(
-  'membership_request_status_enum',
-  ['Pending', 'Approved', 'Declined'],
-);
 export const industryEnum = pgEnum('industry_enum', [
   'Banking and Finance',
   'Aerospace',
@@ -56,21 +54,14 @@ export const industryEnum = pgEnum('industry_enum', [
   'Energy',
   'Technology',
 ]);
-export const educationLevelEnum = pgEnum('education_level_enum', [
-  'Undergraduate',
-  'Graduate',
-]);
+export const educationLevelEnum = pgEnum('education_level_enum', ['Undergraduate', 'Graduate']);
 export const projectStatusEnum = pgEnum('project_status_enum', [
   'Not Started',
   'Looking for Members',
   'In Progress',
   'Completed',
 ]);
-export const userRoleEnum = pgEnum('user_role_enum', [
-  'user',
-  'member',
-  'admin',
-]);
+export const userRoleEnum = pgEnum('user_role_enum', ['user', 'member', 'admin']);
 export const yearEnum = pgEnum('year_enum', [
   'Freshman',
   'Sophomore',
@@ -78,9 +69,7 @@ export const yearEnum = pgEnum('year_enum', [
   'Senior',
   'Alumni',
 ]);
-export const systemNotificationTypeEnum = pgEnum('system_notification_type_enum', [
-  'Events',
-]);
+export const systemNotificationTypeEnum = pgEnum('system_notification_type_enum', ['Events']);
 
 // Tables
 export const majors = pgTable('majors', {
@@ -513,5 +502,7 @@ export type PaymentLink = typeof paymentLinks.$inferSelect;
 export type NewPaymentLink = typeof paymentLinks.$inferInsert;
 export type SystemNotification = typeof systemNotifications.$inferSelect;
 export type NewSystemNotification = typeof systemNotifications.$inferInsert;
-export type UserSystemNotificationPreference = typeof userSystemNotificationPreferences.$inferSelect;
-export type NewUserSystemNotificationPreference = typeof userSystemNotificationPreferences.$inferInsert;
+export type UserSystemNotificationPreference =
+  typeof userSystemNotificationPreferences.$inferSelect;
+export type NewUserSystemNotificationPreference =
+  typeof userSystemNotificationPreferences.$inferInsert;

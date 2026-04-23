@@ -19,7 +19,8 @@ const getSQSClient = async (): Promise<SQSClient | null> => {
 
   const { REGION: region } = env;
   sqsClient = new SQSClient({
-    region, credentials: {
+    region,
+    credentials: {
       accessKeyId: <string>credentials.AccessKeyId,
       secretAccessKey: <string>credentials.SecretAccessKey,
       sessionToken: <string>credentials.SessionToken,
@@ -38,9 +39,14 @@ export interface EmailNotification {
   body?: string;
   template_name?: string;
   template_data?: {
-    [key: string]: string | number | boolean | Array<Record<string, string | number | boolean>> | Record<string, string | number | boolean>;
-  }
-  application: string;   // application identifier e.g. 'acm-website', 'course-scheduler', etc...
+    [key: string]:
+      | string
+      | number
+      | boolean
+      | Array<Record<string, string | number | boolean>>
+      | Record<string, string | number | boolean>;
+  };
+  application: string; // application identifier e.g. 'acm-website', 'course-scheduler', etc...
 }
 
 /**
@@ -55,11 +61,10 @@ export const sendEmailNotification = async (notification: EmailNotification): Pr
   } else {
     const { SQS_QUEUE_URL: queue_url } = env;
 
-    const sendMessageCommand = new SendMessageCommand(
-      {
-        QueueUrl: queue_url,
-        MessageBody: JSON.stringify(notification),
-      });
+    const sendMessageCommand = new SendMessageCommand({
+      QueueUrl: queue_url,
+      MessageBody: JSON.stringify(notification),
+    });
 
     await (<SQSClient>sqsClient).send(sendMessageCommand);
   }

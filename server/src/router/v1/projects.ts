@@ -4,13 +4,7 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
-import {
-  users,
-  projects,
-  files,
-  interestedInProjects,
-  projectsFiles,
-} from '@/db/schema';
+import { users, projects, files, interestedInProjects, projectsFiles } from '@/db/schema';
 import { and, eq, getTableColumns } from 'drizzle-orm';
 import type { User, Project, File as FileSchema } from '@/db/schema'; // naming conflict with File and schema File type
 import {
@@ -26,18 +20,12 @@ import {
   errorSchema,
   newProjectSchema,
 } from '@/util/zod';
-import {
-  deleteFile,
-  generateObjectUrl,
-  getPresignedUrlPutObj,
-} from '@/lib/aws/s3';
+import { deleteFile, generateObjectUrl, getPresignedUrlPutObj } from '@/lib/aws/s3';
 
 const projectRouter = new OpenAPIHono<Context>();
 
-const generateFileKey = (
-  projectId: string | number,
-  filename: string,
-): string => `projects/${projectId}/files/${filename}`;
+const generateFileKey = (projectId: string | number, filename: string): string =>
+  `projects/${projectId}/files/${filename}`;
 
 projectRouter.openapi(
   createRoute({
@@ -87,19 +75,14 @@ projectRouter.openapi(
     const projectId = c.req.param('projectID');
     const filename = c.req.param('filename');
     if (!projectId || !filename) {
-      return c.json(
-        { error: 'error occured uploading file' },
-        HttpStatusCodes.BAD_REQUEST,
-      );
+      return c.json({ error: 'error occured uploading file' }, HttpStatusCodes.BAD_REQUEST);
     }
 
     const key = generateFileKey(projectId, filename);
 
     try {
       await db.insert(files).values({ key, name: filename });
-      await db
-        .insert(projectsFiles)
-        .values({ projectId: parseInt(projectId), fileKey: key });
+      await db.insert(projectsFiles).values({ projectId: parseInt(projectId), fileKey: key });
 
       const res = await getPresignedUrlPutObj(key);
       return c.json({ presigned_url: res }, HttpStatusCodes.OK);
@@ -155,10 +138,7 @@ projectRouter.openapi(
     const projectId = c.req.param('projectID');
 
     if (!fileName || !projectId) {
-      return c.json(
-        { error: 'Not valid parameters' },
-        HttpStatusCodes.BAD_REQUEST,
-      );
+      return c.json({ error: 'Not valid parameters' }, HttpStatusCodes.BAD_REQUEST);
     }
 
     try {
@@ -166,10 +146,7 @@ projectRouter.openapi(
       await db
         .delete(projectsFiles)
         .where(
-          and(
-            eq(projectsFiles.fileKey, fileKey),
-            eq(projectsFiles.projectId, parseInt(projectId)),
-          ),
+          and(eq(projectsFiles.fileKey, fileKey), eq(projectsFiles.projectId, parseInt(projectId))),
         );
       await db.delete(files).where(eq(files.key, fileKey));
       await deleteFile(fileKey);
@@ -289,10 +266,7 @@ projectRouter.openapi(
       createdAt: user.createdAt.toISOString(),
     }));
 
-    return c.json(
-      { interestedUsers: formattedInterestedUsers },
-      HttpStatusCodes.OK,
-    );
+    return c.json({ interestedUsers: formattedInterestedUsers }, HttpStatusCodes.OK);
   },
 );
 
@@ -378,10 +352,7 @@ projectRouter.openapi(
     const body = c.req.valid('json');
     const newProject = await db.insert(projects).values(body).returning();
     if (newProject.length === 0) {
-      return c.json(
-        { error: 'Failed to create project' },
-        HttpStatusCodes.INTERNAL_SERVER_ERROR,
-      );
+      return c.json({ error: 'Failed to create project' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
     return c.json({ project: newProject[0] }, HttpStatusCodes.CREATED);
   },
@@ -441,10 +412,7 @@ projectRouter.openapi(
     const projectID = c.req.param('projectID');
 
     if (!projectID) {
-      return c.json(
-        { error: 'Project ID is required' },
-        HttpStatusCodes.BAD_REQUEST,
-      );
+      return c.json({ error: 'Project ID is required' }, HttpStatusCodes.BAD_REQUEST);
     }
 
     try {
@@ -454,10 +422,7 @@ projectRouter.openapi(
         .where(eq(projects.id, parseInt(projectID)))
         .returning();
       if (newProject.length === 0) {
-        return c.json(
-          { error: 'Project not found' },
-          HttpStatusCodes.NOT_FOUND,
-        );
+        return c.json({ error: 'Project not found' }, HttpStatusCodes.NOT_FOUND);
       }
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
@@ -500,10 +465,15 @@ projectRouter.openapi(
     try {
       await db.delete(projects).where(eq(projects.id, parseInt(projectID)));
       await db.delete(projectsFiles).where(eq(projectsFiles.projectId, parseInt(projectID)));
-      await db.delete(interestedInProjects).where(eq(interestedInProjects.projectId, parseInt(projectID)));
+      await db
+        .delete(interestedInProjects)
+        .where(eq(interestedInProjects.projectId, parseInt(projectID)));
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
-      return c.json({ error: `Failed to delete project: ${error}` }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+      return c.json(
+        { error: `Failed to delete project: ${error}` },
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      );
     }
   },
 );

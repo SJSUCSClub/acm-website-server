@@ -4,14 +4,7 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
-import {
-  users,
-  events,
-  eventCompanies,
-  subscribedCompanies,
-  companies,
-  files,
-} from '@/db/schema';
+import { users, events, eventCompanies, subscribedCompanies, companies, files } from '@/db/schema';
 import { eq, count, getTableColumns, sql } from 'drizzle-orm';
 import type { User, Event, Company } from '@/db/schema';
 import {
@@ -27,11 +20,7 @@ import {
   errorSchema,
   newCompanySchema,
 } from '@/util/zod';
-import {
-  deleteFile,
-  generateObjectUrl,
-  getPresignedUrlPutObj,
-} from '@/lib/aws/s3';
+import { deleteFile, generateObjectUrl, getPresignedUrlPutObj } from '@/lib/aws/s3';
 
 const companyRouter = new OpenAPIHono<Context>();
 
@@ -118,10 +107,7 @@ companyRouter.openapi(
         .where(eq(companies.id, parseInt(companyID)));
 
       if (foundCompanies.length === 0) {
-        return c.json(
-          { error: 'Company not found' },
-          HttpStatusCodes.NOT_FOUND,
-        );
+        return c.json({ error: 'Company not found' }, HttpStatusCodes.NOT_FOUND);
       }
 
       const foundcompany = foundCompanies[0];
@@ -187,16 +173,9 @@ companyRouter.openapi(
   async (c) => {
     const body = c.req.valid('json');
     try {
-      const newCompany = await db
-        .insert(companies)
-        .values(body)
-        .onConflictDoNothing()
-        .returning();
+      const newCompany = await db.insert(companies).values(body).onConflictDoNothing().returning();
       if (newCompany.length === 0) {
-        return c.json(
-          { error: 'Company already exists' },
-          HttpStatusCodes.CONFLICT,
-        );
+        return c.json({ error: 'Company already exists' }, HttpStatusCodes.CONFLICT);
       }
       const company = {
         ...newCompany[0],
@@ -263,10 +242,7 @@ companyRouter.openapi(
     const body = c.req.valid('json');
 
     if (!companyId) {
-      return c.json(
-        { error: 'Company ID is required' },
-        HttpStatusCodes.BAD_REQUEST,
-      );
+      return c.json({ error: 'Company ID is required' }, HttpStatusCodes.BAD_REQUEST);
     }
 
     try {
@@ -276,10 +252,7 @@ companyRouter.openapi(
         .where(eq(companies.id, parseInt(companyId)))
         .returning();
       if (updatedCompany.length === 0) {
-        return c.json(
-          { error: 'Company not found' },
-          HttpStatusCodes.NOT_FOUND,
-        );
+        return c.json({ error: 'Company not found' }, HttpStatusCodes.NOT_FOUND);
       }
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
@@ -334,10 +307,7 @@ companyRouter.openapi(
     const companyId = c.req.param('companyID');
 
     if (!companyId) {
-      return c.json(
-        { error: 'Company ID is required' },
-        HttpStatusCodes.BAD_REQUEST,
-      );
+      return c.json({ error: 'Company ID is required' }, HttpStatusCodes.BAD_REQUEST);
     }
 
     try {
@@ -397,18 +367,12 @@ companyRouter.openapi(
     const companyId = c.req.param('companyID');
 
     if (!companyId) {
-      return c.json(
-        { error: 'Not valid parameters' },
-        HttpStatusCodes.BAD_REQUEST,
-      );
+      return c.json({ error: 'Not valid parameters' }, HttpStatusCodes.BAD_REQUEST);
     }
 
     const key = generateLogoKey(companyId);
     try {
-      await db
-        .insert(files)
-        .values({ key, name: 'logo' })
-        .onConflictDoNothing();
+      await db.insert(files).values({ key, name: 'logo' }).onConflictDoNothing();
       await db
         .update(companies)
         .set({ logo: key })
@@ -418,10 +382,7 @@ companyRouter.openapi(
       return c.json({ presigned_url: res }, HttpStatusCodes.CREATED);
     } catch (error) {
       console.log(error);
-      return c.json(
-        { error: 'Failed to create logo' },
-        HttpStatusCodes.INTERNAL_SERVER_ERROR,
-      );
+      return c.json({ error: 'Failed to create logo' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
   },
 );
@@ -464,10 +425,7 @@ companyRouter.openapi(
     const companyId = c.req.param('companyID');
 
     if (!companyId) {
-      return c.json(
-        { error: 'Not valid parameters' },
-        HttpStatusCodes.BAD_REQUEST,
-      );
+      return c.json({ error: 'Not valid parameters' }, HttpStatusCodes.BAD_REQUEST);
     }
 
     const key = generateLogoKey(companyId);
@@ -481,10 +439,7 @@ companyRouter.openapi(
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
       console.log(error);
-      return c.json(
-        { error: 'Failed to create logo' },
-        HttpStatusCodes.INTERNAL_SERVER_ERROR,
-      );
+      return c.json({ error: 'Failed to create logo' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
     }
   },
 );
@@ -523,10 +478,7 @@ companyRouter.openapi(
       image: generateObjectUrl(event.image),
       createdAt: event.createdAt.toISOString(),
     }));
-    return c.json(
-      { companyEvents: formattedCompanyEvents },
-      HttpStatusCodes.OK,
-    );
+    return c.json({ companyEvents: formattedCompanyEvents }, HttpStatusCodes.OK);
   },
 );
 
@@ -564,10 +516,7 @@ companyRouter.openapi(
       ...user,
       createdAt: user.createdAt.toISOString(),
     }));
-    return c.json(
-      { companySubscribers: formattedCompanySubscribers },
-      HttpStatusCodes.OK,
-    );
+    return c.json({ companySubscribers: formattedCompanySubscribers }, HttpStatusCodes.OK);
   },
 );
 
@@ -600,10 +549,7 @@ companyRouter.openapi(
       .select({ count: count() })
       .from(subscribedCompanies)
       .where(eq(subscribedCompanies.companyId, parseInt(companyID)));
-    return c.json(
-      { subscribersCount: subscribersCount[0].count },
-      HttpStatusCodes.OK,
-    );
+    return c.json({ subscribersCount: subscribersCount[0].count }, HttpStatusCodes.OK);
   },
 );
 
