@@ -16,8 +16,7 @@ import { eq } from 'drizzle-orm';
 
 const sponsorRouter = new OpenAPIHono<Context>();
 
-const generateSponsorLogoKey = (id: string | number): string =>
-  `sponsors/${id}/logo`;
+const generateSponsorLogoKey = (id: string | number): string => `sponsors/${id}/logo`;
 
 sponsorRouter.openapi(
   createRoute({

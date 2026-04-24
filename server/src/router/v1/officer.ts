@@ -13,11 +13,7 @@ import {
   officerReorderSchema,
   officerSchema,
 } from '@/util/zod';
-import {
-  deleteFile,
-  generateObjectUrl,
-  getPresignedUrlPutObj,
-} from '@/lib/aws/s3';
+import { deleteFile, generateObjectUrl, getPresignedUrlPutObj } from '@/lib/aws/s3';
 import {
   authMiddleWare,
   forbiddenRequest,
@@ -27,8 +23,7 @@ import { count, eq, sql } from 'drizzle-orm';
 
 const officerRouter = new OpenAPIHono<Context>();
 
-const generatePhotoKey = (id: string | number): string =>
-  `officers/${id}/photo`;
+const generatePhotoKey = (id: string | number): string => `officers/${id}/photo`;
 
 type OfficerReorder = z.infer<typeof officerReorderSchema>;
 officerRouter.openapi(
@@ -102,10 +97,7 @@ officerRouter.openapi(
     },
   }),
   async (c) => {
-    const foundOfficers: Officer[] = await db
-      .select()
-      .from(officers)
-      .orderBy(officers.order_index);
+    const foundOfficers: Officer[] = await db.select().from(officers).orderBy(officers.order_index);
     const officersWithUrls = foundOfficers.map((officer) => ({
       ...officer,
       photo: generateObjectUrl(officer.photo),
@@ -162,10 +154,7 @@ officerRouter.openapi(
         .where(eq(officers.id, parseInt(officerID)));
 
       if (!officer.length) {
-        return c.json(
-          { error: 'Officer not found' },
-          HttpStatusCodes.NOT_FOUND,
-        );
+        return c.json({ error: 'Officer not found' }, HttpStatusCodes.NOT_FOUND);
       }
 
       const foundofficer = officer[0];
@@ -291,10 +280,7 @@ officerRouter.openapi(
         .where(eq(officers.id, parseInt(officerID)))
         .returning();
       if (updatedOfficer.length === 0) {
-        return c.json(
-          { error: 'Officer not found' },
-          HttpStatusCodes.NOT_FOUND,
-        );
+        return c.json({ error: 'Officer not found' }, HttpStatusCodes.NOT_FOUND);
       }
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
@@ -380,10 +366,7 @@ officerRouter.openapi(
     const { officerID } = c.req.valid('param');
     const key = generatePhotoKey(officerID);
     try {
-      await db
-        .insert(files)
-        .values({ key, name: 'photo' })
-        .onConflictDoNothing();
+      await db.insert(files).values({ key, name: 'photo' }).onConflictDoNothing();
       await db
         .update(officers)
         .set({ photo: key })

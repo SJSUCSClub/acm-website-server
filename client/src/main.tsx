@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 
+import 'acm-cs-sjsu-hero-component/dist/styles.css';
 import './globals.css';
 import { AuthProvider } from './lib/AuthProvider';
 

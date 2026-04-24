@@ -115,10 +115,7 @@ paymentRouter.openapi(
         );
       }
 
-      return c.json(
-        { paymentLink: newPaymentLink[0] },
-        HttpStatusCodes.CREATED,
-      );
+      return c.json({ paymentLink: newPaymentLink[0] }, HttpStatusCodes.CREATED);
     } catch (error) {
       return c.json(
         { error: `Failed to create payment link: ${error}` },
@@ -181,10 +178,7 @@ paymentRouter.openapi(
         .returning();
 
       if (updatedPaymentLink.length === 0) {
-        return c.json(
-          { error: 'Payment link not found' },
-          HttpStatusCodes.NOT_FOUND,
-        );
+        return c.json({ error: 'Payment link not found' }, HttpStatusCodes.NOT_FOUND);
       }
 
       return c.text('', HttpStatusCodes.NO_CONTENT);
@@ -240,10 +234,7 @@ paymentRouter.openapi(
         .returning();
 
       if (deletedPaymentLink.length === 0) {
-        return c.json(
-          { error: 'Payment link not found' },
-          HttpStatusCodes.NOT_FOUND,
-        );
+        return c.json({ error: 'Payment link not found' }, HttpStatusCodes.NOT_FOUND);
       }
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {

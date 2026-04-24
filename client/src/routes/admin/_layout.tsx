@@ -8,7 +8,7 @@ export const Route = createFileRoute('/admin/_layout')({
 
 function RouteComponent() {
   return (
-    <ProtectedRoute requireAdmin showNotFoundOnUnauthorized>
+    <ProtectedRoute requireAdmin>
       <AdminSidebar>
         <Outlet />
       </AdminSidebar>

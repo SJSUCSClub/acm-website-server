@@ -23,6 +23,7 @@ interface UserData {
   gradDate?: Date;
   major: string;
   selectedInterests: string[];
+  paid: 'Semester' | 'Annual' | null;
 }
 
 export function validateGitHubUrl(url: string): string | null {
@@ -60,7 +61,8 @@ export default function Profile() {
     selectedStatus: '',
     gradDate: new Date(),
     major: '',
-    selectedInterests: []
+    selectedInterests: [],
+    paid: null
   });
 
   const [githubError, setGithubError] = useState<string | null>(null);
@@ -142,7 +144,8 @@ export default function Profile() {
           selectedStatus: data.education_level,
           gradDate: new Date(data.gradDate),
           major: data.major,
-          selectedInterests: data.interests || []
+          selectedInterests: data.interests || [],
+          paid: data.paid ?? null
         });
       } catch (error) {
         console.error(error);
@@ -246,6 +249,20 @@ export default function Profile() {
                     {userData.email}
                   </div>
                 </div>
+
+                <div className="space-y-2">
+                  <p className="text-neutral font-semibold mb-2">Membership</p>
+                  {userData.paid ? (
+                    <div className="rounded-xl bg-green-100 text-green-800 px-4 py-2 w-full border-green-300 border-2 font-medium">
+                      Active member — {userData.paid}
+                    </div>
+                  ) : (
+                    <div className="rounded-xl bg-yellow-100 text-yellow-800 px-4 py-2 w-full border-yellow-300 border-2">
+                      Not a member
+                    </div>
+                  )}
+                </div>
+
                 <div className="space-y-2">
                   <Input
                     label="Discord"

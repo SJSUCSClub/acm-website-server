@@ -4,13 +4,7 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 
 import type { Context } from '@/lib/context';
 import { db } from '@/db/db';
-import {
-  clubLinks,
-  events,
-  files,
-  landingQuestions,
-  landingSpotlights,
-} from '@/db/schema';
+import { clubLinks, events, files, landingQuestions, landingSpotlights } from '@/db/schema';
 import type { ClubLink, LandingQuestion } from '@/db/schema';
 import {
   clubLinkSchema,
@@ -28,16 +22,11 @@ import {
   forbiddenRequest,
   unauthorizedRequest,
 } from '@/middlewares/auth-middleware';
-import {
-  deleteFile,
-  generateObjectUrl,
-  getPresignedUrlPutObj,
-} from '@/lib/aws/s3';
+import { deleteFile, generateObjectUrl, getPresignedUrlPutObj } from '@/lib/aws/s3';
 
 const clubRouter = new OpenAPIHono<Context>();
 
-const generateSpotlightImageKey = (id: string | number): string =>
-  `club/spotlights/${id}/image`;
+const generateSpotlightImageKey = (id: string | number): string => `club/spotlights/${id}/image`;
 
 clubRouter.openapi(
   createRoute({
@@ -101,16 +90,9 @@ clubRouter.openapi(
   async (c) => {
     const body = c.req.valid('json');
 
-    const newLinks = await db
-      .update(clubLinks)
-      .set(body)
-      .where(eq(clubLinks.id, 1))
-      .returning();
+    const newLinks = await db.update(clubLinks).set(body).where(eq(clubLinks.id, 1)).returning();
     if (newLinks.length === 0) {
-      return c.json(
-        { error: 'Club link not updated' },
-        HttpStatusCodes.CONFLICT,
-      );
+      return c.json({ error: 'Club link not updated' }, HttpStatusCodes.CONFLICT);
     }
     return c.text('', HttpStatusCodes.NO_CONTENT);
   },
@@ -212,10 +194,7 @@ clubRouter.openapi(
         .where(eq(landingSpotlights.id, parseInt(spotlightID)));
 
       if (!spotlight.length) {
-        return c.json(
-          { error: 'Spotlight not found' },
-          HttpStatusCodes.NOT_FOUND,
-        );
+        return c.json({ error: 'Spotlight not found' }, HttpStatusCodes.NOT_FOUND);
       }
 
       const mappedSpotlight = {
@@ -273,10 +252,7 @@ clubRouter.openapi(
     const body = c.req.valid('json');
 
     try {
-      const newSpotlight = await db
-        .insert(landingSpotlights)
-        .values(body)
-        .returning();
+      const newSpotlight = await db.insert(landingSpotlights).values(body).returning();
       if (newSpotlight.length === 0) {
         throw new Error('Failed to create spotlight');
       }
@@ -344,10 +320,7 @@ clubRouter.openapi(
         .where(eq(landingSpotlights.id, parseInt(spotlightID)))
         .returning();
       if (updatedSpotlight.length === 0) {
-        return c.json(
-          { error: 'Spotlight not found' },
-          HttpStatusCodes.NOT_FOUND,
-        );
+        return c.json({ error: 'Spotlight not found' }, HttpStatusCodes.NOT_FOUND);
       }
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
@@ -392,9 +365,7 @@ clubRouter.openapi(
 
     try {
       const key = generateSpotlightImageKey(spotlightID);
-      await db
-        .delete(landingSpotlights)
-        .where(eq(landingSpotlights.id, parseInt(spotlightID)));
+      await db.delete(landingSpotlights).where(eq(landingSpotlights.id, parseInt(spotlightID)));
       await db.delete(files).where(eq(files.key, key));
       await deleteFile(key);
       return c.text('', HttpStatusCodes.NO_CONTENT);
@@ -533,9 +504,7 @@ clubRouter.openapi(
     },
   }),
   async (c) => {
-    const questions: LandingQuestion[] = await db
-      .select()
-      .from(landingQuestions);
+    const questions: LandingQuestion[] = await db.select().from(landingQuestions);
     return c.json({ questions }, HttpStatusCodes.OK);
   },
 );
@@ -584,15 +553,9 @@ clubRouter.openapi(
   async (c) => {
     const body = c.req.valid('json');
 
-    const newQuestion = await db
-      .insert(landingQuestions)
-      .values(body)
-      .returning();
+    const newQuestion = await db.insert(landingQuestions).values(body).returning();
     if (newQuestion.length === 0) {
-      return c.json(
-        { error: 'Question not created' },
-        HttpStatusCodes.CONFLICT,
-      );
+      return c.json({ error: 'Question not created' }, HttpStatusCodes.CONFLICT);
     }
     return c.json({ question: newQuestion[0] }, HttpStatusCodes.CREATED);
   },
@@ -641,10 +604,7 @@ clubRouter.openapi(
     const body = c.req.valid('json');
 
     try {
-      const newQuestion = await db
-        .insert(landingQuestions)
-        .values(body)
-        .returning();
+      const newQuestion = await db.insert(landingQuestions).values(body).returning();
       if (newQuestion.length === 0) {
         throw new Error('Failed to create question');
       }
@@ -712,10 +672,7 @@ clubRouter.openapi(
         .where(eq(landingQuestions.id, parseInt(questionID)))
         .returning();
       if (newQuestion.length === 0) {
-        return c.json(
-          { error: 'Question not found' },
-          HttpStatusCodes.NOT_FOUND,
-        );
+        return c.json({ error: 'Question not found' }, HttpStatusCodes.NOT_FOUND);
       }
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
@@ -759,9 +716,7 @@ clubRouter.openapi(
     const { questionID } = c.req.valid('param');
 
     try {
-      await db
-        .delete(landingQuestions)
-        .where(eq(landingQuestions.id, parseInt(questionID)));
+      await db.delete(landingQuestions).where(eq(landingQuestions.id, parseInt(questionID)));
       return c.text('', HttpStatusCodes.NO_CONTENT);
     } catch (error) {
       return c.json(

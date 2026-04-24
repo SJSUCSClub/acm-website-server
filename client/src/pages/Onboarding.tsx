@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import Input from '../components/atoms/input';
-import Dropdown from '../components/atoms/dropdown';
-import ProgressBar from '../components/molecules/progress-bar';
-import Btn from '../components/atoms/btn';
-import RightArrow from '/about/rightarrow.svg';
-import Select from '../components/atoms/select';
-import { useQuery, useMutation } from '@/hooks/useFetch';
+import OnboardingCard from '@/components/molecules/onboarding-card';
+import { useMutation, useQuery } from '@/hooks/useFetch';
 import { paths } from '@/types/schema.v1';
 import { useNavigate } from '@tanstack/react-router';
-import OnboardingCard from '@/components/molecules/onboarding-card';
+import React, { useEffect, useState } from 'react';
+import Btn from '../components/atoms/btn';
+import Dropdown from '../components/atoms/dropdown';
+import Input from '../components/atoms/input';
+import Select from '../components/atoms/select';
+import ProgressBar from '../components/molecules/progress-bar';
+import RightArrow from '/about/rightarrow.svg';
 
 type User = paths['/v1/users/my']['get']['responses']['200']['content']['application/json'];
 
@@ -230,7 +230,11 @@ const Done = () => {
       subtitle="You're all set! Welcome to the ACM Club at San José State University. Make the most out of your experience with us."
     >
       <div className="flex justify-between">
-        <Btn variant="primary" className="w-full" onClick={() => navigate({ to: '/dashboard' })}>
+        <Btn
+          variant="primary"
+          className="w-full"
+          onClick={() => navigate({ to: '/account/dashboard' })}
+        >
           <span className="">Go to Home</span>
         </Btn>
       </div>
