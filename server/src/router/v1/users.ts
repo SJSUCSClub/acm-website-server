@@ -184,7 +184,8 @@ userRouter.openapi(
     method: 'post',
     path: '/advance-semester',
     tags: ['users'],
-    summary: 'Admin: advance the semester — annual memberships become semester, semester memberships expire',
+    summary:
+      'Admin: advance the semester — annual memberships become semester, semester memberships expire',
     middleware: [authMiddleWare('admin')],
     responses: {
       [HttpStatusCodes.OK]: {
