@@ -1,3 +1,5 @@
+name: acm-staging
+
 services:
   nginx:
     build:

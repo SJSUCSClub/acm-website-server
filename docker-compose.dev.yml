@@ -1,3 +1,5 @@
+name: acm-dev
+
 services:
   nginx:
     image: nginx:1.27
