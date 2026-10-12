@@ -1,10 +1,10 @@
 provider "aws" {
-  region = "us-west-2"
+  region  = "us-west-2"
   profile = "AcmApplicationTerraformRoleForProdEnvironment"
 }
 
 module "media_storage" {
   source = "./media-storage"
 
-  acm_application_server_role_arn = data.aws_iam_role.acm_application_server_role.arn
+  acm_application_server_role_arn = aws_iam_role.server.arn
 }
