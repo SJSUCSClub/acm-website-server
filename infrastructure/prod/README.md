@@ -3,11 +3,11 @@
 Everything here is managed by Terraform (`terraform init && terraform apply`)
 except the items under **Manual steps**.
 
-| Resource | File |
-|---|---|
-| S3 media bucket | `media-storage/` |
-| Server IAM role + IAM user | `iam.tf` |
-| SQS notification queue + DLQ | `sqs.tf` |
+| Resource                     | File             |
+| ---------------------------- | ---------------- |
+| S3 media bucket              | `media-storage/` |
+| Server IAM role + IAM user   | `iam.tf`         |
+| SQS notification queue + DLQ | `sqs.tf`         |
 
 ## Manual steps
 
@@ -15,9 +15,7 @@ except the items under **Manual steps**.
 
 Create the IAM role `AcmApplicationTerraformRoleForProdEnvironment`:
 
-- **Trust policy:** the account itself (below). Who may actually assume the
-  role is controlled by membership in the `TerraformProdAdmins` group
-  (step 1a), so handing this over to new leads never touches the trust policy.
+- **Trust policy:** the account itself (below)
 - **Permissions:** the policy below, as an inline policy.
 - **Local profile:** add a profile with the same name to `~/.aws/config`:
 
@@ -31,7 +29,7 @@ Create the IAM role `AcmApplicationTerraformRoleForProdEnvironment`:
 > **If you sign in with `aws login`** (your `[default]` profile has
 > `login_session = ...`), `aws sts get-caller-identity` works but
 > `terraform init` fails with `failed to load assume role ... of profile
-> default`. Terraform's SDK can't use `login_session` as a `source_profile`.
+default`. Terraform's SDK can't use `login_session` as a `source_profile`.
 > Bridge it with a `credential_process` profile and point `source_profile`
 > at that instead:
 >
@@ -60,37 +58,6 @@ Trust policy:
   ]
 }
 ```
-
-Do **not** attach a broad `sts:*` / `AdministratorAccess` policy to the
-application's runtime users (`acm-website-server*`). Because the role trusts
-the account, any principal whose own policy allows `sts:AssumeRole` on it can
-use it, so the app user must not be able to.
-
-#### 1a. `TerraformProdAdmins` group (once)
-
-IAM -> User groups -> Create group `TerraformProdAdmins`, then add an inline
-policy:
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": "sts:AssumeRole",
-      "Resource": "arn:aws:iam::440744215929:role/AcmApplicationTerraformRoleForProdEnvironment"
-    }
-  ]
-}
-```
-
-#### Handover checklist (every semester)
-
-- Add the new leads' IAM users to `TerraformProdAdmins`.
-- Remove outgoing leads from it.
-- New leads add the `~/.aws/config` profile above and run
-  `aws sts get-caller-identity --profile AcmApplicationTerraformRoleForProdEnvironment`
-  to confirm access.
 
 The role's permissions:
 
@@ -155,12 +122,12 @@ make sure the SES account is out of the sandbox for prod.
 
 After `apply`, `terraform output` prints:
 
-| Output | `.env.prod` variable |
-|---|---|
-| `notification_service_queue_url` | `NOTIFICATION_SERVICE_QUEUE_URL` |
-| `aws_role_arn` | `AWS_ROLE_ARN` |
-| `s3_bucket_name` | `S3_BUCKET_NAME` |
-| `server_user_name` | user to create the access key for |
+| Output                           | `.env.prod` variable              |
+| -------------------------------- | --------------------------------- |
+| `notification_service_queue_url` | `NOTIFICATION_SERVICE_QUEUE_URL`  |
+| `aws_role_arn`                   | `AWS_ROLE_ARN`                    |
+| `s3_bucket_name`                 | `S3_BUCKET_NAME`                  |
+| `server_user_name`               | user to create the access key for |
 
 The notification service that consumes the queue lives outside this repo. It
 needs `sqs:ReceiveMessage` / `sqs:DeleteMessage` on `notification_service_queue_url`.
