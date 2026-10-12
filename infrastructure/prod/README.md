@@ -28,6 +28,24 @@ Create the IAM role `AcmApplicationTerraformRoleForProdEnvironment`:
   region = us-west-2
   ```
 
+> **If you sign in with `aws login`** (your `[default]` profile has
+> `login_session = ...`), `aws sts get-caller-identity` works but
+> `terraform init` fails with `failed to load assume role ... of profile
+> default`. Terraform's SDK can't use `login_session` as a `source_profile`.
+> Bridge it with a `credential_process` profile and point `source_profile`
+> at that instead:
+>
+> ```ini
+> [profile terraform-source]
+> credential_process = aws configure export-credentials --profile default --format process
+> region = us-east-1
+>
+> [profile AcmApplicationTerraformRoleForProdEnvironment]
+> role_arn = arn:aws:iam::440744215929:role/AcmApplicationTerraformRoleForProdEnvironment
+> source_profile = terraform-source
+> region = us-west-2
+> ```
+
 Trust policy:
 
 ```json
