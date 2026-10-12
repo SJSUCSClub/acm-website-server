@@ -25,7 +25,7 @@ http {
     server {
       listen 80;
       listen [::]:80;
-      server_name staging.acmsjsu.org www.staging.acmsjsu.org;
+      server_name ${DOMAIN} www.${DOMAIN};
 
       location /.well-known/acme-challenge/ {
         root /var/www/certbot;
@@ -39,10 +39,10 @@ http {
     server {
       listen 443 ssl;
       listen [::]:443 ssl;
-      server_name staging.acmsjsu.org www.staging.acmsjsu.org;
+      server_name ${DOMAIN} www.${DOMAIN};
 
-      ssl_certificate /etc/letsencrypt/live/staging.acmsjsu.org/fullchain.pem;
-      ssl_certificate_key /etc/letsencrypt/live/staging.acmsjsu.org/privkey.pem;
+      ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
 
       location /api/ {
       	  access_log /var/log/nginx/access.log proxy_log;
@@ -66,8 +66,8 @@ http {
       listen 443 ssl default_server;
       listen [::]:443 ssl default_server;
 
-      ssl_certificate /etc/letsencrypt/live/staging.acmsjsu.org/fullchain.pem;
-      ssl_certificate_key /etc/letsencrypt/live/staging.acmsjsu.org/privkey.pem;
+      ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
 
       return 444;
     }
