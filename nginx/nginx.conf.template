@@ -32,14 +32,27 @@ http {
       }
 
       location / {
-        return 301 https://$host$request_uri;
+        return 301 https://${DOMAIN}$request_uri;
       }
+    }
+
+    # Canonical host is the bare domain. OAuth state cookies are host-only and
+    # the Google redirect URI points at ${DOMAIN}, so login must start there.
+    server {
+      listen 443 ssl;
+      listen [::]:443 ssl;
+      server_name www.${DOMAIN};
+
+      ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+
+      return 301 https://${DOMAIN}$request_uri;
     }
 
     server {
       listen 443 ssl;
       listen [::]:443 ssl;
-      server_name ${DOMAIN} www.${DOMAIN};
+      server_name ${DOMAIN};
 
       ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
       ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
