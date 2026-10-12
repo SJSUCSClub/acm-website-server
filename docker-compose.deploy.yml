@@ -1,14 +1,16 @@
-name: acm-staging
+name: acm-${DEPLOY_ENV:?REQUIRED}
 
 services:
   nginx:
     build:
       context: .
-      dockerfile: nginx/Dockerfile.staging
-    container_name: acm-nginx
+      dockerfile: nginx/Dockerfile.deploy
+    container_name: ${CONTAINER_PREFIX?REQUIRED}nginx
     ports:
       - "80:80"
       - "443:443"
+    environment:
+      - DOMAIN=${DOMAIN?REQUIRED}
     volumes:
       - ./certbot/www/:/var/www/certbot:ro
       - ./certbot/conf/:/etc/letsencrypt:ro
@@ -22,8 +24,8 @@ services:
   server:
     build:
       context: ./server
-      dockerfile: Dockerfile.staging
-    container_name: acm-server
+      dockerfile: Dockerfile.deploy
+    container_name: ${CONTAINER_PREFIX?REQUIRED}server
     ports:
       - "5001:5001"
     environment:
@@ -61,7 +63,7 @@ services:
 
   db:
     image: postgres:17
-    container_name: acm-db
+    container_name: ${CONTAINER_PREFIX?REQUIRED}db
     ports:
       - "5432:5432"
     environment:
@@ -69,7 +71,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?REQUIRED}
     volumes:
       - acm_website_db_data:/var/lib/postgresql/data
-      - ./db-scripts/staging:/docker-entrypoint-initdb.d/
+      - ./db-scripts/${DEPLOY_ENV?REQUIRED}:/docker-entrypoint-initdb.d/
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER?REQUIRED}"]
       interval: 5s

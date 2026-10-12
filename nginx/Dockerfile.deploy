@@ -9,4 +9,5 @@ RUN bun run build
 
 FROM nginx:1.29-alpine as runner
 COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx/staging.conf /etc/nginx/nginx.conf
+COPY nginx/nginx.conf.template /etc/nginx/templates/nginx.conf.template
+ENV NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx

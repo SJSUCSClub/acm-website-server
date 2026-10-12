@@ -1,14 +1,17 @@
-name: acm-certbot
+name: acm-${DEPLOY_ENV:?REQUIRED}-certbot
 
 services:
   nginx:
     image: nginx:1.29-alpine
-    container_name: acm-certbot-nginx
+    container_name: ${CONTAINER_PREFIX?REQUIRED}certbot-nginx
+    environment:
+      - DOMAIN=${DOMAIN?REQUIRED}
+      - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx
     ports:
       - "80:80"
     volumes:
       - ./certbot/www/:/var/www/certbot:ro
-      - ./nginx/certbot.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certbot.conf.template:/etc/nginx/templates/nginx.conf.template:ro
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost:80/healthcheck.txt"]
       interval: 5s
@@ -18,7 +21,7 @@ services:
 
   certbot:
     image: certbot/certbot:v5.0.0
-    container_name: acm-certbot
+    container_name: ${CONTAINER_PREFIX?REQUIRED}certbot
     volumes:
       - ./certbot/www/:/var/www/certbot:rw
       - ./certbot/conf/:/etc/letsencrypt:rw
