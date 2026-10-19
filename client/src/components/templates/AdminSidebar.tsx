@@ -5,6 +5,7 @@ import {
   House,
   Users,
   FolderOpenDot,
+  Newspaper,
   Calendar,
   ShieldUser,
   Building,
@@ -50,6 +51,11 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ children }) => {
       title: 'Projects',
       icon: FolderOpenDot,
       to: '/admin/projects'
+    },
+    {
+      title: 'Blog',
+      icon: Newspaper,
+      to: '/admin/blog'
     },
     {
       title: 'Events',

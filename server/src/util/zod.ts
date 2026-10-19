@@ -68,6 +68,32 @@ export const projectIDSchema = z.object({
 });
 export const projectSchema = createSelectSchema(projects);
 export const newProjectSchema = createInsertSchema(projects);
+export const blogPostIDSchema = z.object({
+  postID: z.string().regex(/^\d+$/),
+});
+export const newBlogPostSchema = z.object({
+  title: z.string().trim().min(1),
+  content: z.string(),
+  published: z.boolean().default(false),
+});
+export const blogPostSummarySchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  excerpt: z.string(),
+  coverImageUrl: z.string().nullable(),
+  author: z.object({ id: z.string(), name: z.string() }).nullable(),
+  published: z.boolean(),
+  publishedAt: z.string().nullable(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+export const blogPostSchema = blogPostSummarySchema.omit({ excerpt: true }).extend({
+  content: z.string(),
+});
+export const blogListQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(50).default(10),
+});
 export const bookmarkedEvent = eventSchema.extend({
   bookmarkedDate: z.string(),
 });

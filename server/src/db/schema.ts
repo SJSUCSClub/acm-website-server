@@ -359,6 +359,24 @@ export const interestedInProjects = pgTable(
   }),
 );
 
+export const blogPosts = pgTable('blog_posts', {
+  id: serial('id').primaryKey(),
+  title: text('title').notNull(),
+  content: text('content').notNull(),
+  coverImage: text('cover_image').references(() => files.key, {
+    onUpdate: 'cascade',
+    onDelete: 'set null',
+  }),
+  authorId: text('author_id').references(() => users.id, {
+    onUpdate: 'cascade',
+    onDelete: 'set null',
+  }),
+  published: boolean('published').notNull().default(false),
+  publishedAt: timestamp('published_at'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
 export const officers = pgTable('officers', {
   id: serial('id').primaryKey(),
   name: text('name').notNull(),
@@ -485,6 +503,8 @@ export type ProjectFile = typeof projectsFiles.$inferSelect;
 export type NewProjectFile = typeof projectsFiles.$inferInsert;
 export type InterestedInProject = typeof interestedInProjects.$inferSelect;
 export type NewInterestedInProject = typeof interestedInProjects.$inferInsert;
+export type BlogPost = typeof blogPosts.$inferSelect;
+export type NewBlogPost = typeof blogPosts.$inferInsert;
 export type Officer = typeof officers.$inferSelect;
 export type NewOfficer = typeof officers.$inferInsert;
 export type Major = typeof majors.$inferSelect;

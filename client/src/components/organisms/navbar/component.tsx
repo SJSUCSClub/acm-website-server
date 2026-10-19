@@ -64,6 +64,7 @@ export const NavBar: React.FC = () => {
           <LinkCard to="/events" search={DEFAULT_EVENT_FILTERS} pathName="Events" />
           <LinkCard to="/companies" pathName="Companies" />
           <LinkCard to="/projects" pathName="Projects" />
+          <LinkCard to="/blog" pathName="Blog" />
 
           {isLoggedIn && user ? (
             <DropdownMenu>
@@ -165,6 +166,14 @@ export const NavBar: React.FC = () => {
             onClick={handleClick}
           >
             <span className="text-[#196096] font-semibold">Projects</span>
+          </Link>
+
+          <Link
+            to="/blog"
+            className="flex items-center px-6 py-4 hover:bg-gray-100 transition-colors w-full"
+            onClick={handleClick}
+          >
+            <span className="text-[#196096] font-semibold">Blog</span>
           </Link>
 
           {isLoggedIn ? (
