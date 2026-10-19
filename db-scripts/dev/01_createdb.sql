@@ -226,6 +226,23 @@ create table if not exists interested_in_projects(
    FOREIGN KEY(project_id) REFERENCES projects(id) on update cascade on delete cascade
 );
 
+create table if not exists blog_posts(
+   id serial,
+   title text not null,
+   content text not null,
+   cover_image text,
+   author_id text,
+   published boolean not null default false,
+   published_at timestamp,
+   created_at timestamp not null default CURRENT_TIMESTAMP,
+   updated_at timestamp not null default CURRENT_TIMESTAMP,
+   PRIMARY KEY(id),
+   FOREIGN KEY(cover_image) REFERENCES files(key) on update cascade on delete set null,
+   FOREIGN KEY(author_id) REFERENCES users(id) on update cascade on delete set null
+);
+
+create index if not exists blog_posts_published_at_idx on blog_posts(published_at desc);
+
 create table if not exists officers(
    id serial,
    name text not null,
